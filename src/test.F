@@ -157,7 +157,7 @@ A(1)=0.25*pi*A(1)**2.
 
 
 
-fname="./ini_manus_208.dat"
+fname="./data/ini_manus_208.dat"
 open(20,file=trim(fname),access="direct",recl=nz*2)
 read(20,rec=5) tmp
 rho_zm = tmp
@@ -206,7 +206,7 @@ enddo
 
 
 ! precomputed file
-fname="../ACE_MATLAB/data/basis/PMB.dat"
+fname="./data/PMB.dat"
 do k=1,200
   coarse_z(k) = zm((k-1)*4+1)
   coarse_ze(k) = zm((k-1)*4+1)
@@ -219,7 +219,7 @@ call ace_initialization(ncols,nz,200,coarse_z,coarse_ze,trim(fname))
 
 call cpu_time(start)
 
-open(10,file="output_singleACE.dat",access="direct",recl=ncols*nz*3)
+open(10,file="./data/output_singleACE.dat",access="direct",recl=ncols*nz*3)
 n=1
 
 do t=1,180

@@ -1,0 +1,5 @@
+data
+gs_ctl
+*.exe
+*.o
+*.mod
