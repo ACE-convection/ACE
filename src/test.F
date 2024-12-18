@@ -13,7 +13,7 @@ real :: dz,dp,ts,te,dt
 real :: start, finish
 real, dimension(:,:,:), allocatable :: X
 real*4, dimension(:,:,:), allocatable :: Xout
-real, dimension(:,:), allocatable :: forcing 
+real, dimension(:,:), allocatable :: forcing, Tr,q,ql,qi 
 real, dimension(:), allocatable :: A,B
 real, dimension(43832,np) :: tap,husp
 real, dimension(np) :: plev
@@ -35,7 +35,7 @@ fname=trim(path)//"manus_3hr_ARMBEsonde_profiles.nc"
 
 nprof=208
 
-goto 838
+goto 838 ! directly read profile from binary file.
 
 ierr = nf90_open(trim(fname),NF90_NOWRITE,ncid1)
 IF (ierr/=nf90_noerr) WRITE(*,*) "open fail"
@@ -140,7 +140,8 @@ dt=4.
 te=ts+dt*15.
 !te=4.
 
-allocate(X(ncols+1,nz,10),A(ncols+1),B(ncols+1),forcing(ncols,nz),Xout(ncols+1,nz,3))
+allocate(X(ncols+1,nz,10),A(ncols+1),B(ncols+1),forcing(ncols,nz),Xout(ncols+1,nz,3) &
+        ,Tr(ncols,nz),q(ncols,nz),ql(ncols,nz),qi(ncols,nz))
 
 
 A=(/ 5., 10., 15., 25., 35., 45., 55., 0., 0./)
@@ -156,8 +157,7 @@ enddo
 A(1)=0.25*pi*A(1)**2.
 
 
-
-fname="./data/ini_manus_208.dat"
+fname="./input_data/ini_manus_208.dat"
 open(20,file=trim(fname),access="direct",recl=nz*2)
 read(20,rec=5) tmp
 rho_zm = tmp
@@ -206,7 +206,7 @@ enddo
 
 
 ! precomputed file
-fname="./data/PMB.dat"
+fname="./input_data/PMB.dat"
 do k=1,200
   coarse_z(k) = zm((k-1)*4+1)
   coarse_ze(k) = zm((k-1)*4+1)
@@ -219,14 +219,19 @@ call ace_initialization(ncols,nz,200,coarse_z,coarse_ze,trim(fname))
 
 call cpu_time(start)
 
-open(10,file="./data/output_singleACE.dat",access="direct",recl=ncols*nz*3)
+open(10,file="./data/output_singleACE_manus208.dat",access="direct",recl=ncols*nz*7)
 n=1
 
 do t=1,180
   write(*,*) ts,te
 
   Xout = X(:,:,1:3)
-  write(10,rec=n) Xout(1:ncols,:,1:3)
+  do k=1,nz
+  do i=1,ncols
+    call inv_theta_e(X(i,k,1),X(i,k,2),X(i,k,10),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
+  enddo
+  enddo
+  write(10,rec=n) Xout(1:ncols,:,1:3),Tr(1:ncols,:),q(1:ncols,:),ql(1:ncols,:),qi(1:ncols,:)
   n=n+1
 
   call ace_driver(ncols,nz,n_weno,X,A,B,ts,te,dt,forcing)
@@ -235,13 +240,13 @@ do t=1,180
   te=ts+dt*15.
 enddo
 
-923 format(A,5ES24.16)
-write(*,923) "here 1", X(1,1:5,1)
-write(*,923) "here 2", X(1,1:5,2)
-write(*,923) "here 3", X(1,1:5,3)
-
 Xout = X(:,:,1:3)
-write(10,rec=n) Xout(1:ncols,:,1:3)
+do k=1,nz
+do i=1,ncols
+  call inv_theta_e(X(i,k,1),X(i,k,2),X(i,k,10),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
+enddo
+enddo
+write(10,rec=n) Xout(1:ncols,:,1:3),Tr(1:ncols,:),q(1:ncols,:),ql(1:ncols,:),qi(1:ncols,:)
 close(10)
 
 call cpu_time(finish)

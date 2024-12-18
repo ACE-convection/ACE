@@ -11,6 +11,10 @@ real, parameter :: nju = 0.09 ! Morrison (2017)
 ! Spounge layer with Newtonian damping at domain top ztop
 real, parameter :: SLD = 6e3  ! e-folding depth in m
 real, parameter :: SLTau = 180 ! SL relaxation timescale in s
+! coefficients for precipitation sinks
+real, parameter :: qc_ramp = 0.5e-3 ! kg/kg; ramping for precip when qc>qc_ramp
+real, parameter :: dqc = 20 ! kg/kg; transition for a smooth onset of precip ramp function
+real, parameter :: tau_pr = 5*60 ! sec; relaxation timescale for precip
 
 integer :: coarse_nz
 real, dimension(:), allocatable :: coarse_z, coarse_ze
@@ -42,11 +46,6 @@ do while ( t < te)
   ! update ace tendency
   call ace_tendency(ncols,nz,n_weno,A,B,X,K1,1)
   yi(1:ncols,:,1:3) = X(1:ncols,:,1:3) + K1 * dt / 6.
-
-  !8211 format(A,5ES24.16)
-  !write(*,8211) "tend",K1(1,1:5,1)
-  !write(*,8211) "tend",K1(1,1:5,2)
-  !write(*,8211) "tend",K1(1,1:5,3)
 
   call ace_tendency(ncols,nz,n_weno,A,B,yi,K2,2)
   yi(1:ncols,:,1:3) = X(1:ncols,:,1:3) + ( K1 + K2 ) * dt / 6.
@@ -81,6 +80,8 @@ do while ( t < te)
   X(1:ncols,:,1:3) = X(1:ncols,:,1:3) + ( K1 / 6. + K2 ) * dt
 
   ! call physics here
+  call precip_sinks(ncols,nz,X(1:ncols,1:nz,10),K1(:,:,1),K1(:,:,2)) ! simplified precipitation
+  X(1:ncols,:,1:2) = X(1:ncols,:,1:2) +  K1(:,:,1:2) * dt
 
   ! implicit damping 
   call ImDamp(ncols,nz,X,dt)
@@ -143,7 +144,6 @@ real, dimension(ncols,nz,3), intent(out) :: dXdt
 ! local variables
 integer :: i,n,k,ks,ke
 real :: MF_max, MF_min, MF_abs
-real :: qc, dql, dqi, qc_ramp, dqc, tau_pr
 real, dimension(ncols,nz,2) :: eps_tur
 real, dimension(nz) :: rho0B, Tv, Tv0, T0, q0, ql0, qi0
 real, dimension(ncols,nz,3) :: dXdz
@@ -159,10 +159,6 @@ do k=1,nz
   call inv_theta_e(X(ncols+1,k,1),X(ncols+1,k,2),X(ncols+1,k,10),T0(k),q0(k),ql0(k),qi0(k))
   Tv0(k) = T0(k) * ( 1. + 0.60778 * q0(k) - ql0(k) - qi0(k) )
 enddo
-! coefficients for precipitation sinks
-qc_ramp = 0.5e-3 ! kg/kg; ramping for precip when qc>qc_ramp
-dqc = 20 ! kg/kg; transition for a smooth onset of precip ramp function
-tau_pr = 5*60 ! sec; relaxation timescale for precip
 
 ! fill with zeros
 dXdt = 0.
@@ -301,6 +297,35 @@ enddo
 
 end subroutine ImDamp
 
+subroutine precip_sinks(ncols,nz,p,dthe,dqt)
+implicit none
+
+! input/output variables
+integer, intent(in) :: ncols,nz
+real, dimension(ncols,nz), intent(in) :: p
+real, dimension(ncols,nz), intent(inout) :: dthe, dqt
+
+! local variables
+integer :: i,k
+real :: qc, dql, dqi
+
+
+do k=1,nz
+do i=1,ncols
+  qc = ql(i,k) + qi(i,k)
+  dqt(i,k) = - ( qc_ramp / dqc / tau_pr ) * log( 1. + exp( dqc / qc_ramp * ( qc - qc_ramp ) ) )
+  dql = 1.e-8 * ql(i,k) / qc
+  dqi = 1.e-8 * qi(i,k) / qc
+  dthe(i,k) = dqt(i,k) * ( theta_e(T(i,k),q(i,k),ql(i,k)+dql,qi(i,k)+dqi,p(i,k)) &
+                         - theta_e(T(i,k),q(i,k),ql(i,k),qi(i,k),p(i,k)) ) / 1.e-8
+  if ( qc <= 0. ) then
+    dqt(i,k) = 0.
+    dthe(i,k) = 0.
+  endif 
+enddo
+enddo
+
+end subroutine precip_sinks
 
 function theta_e(T,q,ql,qi,p)
 implicit none
