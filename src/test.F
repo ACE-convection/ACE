@@ -1,0 +1,257 @@
+program test
+use netcdf
+use ace_module
+implicit none
+
+integer, parameter :: np=37, n_weno=2
+real,parameter :: pi=4.*atan(1.),Rd=287.04,Cp=1005.7,g=9.80665
+integer :: i,j,k,m,n,o,t
+integer :: ierr,ncid1,varid1
+integer :: nprof, ncols
+real :: dum1,dum2,dum3,dum4,dum5,dum6,dum7
+real :: dz,dp,ts,te,dt
+real :: start, finish
+real, dimension(:,:,:), allocatable :: X
+real*4, dimension(:,:,:), allocatable :: Xout
+real, dimension(:,:), allocatable :: forcing, Tr,q,ql,qi 
+real, dimension(:), allocatable :: A,B
+real, dimension(43832,np) :: tap,husp
+real, dimension(np) :: plev
+real, dimension(43832) :: prp
+real, dimension(np,5211) :: ta,hus
+real, dimension(5211) :: pr
+integer, parameter :: np5=181
+real, dimension(np5) :: p5,tap5,husp5,zp5,rhop5
+integer, parameter :: nz=801, nzm=801
+real, dimension(nz) :: z,T_e,q_e,Tv_e,the_e,rho_e,p_z
+real, dimension(nzm) :: zm,T_zm,q_zm,Tv_zm,the_zm,rho_zm,p_zm,th_zm,thes_zm,rh_zm
+real*8, dimension(nzm) :: tmp
+real, dimension(200) :: coarse_z
+real, dimension(201) :: coarse_ze
+character(300) :: path,fname
+
+path="./data/soundings/"
+fname=trim(path)//"manus_3hr_ARMBEsonde_profiles.nc"
+
+nprof=208
+
+goto 838 ! directly read profile from binary file.
+
+ierr = nf90_open(trim(fname),NF90_NOWRITE,ncid1)
+IF (ierr/=nf90_noerr) WRITE(*,*) "open fail"
+ierr = nf90_inq_varid(ncid1,"pressure",varid1)
+IF (ierr/=nf90_noerr) WRITE(*,*) "var_inq fail"
+ierr = nf90_get_var(ncid1,varid1,plev,start=(/ 1,1,1,1 /),count=(/ np,1,1,1 /))
+IF (ierr/=nf90_noerr) WRITE(*,*) "read fail"
+ierr = nf90_inq_varid(ncid1,"pr",varid1)
+IF (ierr/=nf90_noerr) WRITE(*,*) "var_inq fail"
+ierr = nf90_get_var(ncid1,varid1,prp,start=(/ 1,1,1,1 /),count=(/ 43832,1,1,1 /))
+IF (ierr/=nf90_noerr) WRITE(*,*) "read fail"
+ierr = nf90_inq_varid(ncid1,"ta",varid1)
+IF (ierr/=nf90_noerr) WRITE(*,*) "var_inq fail"
+ierr = nf90_get_var(ncid1,varid1,tap,start=(/ 1,1,1,1 /),count=(/ 43832,np,1,1 /))
+IF (ierr/=nf90_noerr) WRITE(*,*) "read fail ta"
+ierr = nf90_inq_varid(ncid1,"hus",varid1)
+IF (ierr/=nf90_noerr) WRITE(*,*) "var_inq fail"
+ierr = nf90_get_var(ncid1,varid1,husp,start=(/ 1,1,1,1 /),count=(/ 43832,np,1,1 /))
+IF (ierr/=nf90_noerr) WRITE(*,*) "read fail hus"
+ierr = nf90_close(ncid1)
+IF (ierr/=nf90_noerr) WRITE(*,*) "close fail" 
+
+n=1
+do i=1,43832 
+  if (prp(i)/=prp(i)) goto 999
+  do k=1,np
+    if (tap(i,k)/=tap(i,k) .or. husp(i,k)/=husp(i,k)) goto 999
+  enddo
+  ta(:,n)=tap(i,:) 
+  hus(:,n)=husp(i,:)
+  pr(n)=prp(i) 
+  n=n+1
+  999 continue
+enddo
+
+!write(*,*) ta(:,nprof)
+!write(*,*) hus(:,nprof)
+
+dp=5.
+p5(1)=1000.
+do k=2,np5
+  p5(k)=p5(k-1)-dp
+enddo
+p5=p5*100.
+
+call pchip(np,plev(np:1:-1),ta(np:1:-1,nprof),np5,p5(np5:1:-1),tap5(np5:1:-1),.False.)
+call pchip(np,plev(np:1:-1),hus(np:1:-1,nprof),np5,p5(np5:1:-1),husp5(np5:1:-1),.False.)
+
+zp5(1)=0.
+do k=1,np5
+  if (husp5(k)<0.) husp5(k)=0.
+  dum1=tap5(k)*(1.+0.607789855072462*husp5(k))
+  rhop5(k)=p5(k)/dum1/Rd
+  if (k>1) then
+    dum2=0.5*(dum1+tap5(k-1)*(1.+0.607789855072462*husp5(k-1)))
+    zp5(k)=zp5(k-1)+Rd/g*5.e2*dum2/p5(k)
+  endif
+enddo
+
+dz=50.
+z(1)=25.
+zm(1)=0.
+do k=2,nz
+  z(k)=z(k-1)+dz
+  zm(k)=zm(k-1)+dz
+enddo
+
+call pchip(np5,zp5,tap5,nz,z,T_e,.False.)
+call pchip(np5,zp5,husp5,nz,z,q_e,.False.)
+call pchip(np5,zp5,p5,nz,z,p_z,.False.)
+
+do k=1,nz
+  if (q_e(k)<0.) q_e(k)=0.
+  Tv_e(k)=T_e(k)*(1.+0.607789855072462*q_e(k))
+  if (z(k)>zp5(np5)) then
+    p_z(k)=p_z(k-1)*(1.-g*dz/2./Rd/Tv_e(k-1))/(1.+g*dz/2./Rd/Tv_e(k-1))
+  endif
+  rho_e(k)=p_z(k)/Tv_e(k)/Rd
+  the_e(k)=theta_e(T_e(k),q_e(k),0.,0.,p_z(k))
+enddo
+
+call pchip(nz,z,T_e,nzm,zm,T_zm,.False.)
+call pchip(nz,z,q_e,nzm,zm,q_zm,.False.)
+call pchip(nz,z,p_z,nzm,zm,p_zm,.False.)
+
+do k=1,nzm
+  if (q_zm(k)<0.) q_zm(k)=0.
+  Tv_zm(k)=T_zm(k)*(1.+0.607789855072462*q_zm(k))
+  if (z(k)>zp5(np5)) then
+    p_zm(k)=p_zm(k-1)*(1.-g*dz/2./Rd/Tv_zm(k-1))/(1.+g*dz/2./Rd/Tv_zm(k-1))
+  endif
+  rho_zm(k)=p_zm(k)/Tv_zm(k)/Rd
+  the_zm(k)=theta_e(T_zm(k),q_zm(k),0.,0.,p_zm(k))
+enddo
+
+838 continue
+
+dz=50.
+ncols=8
+ts=0.
+dt=4.
+te=ts+dt*15.
+!te=4.
+
+allocate(X(ncols+1,nz,10),A(ncols+1),B(ncols+1),forcing(ncols,nz),Xout(ncols+1,nz,3) &
+        ,Tr(ncols,nz),q(ncols,nz),ql(ncols,nz),qi(ncols,nz))
+
+
+A=(/ 5., 10., 15., 25., 35., 45., 55., 0., 0./)
+A=A*1.e3
+B=pi*A
+B(ncols:ncols+1)=(64.e3+64.e3)*2.
+
+A(ncols)=64.e3*64.e3-0.25*pi*A(ncols-1)**2.
+A(ncols+1)=A(ncols)
+do k=ncols-1,2,-1
+  A(k)=0.25*pi*(A(k)**2.-A(k-1)**2.)
+enddo
+A(1)=0.25*pi*A(1)**2.
+
+
+fname="./input_data/ini_manus_208.dat"
+open(20,file=trim(fname),access="direct",recl=nz*2)
+read(20,rec=5) tmp
+rho_zm = tmp
+read(20,rec=6) tmp
+zm = tmp
+read(20,rec=7) tmp
+the_e = tmp
+read(20,rec=8) tmp
+q_e = tmp
+read(20,rec=9) tmp
+Tv_e = tmp
+read(20,rec=10) tmp
+p_z = tmp
+read(20,rec=11) tmp
+rho_e = tmp
+read(20,rec=12) tmp
+z = tmp
+close(20)
+
+
+do k=1,nz
+  X(:,k,1)=the_e(k)
+  X(:,k,2)=q_e(k)
+  X(:,k,3)=0.
+  X(:,k,4)=rho_e(k)
+  X(:,k,5)=rho_zm(k)
+  X(:,k,6)=z(k)
+  X(:,k,7)=zm(k)
+  X(:,k,8)=dz
+  X(:,k,9)=dz
+  X(:,k,10)=p_z(k)
+enddo
+
+
+! initialize MF
+dum1=0.
+dum2=1000.
+do k=1,nz
+  if (zm(k)<=dum2) then
+    X(1,k,3) = 0.03 & 
+         * sin(pi*(zm(k)-dum1)/(dum2-dum1))
+    X(ncols,k,3) = -0.03 & 
+         * sin(pi*(zm(k)-dum1)/(dum2-dum1))*A(1)/A(ncols)
+  endif 
+enddo
+
+
+! precomputed file
+fname="./input_data/PMB.dat"
+do k=1,200
+  coarse_z(k) = zm((k-1)*4+1)
+  coarse_ze(k) = zm((k-1)*4+1)
+enddo
+coarse_ze(201) = 40000.
+
+call ace_initialization(ncols,nz,200,coarse_z,coarse_ze,trim(fname))
+
+
+
+call cpu_time(start)
+
+open(10,file="./data/output_singleACE_manus208.dat",access="direct",recl=ncols*nz*7)
+n=1
+
+do t=1,180
+  write(*,*) ts,te
+
+  Xout = X(:,:,1:3)
+  do k=1,nz
+  do i=1,ncols
+    call inv_theta_e(X(i,k,1),X(i,k,2),X(i,k,10),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
+  enddo
+  enddo
+  write(10,rec=n) Xout(1:ncols,:,1:3),Tr(1:ncols,:),q(1:ncols,:),ql(1:ncols,:),qi(1:ncols,:)
+  n=n+1
+
+  call ace_driver(ncols,nz,n_weno,X,A,B,ts,te,dt,forcing)
+  
+  ts=te
+  te=ts+dt*15.
+enddo
+
+Xout = X(:,:,1:3)
+do k=1,nz
+do i=1,ncols
+  call inv_theta_e(X(i,k,1),X(i,k,2),X(i,k,10),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
+enddo
+enddo
+write(10,rec=n) Xout(1:ncols,:,1:3),Tr(1:ncols,:),q(1:ncols,:),ql(1:ncols,:),qi(1:ncols,:)
+close(10)
+
+call cpu_time(finish)
+
+write(*,*) finish-start
+
+
+end program test
