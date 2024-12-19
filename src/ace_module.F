@@ -2,7 +2,7 @@ module ace_module
 implicit none
 
 private
-public :: weno, weno_vec, inv_theta_e, pchip, theta_e, ace_driver, ace_initialization
+public :: weno, weno_vec, inv_theta_e, pchip, theta_e, ace_driver, ace_initialization, eval_qs
 
 ! defien operator for grid interface
 
@@ -255,7 +255,7 @@ do i=1,ncols
 enddo  
 
 ! single ACE
-dXdt(2:ncols,:,:)=0.
+!dXdt(2:ncols,:,:)=0.
 
 ! model top 
 dXdt(:,nz-10:nz,:)=0.
@@ -313,7 +313,8 @@ real :: qc, dql, dqi
 do k=1,nz
 do i=1,ncols
   qc = ql(i,k) + qi(i,k)
-  dqt(i,k) = - ( qc_ramp / dqc / tau_pr ) * log( 1. + exp( dqc / qc_ramp * ( qc - qc_ramp ) ) )
+  !dqt(i,k) = - ( qc_ramp / dqc / tau_pr ) * log( 1. + exp( dqc / qc_ramp * ( qc - qc_ramp ) ) ) ! should use -r8 to compile
+  dqt(i,k) = - ( qc_ramp / dqc / tau_pr ) * max( dqc / qc_ramp * ( qc - qc_ramp ) , 0. ) 
   dql = 1.e-8 * ql(i,k) / qc
   dqi = 1.e-8 * qi(i,k) / qc
   dthe(i,k) = dqt(i,k) * ( theta_e(T(i,k),q(i,k),ql(i,k)+dql,qi(i,k)+dqi,p(i,k)) &
