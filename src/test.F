@@ -7,13 +7,15 @@ integer, parameter :: np=37, n_weno=2
 real,parameter :: pi=4.*atan(1.),Rd=287.04,Cp=1005.7,g=9.80665
 integer :: i,j,k,m,n,o,t
 integer :: ierr,ncid1,varid1
-integer :: nprof, ncols
+integer :: nprof, ncols, ice
 real :: dum1,dum2,dum3,dum4,dum5,dum6,dum7
 real :: dz,dp,ts,te,dt
 real :: start, finish
 real, dimension(:,:,:), allocatable :: X
 real*4, dimension(:,:,:), allocatable :: Xout
-real, dimension(:,:), allocatable :: forcing, Tr,q,ql,qi 
+real, dimension(:,:), allocatable :: forcing, Tr,q,ql,qi
+real, dimension(:), allocatable :: Tv0
+real*4, dimension(:,:), allocatable :: T4,q4,ql4,qi4,rh4,b4 
 real, dimension(:), allocatable :: A,B
 real, dimension(43832,np) :: tap,husp
 real, dimension(np) :: plev
@@ -142,7 +144,7 @@ te=ts+dt*15.
 
 allocate(X(ncols+1,nz,10),A(ncols+1),B(ncols+1),forcing(ncols,nz),Xout(ncols+1,nz,3) &
         ,Tr(ncols,nz),q(ncols,nz),ql(ncols,nz),qi(ncols,nz))
-
+allocate(T4(ncols,nz),q4(ncols,nz),ql4(ncols,nz),qi4(ncols,nz),rh4(ncols,nz),b4(ncols,nz),Tv0(nz))
 
 A=(/ 5., 10., 15., 25., 35., 45., 55., 0., 0./)
 A=A*1.e3
@@ -189,6 +191,8 @@ do k=1,nz
   X(:,k,8)=dz
   X(:,k,9)=dz
   X(:,k,10)=p_z(k)
+  call inv_theta_e(X(1,k,1),X(1,k,2),X(1,k,10),Tr(1,k),q(1,k),ql(1,k),qi(1,k))
+  Tv0(k)=Tr(1,k)*(1.+0.607789855072462*q(1,k)-ql(1,k)-qi(1,k))
 enddo
 
 
@@ -197,10 +201,10 @@ dum1=0.
 dum2=1000.
 do k=1,nz
   if (zm(k)<=dum2) then
-    X(1,k,3) = 0.03 & 
+    X(ncols,k,3) = 0.03 & 
          * sin(pi*(zm(k)-dum1)/(dum2-dum1))
-    X(ncols,k,3) = -0.03 & 
-         * sin(pi*(zm(k)-dum1)/(dum2-dum1))*A(1)/A(ncols)
+    !X(ncols,k,3) = -0.03 & 
+    !     * sin(pi*(zm(k)-dum1)/(dum2-dum1))*A(1)/A(ncols)
   endif 
 enddo
 
@@ -219,22 +223,38 @@ call ace_initialization(ncols,nz,200,coarse_z,coarse_ze,trim(fname))
 
 call cpu_time(start)
 
-open(10,file="./data/output_singleACE_manus208.dat",access="direct",recl=ncols*nz*7)
+!open(10,file="./data/output_singleACE_manus208.dat",access="direct",recl=ncols*nz*8)
+open(10,file="./data/output_multiACE_manus208.dat",access="direct",recl=ncols*nz*9)
 n=1
 
-do t=1,180
+do t=1,60*48
   write(*,*) ts,te
 
   Xout = X(:,:,1:3)
   do k=1,nz
   do i=1,ncols
     call inv_theta_e(X(i,k,1),X(i,k,2),X(i,k,10),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
+    ice=0
+    if (Tr(i,k)<273.15) ice=1
+    rh4(i,k)=q(i,k)/eval_qs(Tr(i,k),X(i,k,10),ql(i,k)+qi(i,k),ice)
+    dum1=Tr(i,k)*(1.+0.607789855072462*q(i,k)-ql(i,k)-qi(i,k))
+    b4(i,k)=g*(dum1-Tv0(k))/Tv0(k)
   enddo
   enddo
-  write(10,rec=n) Xout(1:ncols,:,1:3),Tr(1:ncols,:),q(1:ncols,:),ql(1:ncols,:),qi(1:ncols,:)
+  T4=Tr
+  q4=q
+  ql4=ql
+  qi4=qi
+  write(10,rec=n) Xout(1:ncols,:,1:3),T4(1:ncols,:),q4(1:ncols,:),ql4(1:ncols,:),qi4(1:ncols,:),rh4(1:ncols,:),b4(1:ncols,:)
   n=n+1
 
   call ace_driver(ncols,nz,n_weno,X,A,B,ts,te,dt,forcing)
+
+  !write(*,*) X(2,1:5,1)
+  !write(*,*) X(2,1:5,2)
+  !write(*,*) X(2,1:5,3)
+  !write(*,*) "output"
+  !stop
   
   ts=te
   te=ts+dt*15.
@@ -244,9 +264,19 @@ Xout = X(:,:,1:3)
 do k=1,nz
 do i=1,ncols
   call inv_theta_e(X(i,k,1),X(i,k,2),X(i,k,10),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
+  ice=0
+  if (Tr(i,k)<273.15) ice=1
+  rh4(i,k)=q(i,k)/eval_qs(Tr(i,k),X(i,k,10),ql(i,k)+qi(i,k),ice)
+  dum1=Tr(i,k)*(1.+0.607789855072462*q(i,k)-ql(i,k)-qi(i,k))
+  b4(i,k)=g*(dum1-Tv0(k))/Tv0(k)
 enddo
 enddo
-write(10,rec=n) Xout(1:ncols,:,1:3),Tr(1:ncols,:),q(1:ncols,:),ql(1:ncols,:),qi(1:ncols,:)
+T4=Tr
+q4=q
+ql4=ql
+qi4=qi
+
+write(10,rec=n) Xout(1:ncols,:,1:3),T4(1:ncols,:),q4(1:ncols,:),ql4(1:ncols,:),qi4(1:ncols,:),rh4(1:ncols,:),b4(1:ncols,:)
 close(10)
 
 call cpu_time(finish)

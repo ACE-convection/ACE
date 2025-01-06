@@ -2,11 +2,12 @@ module ace_module
 implicit none
 
 private
-public :: weno, weno_vec, inv_theta_e, pchip, theta_e, ace_driver, ace_initialization
+public :: weno, weno_vec, inv_theta_e, pchip, theta_e, ace_driver, ace_initialization, eval_qs
 
 ! defien operator for grid interface
 
 real, parameter :: pi = 4.*atan(1.)
+real, parameter :: g = 9.80665 ! gravity constant 
 real, parameter :: nju = 0.09 ! Morrison (2017)
 ! Spounge layer with Newtonian damping at domain top ztop
 real, parameter :: SLD = 6e3  ! e-folding depth in m
@@ -46,6 +47,11 @@ do while ( t < te)
   ! update ace tendency
   call ace_tendency(ncols,nz,n_weno,A,B,X,K1,1)
   yi(1:ncols,:,1:3) = X(1:ncols,:,1:3) + K1 * dt / 6.
+
+  !write(*,*) K1(2,1:5,1)
+  !write(*,*) K1(2,1:5,2)
+  !write(*,*) K1(2,1:5,3)
+  !write(*,*) "rk93"
 
   call ace_tendency(ncols,nz,n_weno,A,B,yi,K2,2)
   yi(1:ncols,:,1:3) = X(1:ncols,:,1:3) + ( K1 + K2 ) * dt / 6.
@@ -157,7 +163,7 @@ do k=1,nz
   eps_tur(:      ,k,1) = nju*B/A
   eps_tur(2:ncols,k,2) = nju*B(1:ncols-1)/A(2:ncols)
   call inv_theta_e(X(ncols+1,k,1),X(ncols+1,k,2),X(ncols+1,k,10),T0(k),q0(k),ql0(k),qi0(k))
-  Tv0(k) = T0(k) * ( 1. + 0.60778 * q0(k) - ql0(k) - qi0(k) )
+  Tv0(k) = T0(k) * ( 1. + 0.607789855072462 * q0(k) - ql0(k) - qi0(k) )
 enddo
 
 ! fill with zeros
@@ -174,15 +180,15 @@ do i=1,ncols
   enddo
 
   ! Vertical velocity w(zi) (mass flux already at zi)
-  Wi(i,:) = X(i,:,3)/X(i,:,5)
+  Wi(i,:) = X(i,:,3) / X(i,:,5)
 
   ! Vertical mass flux & velocity at zc=zi+dz/2
   call weno_up3(nz,X(i,:,3),mfc(i,:))
-  Wc(i,:) = mfc(i,:)/X(i,:,4)
+  Wc(i,:) = mfc(i,:) / X(i,:,4)
 
   ! Admfdz = (ACE area)*dmfdz for dynamic inflow/outflow at zc=zi+dz/2
   Admfdz(i,nz) = 0.
-  Admfdz(i,1:nz-1) = A(i) * (X(i,2:nz,3)-X(i,1:nz-1,3))/X(i,2:nz,9)
+  Admfdz(i,1:nz-1) = A(i) * ( X(i,2:nz,3) - X(i,1:nz-1,3) ) / X(i,2:nz,9)
 
   ! ioflow = -Bi*rho_0*u_n (minus h. mass flux * lateral boundary length)
   ioflow(i,:) = sum(Admfdz(1:i,:),1)
@@ -192,20 +198,25 @@ do i=1,ncols
   do n=1,2
     dXdt(i,1:nz  ,n) = 0.
     dXdt(i,1:nz-1,n) = - ( rho0wC(i,2:nz,n) - rho0wC(i,1:nz-1,n) ) / X(i,1:nz-1,8) / X(i,1:nz-1,4)  ! vertical flux convergence
+    !if (i==2 .and. n==1) write(*,*)  "flux",dXdt(i,1:5,n)
 
     dXdt(i,1:nz-1,n) = dXdt(i,1:nz-1,n) - eps_tur(i,1:nz-1,1) * ( X(i,1:nz-1,n) - X(i+1,1:nz-1,n) )  ! interact outer
+    !if (i==2 .and. n==1) write(*,*)  "outer interact",dXdt(i,1:5,n)
     if (i>1) &
     dXdt(i,1:nz-1,n) = dXdt(i,1:nz-1,n) - eps_tur(i,1:nz-1,2) * ( X(i,1:nz-1,n) - X(i-1,1:nz-1,n) )  ! interact inner
+    !if (i==2 .and. n==1) write(*,*)  "inner interact",dXdt(i,1:5,n)
 
     dXdt(i,1:nz-1,n) = dXdt(i,1:nz-1,n) + 0.5 * &
                        ( ( ioflow(i  ,1:nz-1) + abs(ioflow(i  ,1:nz-1)) ) * X(i+1,1:nz-1,n) &
                        + ( ioflow(i  ,1:nz-1) - abs(ioflow(i  ,1:nz-1)) ) * X(i  ,1:nz-1,n) ) &
                         / A(i) / X(i,1:nz-1,4)  ! inflow from outer
+    !if (i==2 .and. n==1) write(*,*)  "inflow",dXdt(i,1:5,n)
     if (i>1) &
     dXdt(i,1:nz-1,n) = dXdt(i,1:nz-1,n) - 0.5 * &
                        ( ( ioflow(i-1,1:nz-1) + abs(ioflow(i-1,1:nz-1)) ) * X(i  ,1:nz-1,n) &
                        + ( ioflow(i-1,1:nz-1) - abs(ioflow(i-1,1:nz-1)) ) * X(i-1,1:nz-1,n) ) &
                         / A(i) / X(i,1:nz-1,4)  ! inflow from inner
+    !if (i==2 .and. n==1) write(*,*)  "outflow",dXdt(i,1:5,n)
   enddo
 
   !if (i==1) write(*,*) rkstage,dXdt(i,1:5,1)
@@ -230,17 +241,20 @@ do i=1,ncols
   endif
   
   Tv(1:nz) = T(i,1:nz) * ( 1. + 0.607789855072462 * q(i,1:nz) - ql(i,1:nz) - qi(i,1:nz) )
-  rho0B(1:nz) = 9.8 * X(i,:,4) * ( Tv(1:nz) - Tv0(1:nz) ) / Tv0(1:nz)
+  rho0B(1:nz) = g * X(i,:,4) * ( Tv(1:nz) - Tv0(1:nz) ) / Tv0(1:nz)
   
-  !if (rkstage==1 .and. i==1) then
+  !if (rkstage==1 .and. i==2) then
   !  write(*,*) F(i,1:5) 
-  !  write(*,*) X(i,1:5,4)
-  !  write(*,*) Tv0(1:5)  
   !  write(*,*) Tv(1:5)
+  !  write(*,*) Tv0(1:5)
   !  write(*,*) rho0B(1:5) 
   !endif 
 
   F(i,1:nz) = F(i,1:nz) + rho0B(1:nz)
+
+  !if (rkstage==1 .and. i==2) then
+  !  write(*,*) F(i,1:5) 
+  !endif 
 
   !call pchip(nz,X(i,1:nz,7),F(i,1:nz),coarse_nz,coarse_z,coarse_F(i,1:coarse_nz),.True.)
   coarse_F(i,:) = sum(reshape(F(i,1:nz),(/4,nz/4/)),1)/4.
@@ -250,12 +264,14 @@ do i=1,ncols
   do k=1,coarse_nz+1
     dwdt(i,k) = sum( sum( PMB(i,:,:,k) * coarse_F(:,:) , 2 ), 1 )  
   enddo
+  !if (i==2) write(*,*) dwdt(i,1:5)
 
   call pchip(coarse_nz+1,coarse_ze,dwdt(i,1:coarse_nz+1),nz,X(i,1:nz,7),dXdt(i,1:nz,3),.True.)
+  !if (i==2) write(*,*) dXdt(i,1:5,3)
 enddo  
 
 ! single ACE
-dXdt(2:ncols,:,:)=0.
+!dXdt(2:ncols,:,:)=0.
 
 ! model top 
 dXdt(:,nz-10:nz,:)=0.
@@ -313,7 +329,8 @@ real :: qc, dql, dqi
 do k=1,nz
 do i=1,ncols
   qc = ql(i,k) + qi(i,k)
-  dqt(i,k) = - ( qc_ramp / dqc / tau_pr ) * log( 1. + exp( dqc / qc_ramp * ( qc - qc_ramp ) ) )
+  !dqt(i,k) = - ( qc_ramp / dqc / tau_pr ) * log( 1. + exp( dqc / qc_ramp * ( qc - qc_ramp ) ) ) ! should use -r8 to compile
+  dqt(i,k) = - ( qc_ramp / dqc / tau_pr ) * max( dqc / qc_ramp * ( qc - qc_ramp ) , 0. ) 
   dql = 1.e-8 * ql(i,k) / qc
   dqi = 1.e-8 * qi(i,k) / qc
   dthe(i,k) = dqt(i,k) * ( theta_e(T(i,k),q(i,k),ql(i,k)+dql,qi(i,k)+dqi,p(i,k)) &
