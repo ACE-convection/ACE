@@ -227,9 +227,10 @@ call cpu_time(start)
 open(10,file="./data/output_multiACE_manus208.dat",access="direct",recl=ncols*nz*9)
 n=1
 
-do t=1,60*48
+do t=1,60*48 ! 60 is mins, and 48 is hours
   write(*,*) ts,te
 
+  ! output diagnostic
   Xout = X(:,:,1:3)
   do k=1,nz
   do i=1,ncols
@@ -241,19 +242,18 @@ do t=1,60*48
     b4(i,k)=g*(dum1-Tv0(k))/Tv0(k)
   enddo
   enddo
-  T4=Tr
-  q4=q
-  ql4=ql
-  qi4=qi
+  T4=Tr;  q4=q; ql4=ql; qi4=qi;
   write(10,rec=n) Xout(1:ncols,:,1:3),T4(1:ncols,:),q4(1:ncols,:),ql4(1:ncols,:),qi4(1:ncols,:),rh4(1:ncols,:),b4(1:ncols,:)
   n=n+1
 
+  ! call ace driver to integrate from ts to te with dt
   call ace_driver(ncols,nz,n_weno,X,A,B,ts,te,dt,forcing)
 
   ts=te
   te=ts+dt*15.
 enddo
 
+! output diagnostic
 Xout = X(:,:,1:3)
 do k=1,nz
 do i=1,ncols
@@ -265,11 +265,7 @@ do i=1,ncols
   b4(i,k)=g*(dum1-Tv0(k))/Tv0(k)
 enddo
 enddo
-T4=Tr
-q4=q
-ql4=ql
-qi4=qi
-
+T4=Tr;  q4=q; ql4=ql; qi4=qi;
 write(10,rec=n) Xout(1:ncols,:,1:3),T4(1:ncols,:),q4(1:ncols,:),ql4(1:ncols,:),qi4(1:ncols,:),rh4(1:ncols,:),b4(1:ncols,:)
 close(10)
 
