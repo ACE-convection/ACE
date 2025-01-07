@@ -15,3 +15,19 @@ A copy of a few samplesâ€”not part of this code package, provided only for userâ
 
 - Kuo, Y.-H., and J. D. Neelin, 2024b: Anelastic Convective Entities. Part 2: Adjustment processes and convective cold top. _J. Atmos. Sci._, under review. Preprint available via [ESS Open Archive](https://doi.org/10.22541/essoar.171805611.18082376/v1).
 
+
+How to run?
+
+some preparations for running ACE model.
+1. prepare initial conditions placed under ./input_data (Double-precision binary file with the sequence: theta_mf, qt_mf, Tv_mf, p_mf, rho_mf, zm, theta_e_zc, qt_zc, Tv_zc, p_zc, rho_zc, and z).
+2. place precomputed file under ./input_data (PMB.dat is used for 8-column ACE simulation, and PMB[201,200,forcing-region,response-region]).
+3. modify the filename at line 162 and 213 in ./src/test.F if double-precision binary files of initial conditions and precomputed basis are prepared.
+4. change some settings in line 138-159 ./src/test.F, and give initial massflux in line 199-209 in ./src/test.F.
+5. set the output file name at line 227 in ./src/test.F
+
+run ACE model
+1. execute make under this ACE_FORTRAN directory. Then, source code under ./src/ will be compiled.
+2. execute ace_model.exe to run the model.
+
+
+

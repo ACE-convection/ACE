@@ -48,11 +48,6 @@ do while ( t < te)
   call ace_tendency(ncols,nz,n_weno,A,B,X,K1,1)
   yi(1:ncols,:,1:3) = X(1:ncols,:,1:3) + K1 * dt / 6.
 
-  !write(*,*) K1(2,1:5,1)
-  !write(*,*) K1(2,1:5,2)
-  !write(*,*) K1(2,1:5,3)
-  !write(*,*) "rk93"
-
   call ace_tendency(ncols,nz,n_weno,A,B,yi,K2,2)
   yi(1:ncols,:,1:3) = X(1:ncols,:,1:3) + ( K1 + K2 ) * dt / 6.
 
@@ -198,28 +193,21 @@ do i=1,ncols
   do n=1,2
     dXdt(i,1:nz  ,n) = 0.
     dXdt(i,1:nz-1,n) = - ( rho0wC(i,2:nz,n) - rho0wC(i,1:nz-1,n) ) / X(i,1:nz-1,8) / X(i,1:nz-1,4)  ! vertical flux convergence
-    !if (i==2 .and. n==1) write(*,*)  "flux",dXdt(i,1:5,n)
 
     dXdt(i,1:nz-1,n) = dXdt(i,1:nz-1,n) - eps_tur(i,1:nz-1,1) * ( X(i,1:nz-1,n) - X(i+1,1:nz-1,n) )  ! interact outer
-    !if (i==2 .and. n==1) write(*,*)  "outer interact",dXdt(i,1:5,n)
     if (i>1) &
     dXdt(i,1:nz-1,n) = dXdt(i,1:nz-1,n) - eps_tur(i,1:nz-1,2) * ( X(i,1:nz-1,n) - X(i-1,1:nz-1,n) )  ! interact inner
-    !if (i==2 .and. n==1) write(*,*)  "inner interact",dXdt(i,1:5,n)
 
     dXdt(i,1:nz-1,n) = dXdt(i,1:nz-1,n) + 0.5 * &
                        ( ( ioflow(i  ,1:nz-1) + abs(ioflow(i  ,1:nz-1)) ) * X(i+1,1:nz-1,n) &
                        + ( ioflow(i  ,1:nz-1) - abs(ioflow(i  ,1:nz-1)) ) * X(i  ,1:nz-1,n) ) &
                         / A(i) / X(i,1:nz-1,4)  ! inflow from outer
-    !if (i==2 .and. n==1) write(*,*)  "inflow",dXdt(i,1:5,n)
     if (i>1) &
     dXdt(i,1:nz-1,n) = dXdt(i,1:nz-1,n) - 0.5 * &
                        ( ( ioflow(i-1,1:nz-1) + abs(ioflow(i-1,1:nz-1)) ) * X(i  ,1:nz-1,n) &
                        + ( ioflow(i-1,1:nz-1) - abs(ioflow(i-1,1:nz-1)) ) * X(i-1,1:nz-1,n) ) &
                         / A(i) / X(i,1:nz-1,4)  ! inflow from inner
-    !if (i==2 .and. n==1) write(*,*)  "outflow",dXdt(i,1:5,n)
   enddo
-
-  !if (i==1) write(*,*) rkstage,dXdt(i,1:5,1)
 
   F(i,1:nz  ) = 0.
   F(i,1:nz-1) = - ( X(i,2:nz,3) * Wi(i,2:nz) - X(i,1:nz-1,3) * Wi(i,1:nz-1) ) / X(i,1:nz-1,8)  ! vertical flux convergence
@@ -243,18 +231,7 @@ do i=1,ncols
   Tv(1:nz) = T(i,1:nz) * ( 1. + 0.607789855072462 * q(i,1:nz) - ql(i,1:nz) - qi(i,1:nz) )
   rho0B(1:nz) = g * X(i,:,4) * ( Tv(1:nz) - Tv0(1:nz) ) / Tv0(1:nz)
   
-  !if (rkstage==1 .and. i==2) then
-  !  write(*,*) F(i,1:5) 
-  !  write(*,*) Tv(1:5)
-  !  write(*,*) Tv0(1:5)
-  !  write(*,*) rho0B(1:5) 
-  !endif 
-
   F(i,1:nz) = F(i,1:nz) + rho0B(1:nz)
-
-  !if (rkstage==1 .and. i==2) then
-  !  write(*,*) F(i,1:5) 
-  !endif 
 
   !call pchip(nz,X(i,1:nz,7),F(i,1:nz),coarse_nz,coarse_z,coarse_F(i,1:coarse_nz),.True.)
   coarse_F(i,:) = sum(reshape(F(i,1:nz),(/4,nz/4/)),1)/4.
@@ -264,10 +241,8 @@ do i=1,ncols
   do k=1,coarse_nz+1
     dwdt(i,k) = sum( sum( PMB(i,:,:,k) * coarse_F(:,:) , 2 ), 1 )  
   enddo
-  !if (i==2) write(*,*) dwdt(i,1:5)
 
   call pchip(coarse_nz+1,coarse_ze,dwdt(i,1:coarse_nz+1),nz,X(i,1:nz,7),dXdt(i,1:nz,3),.True.)
-  !if (i==2) write(*,*) dXdt(i,1:5,3)
 enddo  
 
 ! single ACE
