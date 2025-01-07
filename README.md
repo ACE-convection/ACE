@@ -20,7 +20,7 @@ How to run?
 
 some preparations for running ACE model.
 1. prepare initial conditions placed under ./input_data (Double-precision binary file with the sequence: theta_mf, qt_mf, Tv_mf, p_mf, rho_mf, zm, theta_e_zc, qt_zc, Tv_zc, p_zc, rho_zc, and z).
-2. place precomputed file under ./input_data (PMB.dat is used for 8-column ACE simulation).
+2. place precomputed file under ./input_data (PMB.dat is used for 8-column ACE simulation, and PMB[201,200,forcing-region,response-region]).
 3. modify the filename at line 162 and 213 in ./src/test.F if double-precision binary files of initial conditions and precomputed basis are prepared.
 4. change some settings in line 138-159 ./src/test.F, and give initial massflux in line 199-209 in ./src/test.F.
 5. set the output file name at line 227 in ./src/test.F
