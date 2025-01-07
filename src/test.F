@@ -39,99 +39,99 @@ nprof=208
 
 goto 838 ! directly read profile from binary file.
 
-ierr = nf90_open(trim(fname),NF90_NOWRITE,ncid1)
-IF (ierr/=nf90_noerr) WRITE(*,*) "open fail"
-ierr = nf90_inq_varid(ncid1,"pressure",varid1)
-IF (ierr/=nf90_noerr) WRITE(*,*) "var_inq fail"
-ierr = nf90_get_var(ncid1,varid1,plev,start=(/ 1,1,1,1 /),count=(/ np,1,1,1 /))
-IF (ierr/=nf90_noerr) WRITE(*,*) "read fail"
-ierr = nf90_inq_varid(ncid1,"pr",varid1)
-IF (ierr/=nf90_noerr) WRITE(*,*) "var_inq fail"
-ierr = nf90_get_var(ncid1,varid1,prp,start=(/ 1,1,1,1 /),count=(/ 43832,1,1,1 /))
-IF (ierr/=nf90_noerr) WRITE(*,*) "read fail"
-ierr = nf90_inq_varid(ncid1,"ta",varid1)
-IF (ierr/=nf90_noerr) WRITE(*,*) "var_inq fail"
-ierr = nf90_get_var(ncid1,varid1,tap,start=(/ 1,1,1,1 /),count=(/ 43832,np,1,1 /))
-IF (ierr/=nf90_noerr) WRITE(*,*) "read fail ta"
-ierr = nf90_inq_varid(ncid1,"hus",varid1)
-IF (ierr/=nf90_noerr) WRITE(*,*) "var_inq fail"
-ierr = nf90_get_var(ncid1,varid1,husp,start=(/ 1,1,1,1 /),count=(/ 43832,np,1,1 /))
-IF (ierr/=nf90_noerr) WRITE(*,*) "read fail hus"
-ierr = nf90_close(ncid1)
-IF (ierr/=nf90_noerr) WRITE(*,*) "close fail" 
-
-n=1
-do i=1,43832 
-  if (prp(i)/=prp(i)) goto 999
-  do k=1,np
-    if (tap(i,k)/=tap(i,k) .or. husp(i,k)/=husp(i,k)) goto 999
-  enddo
-  ta(:,n)=tap(i,:) 
-  hus(:,n)=husp(i,:)
-  pr(n)=prp(i) 
-  n=n+1
-  999 continue
-enddo
-
-!write(*,*) ta(:,nprof)
-!write(*,*) hus(:,nprof)
-
-dp=5.
-p5(1)=1000.
-do k=2,np5
-  p5(k)=p5(k-1)-dp
-enddo
-p5=p5*100.
-
-call pchip(np,plev(np:1:-1),ta(np:1:-1,nprof),np5,p5(np5:1:-1),tap5(np5:1:-1),.False.)
-call pchip(np,plev(np:1:-1),hus(np:1:-1,nprof),np5,p5(np5:1:-1),husp5(np5:1:-1),.False.)
-
-zp5(1)=0.
-do k=1,np5
-  if (husp5(k)<0.) husp5(k)=0.
-  dum1=tap5(k)*(1.+0.607789855072462*husp5(k))
-  rhop5(k)=p5(k)/dum1/Rd
-  if (k>1) then
-    dum2=0.5*(dum1+tap5(k-1)*(1.+0.607789855072462*husp5(k-1)))
-    zp5(k)=zp5(k-1)+Rd/g*5.e2*dum2/p5(k)
-  endif
-enddo
-
-dz=50.
-z(1)=25.
-zm(1)=0.
-do k=2,nz
-  z(k)=z(k-1)+dz
-  zm(k)=zm(k-1)+dz
-enddo
-
-call pchip(np5,zp5,tap5,nz,z,T_e,.False.)
-call pchip(np5,zp5,husp5,nz,z,q_e,.False.)
-call pchip(np5,zp5,p5,nz,z,p_z,.False.)
-
-do k=1,nz
-  if (q_e(k)<0.) q_e(k)=0.
-  Tv_e(k)=T_e(k)*(1.+0.607789855072462*q_e(k))
-  if (z(k)>zp5(np5)) then
-    p_z(k)=p_z(k-1)*(1.-g*dz/2./Rd/Tv_e(k-1))/(1.+g*dz/2./Rd/Tv_e(k-1))
-  endif
-  rho_e(k)=p_z(k)/Tv_e(k)/Rd
-  the_e(k)=theta_e(T_e(k),q_e(k),0.,0.,p_z(k))
-enddo
-
-call pchip(nz,z,T_e,nzm,zm,T_zm,.False.)
-call pchip(nz,z,q_e,nzm,zm,q_zm,.False.)
-call pchip(nz,z,p_z,nzm,zm,p_zm,.False.)
-
-do k=1,nzm
-  if (q_zm(k)<0.) q_zm(k)=0.
-  Tv_zm(k)=T_zm(k)*(1.+0.607789855072462*q_zm(k))
-  if (z(k)>zp5(np5)) then
-    p_zm(k)=p_zm(k-1)*(1.-g*dz/2./Rd/Tv_zm(k-1))/(1.+g*dz/2./Rd/Tv_zm(k-1))
-  endif
-  rho_zm(k)=p_zm(k)/Tv_zm(k)/Rd
-  the_zm(k)=theta_e(T_zm(k),q_zm(k),0.,0.,p_zm(k))
-enddo
+!ierr = nf90_open(trim(fname),NF90_NOWRITE,ncid1)
+!IF (ierr/=nf90_noerr) WRITE(*,*) "open fail"
+!ierr = nf90_inq_varid(ncid1,"pressure",varid1)
+!IF (ierr/=nf90_noerr) WRITE(*,*) "var_inq fail"
+!ierr = nf90_get_var(ncid1,varid1,plev,start=(/ 1,1,1,1 /),count=(/ np,1,1,1 /))
+!IF (ierr/=nf90_noerr) WRITE(*,*) "read fail"
+!ierr = nf90_inq_varid(ncid1,"pr",varid1)
+!IF (ierr/=nf90_noerr) WRITE(*,*) "var_inq fail"
+!ierr = nf90_get_var(ncid1,varid1,prp,start=(/ 1,1,1,1 /),count=(/ 43832,1,1,1 /))
+!IF (ierr/=nf90_noerr) WRITE(*,*) "read fail"
+!ierr = nf90_inq_varid(ncid1,"ta",varid1)
+!IF (ierr/=nf90_noerr) WRITE(*,*) "var_inq fail"
+!ierr = nf90_get_var(ncid1,varid1,tap,start=(/ 1,1,1,1 /),count=(/ 43832,np,1,1 /))
+!IF (ierr/=nf90_noerr) WRITE(*,*) "read fail ta"
+!ierr = nf90_inq_varid(ncid1,"hus",varid1)
+!IF (ierr/=nf90_noerr) WRITE(*,*) "var_inq fail"
+!ierr = nf90_get_var(ncid1,varid1,husp,start=(/ 1,1,1,1 /),count=(/ 43832,np,1,1 /))
+!IF (ierr/=nf90_noerr) WRITE(*,*) "read fail hus"
+!ierr = nf90_close(ncid1)
+!IF (ierr/=nf90_noerr) WRITE(*,*) "close fail" 
+!
+!n=1
+!do i=1,43832 
+!  if (prp(i)/=prp(i)) goto 999
+!  do k=1,np
+!    if (tap(i,k)/=tap(i,k) .or. husp(i,k)/=husp(i,k)) goto 999
+!  enddo
+!  ta(:,n)=tap(i,:) 
+!  hus(:,n)=husp(i,:)
+!  pr(n)=prp(i) 
+!  n=n+1
+!  999 continue
+!enddo
+!
+!!write(*,*) ta(:,nprof)
+!!write(*,*) hus(:,nprof)
+!
+!dp=5.
+!p5(1)=1000.
+!do k=2,np5
+!  p5(k)=p5(k-1)-dp
+!enddo
+!p5=p5*100.
+!
+!call pchip(np,plev(np:1:-1),ta(np:1:-1,nprof),np5,p5(np5:1:-1),tap5(np5:1:-1),.False.)
+!call pchip(np,plev(np:1:-1),hus(np:1:-1,nprof),np5,p5(np5:1:-1),husp5(np5:1:-1),.False.)
+!
+!zp5(1)=0.
+!do k=1,np5
+!  if (husp5(k)<0.) husp5(k)=0.
+!  dum1=tap5(k)*(1.+0.607789855072462*husp5(k))
+!  rhop5(k)=p5(k)/dum1/Rd
+!  if (k>1) then
+!    dum2=0.5*(dum1+tap5(k-1)*(1.+0.607789855072462*husp5(k-1)))
+!    zp5(k)=zp5(k-1)+Rd/g*5.e2*dum2/p5(k)
+!  endif
+!enddo
+!
+!dz=50.
+!z(1)=25.
+!zm(1)=0.
+!do k=2,nz
+!  z(k)=z(k-1)+dz
+!  zm(k)=zm(k-1)+dz
+!enddo
+!
+!call pchip(np5,zp5,tap5,nz,z,T_e,.False.)
+!call pchip(np5,zp5,husp5,nz,z,q_e,.False.)
+!call pchip(np5,zp5,p5,nz,z,p_z,.False.)
+!
+!do k=1,nz
+!  if (q_e(k)<0.) q_e(k)=0.
+!  Tv_e(k)=T_e(k)*(1.+0.607789855072462*q_e(k))
+!  if (z(k)>zp5(np5)) then
+!    p_z(k)=p_z(k-1)*(1.-g*dz/2./Rd/Tv_e(k-1))/(1.+g*dz/2./Rd/Tv_e(k-1))
+!  endif
+!  rho_e(k)=p_z(k)/Tv_e(k)/Rd
+!  the_e(k)=theta_e(T_e(k),q_e(k),0.,0.,p_z(k))
+!enddo
+!
+!call pchip(nz,z,T_e,nzm,zm,T_zm,.False.)
+!call pchip(nz,z,q_e,nzm,zm,q_zm,.False.)
+!call pchip(nz,z,p_z,nzm,zm,p_zm,.False.)
+!
+!do k=1,nzm
+!  if (q_zm(k)<0.) q_zm(k)=0.
+!  Tv_zm(k)=T_zm(k)*(1.+0.607789855072462*q_zm(k))
+!  if (z(k)>zp5(np5)) then
+!    p_zm(k)=p_zm(k-1)*(1.-g*dz/2./Rd/Tv_zm(k-1))/(1.+g*dz/2./Rd/Tv_zm(k-1))
+!  endif
+!  rho_zm(k)=p_zm(k)/Tv_zm(k)/Rd
+!  the_zm(k)=theta_e(T_zm(k),q_zm(k),0.,0.,p_zm(k))
+!enddo
 
 838 continue
 
@@ -250,12 +250,6 @@ do t=1,60*48
 
   call ace_driver(ncols,nz,n_weno,X,A,B,ts,te,dt,forcing)
 
-  !write(*,*) X(2,1:5,1)
-  !write(*,*) X(2,1:5,2)
-  !write(*,*) X(2,1:5,3)
-  !write(*,*) "output"
-  !stop
-  
   ts=te
   te=ts+dt*15.
 enddo
