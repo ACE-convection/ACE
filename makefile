@@ -1,8 +1,10 @@
 # makefile of ACE model
-
 FC = ifort
-DEBUG = #-CB -g -traceback -check all,noarg_temp_created -debug all
-FCFLAGS = -r8 -O3 -free -mcmodel=large -heap-arrays 10 -shared-intel -fp-model precise $(DEBUG)
+CHECK = -CB -g -traceback -check all,noarg_temp_created -debug all
+FCFLAGS = -r8 -O3 -free -mcmodel=large -heap-arrays 10 -shared-intel -fp-model precise
+ifdef DEBUG
+  FCFLAGS += $(CHECK)
+endif
 FINCLUDE = -I/opt/libs-intel-oneapi/netcdf-4.7.4/include
 LDLIBS = -L/opt/libs-intel-oneapi/netcdf-4.7.4/lib -lnetcdff 
 

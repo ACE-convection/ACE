@@ -7,13 +7,13 @@ integer, parameter :: np=37, n_weno=2
 real,parameter :: pi=4.*atan(1.),Rd=287.04,Cp=1005.7,g=9.80665
 integer :: i,j,k,m,n,o,t
 integer :: ierr,ncid1,varid1
-integer :: nprof, ncols, ice
+integer :: nprof, ncols, ice, n_prog
 real :: dum1,dum2,dum3,dum4,dum5,dum6,dum7
 real :: dz,dp,ts,te,dt
 real :: start, finish
 real, dimension(:,:,:), allocatable :: X
 real*4, dimension(:,:,:), allocatable :: Xout
-real, dimension(:,:), allocatable :: forcing, Tr,q,ql,qi
+real, dimension(:,:), allocatable :: Ref, forcing, Tr,q,ql,qi
 real, dimension(:), allocatable :: Tv0
 real*4, dimension(:,:), allocatable :: T4,q4,ql4,qi4,rh4,b4 
 real, dimension(:), allocatable :: A,B
@@ -135,6 +135,10 @@ goto 838 ! directly read profile from binary file.
 
 838 continue
 
+
+n_prog=3 ! MF, the, qt
+!n_prog=5 ! MF, th, qv, ql, qi
+
 dz=50.
 ncols=8
 ts=0.
@@ -142,7 +146,8 @@ dt=4.
 te=ts+dt*15.
 !te=4.
 
-allocate(X(ncols+1,nz,10),A(ncols+1),B(ncols+1),forcing(ncols,nz),Xout(ncols+1,nz,3) &
+allocate(X(ncols+1,nz,n_prog),A(ncols+1),B(ncols+1),forcing(ncols,nz), &
+         Xout(ncols+1,nz,n_prog),Ref(nz,7) &
         ,Tr(ncols,nz),q(ncols,nz),ql(ncols,nz),qi(ncols,nz))
 allocate(T4(ncols,nz),q4(ncols,nz),ql4(ncols,nz),qi4(ncols,nz),rh4(ncols,nz),b4(ncols,nz),Tv0(nz))
 
@@ -181,18 +186,25 @@ close(20)
 
 
 do k=1,nz
-  X(:,k,1)=the_e(k)
-  X(:,k,2)=q_e(k)
-  X(:,k,3)=0.
-  X(:,k,4)=rho_e(k)
-  X(:,k,5)=rho_zm(k)
-  X(:,k,6)=z(k)
-  X(:,k,7)=zm(k)
-  X(:,k,8)=dz
-  X(:,k,9)=dz
-  X(:,k,10)=p_z(k)
-  call inv_theta_e(X(1,k,1),X(1,k,2),X(1,k,10),Tr(1,k),q(1,k),ql(1,k),qi(1,k))
+  X(:,k,1)=0.
+  X(:,k,2)=the_e(k)
+  X(:,k,3)=q_e(k)
+  Ref(k,1)=rho_e(k)
+  Ref(k,2)=rho_zm(k)
+  Ref(k,3)=z(k)
+  Ref(k,4)=zm(k)
+  Ref(k,5)=dz
+  Ref(k,6)=dz
+  Ref(k,7)=p_z(k)
+  call inv_theta_e(X(1,k,2),X(1,k,3),Ref(k,7),Tr(1,k),q(1,k),ql(1,k),qi(1,k))
   Tv0(k)=Tr(1,k)*(1.+0.607789855072462*q(1,k)-ql(1,k)-qi(1,k))
+ 
+  !! for th_q
+  !X(:,k,1)=0.
+  !X(:,k,2)=Tr(1,k)*(1.e5/Ref(k,7))**(2./7.)
+  !X(:,k,3)=q(1,k)
+  !X(:,k,4)=0.
+  !X(:,k,5)=0.
 enddo
 
 
@@ -201,9 +213,9 @@ dum1=0.
 dum2=1000.
 do k=1,nz
   if (zm(k)<=dum2) then
-    X(ncols,k,3) = 0.03 & 
+    X(ncols,k,1) = 0.03 & 
          * sin(pi*(zm(k)-dum1)/(dum2-dum1))
-    !X(ncols,k,3) = -0.03 & 
+    !X(ncols,k,1) = -0.03 & 
     !     * sin(pi*(zm(k)-dum1)/(dum2-dum1))*A(1)/A(ncols)
   endif 
 enddo
@@ -224,20 +236,26 @@ call ace_initialization(ncols,nz,200,coarse_z,coarse_ze,trim(fname))
 call cpu_time(start)
 
 !open(10,file="./data/output_singleACE_manus208.dat",access="direct",recl=ncols*nz*8)
-open(10,file="./data/output_multiACE_manus208.dat",access="direct",recl=ncols*nz*9)
+!open(10,file="./data/output_multiACE_manus208.dat",access="direct",recl=ncols*nz*9)
+open(10,file="./data/output_multiACE_manus208_swap.dat",access="direct",recl=ncols*nz*9)
+!open(10,file="./data/output_multiACE_manus208_th_q.dat",access="direct",recl=ncols*nz*9)
 n=1
 
 do t=1,60*48 ! 60 is mins, and 48 is hours
   write(*,*) ts,te
 
   ! output diagnostic
-  Xout = X(:,:,1:3)
+  Xout = X
+  !Xout(:,:,1) = X(:,:,1)
   do k=1,nz
   do i=1,ncols
-    call inv_theta_e(X(i,k,1),X(i,k,2),X(i,k,10),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
+    !dum1=(Ref(k,7)/1.e5)**(2./7.)
+    !Xout(i,k,2) = theta_e(X(i,k,2)*dum1,X(i,k,3),X(i,k,4),X(i,k,5),Ref(k,7))
+    !Xout(i,k,3) = sum(X(i,k,3:5),1)
+    call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
     ice=0
     if (Tr(i,k)<273.15) ice=1
-    rh4(i,k)=q(i,k)/eval_qs(Tr(i,k),X(i,k,10),ql(i,k)+qi(i,k),ice)
+    rh4(i,k)=q(i,k)/eval_qs(Tr(i,k),Ref(k,7),ql(i,k)+qi(i,k),ice)
     dum1=Tr(i,k)*(1.+0.607789855072462*q(i,k)-ql(i,k)-qi(i,k))
     b4(i,k)=g*(dum1-Tv0(k))/Tv0(k)
   enddo
@@ -247,20 +265,24 @@ do t=1,60*48 ! 60 is mins, and 48 is hours
   n=n+1
 
   ! call ace driver to integrate from ts to te with dt
-  call ace_driver(ncols,nz,n_weno,X,A,B,ts,te,dt,forcing)
+  call ace_driver(ncols,nz,n_weno,n_prog,X,Ref,A,B,ts,te,dt,forcing)
 
   ts=te
   te=ts+dt*15.
 enddo
 
 ! output diagnostic
-Xout = X(:,:,1:3)
+Xout = X
+!Xout(:,:,1) = X(:,:,1)
 do k=1,nz
 do i=1,ncols
-  call inv_theta_e(X(i,k,1),X(i,k,2),X(i,k,10),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
+  !dum1=(Ref(k,7)/1.e5)**(2./7.)
+  !Xout(i,k,2) = theta_e(X(i,k,2)*dum1,X(i,k,3),X(i,k,4),X(i,k,5),Ref(k,7))
+  !Xout(i,k,3) = sum(X(i,k,3:5),1)
+  call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
   ice=0
   if (Tr(i,k)<273.15) ice=1
-  rh4(i,k)=q(i,k)/eval_qs(Tr(i,k),X(i,k,10),ql(i,k)+qi(i,k),ice)
+  rh4(i,k)=q(i,k)/eval_qs(Tr(i,k),Ref(k,7),ql(i,k)+qi(i,k),ice)
   dum1=Tr(i,k)*(1.+0.607789855072462*q(i,k)-ql(i,k)-qi(i,k))
   b4(i,k)=g*(dum1-Tv0(k))/Tv0(k)
 enddo
