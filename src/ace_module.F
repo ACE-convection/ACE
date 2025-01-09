@@ -148,7 +148,7 @@ real, dimension(ncols,nz,n_prog), intent(out) :: dXdt
 
 ! local variables
 integer :: i,n,k,ks,ke
-real :: MF_max, MF_min, MF_abs
+real :: dum1,dum2
 real, dimension(ncols,nz,2) :: eps_tur
 real, dimension(nz) :: rho0B, Tv, Tv0, T0, q0, ql0, qi0
 real, dimension(ncols,nz,3) :: dXdz
@@ -161,10 +161,10 @@ real, dimension(ncols,nz) ::Wi, Admfdz, ioflow, F
 do k=1,nz
   eps_tur(:      ,k,1) = nju*B/A
   eps_tur(2:ncols,k,2) = nju*B(1:ncols-1)/A(2:ncols)
-  call inv_theta_e(X(ncols+1,k,2),X(ncols+1,k,3),Ref(k,7),T0(k),q0(k),ql0(k),qi0(k))
-  Tv0(k) = T0(k) * ( 1. + 0.607789855072462 * q0(k) - ql0(k) - qi0(k) )
-  !Tv0(k) = X(ncols+1,k,2) * ( Ref(k,7) / 1.e5 ) ** ( 2. / 7. )  &
-  !         * ( 1. + 0.607789855072462 * X(ncols+1,k,3) - X(ncols+1,k,4) - X(ncols+1,k,5) )
+  !call inv_theta_e(X(ncols+1,k,2),X(ncols+1,k,3),Ref(k,7),T0(k),q0(k),ql0(k),qi0(k))
+  !Tv0(k) = T0(k) * ( 1. + 0.607789855072462 * q0(k) - ql0(k) - qi0(k) )
+  Tv0(k) = X(ncols+1,k,2) * ( Ref(k,7) / 1.e5 ) ** ( 2. / 7. )  &
+           * ( 1. + 0.607789855072462 * X(ncols+1,k,3) - X(ncols+1,k,4) - X(ncols+1,k,5) )
 enddo
 
 ! fill with zeros
@@ -230,12 +230,15 @@ do i=1,ncols
 
   if (rkstage==1) then
     do k=1,nz
-      call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),T(i,k),q(i,k),ql(i,k),qi(i,k))
+      !call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),T(i,k),q(i,k),ql(i,k),qi(i,k))
 
-      !T(i,k) = X(ncols+1,k,2) * ( Ref(k,7) / 1.e5 ) ** ( 2. / 7. )
-      !q(i,k) = X(ncols+1,k,3)
-      !ql(i,k) = X(ncols+1,k,4)
-      !qi(i,k) = X(ncols+1,k,5)
+      T(i,k) = X(i,k,2) * ( Ref(k,7) / 1.e5 ) ** ( 2. / 7. )
+      q(i,k) = X(i,k,3)
+      ql(i,k) = X(i,k,4)
+      qi(i,k) = X(i,k,5)
+      dum1 = theta_e(T(i,k),q(i,k),ql(i,k),qi(i,k),Ref(k,7))
+      dum2 = sum(X(i,k,3:5),1)
+      call inv_theta_e(dum1,dum2,Ref(k,7),T(i,k),q(i,k),ql(i,k),qi(i,k))
     enddo
   endif
   
@@ -315,16 +318,17 @@ real :: qc, dql, dqi
 do k=1,nz
 do i=1,ncols
   qc = ql(i,k) + qi(i,k)
-  !!!dqt(i,k) = - ( qc_ramp / dqc / tau_pr ) * log( 1. + exp( dqc / qc_ramp * ( qc - qc_ramp ) ) ) ! should use -r8 to compile
-  dXdt(i,k,2) = - ( qc_ramp / dqc / tau_pr ) * max( dqc / qc_ramp * ( qc - qc_ramp ) , 0. ) 
-  dql = 1.e-8 * ql(i,k) / qc
-  dqi = 1.e-8 * qi(i,k) / qc
-  dXdt(i,k,1) = dXdt(i,k,2) * ( theta_e(T(i,k),q(i,k),ql(i,k)+dql,qi(i,k)+dqi,p(k)) &
-                              - theta_e(T(i,k),q(i,k),ql(i,k),qi(i,k),p(k)) ) / 1.e-8
-  !dXdt(i,k,1) = 0.
-  !dXdt(i,k,2) = 0.
-  !dXdt(i,k,3) = - ( qc_ramp / dqc / tau_pr ) * max( dqc / qc_ramp * ( ql(i,k) - qc_ramp ) , 0. )
-  !dXdt(i,k,4) = - ( qc_ramp / dqc / tau_pr ) * max( dqc / qc_ramp * ( qi(i,k) - qc_ramp ) , 0. )
+  !!!!dqt(i,k) = - ( qc_ramp / dqc / tau_pr ) * log( 1. + exp( dqc / qc_ramp * ( qc - qc_ramp ) ) ) ! should use -r8 to compile
+  !dXdt(i,k,2) = - ( qc_ramp / dqc / tau_pr ) * max( dqc / qc_ramp * ( qc - qc_ramp ) , 0. ) 
+  !dql = 1.e-8 * ql(i,k) / qc
+  !dqi = 1.e-8 * qi(i,k) / qc
+  !dXdt(i,k,1) = dXdt(i,k,2) * ( theta_e(T(i,k),q(i,k),ql(i,k)+dql,qi(i,k)+dqi,p(k)) &
+  !                            - theta_e(T(i,k),q(i,k),ql(i,k),qi(i,k),p(k)) ) / 1.e-8
+
+  dXdt(i,k,1) = 0.
+  dXdt(i,k,2) = 0.
+  dXdt(i,k,3) = - ( qc_ramp / dqc / tau_pr ) * max( dqc / qc_ramp * ( ql(i,k) - qc_ramp ) , 0. )
+  dXdt(i,k,4) = - ( qc_ramp / dqc / tau_pr ) * max( dqc / qc_ramp * ( qi(i,k) - qc_ramp ) , 0. )
   if ( qc <= 0. ) then
     dXdt(i,k,:) = 0.
   endif 

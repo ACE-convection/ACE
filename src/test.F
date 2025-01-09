@@ -136,8 +136,8 @@ goto 838 ! directly read profile from binary file.
 838 continue
 
 
-n_prog=3 ! MF, the, qt
-!n_prog=5 ! MF, th, qv, ql, qi
+!n_prog=3 ! MF, the, qt
+n_prog=5 ! MF, th, qv, ql, qi
 
 dz=50.
 ncols=8
@@ -199,12 +199,12 @@ do k=1,nz
   call inv_theta_e(X(1,k,2),X(1,k,3),Ref(k,7),Tr(1,k),q(1,k),ql(1,k),qi(1,k))
   Tv0(k)=Tr(1,k)*(1.+0.607789855072462*q(1,k)-ql(1,k)-qi(1,k))
  
-  !! for th_q
-  !X(:,k,1)=0.
-  !X(:,k,2)=Tr(1,k)*(1.e5/Ref(k,7))**(2./7.)
-  !X(:,k,3)=q(1,k)
-  !X(:,k,4)=0.
-  !X(:,k,5)=0.
+  ! for th_q
+  X(:,k,1)=0.
+  X(:,k,2)=Tr(1,k)*(1.e5/Ref(k,7))**(2./7.)
+  X(:,k,3)=q(1,k)
+  X(:,k,4)=0.
+  X(:,k,5)=0.
 enddo
 
 
@@ -237,22 +237,23 @@ call cpu_time(start)
 
 !open(10,file="./data/output_singleACE_manus208.dat",access="direct",recl=ncols*nz*8)
 !open(10,file="./data/output_multiACE_manus208.dat",access="direct",recl=ncols*nz*9)
-open(10,file="./data/output_multiACE_manus208_swap.dat",access="direct",recl=ncols*nz*9)
-!open(10,file="./data/output_multiACE_manus208_th_q.dat",access="direct",recl=ncols*nz*9)
+!open(10,file="./data/output_multiACE_manus208_swap.dat",access="direct",recl=ncols*nz*9)
+open(10,file="./data/output_multiACE_manus208_th_q.dat",access="direct",recl=ncols*nz*9)
 n=1
 
 do t=1,60*48 ! 60 is mins, and 48 is hours
   write(*,*) ts,te
 
   ! output diagnostic
-  Xout = X
-  !Xout(:,:,1) = X(:,:,1)
+  !Xout = X
+  Xout(:,:,1) = X(:,:,1)
   do k=1,nz
   do i=1,ncols
-    !dum1=(Ref(k,7)/1.e5)**(2./7.)
-    !Xout(i,k,2) = theta_e(X(i,k,2)*dum1,X(i,k,3),X(i,k,4),X(i,k,5),Ref(k,7))
-    !Xout(i,k,3) = sum(X(i,k,3:5),1)
-    call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
+    dum1=(Ref(k,7)/1.e5)**(2./7.)
+    Xout(i,k,2) = theta_e(X(i,k,2)*dum1,X(i,k,3),X(i,k,4),X(i,k,5),Ref(k,7))
+    Xout(i,k,3) = sum(X(i,k,3:5),1)
+    call inv_theta_e(dble(Xout(i,k,2)),dble(X(i,k,3)),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
+    !call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
     ice=0
     if (Tr(i,k)<273.15) ice=1
     rh4(i,k)=q(i,k)/eval_qs(Tr(i,k),Ref(k,7),ql(i,k)+qi(i,k),ice)
@@ -272,14 +273,15 @@ do t=1,60*48 ! 60 is mins, and 48 is hours
 enddo
 
 ! output diagnostic
-Xout = X
-!Xout(:,:,1) = X(:,:,1)
+!Xout = X
+Xout(:,:,1) = X(:,:,1)
 do k=1,nz
 do i=1,ncols
-  !dum1=(Ref(k,7)/1.e5)**(2./7.)
-  !Xout(i,k,2) = theta_e(X(i,k,2)*dum1,X(i,k,3),X(i,k,4),X(i,k,5),Ref(k,7))
-  !Xout(i,k,3) = sum(X(i,k,3:5),1)
-  call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
+  dum1=(Ref(k,7)/1.e5)**(2./7.)
+  Xout(i,k,2) = theta_e(X(i,k,2)*dum1,X(i,k,3),X(i,k,4),X(i,k,5),Ref(k,7))
+  Xout(i,k,3) = sum(X(i,k,3:5),1)
+  call inv_theta_e(dble(Xout(i,k,2)),dble(X(i,k,3)),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
+  !call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
   ice=0
   if (Tr(i,k)<273.15) ice=1
   rh4(i,k)=q(i,k)/eval_qs(Tr(i,k),Ref(k,7),ql(i,k)+qi(i,k),ice)
