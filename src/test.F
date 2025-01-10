@@ -198,6 +198,7 @@ do k=1,nz
   Ref(k,7)=p_z(k)
   call inv_theta_e(X(1,k,2),X(1,k,3),Ref(k,7),Tr(1,k),q(1,k),ql(1,k),qi(1,k))
   Tv0(k)=Tr(1,k)*(1.+0.607789855072462*q(1,k)-ql(1,k)-qi(1,k))
+  if (k<=10) write(*,*) Tv0(k)
  
   ! for th_q
   X(:,k,1)=0.
@@ -213,7 +214,7 @@ dum1=0.
 dum2=1000.
 do k=1,nz
   if (zm(k)<=dum2) then
-    X(ncols,k,1) = 0.03 & 
+    X(1,k,1) = 0.03 & 
          * sin(pi*(zm(k)-dum1)/(dum2-dum1))
     !X(ncols,k,1) = -0.03 & 
     !     * sin(pi*(zm(k)-dum1)/(dum2-dum1))*A(1)/A(ncols)
@@ -241,8 +242,9 @@ call cpu_time(start)
 open(10,file="./data/output_multiACE_manus208_th_q.dat",access="direct",recl=ncols*nz*9)
 n=1
 
-do t=1,60*48 ! 60 is mins, and 48 is hours
-  write(*,*) ts,te
+te=8
+do t=1,1!60*3 ! 60 is mins, and 48 is hours
+  write(*,*) ts,te,t
 
   ! output diagnostic
   !Xout = X
@@ -252,7 +254,7 @@ do t=1,60*48 ! 60 is mins, and 48 is hours
     dum1=(Ref(k,7)/1.e5)**(2./7.)
     Xout(i,k,2) = theta_e(X(i,k,2)*dum1,X(i,k,3),X(i,k,4),X(i,k,5),Ref(k,7))
     Xout(i,k,3) = sum(X(i,k,3:5),1)
-    call inv_theta_e(dble(Xout(i,k,2)),dble(X(i,k,3)),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
+    call inv_theta_e(dble(Xout(i,k,2)),dble(Xout(i,k,3)),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
     !call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
     ice=0
     if (Tr(i,k)<273.15) ice=1
@@ -280,7 +282,7 @@ do i=1,ncols
   dum1=(Ref(k,7)/1.e5)**(2./7.)
   Xout(i,k,2) = theta_e(X(i,k,2)*dum1,X(i,k,3),X(i,k,4),X(i,k,5),Ref(k,7))
   Xout(i,k,3) = sum(X(i,k,3:5),1)
-  call inv_theta_e(dble(Xout(i,k,2)),dble(X(i,k,3)),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
+  call inv_theta_e(dble(Xout(i,k,2)),dble(Xout(i,k,3)),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
   !call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
   ice=0
   if (Tr(i,k)<273.15) ice=1
@@ -295,7 +297,7 @@ close(10)
 
 call cpu_time(finish)
 
-write(*,*) finish-start
+write(*,*) "time cost =",finish-start
 
 
 end program test

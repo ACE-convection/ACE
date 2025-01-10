@@ -2,7 +2,7 @@ module ace_module
 implicit none
 
 private
-public :: weno, weno_vec, inv_theta_e, pchip, theta_e, ace_driver, ace_initialization, eval_qs
+public :: weno, weno_vec, inv_theta_e, pchip, theta_e, ace_driver, ace_initialization, eval_qs, condensation
 
 ! defien operator for grid interface
 
@@ -22,7 +22,7 @@ real, dimension(:), allocatable :: coarse_z, coarse_ze
 real, dimension(:,:), allocatable :: coarse_F
 real, dimension(:,:), allocatable :: dwdt
 real*8, dimension(:,:,:,:), allocatable :: PMB
-real, dimension(:,:), allocatable, save :: T, q, ql, qi
+real, dimension(:,:), allocatable, save :: Ta, q, ql, qi
 
 contains
 
@@ -41,42 +41,61 @@ real, dimension(ncols,nz), intent(in) :: B_forcing
 ! local variables
 real, dimension(ncols+1,nz,n_prog) :: yi
 real, dimension(ncols,nz,n_prog) :: K1,K2,tmp
+real :: dum1
+integer :: i,k
 
 yi = X
 
 do while ( t < te)
+  do i=1,ncols
+  do k=1,nz
+    dum1 = ( Ref(k,7) / 1.e5 ) ** ( 2. / 7. )
+    Ta(i,k) = X(i,k,2) * dum1
+    q(i,k) = X(i,k,3)
+    ql(i,k) = X(i,k,4)
+    qi(i,k) = X(i,k,5)
+    call condensation(Ta(i,k),q(i,k),ql(i,k),qi(i,k),Ref(k,7))
+    X(i,k,2) = Ta(i,k) / dum1
+    X(i,k,3) = q(i,k)
+    X(i,k,4) = ql(i,k)
+    X(i,k,5) = qi(i,k)
+  enddo
+  enddo
+
   ! update ace tendency
-  call ace_tendency(ncols,nz,n_weno,n_prog,A,B,X,Ref,K1,1)
+  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,K1,1)
   yi(1:ncols,:,:) = X(1:ncols,:,:) + K1 * dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,A,B,yi,Ref,K2,2)
+  write(*,*) K1(1,1:15,1)
+
+  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,K2,2)
   yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,A,B,yi,Ref,tmp,3)
+  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,3)
   K2 = K2 + tmp
   yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,A,B,yi,Ref,tmp,4)
+  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,4)
   K2 = K2 + tmp
   yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,A,B,yi,Ref,tmp,5)
+  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,5)
   K2 = K2 + tmp
   yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,A,B,yi,Ref,tmp,6)
+  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,6)
   K2 = ( K2 + tmp ) / 15.
   yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt 
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,A,B,yi,Ref,tmp,7)
+  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,7)
   K1 = K1 + tmp 
   yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt 
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,A,B,yi,Ref,tmp,8)
+  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,8)
   K1 = K1 + tmp 
   yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt 
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,A,B,yi,Ref,tmp,9)
+  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,9)
   K1 = K1 + tmp
 
   X(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt
@@ -113,7 +132,7 @@ allocate(coarse_z(coarse_nz),coarse_ze(coarse_nz+1))
 allocate(coarse_F(ncols,coarse_nz))
 allocate(PMB(ncols,ncols,coarse_nz,coarse_nz+1))
 allocate(dwdt(ncols,coarse_nz+1))
-allocate(T(ncols,nz),q(ncols,nz),ql(ncols,nz),qi(ncols,nz))
+allocate(Ta(ncols,nz),q(ncols,nz),ql(ncols,nz),qi(ncols,nz))
 
 
 open(10,file=trim(fname),access="direct",recl=(coarse_nz+1)*2)
@@ -134,17 +153,17 @@ coarse_ze = ze_presolve
 end subroutine ace_initialization
 
 
-subroutine ace_tendency(ncols,nz,n_weno,n_prog,A,B,X,Ref,dXdt,rkstage)
+subroutine ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,dXdt,rkstage)
 implicit none
 
 ! input/output variables
 integer, intent(in) :: ncols, nz, n_weno, n_prog, rkstage
+real, intent(in) :: dt
 real, dimension(ncols), intent(in) :: A, B ! ACE area and ACE outer perimeter [km^2, km]
 real, dimension(nz,7), intent(in) :: Ref ! reference varaibles: rhoc, rhoz, z, zm, dz, dzm, p
 real, dimension(ncols+1,nz,n_prog), intent(in) :: X ! MF, theta_e, qt
 !real, dimension(ncols+1,nz,n_prog), intent(in) :: X ! MF, theta, qv, ql, qi
 real, dimension(ncols,nz,n_prog), intent(out) :: dXdt 
-!real, dimension(ncols,nz,n_prog), intent(out) :: dXdt
 
 ! local variables
 integer :: i,n,k,ks,ke
@@ -228,23 +247,19 @@ do i=1,ncols
                      ( ( ioflow(i-1,1:nz-1) + abs(ioflow(i-1,1:nz-1)) ) * Wc(i  ,1:nz-1) &
                      + ( ioflow(i-1,1:nz-1) - abs(ioflow(i-1,1:nz-1)) ) * Wc(i-1,1:nz-1) ) / A(i)  ! inflow from inner
 
-  if (rkstage==1) then
-    do k=1,nz
-      !call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),T(i,k),q(i,k),ql(i,k),qi(i,k))
+  !if (rkstage==1) then
+  !  do k=1,nz
+  !    !call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Ta(i,k),q(i,k),ql(i,k),qi(i,k))
+  !  enddo
+  !endif
 
-      T(i,k) = X(i,k,2) * ( Ref(k,7) / 1.e5 ) ** ( 2. / 7. )
-      q(i,k) = X(i,k,3)
-      ql(i,k) = X(i,k,4)
-      qi(i,k) = X(i,k,5)
-      dum1 = theta_e(T(i,k),q(i,k),ql(i,k),qi(i,k),Ref(k,7))
-      dum2 = sum(X(i,k,3:5),1)
-      call inv_theta_e(dum1,dum2,Ref(k,7),T(i,k),q(i,k),ql(i,k),qi(i,k))
-    enddo
+  Tv(1:nz) = Ta(i,1:nz) * ( 1. + 0.607789855072462 * q(i,1:nz) - ql(i,1:nz) - qi(i,1:nz) )
+  if (i==1 .and. rkstage==1) then
+    write(*,*) Ta(i,1:15)
+    write(*,*) (Tv(1:15) - Tv0(1:15))*1e6
   endif
-  
-  Tv(1:nz) = T(i,1:nz) * ( 1. + 0.607789855072462 * q(i,1:nz) - ql(i,1:nz) - qi(i,1:nz) )
-  rho0B(1:nz) = g * Ref(:,1) * ( Tv(1:nz) - Tv0(1:nz) ) / Tv0(1:nz)
-  
+  rho0B(1:nz) = g * Ref(1:nz,1) * ( Tv(1:nz) - Tv0(1:nz) ) / Tv0(1:nz)
+
   F(i,1:nz) = F(i,1:nz) + rho0B(1:nz)
 
   !call pchip(nz,Ref(1:nz,4),F(i,1:nz),coarse_nz,coarse_z,coarse_F(i,1:coarse_nz),.True.)
@@ -260,7 +275,7 @@ do i=1,ncols
 enddo  
 
 ! single ACE
-!dXdt(2:ncols,:,:)=0.
+dXdt(2:ncols,:,:)=0.
 
 ! model top 
 dXdt(:,nz-10:nz,:)=0.
@@ -322,13 +337,14 @@ do i=1,ncols
   !dXdt(i,k,2) = - ( qc_ramp / dqc / tau_pr ) * max( dqc / qc_ramp * ( qc - qc_ramp ) , 0. ) 
   !dql = 1.e-8 * ql(i,k) / qc
   !dqi = 1.e-8 * qi(i,k) / qc
-  !dXdt(i,k,1) = dXdt(i,k,2) * ( theta_e(T(i,k),q(i,k),ql(i,k)+dql,qi(i,k)+dqi,p(k)) &
-  !                            - theta_e(T(i,k),q(i,k),ql(i,k),qi(i,k),p(k)) ) / 1.e-8
+  !dXdt(i,k,1) = dXdt(i,k,2) * ( theta_e(Ta(i,k),q(i,k),ql(i,k)+dql,qi(i,k)+dqi,p(k)) &
+  !                            - theta_e(Ta(i,k),q(i,k),ql(i,k),qi(i,k),p(k)) ) / 1.e-8
 
   dXdt(i,k,1) = 0.
   dXdt(i,k,2) = 0.
-  dXdt(i,k,3) = - ( qc_ramp / dqc / tau_pr ) * max( dqc / qc_ramp * ( ql(i,k) - qc_ramp ) , 0. )
-  dXdt(i,k,4) = - ( qc_ramp / dqc / tau_pr ) * max( dqc / qc_ramp * ( qi(i,k) - qc_ramp ) , 0. )
+  dql = - ( qc_ramp / dqc / tau_pr ) * max( dqc / qc_ramp * ( qc - qc_ramp ) , 0. )
+  dXdt(i,k,3) = dql * ql(i,k) / qc
+  dXdt(i,k,4) = dql * qi(i,k) / qc
   if ( qc <= 0. ) then
     dXdt(i,k,:) = 0.
   endif 
@@ -528,6 +544,148 @@ if (q>qsat) then
 endif
 
 endsubroutine inv_theta_e
+
+
+subroutine condensation(T,q,ql,qi,p)
+implicit none
+
+! parameters
+real, parameter :: Rd=287.04, Rv=461.5, Cpd=1005.7, Cl=4190., Cvd=719. &
+                  ,Cvv=1410., Cpv=1870., Cpvmcl=Cl-Cpv, EPS=Rd/Rv
+real, parameter :: Lv0=2.501e6, Ls=2.834e6, Lf=0.3337e6, T0=273.1636783445389, P0=1.e5 &
+                  ,qT0=611.3902114165171, LvoT=9155.566660243245
+real, parameter :: tol=1e-3
+
+! input/output variables
+real, intent(in) :: p
+real, intent(inout) :: T,q,ql,qi
+
+! local variables
+integer :: ice
+real :: Cpl,Re,chi,R,e,dT,qc,qt,the
+real :: G0,qsat,qsi,qs,dC,HT0,GT0,tmp,G,H,es,esi,dTqs,dTqsi,dGdT,dHdT
+
+qt = q + ql + qi
+if ( qt < 0. ) then
+  write(*,*) "nagative qt"
+  stop
+endif
+the = theta_e(T,q,ql,qi,p)
+q = qt
+
+Cpl = Cpd + (Cl-CPd)*qt
+Re = Rd*(1-qt)
+chi = Re/Cpl
+R = Re + Rv*qt
+
+ice = 0
+if (T<T0) ice = 1
+!qsat = qv_sat(T,p,ice)*(1.-qt)
+qsat = eval_qs(T,p,qt,ice)
+
+if (q>qsat) then
+  ! Step 2: determine condensate type(s) by comparing G(T0) & H(T0) to G0
+  G0 = the * (p*Re/P0)**chi
+  dC = 2083.900148084866
+  !qsi = qv_sat(T0,p,1) * ( 1. - qt )
+  qsi = eval_qs(T0,p,qt,1)
+  HT0 = T0 * (RE+RV*qsi)**chi * exp( (qsi*Lv(T0)-Lf*(qt-qsi))/Cpl/T0 )
+  !qs = qv_sat(T0,p,0) * ( 1. - qt )
+  qs = eval_qs(T0,p,qt,0)
+  GT0 =  T0 * (RE+RV*qs)**chi * exp(qs*Lv(T0)/CPL/T0)
+
+  ! 3 cases: liquid-only, ice-only, co-existing
+  if (G0>GT0 .and. G0>HT0) then ! liquid-only
+    ! estimate initial T
+    tmp = log(qt*p) - log(610.78*EPS)
+    T = 237.3*tmp/(17.27-tmp) + T0
+
+    dT = 9999.
+    do while (abs(dT)>tol)
+      !qs = qv_sat(T,p,0)*(1.-qt)
+      qs = eval_qs(T,p,qt,0)
+      R = Re + Rv*qs
+      G = T * R**chi *exp(qs*Lv(T)/Cpl/T)
+      !es = polysvp1(T,0)
+      es = eval_es(T,0)
+      dTqs = (1.-qt)* EPS/Rv * p * Lv(T) * es / ( ( p-es )*T )**2.
+      dGdT = 1./T + ( (Rv*Re/R+Lv(T)/T)*dTqs - (Lv0-Cpvmcl*273.15)*qs/T**2. )/Cpl
+      dGdT = dGdT*G
+      dT = -(G-G0)/dGdT
+      T = T + dT
+    enddo
+    !q = qv_sat(T,p,0)*(1.-qt)
+    q = eval_qs(T,p,qt,0)
+    ql = qt-q
+    qi = 0.
+    if (ql<0.) then
+      q = qt
+      ql = 0.
+    endif
+
+  elseif (G0<GT0 .and. G0<HT0) then ! ice-only
+    ! estimate initial T
+    tmp = log(qt*p) - log(610.78*EPS)
+    T = 265.5*tmp/(21.875-tmp) + T0
+
+    dT = 9999.
+    do while (abs(dT)>tol)
+      !qsi = qv_sat(T,p,1)*(1.-qt)
+      qsi = eval_qs(T,p,qt,1)
+      R = Re + Rv*qsi
+      qi = qt-qsi
+      H = T * R**chi * (T0/T)**(dC*qi/Cpl) * exp((qsi*Lv(T)/T - Lf/T0*qi)/Cpl)
+      !esi = polysvp1(T,1)
+      esi = eval_es(T,1)
+      dTqsi = (1.-qt)* EPS*LS/RV * p * esi / ( ( p-esi )*T )**2.
+      dHdT = 1./T + ( ( Rv*Re/R + Lv(T)/T + dC*log(T/T0) + Lf/T0 )*dTqsi &
+                     - ( ((Lv0-Cpvmcl*273.15)/T-dC)*qsi + dC*qt )/T )/Cpl
+      dHdT = dHdT*H
+      dT = -(H-G0)/dHdT
+      T = T + dT
+    enddo
+    !q = qv_sat(T,p,1)*(1.-qt)
+    q = eval_qs(T,p,qt,1)
+    ql = 0.
+    qi = qt-q;
+    if (qi<0.) then
+      q = qt
+      qi = 0.
+    endif
+
+  else ! co_existing
+    T=T0
+    !q = 0.5 * ( qv_sat(T,p,0) + qv_sat(T,p,1) ) *(1.-qt)
+    q = 0.5 * ( eval_qs(T,p,qt,0) + eval_qs(T,p,qt,1) )
+    R = RE + RV*q
+    tmp = (p*Re/R/P0)**chi
+    qc = qt-q;
+    qi = ( Lv(T0)*q - T0*Cpl*log(the*tmp/T0) )/Lf
+    ql = qc-qi
+    if (qc<0.) then
+      q = qt;
+      ql = 0;
+      qi = 0;
+    elseif (ql<0.) then
+      ql = 0;
+      qi = qc;
+    elseif (qi<0.) then
+      qi = 0;
+      ql = qc;
+    endif
+
+  endif
+
+else
+
+  q = qt
+  ql = 0.
+  qi = 0. 
+
+endif
+
+end subroutine condensation
+
 
 function eval_es(T,ice)
 implicit none
