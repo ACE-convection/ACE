@@ -4,7 +4,7 @@ use ace_module
 implicit none
 
 integer, parameter :: np=37, n_weno=2
-real,parameter :: pi=4.*atan(1.),Rd=287.04,Cp=1005.7,g=9.80665
+real,parameter :: pi=4.*atan(1.),Rd=287.04,Cp=1005.7,g=9.80665,p0=1.e5
 integer :: i,j,k,m,n,o,t
 integer :: ierr,ncid1,varid1
 integer :: nprof, ncols, ice, n_prog
@@ -147,7 +147,7 @@ te=ts+dt*15.
 !te=4.
 
 allocate(X(ncols+1,nz,n_prog),A(ncols+1),B(ncols+1),forcing(ncols,nz), &
-         Xout(ncols+1,nz,n_prog),Ref(nz,7) &
+         Xout(ncols+1,nz,n_prog),Ref(nz,8) &
         ,Tr(ncols,nz),q(ncols,nz),ql(ncols,nz),qi(ncols,nz))
 allocate(T4(ncols,nz),q4(ncols,nz),ql4(ncols,nz),qi4(ncols,nz),rh4(ncols,nz),b4(ncols,nz),Tv0(nz))
 
@@ -197,12 +197,12 @@ do k=1,nz
   Ref(k,6)=dz
   Ref(k,7)=p_z(k)
   call inv_theta_e(X(1,k,2),X(1,k,3),Ref(k,7),Tr(1,k),q(1,k),ql(1,k),qi(1,k))
+  Ref(k,8)=(p_z(k)/p0)**(Rd/Cp) ! exner(Tr(1,k),q(1,k),ql(1,k),qi(1,k),Ref(k,7))
   Tv0(k)=Tr(1,k)*(1.+0.607789855072462*q(1,k)-ql(1,k)-qi(1,k))
-  if (k<=10) write(*,*) Tv0(k)
  
   ! for th_q
   X(:,k,1)=0.
-  X(:,k,2)=Tr(1,k)*(1.e5/Ref(k,7))**(2./7.)
+  X(:,k,2)=Tr(1,k)/Ref(k,8)
   X(:,k,3)=q(1,k)
   X(:,k,4)=0.
   X(:,k,5)=0.
@@ -242,8 +242,8 @@ call cpu_time(start)
 open(10,file="./data/output_multiACE_manus208_th_q.dat",access="direct",recl=ncols*nz*9)
 n=1
 
-te=8
-do t=1,1!60*3 ! 60 is mins, and 48 is hours
+!te=8
+do t=1,60*3 ! 60 is mins, and 48 is hours
   write(*,*) ts,te,t
 
   ! output diagnostic
@@ -251,7 +251,7 @@ do t=1,1!60*3 ! 60 is mins, and 48 is hours
   Xout(:,:,1) = X(:,:,1)
   do k=1,nz
   do i=1,ncols
-    dum1=(Ref(k,7)/1.e5)**(2./7.)
+    dum1=Ref(k,8)
     Xout(i,k,2) = theta_e(X(i,k,2)*dum1,X(i,k,3),X(i,k,4),X(i,k,5),Ref(k,7))
     Xout(i,k,3) = sum(X(i,k,3:5),1)
     call inv_theta_e(dble(Xout(i,k,2)),dble(Xout(i,k,3)),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
@@ -279,7 +279,7 @@ enddo
 Xout(:,:,1) = X(:,:,1)
 do k=1,nz
 do i=1,ncols
-  dum1=(Ref(k,7)/1.e5)**(2./7.)
+  dum1=Ref(k,8)
   Xout(i,k,2) = theta_e(X(i,k,2)*dum1,X(i,k,3),X(i,k,4),X(i,k,5),Ref(k,7))
   Xout(i,k,3) = sum(X(i,k,3:5),1)
   call inv_theta_e(dble(Xout(i,k,2)),dble(Xout(i,k,3)),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))

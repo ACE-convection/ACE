@@ -2,7 +2,7 @@ module ace_module
 implicit none
 
 private
-public :: weno, weno_vec, inv_theta_e, pchip, theta_e, ace_driver, ace_initialization, eval_qs, condensation
+public :: weno, weno_vec, inv_theta_e, pchip, theta_e, ace_driver, ace_initialization, eval_qs, condensation, exner
 
 ! defien operator for grid interface
 
@@ -32,7 +32,7 @@ implicit none
 ! input/output variables
 integer, intent(in) :: ncols,nz,n_weno,n_prog
 real, dimension(ncols), intent(in) :: A, B
-real, dimension(nz,7), intent(in) :: Ref
+real, dimension(nz,8), intent(in) :: Ref
 real, dimension(ncols+1,nz,n_prog), intent(inout) :: X
 real, intent(inout) :: t
 real, intent(in) :: te,dt
@@ -49,16 +49,18 @@ yi = X
 do while ( t < te)
   do i=1,ncols
   do k=1,nz
-    dum1 = ( Ref(k,7) / 1.e5 ) ** ( 2. / 7. )
-    Ta(i,k) = X(i,k,2) * dum1
+    Ta(i,k) = X(i,k,2) * Ref(k,8)
     q(i,k) = X(i,k,3)
     ql(i,k) = X(i,k,4)
     qi(i,k) = X(i,k,5)
+    !if (i==1 .and. k<10) write(*,*) k,X(i,k,2:5)
+    !if (i==1 .and. k<10) write(*,*) k, Ta(i,k)
     call condensation(Ta(i,k),q(i,k),ql(i,k),qi(i,k),Ref(k,7))
-    X(i,k,2) = Ta(i,k) / dum1
+    X(i,k,2) = Ta(i,k) / Ref(k,8)
     X(i,k,3) = q(i,k)
     X(i,k,4) = ql(i,k)
     X(i,k,5) = qi(i,k)
+    !if (i==1 .and. k<10) write(*,*) k,X(i,k,2:5)
   enddo
   enddo
 
@@ -66,7 +68,7 @@ do while ( t < te)
   call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,K1,1)
   yi(1:ncols,:,:) = X(1:ncols,:,:) + K1 * dt / 6.
 
-  write(*,*) K1(1,1:15,1)
+  !write(*,*) K1(1,1:15,1)
 
   call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,K2,2)
   yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
@@ -160,7 +162,7 @@ implicit none
 integer, intent(in) :: ncols, nz, n_weno, n_prog, rkstage
 real, intent(in) :: dt
 real, dimension(ncols), intent(in) :: A, B ! ACE area and ACE outer perimeter [km^2, km]
-real, dimension(nz,7), intent(in) :: Ref ! reference varaibles: rhoc, rhoz, z, zm, dz, dzm, p
+real, dimension(nz,8), intent(in) :: Ref ! reference varaibles: rhoc, rhoz, z, zm, dz, dzm, p, pi
 real, dimension(ncols+1,nz,n_prog), intent(in) :: X ! MF, theta_e, qt
 !real, dimension(ncols+1,nz,n_prog), intent(in) :: X ! MF, theta, qv, ql, qi
 real, dimension(ncols,nz,n_prog), intent(out) :: dXdt 
@@ -182,7 +184,7 @@ do k=1,nz
   eps_tur(2:ncols,k,2) = nju*B(1:ncols-1)/A(2:ncols)
   !call inv_theta_e(X(ncols+1,k,2),X(ncols+1,k,3),Ref(k,7),T0(k),q0(k),ql0(k),qi0(k))
   !Tv0(k) = T0(k) * ( 1. + 0.607789855072462 * q0(k) - ql0(k) - qi0(k) )
-  Tv0(k) = X(ncols+1,k,2) * ( Ref(k,7) / 1.e5 ) ** ( 2. / 7. )  &
+  Tv0(k) = X(ncols+1,k,2) * Ref(k,8) &
            * ( 1. + 0.607789855072462 * X(ncols+1,k,3) - X(ncols+1,k,4) - X(ncols+1,k,5) )
 enddo
 
@@ -255,8 +257,8 @@ do i=1,ncols
 
   Tv(1:nz) = Ta(i,1:nz) * ( 1. + 0.607789855072462 * q(i,1:nz) - ql(i,1:nz) - qi(i,1:nz) )
   if (i==1 .and. rkstage==1) then
-    write(*,*) Ta(i,1:15)
-    write(*,*) (Tv(1:15) - Tv0(1:15))*1e6
+    !write(*,*) Ta(i,1:15)
+    !write(*,*) (Tv(1:30) - Tv0(1:30))*1e6
   endif
   rho0B(1:nz) = g * Ref(1:nz,1) * ( Tv(1:nz) - Tv0(1:nz) ) / Tv0(1:nz)
 
@@ -383,9 +385,35 @@ theta_e = T * (P0*R/p/Re)**chi * (es/e)**gamma * (T0/T)**gammi * exp( (q*Lv(T)/T
 
 end function theta_e
 
+function exner(T,q,ql,qi,p)
+implicit none
 
+real, parameter :: Rd=287.04, Rv=461.5, Cpd=1005.7, Cl=4190., Cvd=719. &
+                  ,Cvv=1410., Cpv=1870., Cpvmcl=Cl-Cpv, EPS=Rd/Rv
+real, parameter :: Lv0=2.501e6, Ls=2.834e6, Lf=0.3337e6, T0=273.1636783445389, P0=1.e5
+real, intent(in) :: T,q,ql,qi,p
+integer :: ice
+real :: exner, qt, Re, e, es, chi, gamma, gammi, R, Cpl
 
+qt = q + ql + qi
+e = p*q/(q+EPS*(1-qt))
+ice = 0
+if (T<T0) ice = 1
+!es = polysvp1(T,ice)
+es = eval_es(T,ice)
 
+Re = (1-qt)*Rd;
+R = Re + q*Rv;
+
+Cpl = Cpd + qt*(Cl-Cpd);
+
+chi = Re/Cpl;
+gamma = Rv*q / Cpl;
+gammi = (Cl-Ci(T0)) * qi /Cpl;
+
+exner = 1. / ( (P0*R/p/Re)**chi * (es/e)**gamma * (T0/T)**gammi )
+
+end function exner
 
  
 subroutine inv_theta_e(theta_e,qt,p,T,q,ql,qi)
