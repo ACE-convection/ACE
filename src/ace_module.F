@@ -88,7 +88,7 @@ do while ( t < te)
     call precip_sinks(ncols,nz,n_prog,Ref(1:nz,7),K1(:,:,1:2)) ! simplified precipitation
     X(1:ncols,:,2:n_prog) = X(1:ncols,:,2:n_prog) +  K1(:,:,1:2) * dt
   elseif (n_prog==10) then
-    call p3_wrapper_ace((ncols,nz,n_prog,dt,A,B,yi,X,Ref)
+    call p3_wrapper_ace(ncols,nz,n_prog,dt,yi,X,Ref)
   else
     write(*,*) "No suitable microphysics scheme"
     stop
@@ -330,6 +330,21 @@ enddo
 enddo
 
 end subroutine precip_sinks
+
+
+subroutine p3_wrapper_ace(ncols,nz,n_prog,dt,X_old,X,Ref)
+implicit none
+
+! input/output variables
+integer, intent(in) :: ncols, nz, n_prog
+real, intent(in) :: dt
+real, dimension(nz,8), intent(in) :: Ref ! reference varaibles: rhoc, rhoz, z, zm, dz, dzm, p, pi
+real, dimension(ncols+1,nz,n_prog), intent(in) :: X_old 
+real, dimension(ncols+1,nz,n_prog), intent(in) :: X 
+
+
+end subroutine p3_wrapper_ace
+
 
 function theta_e(T,q,ql,qi,p)
 implicit none
