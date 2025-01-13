@@ -2,7 +2,7 @@ module ace_module
 implicit none
 
 private
-public :: weno, weno_vec, inv_theta_e, pchip, theta_e, ace_driver, ace_initialization, eval_qs, condensation, exner
+public :: weno, weno_vec, inv_theta_e, pchip, theta_e, ace_driver, ace_initialization, eval_qs
 
 ! defien operator for grid interface
 
@@ -47,28 +47,9 @@ integer :: i,k
 yi = X
 
 do while ( t < te)
-  do i=1,ncols
-  do k=1,nz
-    Ta(i,k) = X(i,k,2) * Ref(k,8)
-    q(i,k) = X(i,k,3)
-    ql(i,k) = X(i,k,4)
-    qi(i,k) = X(i,k,5)
-    !if (i==1 .and. k<10) write(*,*) k,X(i,k,2:5)
-    !if (i==1 .and. k<10) write(*,*) k, Ta(i,k)
-    call condensation(Ta(i,k),q(i,k),ql(i,k),qi(i,k),Ref(k,7))
-    X(i,k,2) = Ta(i,k) / Ref(k,8)
-    X(i,k,3) = q(i,k)
-    X(i,k,4) = ql(i,k)
-    X(i,k,5) = qi(i,k)
-    !if (i==1 .and. k<10) write(*,*) k,X(i,k,2:5)
-  enddo
-  enddo
-
   ! update ace tendency
   call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,K1,1)
   yi(1:ncols,:,:) = X(1:ncols,:,:) + K1 * dt / 6.
-
-  !write(*,*) K1(1,1:15,1)
 
   call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,K2,2)
   yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
@@ -182,10 +163,8 @@ real, dimension(ncols,nz) ::Wi, Admfdz, ioflow, F
 do k=1,nz
   eps_tur(:      ,k,1) = nju*B/A
   eps_tur(2:ncols,k,2) = nju*B(1:ncols-1)/A(2:ncols)
-  !call inv_theta_e(X(ncols+1,k,2),X(ncols+1,k,3),Ref(k,7),T0(k),q0(k),ql0(k),qi0(k))
-  !Tv0(k) = T0(k) * ( 1. + 0.607789855072462 * q0(k) - ql0(k) - qi0(k) )
-  Tv0(k) = X(ncols+1,k,2) * Ref(k,8) &
-           * ( 1. + 0.607789855072462 * X(ncols+1,k,3) - X(ncols+1,k,4) - X(ncols+1,k,5) )
+  call inv_theta_e(X(ncols+1,k,2),X(ncols+1,k,3),Ref(k,7),T0(k),q0(k),ql0(k),qi0(k))
+  Tv0(k) = T0(k) * ( 1. + 0.607789855072462 * q0(k) - ql0(k) - qi0(k) )
 enddo
 
 ! fill with zeros
@@ -249,17 +228,13 @@ do i=1,ncols
                      ( ( ioflow(i-1,1:nz-1) + abs(ioflow(i-1,1:nz-1)) ) * Wc(i  ,1:nz-1) &
                      + ( ioflow(i-1,1:nz-1) - abs(ioflow(i-1,1:nz-1)) ) * Wc(i-1,1:nz-1) ) / A(i)  ! inflow from inner
 
-  !if (rkstage==1) then
-  !  do k=1,nz
-  !    !call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Ta(i,k),q(i,k),ql(i,k),qi(i,k))
-  !  enddo
-  !endif
+  if (rkstage==1) then
+    do k=1,nz
+      call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Ta(i,k),q(i,k),ql(i,k),qi(i,k))
+    enddo
+  endif
 
   Tv(1:nz) = Ta(i,1:nz) * ( 1. + 0.607789855072462 * q(i,1:nz) - ql(i,1:nz) - qi(i,1:nz) )
-  if (i==1 .and. rkstage==1) then
-    !write(*,*) Ta(i,1:15)
-    !write(*,*) (Tv(1:30) - Tv0(1:30))*1e6
-  endif
   rho0B(1:nz) = g * Ref(1:nz,1) * ( Tv(1:nz) - Tv0(1:nz) ) / Tv0(1:nz)
 
   F(i,1:nz) = F(i,1:nz) + rho0B(1:nz)
@@ -335,18 +310,12 @@ real :: qc, dql, dqi
 do k=1,nz
 do i=1,ncols
   qc = ql(i,k) + qi(i,k)
-  !!!!dqt(i,k) = - ( qc_ramp / dqc / tau_pr ) * log( 1. + exp( dqc / qc_ramp * ( qc - qc_ramp ) ) ) ! should use -r8 to compile
-  !dXdt(i,k,2) = - ( qc_ramp / dqc / tau_pr ) * max( dqc / qc_ramp * ( qc - qc_ramp ) , 0. ) 
-  !dql = 1.e-8 * ql(i,k) / qc
-  !dqi = 1.e-8 * qi(i,k) / qc
-  !dXdt(i,k,1) = dXdt(i,k,2) * ( theta_e(Ta(i,k),q(i,k),ql(i,k)+dql,qi(i,k)+dqi,p(k)) &
-  !                            - theta_e(Ta(i,k),q(i,k),ql(i,k),qi(i,k),p(k)) ) / 1.e-8
-
-  dXdt(i,k,1) = 0.
-  dXdt(i,k,2) = 0.
-  dql = - ( qc_ramp / dqc / tau_pr ) * max( dqc / qc_ramp * ( qc - qc_ramp ) , 0. )
-  dXdt(i,k,3) = dql * ql(i,k) / qc
-  dXdt(i,k,4) = dql * qi(i,k) / qc
+  !!!dqt(i,k) = - ( qc_ramp / dqc / tau_pr ) * log( 1. + exp( dqc / qc_ramp * ( qc - qc_ramp ) ) ) ! should use -r8 to compile
+  dXdt(i,k,2) = - ( qc_ramp / dqc / tau_pr ) * max( dqc / qc_ramp * ( qc - qc_ramp ) , 0. ) 
+  dql = 1.e-8 * ql(i,k) / qc
+  dqi = 1.e-8 * qi(i,k) / qc
+  dXdt(i,k,1) = dXdt(i,k,2) * ( theta_e(Ta(i,k),q(i,k),ql(i,k)+dql,qi(i,k)+dqi,p(k)) &
+                              - theta_e(Ta(i,k),q(i,k),ql(i,k),qi(i,k),p(k)) ) / 1.e-8
   if ( qc <= 0. ) then
     dXdt(i,k,:) = 0.
   endif 
@@ -384,36 +353,6 @@ gammi = (Cl-Ci(T0)) * qi /Cpl;
 theta_e = T * (P0*R/p/Re)**chi * (es/e)**gamma * (T0/T)**gammi * exp( (q*Lv(T)/T - Lf*qi/T0)/Cpl )
 
 end function theta_e
-
-function exner(T,q,ql,qi,p)
-implicit none
-
-real, parameter :: Rd=287.04, Rv=461.5, Cpd=1005.7, Cl=4190., Cvd=719. &
-                  ,Cvv=1410., Cpv=1870., Cpvmcl=Cl-Cpv, EPS=Rd/Rv
-real, parameter :: Lv0=2.501e6, Ls=2.834e6, Lf=0.3337e6, T0=273.1636783445389, P0=1.e5
-real, intent(in) :: T,q,ql,qi,p
-integer :: ice
-real :: exner, qt, Re, e, es, chi, gamma, gammi, R, Cpl
-
-qt = q + ql + qi
-e = p*q/(q+EPS*(1-qt))
-ice = 0
-if (T<T0) ice = 1
-!es = polysvp1(T,ice)
-es = eval_es(T,ice)
-
-Re = (1-qt)*Rd;
-R = Re + q*Rv;
-
-Cpl = Cpd + qt*(Cl-Cpd);
-
-chi = Re/Cpl;
-gamma = Rv*q / Cpl;
-gammi = (Cl-Ci(T0)) * qi /Cpl;
-
-exner = 1. / ( (P0*R/p/Re)**chi * (es/e)**gamma * (T0/T)**gammi )
-
-end function exner
 
  
 subroutine inv_theta_e(theta_e,qt,p,T,q,ql,qi)
@@ -572,148 +511,6 @@ if (q>qsat) then
 endif
 
 endsubroutine inv_theta_e
-
-
-subroutine condensation(T,q,ql,qi,p)
-implicit none
-
-! parameters
-real, parameter :: Rd=287.04, Rv=461.5, Cpd=1005.7, Cl=4190., Cvd=719. &
-                  ,Cvv=1410., Cpv=1870., Cpvmcl=Cl-Cpv, EPS=Rd/Rv
-real, parameter :: Lv0=2.501e6, Ls=2.834e6, Lf=0.3337e6, T0=273.1636783445389, P0=1.e5 &
-                  ,qT0=611.3902114165171, LvoT=9155.566660243245
-real, parameter :: tol=1e-3
-
-! input/output variables
-real, intent(in) :: p
-real, intent(inout) :: T,q,ql,qi
-
-! local variables
-integer :: ice
-real :: Cpl,Re,chi,R,e,dT,qc,qt,the
-real :: G0,qsat,qsi,qs,dC,HT0,GT0,tmp,G,H,es,esi,dTqs,dTqsi,dGdT,dHdT
-
-qt = q + ql + qi
-if ( qt < 0. ) then
-  write(*,*) "nagative qt"
-  stop
-endif
-the = theta_e(T,q,ql,qi,p)
-q = qt
-
-Cpl = Cpd + (Cl-CPd)*qt
-Re = Rd*(1-qt)
-chi = Re/Cpl
-R = Re + Rv*qt
-
-ice = 0
-if (T<T0) ice = 1
-!qsat = qv_sat(T,p,ice)*(1.-qt)
-qsat = eval_qs(T,p,qt,ice)
-
-if (q>qsat) then
-  ! Step 2: determine condensate type(s) by comparing G(T0) & H(T0) to G0
-  G0 = the * (p*Re/P0)**chi
-  dC = 2083.900148084866
-  !qsi = qv_sat(T0,p,1) * ( 1. - qt )
-  qsi = eval_qs(T0,p,qt,1)
-  HT0 = T0 * (RE+RV*qsi)**chi * exp( (qsi*Lv(T0)-Lf*(qt-qsi))/Cpl/T0 )
-  !qs = qv_sat(T0,p,0) * ( 1. - qt )
-  qs = eval_qs(T0,p,qt,0)
-  GT0 =  T0 * (RE+RV*qs)**chi * exp(qs*Lv(T0)/CPL/T0)
-
-  ! 3 cases: liquid-only, ice-only, co-existing
-  if (G0>GT0 .and. G0>HT0) then ! liquid-only
-    ! estimate initial T
-    tmp = log(qt*p) - log(610.78*EPS)
-    T = 237.3*tmp/(17.27-tmp) + T0
-
-    dT = 9999.
-    do while (abs(dT)>tol)
-      !qs = qv_sat(T,p,0)*(1.-qt)
-      qs = eval_qs(T,p,qt,0)
-      R = Re + Rv*qs
-      G = T * R**chi *exp(qs*Lv(T)/Cpl/T)
-      !es = polysvp1(T,0)
-      es = eval_es(T,0)
-      dTqs = (1.-qt)* EPS/Rv * p * Lv(T) * es / ( ( p-es )*T )**2.
-      dGdT = 1./T + ( (Rv*Re/R+Lv(T)/T)*dTqs - (Lv0-Cpvmcl*273.15)*qs/T**2. )/Cpl
-      dGdT = dGdT*G
-      dT = -(G-G0)/dGdT
-      T = T + dT
-    enddo
-    !q = qv_sat(T,p,0)*(1.-qt)
-    q = eval_qs(T,p,qt,0)
-    ql = qt-q
-    qi = 0.
-    if (ql<0.) then
-      q = qt
-      ql = 0.
-    endif
-
-  elseif (G0<GT0 .and. G0<HT0) then ! ice-only
-    ! estimate initial T
-    tmp = log(qt*p) - log(610.78*EPS)
-    T = 265.5*tmp/(21.875-tmp) + T0
-
-    dT = 9999.
-    do while (abs(dT)>tol)
-      !qsi = qv_sat(T,p,1)*(1.-qt)
-      qsi = eval_qs(T,p,qt,1)
-      R = Re + Rv*qsi
-      qi = qt-qsi
-      H = T * R**chi * (T0/T)**(dC*qi/Cpl) * exp((qsi*Lv(T)/T - Lf/T0*qi)/Cpl)
-      !esi = polysvp1(T,1)
-      esi = eval_es(T,1)
-      dTqsi = (1.-qt)* EPS*LS/RV * p * esi / ( ( p-esi )*T )**2.
-      dHdT = 1./T + ( ( Rv*Re/R + Lv(T)/T + dC*log(T/T0) + Lf/T0 )*dTqsi &
-                     - ( ((Lv0-Cpvmcl*273.15)/T-dC)*qsi + dC*qt )/T )/Cpl
-      dHdT = dHdT*H
-      dT = -(H-G0)/dHdT
-      T = T + dT
-    enddo
-    !q = qv_sat(T,p,1)*(1.-qt)
-    q = eval_qs(T,p,qt,1)
-    ql = 0.
-    qi = qt-q;
-    if (qi<0.) then
-      q = qt
-      qi = 0.
-    endif
-
-  else ! co_existing
-    T=T0
-    !q = 0.5 * ( qv_sat(T,p,0) + qv_sat(T,p,1) ) *(1.-qt)
-    q = 0.5 * ( eval_qs(T,p,qt,0) + eval_qs(T,p,qt,1) )
-    R = RE + RV*q
-    tmp = (p*Re/R/P0)**chi
-    qc = qt-q;
-    qi = ( Lv(T0)*q - T0*Cpl*log(the*tmp/T0) )/Lf
-    ql = qc-qi
-    if (qc<0.) then
-      q = qt;
-      ql = 0;
-      qi = 0;
-    elseif (ql<0.) then
-      ql = 0;
-      qi = qc;
-    elseif (qi<0.) then
-      qi = 0;
-      ql = qc;
-    endif
-
-  endif
-
-else
-
-  q = qt
-  ql = 0.
-  qi = 0. 
-
-endif
-
-end subroutine condensation
-
 
 function eval_es(T,ice)
 implicit none

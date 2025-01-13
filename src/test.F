@@ -196,16 +196,9 @@ do k=1,nz
   Ref(k,5)=dz
   Ref(k,6)=dz
   Ref(k,7)=p_z(k)
+  Ref(k,8)=(p_z(k)/p0)**(Rd/Cp)
   call inv_theta_e(X(1,k,2),X(1,k,3),Ref(k,7),Tr(1,k),q(1,k),ql(1,k),qi(1,k))
-  Ref(k,8)=(p_z(k)/p0)**(Rd/Cp) ! exner(Tr(1,k),q(1,k),ql(1,k),qi(1,k),Ref(k,7))
   Tv0(k)=Tr(1,k)*(1.+0.607789855072462*q(1,k)-ql(1,k)-qi(1,k))
- 
-  ! for th_q
-  X(:,k,1)=0.
-  X(:,k,2)=Tr(1,k)/Ref(k,8)
-  X(:,k,3)=q(1,k)
-  X(:,k,4)=0.
-  X(:,k,5)=0.
 enddo
 
 
@@ -238,24 +231,17 @@ call cpu_time(start)
 
 !open(10,file="./data/output_singleACE_manus208.dat",access="direct",recl=ncols*nz*8)
 !open(10,file="./data/output_multiACE_manus208.dat",access="direct",recl=ncols*nz*9)
-!open(10,file="./data/output_multiACE_manus208_swap.dat",access="direct",recl=ncols*nz*9)
-open(10,file="./data/output_multiACE_manus208_th_q.dat",access="direct",recl=ncols*nz*9)
+open(10,file="./data/output_multiACE_manus208_swap.dat",access="direct",recl=ncols*nz*9)
 n=1
 
-!te=8
 do t=1,60*3 ! 60 is mins, and 48 is hours
   write(*,*) ts,te,t
 
   ! output diagnostic
-  !Xout = X
-  Xout(:,:,1) = X(:,:,1)
+  Xout = X
   do k=1,nz
   do i=1,ncols
-    dum1=Ref(k,8)
-    Xout(i,k,2) = theta_e(X(i,k,2)*dum1,X(i,k,3),X(i,k,4),X(i,k,5),Ref(k,7))
-    Xout(i,k,3) = sum(X(i,k,3:5),1)
-    call inv_theta_e(dble(Xout(i,k,2)),dble(Xout(i,k,3)),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
-    !call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
+    call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
     ice=0
     if (Tr(i,k)<273.15) ice=1
     rh4(i,k)=q(i,k)/eval_qs(Tr(i,k),Ref(k,7),ql(i,k)+qi(i,k),ice)
@@ -263,7 +249,7 @@ do t=1,60*3 ! 60 is mins, and 48 is hours
     b4(i,k)=g*(dum1-Tv0(k))/Tv0(k)
   enddo
   enddo
-  T4=Tr;  q4=q; ql4=ql; qi4=qi;
+  T4=Tr; q4=q; ql4=ql; qi4=qi;
   write(10,rec=n) Xout(1:ncols,:,1:3),T4(1:ncols,:),q4(1:ncols,:),ql4(1:ncols,:),qi4(1:ncols,:),rh4(1:ncols,:),b4(1:ncols,:)
   n=n+1
 
@@ -275,15 +261,10 @@ do t=1,60*3 ! 60 is mins, and 48 is hours
 enddo
 
 ! output diagnostic
-!Xout = X
-Xout(:,:,1) = X(:,:,1)
+Xout = X
 do k=1,nz
 do i=1,ncols
-  dum1=Ref(k,8)
-  Xout(i,k,2) = theta_e(X(i,k,2)*dum1,X(i,k,3),X(i,k,4),X(i,k,5),Ref(k,7))
-  Xout(i,k,3) = sum(X(i,k,3:5),1)
-  call inv_theta_e(dble(Xout(i,k,2)),dble(Xout(i,k,3)),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
-  !call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
+  call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
   ice=0
   if (Tr(i,k)<273.15) ice=1
   rh4(i,k)=q(i,k)/eval_qs(Tr(i,k),Ref(k,7),ql(i,k)+qi(i,k),ice)
@@ -291,7 +272,7 @@ do i=1,ncols
   b4(i,k)=g*(dum1-Tv0(k))/Tv0(k)
 enddo
 enddo
-T4=Tr;  q4=q; ql4=ql; qi4=qi;
+T4=Tr; q4=q; ql4=ql; qi4=qi;
 write(10,rec=n) Xout(1:ncols,:,1:3),T4(1:ncols,:),q4(1:ncols,:),ql4(1:ncols,:),qi4(1:ncols,:),rh4(1:ncols,:),b4(1:ncols,:)
 close(10)
 
