@@ -84,8 +84,15 @@ do while ( t < te)
   X(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt
 
   ! call physics here
-  call precip_sinks(ncols,nz,n_prog,Ref(1:nz,7),K1(:,:,1:2)) ! simplified precipitation
-  X(1:ncols,:,2:n_prog) = X(1:ncols,:,2:n_prog) +  K1(:,:,1:2) * dt
+  if (n_prog==3) then
+    call precip_sinks(ncols,nz,n_prog,Ref(1:nz,7),K1(:,:,1:2)) ! simplified precipitation
+    X(1:ncols,:,2:n_prog) = X(1:ncols,:,2:n_prog) +  K1(:,:,1:2) * dt
+  elseif (n_prog==10) then
+    call p3_wrapper_ace((ncols,nz,n_prog,dt,A,B,yi,X,Ref)
+  else
+    write(*,*) "No suitable microphysics scheme"
+    stop
+  endif
 
   ! implicit damping 
   call ImDamp(ncols,nz,n_prog,X,Ref,dt)
