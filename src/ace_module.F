@@ -333,6 +333,7 @@ end subroutine precip_sinks
 
 
 subroutine p3_wrapper_ace(ncols,nz,n_prog,dt,X_old,X,Ref)
+use microphy_p3
 implicit none
 
 ! input/output variables
@@ -342,6 +343,46 @@ real, dimension(nz,8), intent(in) :: Ref ! reference varaibles: rhoc, rhoz, z, z
 real, dimension(ncols+1,nz,n_prog), intent(in) :: X_old 
 real, dimension(ncols+1,nz,n_prog), intent(in) :: X 
 
+! local variables
+integer, save :: itt=1
+integer, parameter :: nCat=1 ,&                  ! the number of ice categories
+                      n_diag_2d=1 ,&             ! size of 2d diagnostic array
+                      n_diag_3d=1                ! size of 3d diagnostic array
+logical, parameter :: log_predictNc = .True.  ,& ! predict cloud droplet number or not
+                      typeDiags_ON  = .False. ,& ! diagnose ice types or not
+                      debug_on      = .False. ,& ! debug mode
+                      scpf_on       = .False. ,& ! cloud fraction version not used
+                      trplMomI      = .False. ,& ! triple moment ice
+                      liqfrac       = .False. ,& ! liquid fraction ice
+                      abort_on_err  = .True.  ,& ! program aborts when encountering error
+                      dowr          = .True.     ! print message or not
+real, parameter :: scpf_pfrac    = 0. ,&   ! dummy variable (not used), set to 0
+                   scpf_resfact  = 0. ,&   ! dummy variable (not used), set to 0
+                   clbfact_dep   = 1. ,&   ! calibration for deposition
+                   clbfact_sub   = 1.      ! calibration for sublimation
+real, dimension(ncols,nz) :: qc,nc,qr,nr,th_old,th,qv_old,qv, &
+                             qitot,qirim,qiliq,ni,birim,zi,ssat,w,p,dz, &
+                             diag_ze,diag_effc,diag_effi,diag_vmi,diag_di,diag_rhoi,cldfrac
+real, dimension(ncols,nz,n_diag_2d) :: diag_2d
+real, dimension(ncols,nz,n_diag_3d) :: diag_3d
+real, dimension(ncols) :: precip_liq,precip_sol
+
+
+
+
+call p3_main(qc,nc,qr,nr,th_old,th,qv_old,qv,dt, &
+             qitot,qirim,qiliq,ni,birim,zi,ssat,w, &
+             p,dz,itt,precip_liq,precip_sol, &
+             1,ncols,1,nz,nCat, &
+             diag_ze,diag_effc,diag_effi,diag_vmi,diag_di,diag_rhoi, &
+             n_diag_2d,diag_2d,n_diag_3d,diag_3d,log_predictNc,'ACE', &
+             clbfact_dep,clbfact_sub, &
+             debug_on,scpf_on,scpf_pfrac,scpf_resfact,cldfrac,     &
+             trplMomI,liqfrac)
+
+
+
+itt = itt + 1
 
 end subroutine p3_wrapper_ace
 
