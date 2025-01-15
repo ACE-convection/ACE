@@ -7,7 +7,7 @@ integer, parameter :: np=37, n_weno=2
 real,parameter :: pi=4.*atan(1.),Rd=287.04,Cp=1005.7,g=9.80665,p0=1.e5
 integer :: i,j,k,m,n,o,t
 integer :: ierr,ncid1,varid1
-integer :: nprof, ncols, ice, n_prog
+integer :: nprof, ncols, ice, n_prog,ndt
 real :: dum1,dum2,dum3,dum4,dum5,dum6,dum7
 real :: dz,dp,ts,te,dt
 real :: start, finish
@@ -137,13 +137,14 @@ goto 838 ! directly read profile from binary file.
 
 
 !n_prog=3 ! MF, the, qt
-n_prog=10 ! for P3
+n_prog=11 ! for P3
 
 dz=50.
 ncols=8
 ts=0.
-dt=4.
-te=ts+dt*15.
+dt=2.
+ndt=int(60./dt)
+te=ts+dt*real(ndt)
 !te=4.
 
 allocate(X(ncols+1,nz,n_prog),A(ncols+1),B(ncols+1),forcing(ncols,nz), &
@@ -211,15 +212,15 @@ do k=1,nz
   X(:,k,8)=0.
   X(:,k,9)=0.
   X(:,k,10)=0.
+  X(:,k,11)=0.
 enddo
-
 
 ! initialize MF
 dum1=0.
 dum2=1000.
 do k=1,nz
   if (zm(k)<=dum2) then
-    X(1,k,1) = 0.03 & 
+    X(1,k,1) = 0.3 & !0.03 & 
          * sin(pi*(zm(k)-dum1)/(dum2-dum1))
     !X(ncols,k,1) = -0.03 & 
     !     * sin(pi*(zm(k)-dum1)/(dum2-dum1))*A(1)/A(ncols)
@@ -245,16 +246,22 @@ call cpu_time(start)
 !open(10,file="./data/output_multiACE_manus208.dat",access="direct",recl=ncols*nz*9)
 !open(10,file="./data/output_multiACE_manus208_swap.dat",access="direct",recl=ncols*nz*9)
 open(10,file="./data/output_multiACE_manus208_p3.dat",access="direct",recl=ncols*nz*9)
+!open(10,file="./data/output_singleACE_manus208_p3.dat",access="direct",recl=ncols*nz*9)
+
 n=1
 
-do t=1,60*3 ! 60 is mins, and 48 is hours
+do t=1,60*24*100 ! 60 is mins, and 48 is hours
   write(*,*) ts,te,t
 
   ! output diagnostic
   Xout = X
   do k=1,nz
   do i=1,ncols
-    call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
+  !  call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
+    Tr(i,k)=X(i,k,2)*Ref(k,8)
+    q(i,k) =X(i,k,3)
+    ql(i,k)=X(i,k,4)+X(i,k,6)
+    qi(i,k)=X(i,k,8)
     ice=0
     if (Tr(i,k)<273.15) ice=1
     rh4(i,k)=q(i,k)/eval_qs(Tr(i,k),Ref(k,7),ql(i,k)+qi(i,k),ice)
@@ -262,22 +269,26 @@ do t=1,60*3 ! 60 is mins, and 48 is hours
     b4(i,k)=g*(dum1-Tv0(k))/Tv0(k)
   enddo
   enddo
-  T4=Tr; q4=q; ql4=ql; qi4=qi;
-  write(10,rec=n) Xout(1:ncols,:,1:3),T4(1:ncols,:),q4(1:ncols,:),ql4(1:ncols,:),qi4(1:ncols,:),rh4(1:ncols,:),b4(1:ncols,:)
+  !T4=Tr; q4=q; ql4=ql; qi4=qi;
+  !write(10,rec=n) Xout(1:ncols,:,1:3),T4(1:ncols,:),q4(1:ncols,:),ql4(1:ncols,:),qi4(1:ncols,:),rh4(1:ncols,:),b4(1:ncols,:)
+  write(10,rec=n) Xout(1:ncols,:,1:3),Xout(1:ncols,:,4),Xout(1:ncols,:,6),Xout(1:ncols,:,8),Xout(1:ncols,:,10),rh4(1:ncols,:),b4(1:ncols,:)
   n=n+1
 
   ! call ace driver to integrate from ts to te with dt
   call ace_driver(ncols,nz,n_weno,n_prog,X,Ref,A,B,ts,te,dt,forcing)
 
   ts=te
-  te=ts+dt*15.
+  te=ts+dt*real(ndt)
 enddo
 
 ! output diagnostic
 Xout = X
 do k=1,nz
 do i=1,ncols
-  call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
+  !call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
+  Tr(i,k)=X(i,k,2)*Ref(k,8)
+  ql(i,k)=X(i,k,4)+X(i,k,6)
+  qi(i,k)=X(i,k,8)
   ice=0
   if (Tr(i,k)<273.15) ice=1
   rh4(i,k)=q(i,k)/eval_qs(Tr(i,k),Ref(k,7),ql(i,k)+qi(i,k),ice)
@@ -285,8 +296,9 @@ do i=1,ncols
   b4(i,k)=g*(dum1-Tv0(k))/Tv0(k)
 enddo
 enddo
-T4=Tr; q4=q; ql4=ql; qi4=qi;
-write(10,rec=n) Xout(1:ncols,:,1:3),T4(1:ncols,:),q4(1:ncols,:),ql4(1:ncols,:),qi4(1:ncols,:),rh4(1:ncols,:),b4(1:ncols,:)
+!T4=Tr; q4=q; ql4=ql; qi4=qi;
+!write(10,rec=n) Xout(1:ncols,:,1:3),T4(1:ncols,:),q4(1:ncols,:),ql4(1:ncols,:),qi4(1:ncols,:),rh4(1:ncols,:),b4(1:ncols,:)
+write(10,rec=n) Xout(1:ncols,:,1:3),Xout(1:ncols,:,4),Xout(1:ncols,:,6),Xout(1:ncols,:,8),Xout(1:ncols,:,10),rh4(1:ncols,:),b4(1:ncols,:)
 close(10)
 
 call cpu_time(finish)

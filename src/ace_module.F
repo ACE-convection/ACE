@@ -81,18 +81,31 @@ do while ( t < te)
   call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,9)
   K1 = K1 + tmp
 
+  yi = X
   X(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt
-
+  
   ! call physics here
   if (n_prog==3) then
     call precip_sinks(ncols,nz,n_prog,Ref(1:nz,7),K1(:,:,1:2)) ! simplified precipitation
     X(1:ncols,:,2:n_prog) = X(1:ncols,:,2:n_prog) +  K1(:,:,1:2) * dt
-  elseif (n_prog==10) then
+  elseif (n_prog==11) then
     call p3_wrapper_ace(ncols,nz,n_prog,dt,yi,X,Ref)
   else
     write(*,*) "No suitable microphysics scheme"
     stop
   endif
+
+  ! NaN check
+  do k=1,nz
+  do i=1,ncols
+    if (X(i,k,2)/=X(i,k,2)) then
+      write(*,*) i,k,Ref(k,7)
+      write(*,*) yi(i,k,2:11)
+      write(*,*) X(i,k,2:11)
+      stop "check 2"
+    endif    
+  enddo
+  enddo
 
   ! implicit damping 
   call ImDamp(ncols,nz,n_prog,X,Ref,dt)
@@ -237,8 +250,15 @@ do i=1,ncols
 
   if (rkstage==1) then
     do k=1,nz
-      call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Ta(i,k),q(i,k),ql(i,k),qi(i,k))
-    enddo
+      if (n_prog==3) then
+        call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Ta(i,k),q(i,k),ql(i,k),qi(i,k))
+      elseif (n_prog==11) then
+        Ta(i,:) = X(i,:,2) * Ref(:,8)
+        q(i,:)  = X(i,:,3)
+        ql(i,:) = X(i,:,4) + X(i,:,6)
+        qi(i,:) = X(i,:,8)
+      endif
+    enddo 
   endif
 
   Tv(1:nz) = Ta(i,1:nz) * ( 1. + 0.607789855072462 * q(i,1:nz) - ql(i,1:nz) - qi(i,1:nz) )
@@ -259,7 +279,7 @@ do i=1,ncols
 enddo  
 
 ! single ACE
-dXdt(2:ncols,:,:)=0.
+!dXdt(2:ncols,:,:)=0.
 
 ! model top 
 dXdt(:,nz-10:nz,:)=0.
@@ -341,46 +361,88 @@ integer, intent(in) :: ncols, nz, n_prog
 real, intent(in) :: dt
 real, dimension(nz,8), intent(in) :: Ref ! reference varaibles: rhoc, rhoz, z, zm, dz, dzm, p, pi
 real, dimension(ncols+1,nz,n_prog), intent(in) :: X_old 
-real, dimension(ncols+1,nz,n_prog), intent(in) :: X 
+real, dimension(ncols+1,nz,n_prog), intent(inout) :: X ! mf, th, qv, qc, nc, qr, nr, qi, ni, qrim, brim
 
 ! local variables
-integer, save :: itt=1
-integer, parameter :: nCat=1 ,&                  ! the number of ice categories
-                      n_diag_2d=1 ,&             ! size of 2d diagnostic array
-                      n_diag_3d=1                ! size of 3d diagnostic array
+integer, save :: itt = 1
+logical, save :: first = .True.
+integer, parameter :: nCat = 1 ,&                ! the number of ice categories
+                      n_diag_2d = 1 ,&           ! size of 2d diagnostic array
+                      n_diag_3d = 1              ! size of 3d diagnostic array
 logical, parameter :: log_predictNc = .True.  ,& ! predict cloud droplet number or not
                       typeDiags_ON  = .False. ,& ! diagnose ice types or not
                       debug_on      = .False. ,& ! debug mode
                       scpf_on       = .False. ,& ! cloud fraction version not used
                       trplMomI      = .False. ,& ! triple moment ice
                       liqfrac       = .False. ,& ! liquid fraction ice
-                      abort_on_err  = .True.  ,& ! program aborts when encountering error
+                      abort_on_err  = .False.  ,& ! program aborts when encountering error
                       dowr          = .True.     ! print message or not
 real, parameter :: scpf_pfrac    = 0. ,&   ! dummy variable (not used), set to 0
                    scpf_resfact  = 0. ,&   ! dummy variable (not used), set to 0
                    clbfact_dep   = 1. ,&   ! calibration for deposition
                    clbfact_sub   = 1.      ! calibration for sublimation
+character(3), parameter :: model = "ACE"
+integer :: i,j,k,stat
 real, dimension(ncols,nz) :: qc,nc,qr,nr,th_old,th,qv_old,qv, &
                              qitot,qirim,qiliq,ni,birim,zi,ssat,w,p,dz, &
                              diag_ze,diag_effc,diag_effi,diag_vmi,diag_di,diag_rhoi,cldfrac
-real, dimension(ncols,nz,n_diag_2d) :: diag_2d
+real, dimension(ncols,n_diag_2d) :: diag_2d
 real, dimension(ncols,nz,n_diag_3d) :: diag_3d
 real, dimension(ncols) :: precip_liq,precip_sol
 
+if (first) then
+  call p3_init('./input_data/',ncat,trplMomI,liqfrac,trim(model),stat,abort_on_err,dowr)
+  if (stat/=0) stop "Failure of p3 initialization"
+  first = .False.
+endif
 
+th_old = X_old(1:ncols,:,2)
+qv_old = X_old(1:ncols,:,3)
 
+th    = X(1:ncols,:,2)
+qv    = X(1:ncols,:,3)
+qc    = X(1:ncols,:,4)
+nc    = X(1:ncols,:,5)
+qr    = X(1:ncols,:,6)
+nr    = X(1:ncols,:,7)
+qitot = X(1:ncols,:,8)
+ni    = X(1:ncols,:,9)
+qirim = X(1:ncols,:,10)
+birim = X(1:ncols,:,11)
+
+do k=1,nz
+  dz(:,k)   = Ref(k,5)
+  p(:,k)    = Ref(k,7)
+enddo
+
+zi    = 0.
+ssat  = 0.
+w     = 0.
+qiliq = 0.
 
 call p3_main(qc,nc,qr,nr,th_old,th,qv_old,qv,dt, &
              qitot,qirim,qiliq,ni,birim,zi,ssat,w, &
              p,dz,itt,precip_liq,precip_sol, &
              1,ncols,1,nz,nCat, &
              diag_ze,diag_effc,diag_effi,diag_vmi,diag_di,diag_rhoi, &
-             n_diag_2d,diag_2d,n_diag_3d,diag_3d,log_predictNc,'ACE', &
+             n_diag_2d,diag_2d,n_diag_3d,diag_3d,log_predictNc,trim(model), &
              clbfact_dep,clbfact_sub, &
              debug_on,scpf_on,scpf_pfrac,scpf_resfact,cldfrac,     &
              trplMomI,liqfrac)
 
 
+if (global_status == -1) stop "p3 stop"
+
+X(1:ncols,:,2)  = th
+X(1:ncols,:,3)  = qv
+X(1:ncols,:,4)  = qc
+X(1:ncols,:,5)  = nc
+X(1:ncols,:,6)  = qr
+X(1:ncols,:,7)  = nr
+X(1:ncols,:,8)  = qitot
+X(1:ncols,:,9)  = ni
+X(1:ncols,:,10) = qirim
+X(1:ncols,:,11) = birim
 
 itt = itt + 1
 

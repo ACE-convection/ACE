@@ -26,8 +26,6 @@
 ! Last updated:  2023 June                                                                 !
 !__________________________________________________________________________________________!
 
-#include "definesld.com"
-
  MODULE microphy_p3
 
 #ifdef ECCCGEM
@@ -65,7 +63,7 @@
  real, parameter    :: real_rcollsize = real(rcollsize)
 
  ! NOTE: TO DO, MAKE LOOKUP TABLE ARRAYS ALLOCATABLE SO BOTH 2-MOMENT AND 3-MOMENT NOT ALLOCATED
- real*8, dimension(densize,rimsize,liqsize,isize,tabsize)                     :: itab        !ice lookup table values
+ real, dimension(densize,rimsize,liqsize,isize,tabsize)                     :: itab        !ice lookup table values
  real, dimension(zsize,densize,rimsize,liqsize,isize,tabsize_3mom)          :: itab_3mom   !ice lookup table values
 
 !ice lookup table values for ice-rain collision/collection
@@ -4042,7 +4040,6 @@ END subroutine p3_init
 
 !======================================================================================!
 
-
 !---------------------------------------------------------------------------------
 ! update prognostic microphysics and thermodynamics variables
 !---------------------------------------------------------------------------------
@@ -4174,18 +4171,18 @@ END subroutine p3_init
                               qrmul(iice)-qrmlt(iice)-qimlt(iice)+qifrz(iice))*        &
                               xlf(i,k)*inv_cp+(qlcon(iice)-qlevp(iice))*xxlv(i,k)*     &
                               inv_cp)*dt
-#if defined (HEATING)
-          diag_3d(i,k,4) = diag_3d(i,k,4) + &
-                             (qidep(iice)-qisub(iice)+qinuc(iice))*xxls(i,k)*inv_cp*dt
-          diag_3d(i,k,6) = diag_3d(i,k,6) + &
-                             (qrcol(iice)+qccol(iice)+qchetc(iice)+ &
-                              qcheti(iice)+qrhetc(iice)+qrheti(iice)+ &
-                              qrmul(iice)-qrmlt(iice)-qimlt(iice)+ &
-                              qifrz(iice))*xlf(i,k)*inv_cp*dt + &
-                              (qlcon(iice)-qlevp(iice))*xxlv(i,k)*inv_cp*dt
-          diag_3d(i,k,7) = diag_3d(i,k,7) - &
-                             (qrmlt(iice)+qimlt(iice))*xlf(i,k)*inv_cp*dt
-#endif
+!#if defined (HEATING)
+!          diag_3d(i,k,4) = diag_3d(i,k,4) + &
+!                             (qidep(iice)-qisub(iice)+qinuc(iice))*xxls(i,k)*inv_cp*dt
+!          diag_3d(i,k,6) = diag_3d(i,k,6) + &
+!                             (qrcol(iice)+qccol(iice)+qchetc(iice)+ &
+!                              qcheti(iice)+qrhetc(iice)+qrheti(iice)+ &
+!                              qrmul(iice)-qrmlt(iice)-qimlt(iice)+ &
+!                              qifrz(iice))*xlf(i,k)*inv_cp*dt + &
+!                              (qlcon(iice)-qlevp(iice))*xxlv(i,k)*inv_cp*dt
+!          diag_3d(i,k,7) = diag_3d(i,k,7) - &
+!                             (qrmlt(iice)+qimlt(iice))*xlf(i,k)*inv_cp*dt
+!#endif
 
        enddo iice_loop3
    !==
@@ -4209,9 +4206,9 @@ END subroutine p3_init
        th(i,k) = th(i,k) + invexn(i,k)*((qcnuc+qccon+qrcon-qcevp-qrevp)*xxlv(i,k)*    &
                  inv_cp)*dt
    !==
-#if defined (HEATING)
-       diag_3d(i,k,5) = diag_3d(i,k,5) + (qcnuc+qccon+qrcon-qcevp-qrevp)*xxlv(i,k)*inv_cp*dt
-#endif
+!#if defined (HEATING)
+!       diag_3d(i,k,5) = diag_3d(i,k,5) + (qcnuc+qccon+qrcon-qcevp-qrevp)*xxlv(i,k)*inv_cp*dt
+!#endif
 
        ! clipping for Filiq > 0.99 (transfer unmelted ice to rain)
        if (log_LiquidFrac) then
@@ -4220,10 +4217,10 @@ END subroutine p3_init
                   qr(i,k) = qr(i,k) + qitot(i,k,iice)
                   nr(i,k) = nr(i,k) + nitot(i,k,iice)
                   th(i,k) = th(i,k) - invexn(i,k)*(qitot(i,k,iice)-qiliq(i,k,iice))*xlf(i,k)*inv_cp
-#if defined (HEATING)
-                  diag_3d(i,k,6) = diag_3d(i,k,6) - (qitot(i,k,iice)-qiliq(i,k,iice))*xlf(i,k)*inv_cp
-                  diag_3d(i,k,7) = diag_3d(i,k,7) + (qitot(i,k,iice)-qiliq(i,k,iice))*xlf(i,k)*inv_cp
-#endif
+!#if defined (HEATING)
+!                  diag_3d(i,k,6) = diag_3d(i,k,6) - (qitot(i,k,iice)-qiliq(i,k,iice))*xlf(i,k)*inv_cp
+!                  diag_3d(i,k,7) = diag_3d(i,k,7) + (qitot(i,k,iice)-qiliq(i,k,iice))*xlf(i,k)*inv_cp
+!#endif
                   qitot(i,k,iice) = 0.
                   nitot(i,k,iice) = 0.
                   qirim(i,k,iice) = 0.
@@ -4237,9 +4234,9 @@ END subroutine p3_init
        if (qc(i,k).lt.qsmall) then
           qv(i,k) = qv(i,k) + qc(i,k)
           th(i,k) = th(i,k) - invexn(i,k)*qc(i,k)*xxlv(i,k)*inv_cp
-#if defined (HEATING)
-          diag_3d(i,k,5) = diag_3d(i,k,5) - qc(i,k)*xxlv(i,k)*inv_cp
-#endif
+!#if defined (HEATING)
+!          diag_3d(i,k,5) = diag_3d(i,k,5) - qc(i,k)*xxlv(i,k)*inv_cp
+!#endif
           qc(i,k) = 0.
           nc(i,k) = 0.
        else
@@ -4249,9 +4246,9 @@ END subroutine p3_init
        if (qr(i,k).lt.qsmall) then
           qv(i,k) = qv(i,k) + qr(i,k)
           th(i,k) = th(i,k) - invexn(i,k)*qr(i,k)*xxlv(i,k)*inv_cp
-#if defined (HEATING)
-          diag_3d(i,k,5) = diag_3d(i,k,5) - qr(i,k)*xxlv(i,k)*inv_cp
-#endif
+!#if defined (HEATING)
+!          diag_3d(i,k,5) = diag_3d(i,k,5) - qr(i,k)*xxlv(i,k)*inv_cp
+!#endif
           qr(i,k) = 0.
           nr(i,k) = 0.
        else
@@ -4263,10 +4260,10 @@ END subroutine p3_init
              qv(i,k) = qv(i,k) + qitot(i,k,iice)
              th(i,k) = th(i,k) - invexn(i,k)*(qitot(i,k,iice)-qiliq(i,k,iice))*xxls(i,k)*inv_cp
              th(i,k) = th(i,k) - invexn(i,k)*qiliq(i,k,iice)*xxlv(i,k)*inv_cp
-#if defined (HEATING)
-             diag_3d(i,k,4) = diag_3d(i,k,4) - (qitot(i,k,iice)-qiliq(i,k,iice))*xxls(i,k)*inv_cp &
-                                             - qiliq(i,k,iice)*xxlv(i,k)*inv_cp
-#endif
+!#if defined (HEATING)
+!             diag_3d(i,k,4) = diag_3d(i,k,4) - (qitot(i,k,iice)-qiliq(i,k,iice))*xxls(i,k)*inv_cp &
+!                                             - qiliq(i,k,iice)*xxlv(i,k)*inv_cp
+!#endif
              qitot(i,k,iice) = 0.
              nitot(i,k,iice) = 0.
              qirim(i,k,iice) = 0.
@@ -5213,9 +5210,9 @@ END subroutine p3_init
           th(i,k) = th(i,k) + invexn(i,k)*Q_nuc*xlf(i,k)*inv_cp
           qc(i,k) = 0.  != qc(i,k) - Q_nuc
           nc(i,k) = 0.  != nc(i,k) - N_nuc
-#if defined (HEATING)
-          diag_3d(i,k,6) = diag_3d(i,k,6) + Q_nuc*xlf(i,k)*inv_cp
-#endif
+!#if defined (HEATING)
+!          diag_3d(i,k,6) = diag_3d(i,k,6) + Q_nuc*xlf(i,k)*inv_cp
+!#endif
 
        endif qc_not_small_2
 
@@ -5248,9 +5245,9 @@ END subroutine p3_init
           th(i,k) = th(i,k) + invexn(i,k)*Q_nuc*xlf(i,k)*inv_cp
           qr(i,k) = 0.  ! = qr(i,k) - Q_nuc
           nr(i,k) = 0.  ! = nr(i,k) - N_nuc
-#if defined (HEATING)
-          diag_3d(i,k,6) = diag_3d(i,k,6) + Q_nuc*xlf(i,k)*inv_cp
-#endif
+!#if defined (HEATING)
+!          diag_3d(i,k,6) = diag_3d(i,k,6) + Q_nuc*xlf(i,k)*inv_cp
+!#endif
 
        endif qr_not_small_2
 
@@ -5328,10 +5325,10 @@ END subroutine p3_init
                 qv(i,k) = qv(i,k) + qitot(i,k,iice)
                 th(i,k) = th(i,k) - invexn(i,k)*(qitot(i,k,iice)-qiliq(i,k,iice))*xxls(i,k)*inv_cp
                 th(i,k) = th(i,k) - invexn(i,k)*qiliq(i,k,iice)*xxlv(i,k)*inv_cp
-#if defined (HEATING)
-                diag_3d(i,k,4) = diag_3d(i,k,4) - (qitot(i,k,iice)-qiliq(i,k,iice))*xxls(i,k)*inv_cp &
-                                                - qiliq(i,k,iice)*xxlv(i,k)*inv_cp
-#endif
+!#if defined (HEATING)
+!                diag_3d(i,k,4) = diag_3d(i,k,4) - (qitot(i,k,iice)-qiliq(i,k,iice))*xxls(i,k)*inv_cp &
+!                                                - qiliq(i,k,iice)*xxlv(i,k)*inv_cp
+!#endif
                 qitot(i,k,iice) = 0.
                 nitot(i,k,iice) = 0.
                 qirim(i,k,iice) = 0.
@@ -5405,9 +5402,9 @@ END subroutine p3_init
        else
           qv(i,k) = qv(i,k)+qc(i,k)
           th(i,k) = th(i,k)-invexn(i,k)*qc(i,k)*xxlv(i,k)*inv_cp
-#if defined (HEATING)
-          diag_3d(i,k,5) = diag_3d(i,k,5) - qc(i,k)*xxlv(i,k)*inv_cp
-#endif
+!#if defined (HEATING)
+!          diag_3d(i,k,5) = diag_3d(i,k,5) - qc(i,k)*xxlv(i,k)*inv_cp
+!#endif
           qc(i,k) = 0.
           nc(i,k) = 0.
        endif
@@ -5437,9 +5434,9 @@ END subroutine p3_init
        else
           qv(i,k) = qv(i,k)+qr(i,k)
           th(i,k) = th(i,k)-invexn(i,k)*qr(i,k)*xxlv(i,k)*inv_cp
-#if defined (HEATING)
-          diag_3d(i,k,5) = diag_3d(i,k,5) - qr(i,k)*xxlv(i,k)*inv_cp
-#endif
+!#if defined (HEATING)
+!          diag_3d(i,k,5) = diag_3d(i,k,5) - qr(i,k)*xxlv(i,k)*inv_cp
+!#endif
           qr(i,k) = 0.
           nr(i,k) = 0.
        endif
@@ -5583,10 +5580,10 @@ END subroutine p3_init
              qv(i,k) = qv(i,k) + qitot(i,k,iice)
              th(i,k) = th(i,k) - invexn(i,k)*(qitot(i,k,iice)-qiliq(i,k,iice))*xxls(i,k)*inv_cp
              th(i,k) = th(i,k) - invexn(i,k)*qiliq(i,k,iice)*xxlv(i,k)*inv_cp
-#if defined (HEATING)
-             diag_3d(i,k,4) = diag_3d(i,k,4) - (qitot(i,k,iice)-qiliq(i,k,iice))*xxls(i,k)*inv_cp &
-                                             - qiliq(i,k,iice)*xxlv(i,k)*inv_cp
-#endif
+!#if defined (HEATING)
+!             diag_3d(i,k,4) = diag_3d(i,k,4) - (qitot(i,k,iice)-qiliq(i,k,iice))*xxls(i,k)*inv_cp &
+!                                             - qiliq(i,k,iice)*xxlv(i,k)*inv_cp
+!#endif
              qitot(i,k,iice) = 0.
              nitot(i,k,iice) = 0.
              qirim(i,k,iice) = 0.
@@ -11824,7 +11821,7 @@ SUBROUTINE access_lookup_table_coll_3mom_LF(dumzz,dumjj,dumii,dumll,dumj,dumi,in
 
    ! check unrealistic values T
      if (.not.(T(k)>T_low .and. T(k)<T_high)) then
-        write(*,*) "unrealistic values T :", T(k)
+        write(*,*) "unrealistic values T :", k, T(k)
         badvalue_found = .true.
      endif
    ! check for NANs:
