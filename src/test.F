@@ -145,7 +145,6 @@ ts=0.
 dt=2.
 ndt=int(60./dt)
 te=ts+dt*real(ndt)
-!te=4.
 
 allocate(X(ncols+1,nz,n_prog),A(ncols+1),B(ncols+1),forcing(ncols,nz), &
          Xout(ncols+1,nz,n_prog),Ref(nz,8) &
