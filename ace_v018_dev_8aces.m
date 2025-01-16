@@ -401,9 +401,10 @@ global Nzm Ni turn_off_mf_diff
       yn = SSPRK93(yn,dt,Inonneg);
       % Implicitly solving massflux diffusion
       if ~turn_off_mf_diff
-        for i=1:Ni
-          yn((5*i-3)*Nzm+(1:Nzm)) = ImDiffMF(yn((5*i-3)*Nzm+(1:Nzm)),dt,i);
-        end
+%       for i=1:Ni
+%         yn((5*i-3)*Nzm+(1:Nzm)) = ImDiffMF(yn((5*i-3)*Nzm+(1:Nzm)),dt,i);
+%       end
+        yn = ImDiff(yn,dt);
       end
       % Implicit Newtonian damping
       yn = ImDamp(yn);
@@ -492,6 +493,62 @@ global Nzm Ni theta_e_zc qt_zc damp
   X = reshape(X,[Nzm,5,Ni]); % X(z,var,ACE-i)=[theta_e,qt,MF,dtheta_e_pr_accum,pr_accum]
   % damp = dt*(eps_sl./[rho_zc,rho_zc,rho_mf])
   X(:,1:3,:) = ( X(:,1:3,:) + damp.*[theta_e_zc,qt_zc,zeros(Nzm,1)] )./(1+damp);
+  X = X(:);
+end
+
+function X = ImDiff(X,dt)
+global Nzm Ni eddiffu eddiwin rho_zi rho_zc dz
+  X = reshape(X,[Nzm,5,Ni]); % X(z,var,ACE-i)=[theta_e,qt,MF,dtheta_e_pr_accum,pr_accum]
+  % Vertical velocity w(zi) (mass flux already at zi)
+  wi = squeeze(X(:,3,:)./rho_zi); % (zi,1,ACE-i)-->(zi,ACE-i)
+  drho0wdz = squeeze( (X(2:end,3,:)-X(1:end-1,3,:))/dz ); % (zc,ACE-i); size(drho0wdz)=[Nzm-1,Ni]
+  % Vertical momentum diffusion coefficients
+  mu_1 = abs(drho0wdz).*( eddiffu.*( max(wi)-min(wi) )./max(abs(drho0wdz)+eps) ); % (zc,ACE-i); size=[Nzm-1,Ni]
+  % Vertical tracer diffusivity
+  mu_c = 0.5*( mu_1(1:end-1,:)+mu_1(2:end,:) ); % (zi,ACE-i) for interior zi; size=[Nzm-2,Ni]
+  % Other coefficients
+  c = dz/dt;
+  rho0c = rho_zc(1:end-1)*(dz^2/dt); % (zc,1); size=[Nzm-1,Ni]
+  rho0mu = rho_zi(2:end-1).*mu_c; % (zi,ACE-i) for interior zi; size=[Nzm-2,Ni]
+  % Implicity diffusive update
+  for ida=1:Ni
+    % Tracer diffusion
+    MatC = sparse(1:Nzm-1,1:Nzm-1,[0;rho0mu(:,ida)]+rho0c+[rho0mu(:,ida);0])+...
+           sparse(1:Nzm-2,2:Nzm-1,-rho0mu(:,ida),Nzm-1,Nzm-1)+...
+           sparse(2:Nzm-1,1:Nzm-2,-rho0mu(:,ida),Nzm-1,Nzm-1);
+    X(1:end-1,1:2,ida) = MatC\( rho0c.*X(1:end-1,1:2,ida) );
+    % Mass flux diffusion
+    mu_2 = movmax(mu_1(:,ida),[1 1]*eddiwin(ida)); % (zc,ACE-i); size=[Nzm-1,1]
+    mu_D = conv(mu_2,ones(2*eddiwin(ida)+1,1)/(2*c*eddiwin(ida)+1),'same'); % (zc,ACE-i); size=[Nzm-1,1]
+    Mat = sparse(1:Nzm-2,1:Nzm-2,(c+mu_D(1:end-1)+mu_D(2:end)),Nzm-2,Nzm-2)+...
+          sparse(1:Nzm-3,2:Nzm-2,-mu_D(2:end-1),Nzm-2,Nzm-2)+...
+          sparse(2:Nzm-2,1:Nzm-3,-mu_D(2:end-1),Nzm-2,Nzm-2);
+    X(2:end-1,3,ida) = Mat\( c*X(2:end-1,3,ida) );
+  end%ida
+  % Double check w=0 at surface and model top
+  X([1,end-10:end],3,:) = 0;
+  X = X(:);
+end
+
+function X = ImDiffMF(X,dt)
+global Nzm Ni eddiffu eddiwin rho_zi dz
+  X = reshape(X,[Nzm,5,Ni]); % X(z,var,ACE-i)=[theta_e,qt,MF,dtheta_e_pr_accum,pr_accum]
+  % Vertical velocity w(zi) (mass flux already at zi)
+  wi = squeeze(X(:,3,:)./rho_zi); % (zi,1,ACE-i)-->(zi,ACE-i)
+  drho0wdz = squeeze( (X(2:end,3,:)-X(1:end-1,3,:))/dz ); % (zc,ACE-i); size(drho0wdz)=[Nzm-1,Ni]
+  % Vertical momentum diffusion coefficients
+  mu_1 = abs(drho0wdz).*( eddiffu.*( max(wi)-min(wi) )./max(abs(drho0wdz)+eps) ); % (zc,ACE-i); size=[Nzm-1,Ni]
+  c = dz/dt;
+  for ida=1:Ni
+    mu_2 = movmax(mu_1(:,ida),[1 1]*eddiwin(ida)); % (zc,ACE-i); size=[Nzm-1,1]
+    mu_D = conv(mu_2,ones(2*eddiwin(ida)+1,1)/(2*c*eddiwin(ida)+1),'same'); % (zc,ACE-i); size=[Nzm-1,1]
+    Mat = sparse(1:Nzm-2,1:Nzm-2,(c+mu_D(1:end-1)+mu_D(2:end)),Nzm-2,Nzm-2)+...
+          sparse(1:Nzm-3,2:Nzm-2,-mu_D(2:end-1),Nzm-2,Nzm-2)+...
+          sparse(2:Nzm-2,1:Nzm-3,-mu_D(2:end-1),Nzm-2,Nzm-2);
+    X(2:end-1,3,ida) = Mat\( c*X(2:end-1,3,ida) );
+  end%ida
+  % Double check w=0 at surface and model top
+  X([1,end-10:end],3,:) = 0;
   X = X(:);
 end
 
