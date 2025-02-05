@@ -1,5 +1,5 @@
 # ACE_MATLAB_v0.18
-Anelastic Convective Entity (ACE) Model - MATLAB Implementation version 0.16
+Anelastic Convective Entity (ACE) Model - MATLAB Implementation version 0.18
 
 This ACE_MATLAB_v0.18 code package is prepared for and released with the publication of Kuo & Neelin (2025a, 2025b) in the Journal of Atmospheric Sciences. Detailed model description can be found in the references list below.
 
