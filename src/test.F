@@ -136,8 +136,8 @@ goto 838 ! directly read profile from binary file.
 838 continue
 
 
-n_prog=3 ! MF, the, qt
-!n_prog=11 ! for P3
+!n_prog=3 ! MF, the, qt
+n_prog=11 ! for P3
 
 dz=50.
 ncols=8
@@ -200,18 +200,18 @@ do k=1,nz
   call inv_theta_e(X(1,k,2),X(1,k,3),Ref(k,7),Tr(1,k),q(1,k),ql(1,k),qi(1,k))
   Tv0(k)=Tr(1,k)*(1.+0.607789855072462*q(1,k)-ql(1,k)-qi(1,k))
   
-  !! for P3
-  !X(:,k,1)=0.
-  !X(:,k,2)=Tr(1,k) / Ref(k,8)
-  !X(:,k,3)=q(1,k)
-  !X(:,k,4)=0.
-  !X(:,k,5)=0.
-  !X(:,k,6)=0.
-  !X(:,k,7)=0.
-  !X(:,k,8)=0.
-  !X(:,k,9)=0.
-  !X(:,k,10)=0.
-  !X(:,k,11)=0.
+  ! for P3
+  X(:,k,1)=0.
+  X(:,k,2)=Tr(1,k) / Ref(k,8)
+  X(:,k,3)=q(1,k)
+  X(:,k,4)=0.
+  X(:,k,5)=0.
+  X(:,k,6)=0.
+  X(:,k,7)=0.
+  X(:,k,8)=0.
+  X(:,k,9)=0.
+  X(:,k,10)=0.
+  X(:,k,11)=0.
 enddo
 
 ! initialize MF
