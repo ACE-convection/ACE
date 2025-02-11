@@ -88,23 +88,23 @@ do while ( t < te)
   X(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt
   
   ! call physics here
-  !if (n_prog==3) then
-  !  call precip_sinks(ncols,nz,n_prog,Ref(1:nz,7),K1(:,:,1:2)) ! simplified precipitation
-  !  X(1:ncols,:,2:n_prog) = X(1:ncols,:,2:n_prog) +  K1(:,:,1:2) * dt
-  !  
-  !  ! NaN check
-  !  do k=1,nz
-  !  do i=1,ncols
-  !    if (X(i,k,1)/=X(i,k,1)) stop "NaN is found"
-  !  enddo
-  !  enddo
+  if (n_prog==3) then
+    call precip_sinks(ncols,nz,n_prog,Ref(1:nz,7),K1(:,:,1:2)) ! simplified precipitation
+    X(1:ncols,:,2:n_prog) = X(1:ncols,:,2:n_prog) +  K1(:,:,1:2) * dt
+    
+    ! NaN check
+    do k=1,nz
+    do i=1,ncols
+      if (X(i,k,1)/=X(i,k,1)) stop "NaN is found"
+    enddo
+    enddo
 
-  !elseif (n_prog==11) then
-  !  call p3_wrapper_ace(ncols,nz,n_prog,dt,yi,X,Ref)
-  !else
-  !  write(*,*) "No suitable microphysics scheme"
-  !  stop
-  !endif
+  elseif (n_prog==11) then
+    call p3_wrapper_ace(ncols,nz,n_prog,dt,yi,X,Ref)
+  else
+    write(*,*) "No suitable microphysics scheme"
+    stop
+  endif
 
 
   ! implicit diffusion of mass flux and racers
@@ -318,7 +318,7 @@ do k=1,nz-1
   wi(:,k) = X(1:ncols,k,1) / Ref(k,2)
   drho0wdz(:,k) = ( X(1:ncols,k+1,1) - X(1:ncols,k,1) ) / Ref(k,5)
 enddo
- drho0wdz(:,nz) = 0.
+drho0wdz(:,nz) = 0.
 
 do k=1,nz
   mu_i(:,k) = abs(drho0wdz(:,k)) * ( eddiffu(:,k) * ( maxval(wi,2) - minval(wi,2) ) ) &
@@ -353,7 +353,6 @@ do i=1,ncols
     coeff(k,1) = - mu(k)
     coeff(k,3) = - mu(k+1)
     coeff(k,2) = 1. -  coeff(k,1) - coeff(k,3)
-    !if ((k<=10 .or. k>=790) .and. i==1) write(*,'(I4,3ES16.8)') k,coeff(k,:)*ref(:,5)/dt
   enddo
  
   tmp(:) = X(i,:,1) 
@@ -361,11 +360,6 @@ do i=1,ncols
   if (info/=0) write(*,*) "ACE ImDiff: matrix cannot be solved", info
 
   X(i,2:nz,1) = tmp(2:nz)
-
-  !do k=1,nz
-  !  if ((k<=10 .or. k>=790) .and. i==1) write(*,*) k,X(i,k,1)
-  !enddo
-
 enddo
 
 ! MF at the model top and surface

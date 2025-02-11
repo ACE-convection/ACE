@@ -244,13 +244,14 @@ call cpu_time(start)
 !open(10,file="./data/output_singleACE_manus208.dat",access="direct",recl=ncols*nz*8)
 !open(10,file="./data/output_multiACE_manus208.dat",access="direct",recl=ncols*nz*9)
 !open(10,file="./data/output_multiACE_manus208_swap.dat",access="direct",recl=ncols*nz*9)
-open(10,file="./data/output_multiACE_manus208_p3.dat",access="direct",recl=ncols*nz*9)
-!open(10,file="./data/output_singleACE_manus208_p3.dat",access="direct",recl=ncols*nz*9)
+!open(10,file="./data/output_multiACE_manus208_p3.dat",access="direct",recl=ncols*nz*9)
+open(10,file="./data/output_singleACE_manus208_p3.dat",access="direct",recl=ncols*nz*9)
+!open(10,file="./data/output_singleACE_manus208_vdiff.dat",access="direct",recl=ncols*nz*9)
+
 
 n=1
 
-te=4
-do t=1,1 !60*3 ! 60 is mins, and 48 is hours
+do t=1,60*120 ! 60 is mins, and 48 is hours
   write(*,*) ts,te,t
 
   ! output diagnostic
