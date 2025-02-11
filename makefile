@@ -1,7 +1,7 @@
 # makefile of ACE model
 FC = ifort
 CHECK = -CB -g -traceback -check all,noarg_temp_created -debug all
-FCFLAGS = -r8 -O3 -free -mcmodel=large -heap-arrays 10 -shared-intel -fp-model precise
+FCFLAGS = -r8 -O3 -free -mcmodel=large -heap-arrays 10 -shared-intel -fp-model precise -qmkl
 ifdef DEBUG
   FCFLAGS += $(CHECK)
 endif

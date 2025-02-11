@@ -9,6 +9,7 @@ public :: weno, weno_vec, inv_theta_e, pchip, theta_e, ace_driver, ace_initializ
 real, parameter :: pi = 4.*atan(1.)
 real, parameter :: g = 9.80665 ! gravity constant 
 real, parameter :: nju = 0.09 ! Morrison (2017)
+real, parameter :: eps = 222.044604925031e-018 ! a small real number
 ! Spounge layer with Newtonian damping at domain top ztop
 real, parameter :: SLD = 6e3  ! e-folding depth in m
 real, parameter :: SLTau = 180 ! SL relaxation timescale in s
@@ -23,6 +24,8 @@ real, dimension(:,:), allocatable :: coarse_F
 real, dimension(:,:), allocatable :: dwdt
 real*8, dimension(:,:,:,:), allocatable :: PMB
 real, dimension(:,:), allocatable, save :: Ta, q, ql, qi
+real, dimension(:,:), allocatable, save :: eddiffu 
+integer, dimension(:,:), allocatable, save :: eddiwin
 
 contains
 
@@ -85,27 +88,27 @@ do while ( t < te)
   X(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt
   
   ! call physics here
-  if (n_prog==3) then
-    call precip_sinks(ncols,nz,n_prog,Ref(1:nz,7),K1(:,:,1:2)) ! simplified precipitation
-    X(1:ncols,:,2:n_prog) = X(1:ncols,:,2:n_prog) +  K1(:,:,1:2) * dt
-  elseif (n_prog==11) then
-    call p3_wrapper_ace(ncols,nz,n_prog,dt,yi,X,Ref)
-  else
-    write(*,*) "No suitable microphysics scheme"
-    stop
-  endif
+  !if (n_prog==3) then
+  !  call precip_sinks(ncols,nz,n_prog,Ref(1:nz,7),K1(:,:,1:2)) ! simplified precipitation
+  !  X(1:ncols,:,2:n_prog) = X(1:ncols,:,2:n_prog) +  K1(:,:,1:2) * dt
+  !  
+  !  ! NaN check
+  !  do k=1,nz
+  !  do i=1,ncols
+  !    if (X(i,k,1)/=X(i,k,1)) stop "NaN is found"
+  !  enddo
+  !  enddo
 
-  ! NaN check
-  do k=1,nz
-  do i=1,ncols
-    if (X(i,k,2)/=X(i,k,2)) then
-      write(*,*) i,k,Ref(k,7)
-      write(*,*) yi(i,k,2:11)
-      write(*,*) X(i,k,2:11)
-      stop "check 2"
-    endif    
-  enddo
-  enddo
+  !elseif (n_prog==11) then
+  !  call p3_wrapper_ace(ncols,nz,n_prog,dt,yi,X,Ref)
+  !else
+  !  write(*,*) "No suitable microphysics scheme"
+  !  stop
+  !endif
+
+
+  ! implicit diffusion of mass flux and racers
+  call ImDiff(ncols,nz,n_prog,X,Ref,dt)
 
   ! implicit damping 
   call ImDamp(ncols,nz,n_prog,X,Ref,dt)
@@ -136,7 +139,7 @@ allocate(coarse_F(ncols,coarse_nz))
 allocate(PMB(ncols,ncols,coarse_nz,coarse_nz+1))
 allocate(dwdt(ncols,coarse_nz+1))
 allocate(Ta(ncols,nz),q(ncols,nz),ql(ncols,nz),qi(ncols,nz))
-
+allocate(eddiffu(ncols,nz),eddiwin(ncols,nz))
 
 open(10,file=trim(fname),access="direct",recl=(coarse_nz+1)*2)
 n=1
@@ -165,7 +168,6 @@ real, intent(in) :: dt
 real, dimension(ncols), intent(in) :: A, B ! ACE area and ACE outer perimeter [km^2, km]
 real, dimension(nz,8), intent(in) :: Ref ! reference varaibles: rhoc, rhoz, z, zm, dz, dzm, p, pi
 real, dimension(ncols+1,nz,n_prog), intent(in) :: X ! MF, theta_e, qt
-!real, dimension(ncols+1,nz,n_prog), intent(in) :: X ! MF, theta, qv, ql, qi
 real, dimension(ncols,nz,n_prog), intent(out) :: dXdt 
 
 ! local variables
@@ -279,13 +281,98 @@ do i=1,ncols
 enddo  
 
 ! single ACE
-!dXdt(2:ncols,:,:)=0.
+dXdt(2:ncols,:,:)=0.
 
 ! model top 
 dXdt(:,nz-10:nz,:)=0.
 
 
 end subroutine ace_tendency
+
+subroutine ImDiff(ncols,nz,n_prog,X,Ref,dt)
+implicit none
+
+! input/output variables
+integer, intent(in) :: ncols,nz,n_prog
+real, intent(in) :: dt
+real, dimension(ncols+1,nz,n_prog), intent(inout) :: X
+real, dimension(nz,7), intent(in) :: Ref
+
+! local variable
+logical, save :: first = .True.
+integer :: i, k, ks, ke, info
+real :: dum1
+real, dimension(ncols,nz) :: wi, drho0wdz, mu_i, mu_c
+real, dimension(nz) :: tmp, mu
+real, dimension(nz,3) :: coeff
+
+if (first) then
+  do k=1,nz
+    eddiffu(:,k) = 5.e3 / ( 4. * pi ) / Ref(1:10,5)
+    eddiwin(:,k) = ceiling( 5.e3 / ( 2. * Ref(k,5) ) ) 
+  enddo
+  first = .False.
+endif
+
+do k=1,nz-1
+  wi(:,k) = X(1:ncols,k,1) / Ref(k,2)
+  drho0wdz(:,k) = ( X(1:ncols,k+1,1) - X(1:ncols,k,1) ) / Ref(k,5)
+enddo
+ drho0wdz(:,nz) = 0.
+
+do k=1,nz
+  mu_i(:,k) = abs(drho0wdz(:,k)) * ( eddiffu(:,k) * ( maxval(wi,2) - minval(wi,2) ) ) &
+               / (maxval(abs(drho0wdz)+eps,2))
+enddo
+
+do k=1,nz-1
+  mu_c(:,k) = 0.5 * ( mu_i(:,k) + mu_i(:,k+1) )
+enddo
+
+do i=1,ncols 
+
+  ! moving max
+  do k=1,nz
+    ks = max(k-eddiwin(i,k),1)
+    ke = min(k+eddiwin(i,k),nz)
+    tmp(k) = maxval(mu_i(i,ks:ke),1)
+  enddo
+ 
+  ! convolution
+  do k=1,nz
+    ks = max(k-eddiwin(i,k),1)
+    ke = min(k+eddiwin(i,k),nz)
+    
+    mu(k) = sum(tmp(ks:ke)*(1./(2.*eddiwin(i,k)*Ref(ks:ke,5)/dt+1.)),1)
+  enddo
+ 
+  mu = mu * dt / ref(:,5)
+  ! solve tridiagonal system
+  coeff = 0.
+  do k=1,nz-1
+    coeff(k,1) = - mu(k)
+    coeff(k,3) = - mu(k+1)
+    coeff(k,2) = 1. -  coeff(k,1) - coeff(k,3)
+    !if ((k<=10 .or. k>=790) .and. i==1) write(*,'(I4,3ES16.8)') k,coeff(k,:)*ref(:,5)/dt
+  enddo
+ 
+  tmp(:) = X(i,:,1) 
+  call dgtsv(nz-1,1,coeff(2:nz-1,1),coeff(1:nz-1,2),coeff(1:nz-2,3),tmp(2:nz),nz-1,info)
+  if (info/=0) write(*,*) "ACE ImDiff: matrix cannot be solved", info
+
+  X(i,2:nz,1) = tmp(2:nz)
+
+  !do k=1,nz
+  !  if ((k<=10 .or. k>=790) .and. i==1) write(*,*) k,X(i,k,1)
+  !enddo
+
+enddo
+
+! MF at the model top and surface
+X(:,1,1) = 0.
+X(:,nz-10:nz,1) = 0.
+
+end subroutine ImDiff
 
  
 subroutine ImDamp(ncols,nz,n_prog,X,Ref,dt)
