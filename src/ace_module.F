@@ -281,7 +281,7 @@ do i=1,ncols
 enddo  
 
 ! single ACE
-dXdt(2:ncols,:,:)=0.
+!dXdt(2:ncols,:,:)=0.
 
 ! model top 
 dXdt(:,nz-10:nz,:)=0.
