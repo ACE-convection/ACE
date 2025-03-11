@@ -24,13 +24,16 @@ real, dimension(np,5211) :: ta,hus
 real, dimension(5211) :: pr
 integer, parameter :: np5=181
 real, dimension(np5) :: p5,tap5,husp5,zp5,rhop5
-integer, parameter :: nz=801, nzm=801
-real, dimension(nz) :: z,T_e,q_e,Tv_e,the_e,rho_e,p_z
-real, dimension(nzm) :: zm,T_zm,q_zm,Tv_zm,the_zm,rho_zm,p_zm,th_zm,thes_zm,rh_zm
-real*8, dimension(nzm) :: tmp
+integer :: nz, nzm
+real, dimension(:), allocatable :: z,T_e,q_e,Tv_e,the_e,rho_e,p_z
+real, dimension(:), allocatable :: zm,T_zm,q_zm,Tv_zm,the_zm,rho_zm,p_zm,th_zm,thes_zm,rh_zm
+real*8, dimension(:), allocatable :: tmp
 real, dimension(200) :: coarse_z
 real, dimension(201) :: coarse_ze
-character(300) :: path,fname
+character(300) :: path,fname,PMB_file
+logical :: single_ace,microphy,do_ImDiff
+
+namelist /config/ n_prog,ncols,nz,PMB_file,single_ace,microphy,do_ImDiff
 
 path="./data/soundings/"
 fname=trim(path)//"manus_3hr_ARMBEsonde_profiles.nc"
@@ -139,6 +142,8 @@ goto 838 ! directly read profile from binary file.
 !n_prog=3 ! MF, the, qt
 n_prog=11 ! for P3
 
+nz=801
+nzm=801
 dz=50.
 ncols=8
 ts=0.
@@ -146,6 +151,15 @@ dt=4.
 ndt=int(60./dt)
 te=ts+dt*real(ndt)
 
+open(10,file="./namelist.input",form="formatted")
+read(10,config)
+close(10)
+
+
+
+allocate(z(nz),T_e(nz),q_e(nz),Tv_e(nz),the_e(nz),rho_e(nz),p_z(nz))
+allocate(zm(nzm),T_zm(nzm),q_zm(nzm),Tv_zm(nzm),the_zm(nzm),rho_zm(nzm) &
+        ,p_zm(nzm),th_zm(nzm),thes_zm(nzm),rh_zm(nzm),tmp(nzm))
 allocate(X(ncols+1,nz,n_prog),A(ncols+1),B(ncols+1),forcing(ncols,nz), &
          Xout(ncols+1,nz,n_prog),Ref(nz,8) &
         ,Tr(ncols,nz),q(ncols,nz),ql(ncols,nz),qi(ncols,nz))
@@ -200,18 +214,18 @@ do k=1,nz
   call inv_theta_e(X(1,k,2),X(1,k,3),Ref(k,7),Tr(1,k),q(1,k),ql(1,k),qi(1,k))
   Tv0(k)=Tr(1,k)*(1.+0.607789855072462*q(1,k)-ql(1,k)-qi(1,k))
   
-  ! for P3
-  X(:,k,1)=0.
-  X(:,k,2)=Tr(1,k) / Ref(k,8)
-  X(:,k,3)=q(1,k)
-  X(:,k,4)=0.
-  X(:,k,5)=0.
-  X(:,k,6)=0.
-  X(:,k,7)=0.
-  X(:,k,8)=0.
-  X(:,k,9)=0.
-  X(:,k,10)=0.
-  X(:,k,11)=0.
+  !! for P3
+  !X(:,k,1)=0.
+  !X(:,k,2)=Tr(1,k) / Ref(k,8)
+  !X(:,k,3)=q(1,k)
+  !X(:,k,4)=0.
+  !X(:,k,5)=0.
+  !X(:,k,6)=0.
+  !X(:,k,7)=0.
+  !X(:,k,8)=0.
+  !X(:,k,9)=0.
+  !X(:,k,10)=0.
+  !X(:,k,11)=0.
 enddo
 
 ! initialize MF
@@ -228,14 +242,8 @@ enddo
 
 
 ! precomputed file
-fname="./input_data/PMB.dat"
-do k=1,200
-  coarse_z(k) = zm((k-1)*4+1)
-  coarse_ze(k) = zm((k-1)*4+1)
-enddo
-coarse_ze(201) = 40000.
-
-call ace_initialization(ncols,nz,200,coarse_z,coarse_ze,trim(fname))
+fname="./input_data/precomputed_mf_basis.nc"
+call ace_initialization(ncols,nz,trim(fname))
 
 
 

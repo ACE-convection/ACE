@@ -8,24 +8,27 @@ public :: weno, weno_vec, inv_theta_e, pchip, theta_e, ace_driver, ace_initializ
 
 real, parameter :: pi = 4.*atan(1.)
 real, parameter :: g = 9.80665 ! gravity constant 
-real, parameter :: nju = 0.09 ! Morrison (2017)
 real, parameter :: eps = 222.044604925031e-018 ! a small real number
-! Spounge layer with Newtonian damping at domain top ztop
-real, parameter :: SLD = 6e3  ! e-folding depth in m
-real, parameter :: SLTau = 180 ! SL relaxation timescale in s
+
+real :: nju = 0.09 ! Morrison (2017)
+! Sponge layer with Newtonian damping at domain top ztop
+real :: SLD = 6e3  ! e-folding depth in m
+real :: SLTau = 180 ! SL relaxation timescale in s
 ! coefficients for precipitation sinks
-real, parameter :: qc_ramp = 0.5e-3 ! kg/kg; ramping for precip when qc>qc_ramp
-real, parameter :: dqc = 20 ! kg/kg; transition for a smooth onset of precip ramp function
-real, parameter :: tau_pr = 5*60 ! sec; relaxation timescale for precip
+real :: qc_ramp = 0.5e-3 ! kg/kg; ramping for precip when qc>qc_ramp
+real :: dqc = 20 ! kg/kg; transition for a smooth onset of precip ramp function
+real :: tau_pr = 5*60 ! sec; relaxation timescale for precip
 
 integer :: coarse_nz
 real, dimension(:), allocatable :: coarse_z, coarse_ze
 real, dimension(:,:), allocatable :: coarse_F
 real, dimension(:,:), allocatable :: dwdt
-real*8, dimension(:,:,:,:), allocatable :: PMB
+real*8, dimension(:,:,:,:), allocatable :: PMB, pmb2
 real, dimension(:,:), allocatable, save :: Ta, q, ql, qi
 real, dimension(:,:), allocatable, save :: eddiffu 
 integer, dimension(:,:), allocatable, save :: eddiwin
+character(300) :: PMB_file
+logical :: do_ImDamp
 
 contains
 
@@ -121,19 +124,36 @@ enddo
 endsubroutine ace_driver
 
 
-subroutine ace_initialization(ncols,nz,nz_presolve,z_presolve,ze_presolve,fname)
+subroutine ace_initialization(ncols,nz,fname)
+use netcdf
 implicit none
 
 ! input variables
-integer, intent(in) :: ncols, nz, nz_presolve
-real, dimension(nz_presolve) :: z_presolve
-real, dimension(nz_presolve+1) :: ze_presolve
+integer, intent(in) :: ncols, nz
 character(*), intent(in) :: fname
 
 ! local variables
 integer :: i,j,k,n
+integer :: ierr,ncid1,varid1,dimid1
+character(300) :: infile
 
-coarse_nz=nz_presolve
+namelist /sponge/ do_ImDamp,SLD,SLTau,nju
+namelist /microphy3/ qc_ramp,dqc,tau_pr
+
+open(10,file="./namelist.input",form="formatted")
+read(10,sponge)
+read(10,microphy3)
+close(10)
+
+infile="./input_data/precomputed_mf_basis.nc"
+ierr=nf90_open(trim(fname),nf90_nowrite,ncid1)
+if (ierr/=nf90_noerr) write(*,*) "can't open PMB file", ierr
+
+ierr=nf90_inq_dimid(ncid1,'zc',dimid1)
+if (ierr/=nf90_noerr) write(*,*) "can't inq zc", ierr
+ierr=nf90_inquire_dimension(ncid1,dimid1,len=coarse_nz)
+if (ierr/=nf90_noerr) write(*,*) "can't read zc", ierr
+
 allocate(coarse_z(coarse_nz),coarse_ze(coarse_nz+1))
 allocate(coarse_F(ncols,coarse_nz))
 allocate(PMB(ncols,ncols,coarse_nz,coarse_nz+1))
@@ -141,20 +161,23 @@ allocate(dwdt(ncols,coarse_nz+1))
 allocate(Ta(ncols,nz),q(ncols,nz),ql(ncols,nz),qi(ncols,nz))
 allocate(eddiffu(ncols,nz),eddiwin(ncols,nz))
 
-open(10,file=trim(fname),access="direct",recl=(coarse_nz+1)*2)
-n=1
-do k=1,ncols
-do j=1,ncols
-  do i=1,coarse_nz
-    read(10,rec=n) PMB(k,j,i,:)
-    n=n+1
-  enddo
-enddo
-enddo
-close(10)
+ierr=nf90_inq_varid(ncid1,"PMB",varid1)
+if (ierr/=nf90_noerr) write(*,*) "can't inq PMB", ierr
+ierr=nf90_get_var(ncid1,varid1,PMB2)
+if (ierr/=nf90_noerr) write(*,*) "can't read PMB", ierr
 
-coarse_z = z_presolve
-coarse_ze = ze_presolve
+ierr=nf90_inq_varid(ncid1,"Zc",varid1)
+if (ierr/=nf90_noerr) write(*,*) "can't inq Zc", ierr
+ierr=nf90_get_var(ncid1,varid1,coarse_z)
+if (ierr/=nf90_noerr) write(*,*) "can't read Zc", ierr
+
+ierr=nf90_inq_varid(ncid1,"Zi",varid1)
+if (ierr/=nf90_noerr) write(*,*) "can't inq Zi", ierr
+ierr=nf90_get_var(ncid1,varid1,coarse_ze)
+if (ierr/=nf90_noerr) write(*,*) "can't read Zi", ierr
+
+ierr=nf90_close(ncid1)
+if (ierr/=nf90_noerr) write(*,*) "can't close PMB file", ierr 
 
 end subroutine ace_initialization
 

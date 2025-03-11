@@ -1,0 +1,22 @@
+&config
+n_prog          =        3,                            ! Number of prognostic variables 
+ncols           =        8,                            ! Number of ACE columns
+nz              =        801,                          ! Number of vertical grid points (including 1 halo point)
+PMB_file        =        "./input_data/PMB.dat",       ! File path of precomputed massflux basis
+single_ace      =        .True.,                       ! Perform single ACE simulation
+microphy        =        .True.,                       ! Switch of microphysics (simple micorphy when n_prog=3, P3 scheme when n_prog=11)
+do_ImDiff       =        .True.,                       ! Apply implicit vertical diffusion or not
+/
+
+&sponge
+do_ImDamp       =        .True.,                       ! Upper-level Newtonian damping 
+SLD             =        6.e3,                         ! E-folding depth of damping (m)
+SLTau           =        180,                          ! relaxation timescale (s)
+nju             =        0.09,                         ! horiztonal diffusion rate (m^2/s)
+/
+
+&microphy3
+qc_ramp         =        0.5e-3,                       ! Ramping for precip when qc>qc_ramp (kg/kg)
+dqc             =        20.,                          ! Transition for a smooth onset of precip ramp function (kg/kg)
+tau_pr          =        300.,                         ! Relaxation timescale for precip (s)
+/
