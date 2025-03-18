@@ -3,11 +3,11 @@ use netcdf
 use ace_module
 implicit none
 
-integer, parameter :: np=37, n_weno=2
+integer, parameter :: np=37
 real,parameter :: pi=4.*atan(1.),Rd=287.04,Cp=1005.7,g=9.80665,p0=1.e5
 integer :: i,j,k,m,n,o,t
 integer :: ierr,ncid1,varid1
-integer :: nprof, ncols, ice, n_prog,ndt
+integer :: nprof,n_weno,ncols, ice, n_prog,ndt
 real :: dum1,dum2,dum3,dum4,dum5,dum6,dum7
 real :: dz,dp,ts,te,dt
 real :: start, finish
@@ -31,9 +31,9 @@ real*8, dimension(:), allocatable :: tmp
 real, dimension(200) :: coarse_z
 real, dimension(201) :: coarse_ze
 character(300) :: path,fname,PMB_file
-logical :: single_ace,microphy,do_ImDiff
+logical :: single_ace,do_microphy,do_ImDiff
 
-namelist /config/ n_prog,ncols,nz,PMB_file,single_ace,microphy,do_ImDiff
+namelist /config/ n_prog,n_weno,ncols,nz,PMB_file,single_ace,do_microphy,do_ImDiff
 
 path="./data/soundings/"
 fname=trim(path)//"manus_3hr_ARMBEsonde_profiles.nc"
@@ -150,6 +150,7 @@ ts=0.
 dt=4.
 ndt=int(60./dt)
 te=ts+dt*real(ndt)
+PMB_file="./input_data/precomputed_mf_basis.nc"
 
 open(10,file="./namelist.input",form="formatted")
 read(10,config)
@@ -242,10 +243,7 @@ enddo
 
 
 ! precomputed file
-fname="./input_data/precomputed_mf_basis.nc"
-call ace_initialization(ncols,nz,trim(fname))
-
-
+call ace_initialization(ncols,nz,trim(PMB_file))
 
 call cpu_time(start)
 

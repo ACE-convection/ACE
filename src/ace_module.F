@@ -2,47 +2,61 @@ module ace_module
 implicit none
 
 private
+public :: ace_t
 public :: weno, weno_vec, inv_theta_e, pchip, theta_e, ace_driver, ace_initialization, eval_qs
 
-! defien operator for grid interface
+! model setup by ace_t
+type ace_t
+  ! model setup
+  integer :: n_prog,n_weno,ncols,nz
+  real, dimension(:), allocatable :: A, B
+  real, dimension(:,:), allocatable :: Ref
+  real, dimension(:,:,:), allocatable :: X, forcing
+  character(300) :: PMB_file
+  logical :: single_ace,do_microphy,do_ImDiff,do_ImDamp
+  real :: dt
+  real :: t_now
 
+  ! parameters for ImPamp
+  real :: nju,SLD,SLTau
+  
+  ! constants for simple micrphysics scheme
+  real qc_ramp,dqc,tau_pr
+    
+  ! options for P3 microphysics scheme
+  integer :: ncat
+  logical :: log_predictNc,trplMomI,liqfrac
+
+  ! arrays for PMB
+  integer :: coarse_nz
+  real, dimension(:), allocatable :: coarse_z, coarse_ze
+  real, dimension(:,:), allocatable :: coarse_F
+  real, dimension(:,:), allocatable :: dwdt
+  real, dimension(:,:,:,:), allocatable :: PMB
+
+  ! array for calculating buoyancy
+  real, dimension(:,:), allocatable :: Ta, q, ql, qi
+
+  contains
+    procedure :: initialize=>ace_initialization
+    procedure :: integrate=>ace_driver
+end type ace_t
+
+
+! constants
 real, parameter :: pi = 4.*atan(1.)
 real, parameter :: g = 9.80665 ! gravity constant 
 real, parameter :: eps = 222.044604925031e-018 ! a small real number
 
-real :: nju = 0.09 ! Morrison (2017)
-! Sponge layer with Newtonian damping at domain top ztop
-real :: SLD = 6e3  ! e-folding depth in m
-real :: SLTau = 180 ! SL relaxation timescale in s
-! coefficients for precipitation sinks
-real :: qc_ramp = 0.5e-3 ! kg/kg; ramping for precip when qc>qc_ramp
-real :: dqc = 20 ! kg/kg; transition for a smooth onset of precip ramp function
-real :: tau_pr = 5*60 ! sec; relaxation timescale for precip
-
-integer :: coarse_nz
-real, dimension(:), allocatable :: coarse_z, coarse_ze
-real, dimension(:,:), allocatable :: coarse_F
-real, dimension(:,:), allocatable :: dwdt
-real*8, dimension(:,:,:,:), allocatable :: PMB, pmb2
-real, dimension(:,:), allocatable, save :: Ta, q, ql, qi
-real, dimension(:,:), allocatable, save :: eddiffu 
-integer, dimension(:,:), allocatable, save :: eddiwin
-character(300) :: PMB_file
-logical :: do_ImDamp
-
 contains
 
-subroutine ace_driver(ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing)
+subroutine ace_driver(self,te)
 implicit none
 
-! input/output variables
-integer, intent(in) :: ncols,nz,n_weno,n_prog
-real, dimension(ncols), intent(in) :: A, B
-real, dimension(nz,8), intent(in) :: Ref
-real, dimension(ncols+1,nz,n_prog), intent(inout) :: X
-real, intent(inout) :: t
-real, intent(in) :: te,dt
-real, dimension(ncols,nz), intent(in) :: B_forcing
+class(ace_t) :: self
+
+! input variables
+real, intent(in) :: te ! integrate ACE to te
 
 ! local variables
 real, dimension(ncols+1,nz,n_prog) :: yi
@@ -50,71 +64,73 @@ real, dimension(ncols,nz,n_prog) :: K1,K2,tmp
 real :: dum1
 integer :: i,k
 
-yi = X
+yi = self%X
 
-do while ( t < te)
+do while ( self%t_now < te)
   ! update ace tendency
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,K1,1)
-  yi(1:ncols,:,:) = X(1:ncols,:,:) + K1 * dt / 6.
+  call ace_tendency(K1,1)
+  yi(1:ncols,:,:) = self%X(1:ncols,:,:) + K1 * dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,K2,2)
-  yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
+  call ace_tendency(K1,2)
+  yi(1:ncols,:,:) = self%X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,3)
+  call ace_tendency(K1,3)
   K2 = K2 + tmp
-  yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
+  yi(1:ncols,:,:) = self%X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,4)
+  call ace_tendency(K1,4)
   K2 = K2 + tmp
-  yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
+  yi(1:ncols,:,:) = self%X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,5)
+  call ace_tendency(K1,5)
   K2 = K2 + tmp
-  yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
+  yi(1:ncols,:,:) = self%X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,6)
+  call ace_tendency(K1,6)
   K2 = ( K2 + tmp ) / 15.
-  yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt 
+  yi(1:ncols,:,:) = self%X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt 
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,7)
+  call ace_tendency(K1,7)
   K1 = K1 + tmp 
-  yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt 
+  yi(1:ncols,:,:) = self%X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt 
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,8)
+  call ace_tendency(K1,8)
   K1 = K1 + tmp 
-  yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt 
+  yi(1:ncols,:,:) = self%X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt 
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,9)
+  call ace_tendency(K1,9)
   K1 = K1 + tmp
 
-  yi = X
-  X(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt
+  yi = self%X
+  self%X(1:ncols,:,:) = self%X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt
   
   ! call physics here
-  if (n_prog==3) then
-    call precip_sinks(ncols,nz,n_prog,Ref(1:nz,7),K1(:,:,1:2)) ! simplified precipitation
-    X(1:ncols,:,2:n_prog) = X(1:ncols,:,2:n_prog) +  K1(:,:,1:2) * dt
-    
-    ! NaN check
-    do k=1,nz
-    do i=1,ncols
-      if (X(i,k,1)/=X(i,k,1)) stop "NaN is found"
-    enddo
-    enddo
+  if (self%do_microphy) then
+    if (n_prog==3) then
+      call precip_sinks(ncols,nz,n_prog,Ref(1:nz,7),K1(:,:,1:2)) ! simplified precipitation
+      X(1:ncols,:,2:n_prog) = X(1:ncols,:,2:n_prog) +  K1(:,:,1:2) * dt
+      
+      ! NaN check
+      do k=1,nz
+      do i=1,ncols
+        if (X(i,k,1)/=X(i,k,1)) stop "NaN is found"
+      enddo
+      enddo
 
-  elseif (n_prog==11) then
-    call p3_wrapper_ace(ncols,nz,n_prog,dt,yi,X,Ref)
-  else
-    write(*,*) "No suitable microphysics scheme"
-    stop
-  endif
+    elseif (n_prog==11) then
+      call p3_wrapper_ace(ncols,nz,n_prog,dt,yi,X,Ref)
+    else
+      write(*,*) "No suitable microphysics scheme"
+      stop
+    endif
+  endif 
 
 
   ! implicit diffusion of mass flux and racers
-  call ImDiff(ncols,nz,n_prog,X,Ref,dt)
+  if (self%do_ImDiff) call ImDiff(ncols,nz,n_prog,X,Ref,dt)
 
   ! implicit damping 
-  call ImDamp(ncols,nz,n_prog,X,Ref,dt)
+  if (self%do_ImDamp) call ImDamp(ncols,nz,n_prog,X,Ref,dt)
 
 
   t = t + dt
@@ -124,56 +140,135 @@ enddo
 endsubroutine ace_driver
 
 
-subroutine ace_initialization(ncols,nz,fname)
+subroutine ace_initialization(self)
 use netcdf
 implicit none
 
-! input variables
-integer, intent(in) :: ncols, nz
-character(*), intent(in) :: fname
+! ace type
+class(ace_t) :: self
 
 ! local variables
 integer :: i,j,k,n
 integer :: ierr,ncid1,varid1,dimid1
-character(300) :: infile
 
-namelist /sponge/ do_ImDamp,SLD,SLTau,nju
-namelist /microphy3/ qc_ramp,dqc,tau_pr
+integer :: n_prog=3,n_weno=2,ncols=8,nz=801
+character(300) :: PMB_file="./input_data/"
+logical :: single_ace=.True.,do_microphy=.True.,do_ImDiff=.True.,do_ImDamp=.True.
+real :: t_now = 0.
+real :: dt = 4.
+real :: nju = 0.09 ! Morrison (2017)
+namelist /config/ PMB_file,n_prog,n_weno,ncols,nz &
+                 ,single_ace,do_microphy,do_ImDiff,do_ImDamp&
+                 ,t_now,dt,nju
 
+! parameters for ImDamp
+! Sponge layer with Newtonian damping at domain top ztop
+real :: SLD = 6e3  ! e-folding depth in m
+real :: SLTau = 180 ! SL relaxation timescale in s
+namelist /sponge/ SLD,SLTau
+
+! coefficients for precipitation sinks (simple microphysics scheme)
+real :: qc_ramp = 0.5e-3 ! kg/kg; ramping for precip when qc>qc_ramp
+real :: dqc = 20 ! kg/kg; transition for a smooth onset of precip ramp function
+real :: tau_pr = 5*60 ! sec; relaxation timescale for precip
+namelist /microphy_simple_scheme/ qc_ramp,dqc,tau_pr
+
+! options for P3 microphysics scheme
+integer :: ncat = 1 
+logical :: log_predictNc = .True.
+logical :: trplMomI = .False.
+logical :: liqfrac = .False.
+namelist /microphy_p3_scheme/ ncat,log_predictNc,trplMomI,liqfrac
+
+
+! open and read the namelist
 open(10,file="./namelist.input",form="formatted")
-read(10,sponge)
-read(10,microphy3)
+
+! ACE configuration
+read(10,config)
+self%PMB_file=PMB_file
+self%n_prog=n_prog
+self%n_weno=n_weno
+self%ncols=ncols
+self%nz=nz
+self%single_ace=single_ace
+self%do_microphy=do_microphy
+self%do_ImDiff=do_ImDiff
+self%do_ImDamp=do_ImDamp
+self%t_now=t_now
+self%dt=dt
+self%nju=nju
+
+! read constant for ImDamp
+if (self%do_ImDamp) then
+  read(10,sponge)
+  self%SLD=SLD
+  self%SLTau=SLTau 
+endif 
+
+! read options and constants for microphysics scheme
+if (self%do_microphy) then
+  if (self%n_prog==3) then ! simple microphysics
+    read(10,microphy_simple_scheme)
+    self%qc_ramp=qc_ramp
+    self%dqc=dqc
+    self%tau_pr=tau_pr
+  elseif (self%n_prog==11) then ! P3 microphysics
+    read(10,microphy_p3_scheme)
+    self%ncat=ncat
+    self%log_predictNc=log_predictNc
+    self%trplMomI=trplMomI
+    self%liqfrac=liqfrac
+  endif
+endif
+
 close(10)
 
-infile="./input_data/precomputed_mf_basis.nc"
-ierr=nf90_open(trim(fname),nf90_nowrite,ncid1)
+
+! read precomputed massflux basis
+ierr=nf90_open(trim(self%PMB_file),nf90_nowrite,ncid1)
 if (ierr/=nf90_noerr) write(*,*) "can't open PMB file", ierr
 
 ierr=nf90_inq_dimid(ncid1,'zc',dimid1)
 if (ierr/=nf90_noerr) write(*,*) "can't inq zc", ierr
-ierr=nf90_inquire_dimension(ncid1,dimid1,len=coarse_nz)
+ierr=nf90_inquire_dimension(ncid1,dimid1,len=self%coarse_nz)
 if (ierr/=nf90_noerr) write(*,*) "can't read zc", ierr
+ierr=nf90_inq_dimid(ncid1,'ncols-response',dimid1)
+if (ierr/=nf90_noerr) write(*,*) "can't inq ncols", ierr
+ierr=nf90_inquire_dimension(ncid1,dimid1,len=n)
+if (ierr/=nf90_noerr) write(*,*) "can't read ncols", ierr
 
-allocate(coarse_z(coarse_nz),coarse_ze(coarse_nz+1))
-allocate(coarse_F(ncols,coarse_nz))
-allocate(PMB(ncols,ncols,coarse_nz,coarse_nz+1))
-allocate(dwdt(ncols,coarse_nz+1))
-allocate(Ta(ncols,nz),q(ncols,nz),ql(ncols,nz),qi(ncols,nz))
-allocate(eddiffu(ncols,nz),eddiwin(ncols,nz))
+if (n/=self%ncols) stop "ncols are inconsistent in PMB file and namelist"
+
+! allocate arrays
+allocate(self%X(self%ncols+1,self%nz,self%n_prog),&
+         self%forcing(self%ncols+1,self%nz,self%n_prog),&
+         self%Ref(self%nz,8),&
+         self%A(self%ncols+1),&
+         self%B(self%ncols+1),&
+         self%coarse_z(self%coarse_nz),&
+         self%coarse_ze(self%coarse_nz+1),&
+         self%coarse_F(self%ncols,self%coarse_nz),&
+         self%PMB(self%ncols,self%ncols,self%coarse_nz,self%coarse_nz+1),&
+         self%dwdt(self%ncols,self%coarse_nz+1),&
+         self%Ta(self%ncols,self%nz),&
+         self%q(self%ncols,self%nz),&
+         self%ql(self%ncols,self%nz),&
+         self%qi(self%ncols,self%nz))
 
 ierr=nf90_inq_varid(ncid1,"PMB",varid1)
 if (ierr/=nf90_noerr) write(*,*) "can't inq PMB", ierr
-ierr=nf90_get_var(ncid1,varid1,PMB2)
+ierr=nf90_get_var(ncid1,varid1,self%PMB)
 if (ierr/=nf90_noerr) write(*,*) "can't read PMB", ierr
 
 ierr=nf90_inq_varid(ncid1,"Zc",varid1)
 if (ierr/=nf90_noerr) write(*,*) "can't inq Zc", ierr
-ierr=nf90_get_var(ncid1,varid1,coarse_z)
+ierr=nf90_get_var(ncid1,varid1,self%coarse_z)
 if (ierr/=nf90_noerr) write(*,*) "can't read Zc", ierr
 
 ierr=nf90_inq_varid(ncid1,"Zi",varid1)
 if (ierr/=nf90_noerr) write(*,*) "can't inq Zi", ierr
-ierr=nf90_get_var(ncid1,varid1,coarse_ze)
+ierr=nf90_get_var(ncid1,varid1,self%coarse_ze)
 if (ierr/=nf90_noerr) write(*,*) "can't read Zi", ierr
 
 ierr=nf90_close(ncid1)
@@ -328,6 +423,8 @@ real :: dum1
 real, dimension(ncols,nz) :: wi, drho0wdz, mu_i, mu_c
 real, dimension(nz) :: tmp, mu
 real, dimension(nz,3) :: coeff
+real, dimension(ncols,nz), save :: eddiffu 
+integer, dimension(ncols,nz), save :: eddiwin
 
 if (first) then
   do k=1,nz
@@ -477,8 +574,6 @@ logical, parameter :: log_predictNc = .True.  ,& ! predict cloud droplet number 
                       typeDiags_ON  = .False. ,& ! diagnose ice types or not
                       debug_on      = .False. ,& ! debug mode
                       scpf_on       = .False. ,& ! cloud fraction version not used
-                      trplMomI      = .False. ,& ! triple moment ice
-                      liqfrac       = .False. ,& ! liquid fraction ice
                       abort_on_err  = .False.  ,& ! program aborts when encountering error
                       dowr          = .True.     ! print message or not
 real, parameter :: scpf_pfrac    = 0. ,&   ! dummy variable (not used), set to 0
