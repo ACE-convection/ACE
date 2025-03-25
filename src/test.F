@@ -3,184 +3,37 @@ use netcdf
 use ace_module
 implicit none
 
-integer, parameter :: np=37
 real,parameter :: pi=4.*atan(1.),Rd=287.04,Cp=1005.7,g=9.80665,p0=1.e5
 integer :: i,j,k,m,n,o,t
 integer :: ierr,ncid1,varid1
-integer :: nprof,n_weno,ncols, ice, n_prog,ndt
+integer :: ice
 real :: dum1,dum2,dum3,dum4,dum5,dum6,dum7
-real :: dz,dp,ts,te,dt
+real :: dz,dp,ts,te,dt, dt_out
 real :: start, finish
-real, dimension(:,:,:), allocatable :: X
 real*4, dimension(:,:,:), allocatable :: Xout
-real, dimension(:,:), allocatable :: Ref, forcing, Tr,q,ql,qi
+real, dimension(:,:), allocatable :: Tr,q,ql,qi
 real, dimension(:), allocatable :: Tv0
 real*4, dimension(:,:), allocatable :: T4,q4,ql4,qi4,rh4,b4 
 real, dimension(:), allocatable :: A,B
-real, dimension(43832,np) :: tap,husp
-real, dimension(np) :: plev
-real, dimension(43832) :: prp
-real, dimension(np,5211) :: ta,hus
-real, dimension(5211) :: pr
-integer, parameter :: np5=181
-real, dimension(np5) :: p5,tap5,husp5,zp5,rhop5
-integer :: nz, nzm
 real, dimension(:), allocatable :: z,T_e,q_e,Tv_e,the_e,rho_e,p_z
 real, dimension(:), allocatable :: zm,T_zm,q_zm,Tv_zm,the_zm,rho_zm,p_zm,th_zm,thes_zm,rh_zm
 real*8, dimension(:), allocatable :: tmp
-real, dimension(200) :: coarse_z
-real, dimension(201) :: coarse_ze
-character(300) :: path,fname,PMB_file
-logical :: single_ace,do_microphy,do_ImDiff
+character(300) :: path,fname
 
-namelist /config/ n_prog,n_weno,ncols,nz,PMB_file,single_ace,do_microphy,do_ImDiff
-
-path="./data/soundings/"
-fname=trim(path)//"manus_3hr_ARMBEsonde_profiles.nc"
-
-nprof=208
-
-goto 838 ! directly read profile from binary file.
-
-!ierr = nf90_open(trim(fname),NF90_NOWRITE,ncid1)
-!IF (ierr/=nf90_noerr) WRITE(*,*) "open fail"
-!ierr = nf90_inq_varid(ncid1,"pressure",varid1)
-!IF (ierr/=nf90_noerr) WRITE(*,*) "var_inq fail"
-!ierr = nf90_get_var(ncid1,varid1,plev,start=(/ 1,1,1,1 /),count=(/ np,1,1,1 /))
-!IF (ierr/=nf90_noerr) WRITE(*,*) "read fail"
-!ierr = nf90_inq_varid(ncid1,"pr",varid1)
-!IF (ierr/=nf90_noerr) WRITE(*,*) "var_inq fail"
-!ierr = nf90_get_var(ncid1,varid1,prp,start=(/ 1,1,1,1 /),count=(/ 43832,1,1,1 /))
-!IF (ierr/=nf90_noerr) WRITE(*,*) "read fail"
-!ierr = nf90_inq_varid(ncid1,"ta",varid1)
-!IF (ierr/=nf90_noerr) WRITE(*,*) "var_inq fail"
-!ierr = nf90_get_var(ncid1,varid1,tap,start=(/ 1,1,1,1 /),count=(/ 43832,np,1,1 /))
-!IF (ierr/=nf90_noerr) WRITE(*,*) "read fail ta"
-!ierr = nf90_inq_varid(ncid1,"hus",varid1)
-!IF (ierr/=nf90_noerr) WRITE(*,*) "var_inq fail"
-!ierr = nf90_get_var(ncid1,varid1,husp,start=(/ 1,1,1,1 /),count=(/ 43832,np,1,1 /))
-!IF (ierr/=nf90_noerr) WRITE(*,*) "read fail hus"
-!ierr = nf90_close(ncid1)
-!IF (ierr/=nf90_noerr) WRITE(*,*) "close fail" 
-!
-!n=1
-!do i=1,43832 
-!  if (prp(i)/=prp(i)) goto 999
-!  do k=1,np
-!    if (tap(i,k)/=tap(i,k) .or. husp(i,k)/=husp(i,k)) goto 999
-!  enddo
-!  ta(:,n)=tap(i,:) 
-!  hus(:,n)=husp(i,:)
-!  pr(n)=prp(i) 
-!  n=n+1
-!  999 continue
-!enddo
-!
-!!write(*,*) ta(:,nprof)
-!!write(*,*) hus(:,nprof)
-!
-!dp=5.
-!p5(1)=1000.
-!do k=2,np5
-!  p5(k)=p5(k-1)-dp
-!enddo
-!p5=p5*100.
-!
-!call pchip(np,plev(np:1:-1),ta(np:1:-1,nprof),np5,p5(np5:1:-1),tap5(np5:1:-1),.False.)
-!call pchip(np,plev(np:1:-1),hus(np:1:-1,nprof),np5,p5(np5:1:-1),husp5(np5:1:-1),.False.)
-!
-!zp5(1)=0.
-!do k=1,np5
-!  if (husp5(k)<0.) husp5(k)=0.
-!  dum1=tap5(k)*(1.+0.607789855072462*husp5(k))
-!  rhop5(k)=p5(k)/dum1/Rd
-!  if (k>1) then
-!    dum2=0.5*(dum1+tap5(k-1)*(1.+0.607789855072462*husp5(k-1)))
-!    zp5(k)=zp5(k-1)+Rd/g*5.e2*dum2/p5(k)
-!  endif
-!enddo
-!
-!dz=50.
-!z(1)=25.
-!zm(1)=0.
-!do k=2,nz
-!  z(k)=z(k-1)+dz
-!  zm(k)=zm(k-1)+dz
-!enddo
-!
-!call pchip(np5,zp5,tap5,nz,z,T_e,.False.)
-!call pchip(np5,zp5,husp5,nz,z,q_e,.False.)
-!call pchip(np5,zp5,p5,nz,z,p_z,.False.)
-!
-!do k=1,nz
-!  if (q_e(k)<0.) q_e(k)=0.
-!  Tv_e(k)=T_e(k)*(1.+0.607789855072462*q_e(k))
-!  if (z(k)>zp5(np5)) then
-!    p_z(k)=p_z(k-1)*(1.-g*dz/2./Rd/Tv_e(k-1))/(1.+g*dz/2./Rd/Tv_e(k-1))
-!  endif
-!  rho_e(k)=p_z(k)/Tv_e(k)/Rd
-!  the_e(k)=theta_e(T_e(k),q_e(k),0.,0.,p_z(k))
-!enddo
-!
-!call pchip(nz,z,T_e,nzm,zm,T_zm,.False.)
-!call pchip(nz,z,q_e,nzm,zm,q_zm,.False.)
-!call pchip(nz,z,p_z,nzm,zm,p_zm,.False.)
-!
-!do k=1,nzm
-!  if (q_zm(k)<0.) q_zm(k)=0.
-!  Tv_zm(k)=T_zm(k)*(1.+0.607789855072462*q_zm(k))
-!  if (z(k)>zp5(np5)) then
-!    p_zm(k)=p_zm(k-1)*(1.-g*dz/2./Rd/Tv_zm(k-1))/(1.+g*dz/2./Rd/Tv_zm(k-1))
-!  endif
-!  rho_zm(k)=p_zm(k)/Tv_zm(k)/Rd
-!  the_zm(k)=theta_e(T_zm(k),q_zm(k),0.,0.,p_zm(k))
-!enddo
-
-838 continue
+type(ace_t) :: ace
 
 
-!n_prog=3 ! MF, the, qt
-n_prog=11 ! for P3
-
-nz=801
-nzm=801
-dz=50.
-ncols=8
-ts=0.
-dt=4.
-ndt=int(60./dt)
-te=ts+dt*real(ndt)
-PMB_file="./input_data/precomputed_mf_basis.nc"
-
-open(10,file="./namelist.input",form="formatted")
-read(10,config)
-close(10)
+call ace%initialize
 
 
-
-allocate(z(nz),T_e(nz),q_e(nz),Tv_e(nz),the_e(nz),rho_e(nz),p_z(nz))
-allocate(zm(nzm),T_zm(nzm),q_zm(nzm),Tv_zm(nzm),the_zm(nzm),rho_zm(nzm) &
-        ,p_zm(nzm),th_zm(nzm),thes_zm(nzm),rh_zm(nzm),tmp(nzm))
-allocate(X(ncols+1,nz,n_prog),A(ncols+1),B(ncols+1),forcing(ncols,nz), &
-         Xout(ncols+1,nz,n_prog),Ref(nz,8) &
-        ,Tr(ncols,nz),q(ncols,nz),ql(ncols,nz),qi(ncols,nz))
-allocate(T4(ncols,nz),q4(ncols,nz),ql4(ncols,nz),qi4(ncols,nz),rh4(ncols,nz),b4(ncols,nz),Tv0(nz))
-
-A=(/ 5., 10., 15., 25., 35., 45., 55., 0., 0./)
-A=A*1.e3
-B=pi*A
-B(ncols:ncols+1)=(64.e3+64.e3)*2.
-
-A(ncols)=64.e3*64.e3-0.25*pi*A(ncols-1)**2.
-A(ncols+1)=A(ncols)
-do k=ncols-1,2,-1
-  A(k)=0.25*pi*(A(k)**2.-A(k-1)**2.)
-enddo
-A(1)=0.25*pi*A(1)**2.
-
+allocate(z(ace%nz),T_e(ace%nz),q_e(ace%nz),Tv_e(ace%nz),the_e(ace%nz),rho_e(ace%nz),p_z(ace%nz))
+allocate(zm(ace%nzm),T_zm(ace%nzm),q_zm(ace%nzm),Tv_zm(ace%nzm),the_zm(ace%nzm),rho_zm(ace%nzm) &
+        ,p_zm(ace%nzm),th_zm(ace%nzm),thes_zm(ace%nzm),rh_zm(ace%nzm),tmp(ace%nzm))
+allocate(T4(ace%ncols,ace%nz),q4(ace%ncols,ace%nz),ql4(ace%ncols,ace%nz),qi4(ace%ncols,ace%nz),rh4(ace%ncols,ace%nz),b4(ace%ncols,ace%nz),Tv0(ace%nz))
+allocate(Xout(ace%ncols+1,ace%nz,ace%n_prog))
 
 fname="./input_data/ini_manus_208.dat"
-open(20,file=trim(fname),access="direct",recl=nz*2)
+open(20,file=trim(fname),access="direct",recl=ace%nz*2)
 read(20,rec=5) tmp
 rho_zm = tmp
 read(20,rec=6) tmp
@@ -200,117 +53,76 @@ z = tmp
 close(20)
 
 
-do k=1,nz
-  X(:,k,1)=0.
-  X(:,k,2)=the_e(k)
-  X(:,k,3)=q_e(k)
-  Ref(k,1)=rho_e(k)
-  Ref(k,2)=rho_zm(k)
-  Ref(k,3)=z(k)
-  Ref(k,4)=zm(k)
-  Ref(k,5)=dz
-  Ref(k,6)=dz
-  Ref(k,7)=p_z(k)
-  Ref(k,8)=(p_z(k)/p0)**(Rd/Cp)
-  call inv_theta_e(X(1,k,2),X(1,k,3),Ref(k,7),Tr(1,k),q(1,k),ql(1,k),qi(1,k))
-  Tv0(k)=Tr(1,k)*(1.+0.607789855072462*q(1,k)-ql(1,k)-qi(1,k))
+dz=50
+do k=1,ace%nz
+  ace%X(:,k,1)=0.
+  ace%X(:,k,2)=the_e(k)
+  ace%X(:,k,3)=q_e(k)
+  ace%Ref(k,1)=rho_e(k)
+  ace%Ref(k,2)=rho_zm(k)
+  ace%Ref(k,3)=z(k)
+  ace%Ref(k,4)=zm(k)
+  ace%Ref(k,5)=dz
+  ace%Ref(k,6)=dz
+  ace%Ref(k,7)=p_z(k)
+  ace%Ref(k,8)=(p_z(k)/p0)**(Rd/Cp)
+  call inv_theta_e(ace%X(1,k,2),ace%X(1,k,3),ace%Ref(k,7),ace%Ta(1,k),ace%q(1,k),ace%ql(1,k),ace%qi(1,k))
+  Tv0(k)=ace%Ta(1,k)*(1.+0.607789855072462*ace%q(1,k)-ace%ql(1,k)-ace%qi(1,k))
   
-  !! for P3
-  !X(:,k,1)=0.
-  !X(:,k,2)=Tr(1,k) / Ref(k,8)
-  !X(:,k,3)=q(1,k)
-  !X(:,k,4)=0.
-  !X(:,k,5)=0.
-  !X(:,k,6)=0.
-  !X(:,k,7)=0.
-  !X(:,k,8)=0.
-  !X(:,k,9)=0.
-  !X(:,k,10)=0.
-  !X(:,k,11)=0.
+  if (ace%n_prog==11) then  ! for P3
+    ace%X(:,k,1)=0.
+    ace%X(:,k,2)=ace%Ta(1,k) / ace%Ref(k,8)
+    ace%X(:,k,3)=ace%q(1,k)
+    ace%X(:,k,4)=0.
+    ace%X(:,k,5)=0.
+    ace%X(:,k,6)=0.
+    ace%X(:,k,7)=0.
+    ace%X(:,k,8)=0.
+    ace%X(:,k,9)=0.
+    ace%X(:,k,10)=0.
+    ace%X(:,k,11)=0.
+  endif
 enddo
 
 ! initialize MF
 dum1=0.
 dum2=1000.
-do k=1,nz
-  if (zm(k)<=dum2) then
-    X(1,k,1) = 0.03 & !0.03 & 
-         * sin(pi*(zm(k)-dum1)/(dum2-dum1))
+do k=1,ace%nz
+  if (ace%Ref(k,4)<=dum2) then
+    ace%X(1,k,1) = 0.03 & !0.03 & 
+         * sin(pi*(ace%Ref(k,4)-dum1)/(dum2-dum1))
     !X(ncols,k,1) = -0.03 & 
     !     * sin(pi*(zm(k)-dum1)/(dum2-dum1))*A(1)/A(ncols)
   endif 
 enddo
 
-
-! precomputed file
-call ace_initialization(ncols,nz,trim(PMB_file))
-
 call cpu_time(start)
-
-!open(10,file="./data/output_singleACE_manus208.dat",access="direct",recl=ncols*nz*8)
-!open(10,file="./data/output_multiACE_manus208.dat",access="direct",recl=ncols*nz*9)
-!open(10,file="./data/output_multiACE_manus208_swap.dat",access="direct",recl=ncols*nz*9)
-open(10,file="./data/output_multiACE_manus208_p3.dat",access="direct",recl=ncols*nz*9)
-!open(10,file="./data/output_singleACE_manus208_p3.dat",access="direct",recl=ncols*nz*9)
-!open(10,file="./data/output_singleACE_manus208_vdiff.dat",access="direct",recl=ncols*nz*9)
 
 
 n=1
+dt_out=60. ! output frequency
 
-do t=1,60*240 ! 60 is mins, and 48 is hours
-  write(*,*) ts,te,t
+! call ace diagnostic and output
+call ace%diagnose()
+call ace%output() 
 
-  ! output diagnostic
-  Xout = X
-  do k=1,nz
-  do i=1,ncols
-  !  call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
-    Tr(i,k)=X(i,k,2)*Ref(k,8)
-    q(i,k) =X(i,k,3)
-    ql(i,k)=X(i,k,4)+X(i,k,6)
-    qi(i,k)=X(i,k,8)
-    ice=0
-    if (Tr(i,k)<273.15) ice=1
-    rh4(i,k)=q(i,k)/eval_qs(Tr(i,k),Ref(k,7),ql(i,k)+qi(i,k),ice)
-    dum1=Tr(i,k)*(1.+0.607789855072462*q(i,k)-ql(i,k)-qi(i,k))
-    b4(i,k)=g*(dum1-Tv0(k))/Tv0(k)
-  enddo
-  enddo
-  !T4=Tr; q4=q; ql4=ql; qi4=qi;
-  !write(10,rec=n) Xout(1:ncols,:,1:3),T4(1:ncols,:),q4(1:ncols,:),ql4(1:ncols,:),qi4(1:ncols,:),rh4(1:ncols,:),b4(1:ncols,:)
-  write(10,rec=n) Xout(1:ncols,:,1:3),Xout(1:ncols,:,4),Xout(1:ncols,:,6),Xout(1:ncols,:,8),Xout(1:ncols,:,10),rh4(1:ncols,:),b4(1:ncols,:)
-  n=n+1
 
-  ! call ace driver to integrate from ts to te with dt
-  call ace_driver(ncols,nz,n_weno,n_prog,X,Ref,A,B,ts,te,dt,forcing)
+te=ace%t_now+dt_out
+do t=1,60*24 !24*10 ! 60 is mins, and 24 is hours
+  !write(*,*) ace%t_now,te,t
 
-  ts=te
-  te=ts+dt*real(ndt)
+  ! call ace driver to integrate from t_now to te with dt
+  call ace%integrate(te)
+  
+  ! call ace diagnostic and output
+  call ace%diagnose()
+  call ace%output() 
+
+  te=ace%t_now+dt_out
 enddo
-
-! output diagnostic
-Xout = X
-do k=1,nz
-do i=1,ncols
-  !call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
-  Tr(i,k)=X(i,k,2)*Ref(k,8)
-  ql(i,k)=X(i,k,4)+X(i,k,6)
-  qi(i,k)=X(i,k,8)
-  ice=0
-  if (Tr(i,k)<273.15) ice=1
-  rh4(i,k)=q(i,k)/eval_qs(Tr(i,k),Ref(k,7),ql(i,k)+qi(i,k),ice)
-  dum1=Tr(i,k)*(1.+0.607789855072462*q(i,k)-ql(i,k)-qi(i,k))
-  b4(i,k)=g*(dum1-Tv0(k))/Tv0(k)
-enddo
-enddo
-!T4=Tr; q4=q; ql4=ql; qi4=qi;
-!write(10,rec=n) Xout(1:ncols,:,1:3),T4(1:ncols,:),q4(1:ncols,:),ql4(1:ncols,:),qi4(1:ncols,:),rh4(1:ncols,:),b4(1:ncols,:)
-write(10,rec=n) Xout(1:ncols,:,1:3),Xout(1:ncols,:,4),Xout(1:ncols,:,6),Xout(1:ncols,:,8),Xout(1:ncols,:,10),rh4(1:ncols,:),b4(1:ncols,:)
-close(10)
 
 call cpu_time(finish)
 
 write(*,*) "time cost =",finish-start
-
 
 end program test
