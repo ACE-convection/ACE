@@ -1,7 +1,7 @@
 &config
 PMB_file      = "./input_data/precomputed_mf_basis.nc",   ! File path of precomputed massflux basis
 case_name     = "p3_singleACE"                            ! Case name (will be used to read IC file and output nc file)
-n_prog        = 11,                                       ! Number of prognostic variables 
+n_prog        = 3,                                       ! Number of prognostic variables 
 n_weno        = 2,                                        ! Order of WENO scheme
 ncols         = 8,                                        ! Number of ACE columns
 nz            = 801,                                      ! Number of vertical grid points (including 1 halo point)

@@ -152,12 +152,15 @@ enddo
 endsubroutine ace_driver
 
 
-subroutine ace_initialization(self)
+subroutine ace_initialization(self,fname)
 use netcdf
 implicit none
 
 ! ace type
 class(ace_t), intent(inout) :: self
+
+! input variable
+character(*), intent(in) :: fname
 
 ! local variables
 integer :: i,j,k,n
@@ -196,7 +199,7 @@ namelist /microphy_p3_scheme/ ncat,log_predictNc,trplMomI,liqfrac
 
 
 ! open and read the namelist
-open(10,file="./namelist.input",form="formatted")
+open(10,file=trim(fname),form="formatted")
 
 ! ACE configuration
 read(10,config)

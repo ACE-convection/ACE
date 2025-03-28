@@ -8,7 +8,7 @@ integer :: i,j,k,m,n,o,t
 integer :: ierr,ncid1,varid1
 integer :: ice
 real :: dum1,dum2,dum3,dum4,dum5,dum6,dum7
-real :: dz,dp,ts,te,dt, dt_out
+real :: dz,dp,ts,t_end,dt, dt_out
 real :: start, finish
 real*4, dimension(:,:,:), allocatable :: Xout
 real, dimension(:,:), allocatable :: Tr,q,ql,qi
@@ -23,7 +23,7 @@ character(300) :: path,fname
 type(ace_t) :: ace
 
 
-call ace%initialize
+call ace%initialize("./namelist.input")
 
 
 allocate(z(ace%nz),T_e(ace%nz),q_e(ace%nz),Tv_e(ace%nz),the_e(ace%nz),rho_e(ace%nz),p_z(ace%nz))
@@ -107,18 +107,18 @@ call ace%diagnose()
 call ace%output() 
 
 
-te=ace%t_now+dt_out
+t_end=ace%t_now+dt_out
 do t=1,60*24 !24*10 ! 60 is mins, and 24 is hours
-  !write(*,*) ace%t_now,te,t
+  !write(*,*) ace%t_now,t_end,t
 
-  ! call ace driver to integrate from t_now to te with dt
-  call ace%integrate(te)
+  ! call ace driver to integrate from t_now to t_end with dt
+  call ace%integrate(t_end)
   
   ! call ace diagnostic and output
   call ace%diagnose()
   call ace%output() 
 
-  te=ace%t_now+dt_out
+  t_end=ace%t_now+dt_out
 enddo
 
 call cpu_time(finish)
