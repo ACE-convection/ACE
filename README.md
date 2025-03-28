@@ -25,6 +25,6 @@ Changing other variables is not recommended unless you are certain what you are 
 ## References:
 - Kuo, Y.-H., and J. D. Neelin, 2022: Conditions for convective deep inflow. _Geophys. Res. Lett._, 49, e2022GL100 552, doi:10.1029/2022GL100552.
 
-- Kuo, Y.-H., and J. D. Neelin, 2025a: Anelastic Convective Entities. Part 1: Formulation and implication for nighttime convection. _J. Atmos. Sci._, in press. DOI: 10.1175/JAS-D-23-0214.1.
+- Kuo, Y.-H., and J. D. Neelin, 2025a: Anelastic Convective Entities. Part 1: Formulation and implication for nighttime convection. _J. Atmos. Sci._, 82, 599-623, doi:10.1175/JAS-D-23-0214.1.
 
-- Kuo, Y.-H., and J. D. Neelin, 2025b: Anelastic Convective Entities. Part 2: Adjustment processes and convective cold top. _J. Atmos. Sci._, in press. DOI: 10.1175/JAS-D-24-0130.1.
+- Kuo, Y.-H., and J. D. Neelin, 2025b: Anelastic Convective Entities. Part 2: Adjustment processes and convective cold top. _J. Atmos. Sci._, 82, 625-640, doi:10.1175/JAS-D-24-0130.1.
