@@ -13,8 +13,10 @@ type ace_t
   real, dimension(:,:), allocatable :: Ref
   real, dimension(:,:,:), allocatable :: X, forcing
   character(300) :: case_name
-  character(300) :: PMB_file
+  character(300) :: PMB_PMD_file
+  logical :: nc_init
   logical :: single_ace,do_microphy,do_ImDiff,do_ImDamp
+  logical :: do_DHv,do_DHh
   real :: dt
   real :: t_now
 
@@ -32,12 +34,12 @@ type ace_t
   integer :: ncat
   logical :: log_predictNc,trplMomI,liqfrac
 
- ! arrays for PMB
+ ! arrays for PMB and PMD
   integer :: coarse_nz
   real, dimension(:), allocatable :: coarse_z, coarse_ze
-  real, dimension(:,:), allocatable :: coarse_F
+  real, dimension(:,:), allocatable :: coarse_F, coarse_DHh
   real, dimension(:,:), allocatable :: dwdt
-  real, dimension(:,:,:,:), allocatable :: PMB
+  real, dimension(:,:,:,:), allocatable :: PMB, PMD
 
   ! array for calculating buoyancy and RH
   real, dimension(:,:), allocatable :: Ta, q, ql, qi
@@ -74,11 +76,14 @@ real, intent(in) :: te ! integrate ACE to te
 real, dimension(self%ncols,self%nz,self%n_prog) :: K1,K2,tmp
 real, dimension(self%ncols+1,self%nz,self%n_prog) :: yi
 real :: dum1
+integer(4) :: start, finish
 integer :: i,k
 
 yi = self%X
 
 do while ( self%t_now < te)
+  !write(*,*) self%t_now, te
+  call system_clock(count=start)
   ! update ace tendency
   call ace_tendency(self,self%X,K1,1)
   yi(1:self%ncols,:,:) = self%X(1:self%ncols,:,:) + K1 * self%dt / 6.
@@ -115,8 +120,11 @@ do while ( self%t_now < te)
 
   yi = self%X
   self%X(1:self%ncols,:,:) = self%X(1:self%ncols,:,:) + ( K1 / 6. + K2 ) * self%dt
-  
+  call system_clock(count=finish)
+  !write(*,*) "dynamic", real(finish-start)/10000.  
+
   ! call physics here
+  call system_clock(count=start)
   if (self%do_microphy) then
     if (self%n_prog==3) then
       call precip_sinks(self,K1(:,:,1:2)) ! simplified precipitation
@@ -125,7 +133,10 @@ do while ( self%t_now < te)
       ! NaN check
       do k=1,self%nz
       do i=1,self%ncols
-        if (self%X(i,k,1)/=self%X(i,k,1)) stop "NaN is found"
+        if (self%X(i,k,1)/=self%X(i,k,1)) then
+          write(*,*) "NaN is found at col=", i,", level=",k
+          stop
+        endif
       enddo
       enddo
 
@@ -136,16 +147,25 @@ do while ( self%t_now < te)
       stop
     endif
   endif 
+  call system_clock(count=finish)
+  !write(*,*) "micro", real(finish-start)/10000.  
 
 
   ! implicit diffusion of mass flux and racers
+  call system_clock(count=start)
   if (self%do_ImDiff) call ImDiff(self)
+  call system_clock(count=finish)
+  !write(*,*) "ImDiff", real(finish-start)/10000.  
 
   ! implicit damping 
+  call system_clock(count=start)
   if (self%do_ImDamp) call ImDamp(self)
+  call system_clock(count=finish)
+  !write(*,*) "ImDamp", real(finish-start)/10000.  
 
 
   self%t_now = self%t_now + self%dt
+  write(*,*) self%t_now
 enddo
 
 
@@ -163,19 +183,22 @@ class(ace_t), intent(inout) :: self
 character(*), intent(in) :: fname
 
 ! local variables
-integer :: i,j,k,n
+integer :: i,j,k,n, ii,kk
 integer :: ierr,ncid1,varid1,dimid1
 
 integer :: n_prog=3,n_weno=2,ncols=8,nz=801
-character(300) :: PMB_file="./input_data/precomputed_mf_basis.nc"
+character(300) :: PMB_PMD_file="./input_data/precomputed_mf_basis.nc"
 character(300) :: case_name="ACE_default_simulation"
-logical :: single_ace=.True.,do_microphy=.True.,do_ImDiff=.True.,do_ImDamp=.True.
+logical :: nc_init=.False.
+logical :: single_ace=.True.,do_microphy=.True.,do_ImDiff=.True.,do_ImDamp=.False.
+logical :: do_DHv=.True.,do_DHh=.True.
 real :: t_now = 0.
 real :: dt = 4.
 real :: nju = 0.09 ! Morrison (2017)
-namelist /config/ PMB_file,case_name &
+namelist /config/ PMB_PMD_file,nc_init,case_name &
                  ,n_prog,n_weno,ncols,nz &
                  ,single_ace,do_microphy,do_ImDiff,do_ImDamp &
+                 ,do_DHv,do_DHh &
                  ,t_now,dt,nju
 
 ! parameters for ImDamp
@@ -203,8 +226,9 @@ open(10,file=trim(fname),form="formatted")
 
 ! ACE configuration
 read(10,config)
-self%PMB_file=PMB_file
+self%PMB_PMD_file=PMB_PMD_file
 self%case_name=case_name
+self%nc_init=nc_init
 self%n_prog=n_prog
 self%n_weno=n_weno
 self%ncols=ncols
@@ -214,6 +238,8 @@ self%single_ace=single_ace
 self%do_microphy=do_microphy
 self%do_ImDiff=do_ImDiff
 self%do_ImDamp=do_ImDamp
+self%do_DHv=do_DHv
+self%do_DHh=do_DHh
 self%t_now=t_now
 self%dt=dt
 self%nju=nju
@@ -243,34 +269,10 @@ endif
 
 close(10)
 
-
-! read precomputed massflux basis
-ierr=nf90_open(trim(self%PMB_file),nf90_nowrite,ncid1)
-if (ierr/=nf90_noerr) write(*,*) "can't open PMB file", ierr
-
-ierr=nf90_inq_dimid(ncid1,'zc',dimid1)
-if (ierr/=nf90_noerr) write(*,*) "can't inq zc", ierr
-ierr=nf90_inquire_dimension(ncid1,dimid1,len=self%coarse_nz)
-if (ierr/=nf90_noerr) write(*,*) "can't read zc", ierr
-ierr=nf90_inq_dimid(ncid1,'ncols-response',dimid1)
-if (ierr/=nf90_noerr) write(*,*) "can't inq ncols", ierr
-ierr=nf90_inquire_dimension(ncid1,dimid1,len=n)
-if (ierr/=nf90_noerr) write(*,*) "can't read ncols", ierr
-
-if (n/=self%ncols) stop "ncols are inconsistent in PMB file and namelist"
-
-! allocate arrays
+! allocate array according to namelist
 allocate(self%X(self%ncols+1,self%nz,self%n_prog),&
          self%forcing(self%ncols+1,self%nz,self%n_prog),&
          self%Ref(self%nz,8),&
-         self%radius(self%ncols+1),&
-         self%A(self%ncols+1),&
-         self%B(self%ncols+1),&
-         self%coarse_z(self%coarse_nz),&
-         self%coarse_ze(self%coarse_nz+1),&
-         self%coarse_F(self%ncols,self%coarse_nz),&
-         self%PMB(self%ncols,self%ncols,self%coarse_nz,self%coarse_nz+1),&
-         self%dwdt(self%ncols,self%coarse_nz+1),&
          self%Ta(self%ncols,self%nz),&
          self%q(self%ncols,self%nz),&
          self%ql(self%ncols,self%nz),&
@@ -288,44 +290,160 @@ allocate(self%X(self%ncols+1,self%nz,self%n_prog),&
          self%eddiffu(self%ncols,self%nz),&
          self%eddiwin(self%ncols,self%nz) )
 
+
+! read initial condition from nc file if nc_init is false.
+if (nc_init) then
+  ierr=nf90_open("./input_data/"//trim(self%case_name)//"_IC.nc",nf90_nowrite,ncid1)
+  if (ierr/=nf90_noerr) stop "can't open IC nc file"
+  
+  ierr=nf90_inq_dimid(ncid1,'ncols',dimid1)
+  if (ierr/=nf90_noerr) stop "can't inq ncols"
+  ierr=nf90_inquire_dimension(ncid1,dimid1,len=n)
+  if (ierr/=nf90_noerr) stop "can't read ncols"
+
+  if (n/=self%ncols) stop "ncols are inconsistent in IC file and namelist"
+
+  ierr=nf90_inq_dimid(ncid1,'nzc',dimid1)
+  if (ierr/=nf90_noerr) stop "can't inq nzc"
+  ierr=nf90_inquire_dimension(ncid1,dimid1,len=n)
+  if (ierr/=nf90_noerr) stop "can't read nzc"
+
+  if (n/=self%nz) stop "nz are inconsistent in IC file and namelist"
+ 
+  ierr=nf90_inq_dimid(ncid1,'n_prog',dimid1)
+  if (ierr/=nf90_noerr) stop "can't inq n_prog"
+  ierr=nf90_inquire_dimension(ncid1,dimid1,len=n)
+  if (ierr/=nf90_noerr) stop "can't read n_prog"
+
+  if (n/=self%n_prog) stop "n_prog are inconsistent in IC file and namelist"
+
+  ! read the reference varaibles
+  ierr=nf90_inq_varid(ncid1,"rho_c",varid1)
+  if (ierr/=nf90_noerr) stop "can't inq rho_c"
+  ierr=nf90_get_var(ncid1,varid1,self%Ref(:,1))
+  if (ierr/=nf90_noerr) stop "can't read rho_c"
+
+  ierr=nf90_inq_varid(ncid1,"rho_i",varid1)
+  if (ierr/=nf90_noerr) stop "can't inq rho_i"
+  ierr=nf90_get_var(ncid1,varid1,self%Ref(:,2))
+  if (ierr/=nf90_noerr) stop "can't read rho_i"
+
+  ierr=nf90_inq_varid(ncid1,"zc",varid1)
+  if (ierr/=nf90_noerr) stop "can't inq zc"
+  ierr=nf90_get_var(ncid1,varid1,self%Ref(:,3))
+  if (ierr/=nf90_noerr) stop "can't read zc"
+
+  ierr=nf90_inq_varid(ncid1,"zi",varid1)
+  if (ierr/=nf90_noerr) stop "can't inq zi"
+  ierr=nf90_get_var(ncid1,varid1,self%Ref(:,4))
+  if (ierr/=nf90_noerr) stop "can't read zi"
+
+  ierr=nf90_inq_varid(ncid1,"dzc",varid1)
+  if (ierr/=nf90_noerr) stop "can't inq dzc"
+  ierr=nf90_get_var(ncid1,varid1,self%Ref(:,5))
+  if (ierr/=nf90_noerr) stop "can't read dzc"
+
+  ierr=nf90_inq_varid(ncid1,"dzi",varid1)
+  if (ierr/=nf90_noerr) stop "can't inq dzi"
+  ierr=nf90_get_var(ncid1,varid1,self%Ref(:,6))
+  if (ierr/=nf90_noerr) stop "can't read dzi"
+
+  ierr=nf90_inq_varid(ncid1,"p_c",varid1)
+  if (ierr/=nf90_noerr) stop "can't inq p_c"
+  ierr=nf90_get_var(ncid1,varid1,self%Ref(:,7))
+  if (ierr/=nf90_noerr) stop "can't read p_c"
+
+  ierr=nf90_inq_varid(ncid1,"pi_c",varid1)
+  if (ierr/=nf90_noerr) stop "can't inq pi_c"
+  ierr=nf90_get_var(ncid1,varid1,self%Ref(:,8))
+  if (ierr/=nf90_noerr) stop "can't read pi_c"
+ 
+  ! read IC
+  ierr=nf90_inq_varid(ncid1,"X",varid1)
+  if (ierr/=nf90_noerr) stop "can't inq X"
+  ierr=nf90_get_var(ncid1,varid1,self%X)
+  if (ierr/=nf90_noerr) stop "can't read X"
+
+  ierr=nf90_close(ncid1)
+  if (ierr/=nf90_noerr) stop "can't close IC file"
+  
+  write(*,*) "Successfully reading IC from file: ./input_data/"//trim(self%case_name)//"_IC.nc" 
+else
+  write(*,*) "Setup initial condition before calling integrate()" 
+endif
+
+! read precomputed massflux basis
+ierr=nf90_open(trim(self%PMB_PMD_file),nf90_nowrite,ncid1)
+if (ierr/=nf90_noerr) stop "can't open PMB&PMD file"
+
+ierr=nf90_inq_dimid(ncid1,'nzc',dimid1)
+if (ierr/=nf90_noerr) stop "can't inq nzc"
+ierr=nf90_inquire_dimension(ncid1,dimid1,len=self%coarse_nz)
+if (ierr/=nf90_noerr) stop "can't read nzc"
+ierr=nf90_inq_dimid(ncid1,'ncols-response',dimid1)
+if (ierr/=nf90_noerr) stop "can't inq ncols"
+ierr=nf90_inquire_dimension(ncid1,dimid1,len=n)
+if (ierr/=nf90_noerr) stop "can't read ncols"
+
+if (n/=self%ncols) stop "ncols are inconsistent in PMB&PMD file and namelist"
+
+! allocate arrays according to PMB&PMD file
+allocate(self%radius(self%ncols+1),&
+         self%A(self%ncols+1),&
+         self%B(self%ncols+1),&
+         self%coarse_z(self%coarse_nz),&
+         self%coarse_ze(self%coarse_nz+1),&
+         self%coarse_F(self%ncols,self%coarse_nz),&
+         self%coarse_DHh(self%ncols,self%coarse_nz),&
+         self%PMB(self%ncols,self%ncols,self%coarse_nz,self%coarse_nz+1),&
+         self%PMD(self%ncols,self%ncols,self%coarse_nz,self%coarse_nz+1),&
+         self%dwdt(self%ncols,self%coarse_nz+1) )
+
 ierr=nf90_inq_varid(ncid1,"R",varid1)
-if (ierr/=nf90_noerr) write(*,*) "can't inq R", ierr
+if (ierr/=nf90_noerr) stop "can't inq R"
 ierr=nf90_get_var(ncid1,varid1,self%radius(1:self%ncols))
-if (ierr/=nf90_noerr) write(*,*) "can't read R", ierr
+if (ierr/=nf90_noerr) stop "can't read R"
 
 self%radius(self%ncols+1)=self%radius(self%ncols)
 
 ierr=nf90_inq_varid(ncid1,"A",varid1)
-if (ierr/=nf90_noerr) write(*,*) "can't inq A", ierr
+if (ierr/=nf90_noerr) stop "can't inq A"
 ierr=nf90_get_var(ncid1,varid1,self%A(1:self%ncols))
-if (ierr/=nf90_noerr) write(*,*) "can't read A", ierr
+if (ierr/=nf90_noerr) stop "can't read A"
 
 self%A(self%ncols+1)=self%A(self%ncols)
 
 ierr=nf90_inq_varid(ncid1,"B",varid1)
-if (ierr/=nf90_noerr) write(*,*) "can't inq B", ierr
+if (ierr/=nf90_noerr) stop "can't inq B"
 ierr=nf90_get_var(ncid1,varid1,self%B(1:self%ncols))
-if (ierr/=nf90_noerr) write(*,*) "can't read B", ierr
+if (ierr/=nf90_noerr) stop "can't read B"
 
 self%B(self%ncols+1)=self%B(self%ncols)
 
 ierr=nf90_inq_varid(ncid1,"PMB",varid1)
-if (ierr/=nf90_noerr) write(*,*) "can't inq PMB", ierr
+if (ierr/=nf90_noerr) stop "can't inq PMB"
 ierr=nf90_get_var(ncid1,varid1,self%PMB)
-if (ierr/=nf90_noerr) write(*,*) "can't read PMB", ierr
+if (ierr/=nf90_noerr) stop "can't read PMB"
+
+if (self%do_DHh) then
+  ierr=nf90_inq_varid(ncid1,"PMD",varid1)
+  if (ierr/=nf90_noerr) stop "can't inq PMD"
+  ierr=nf90_get_var(ncid1,varid1,self%PMD)
+  if (ierr/=nf90_noerr) stop "can't read PMD"
+endif
 
 ierr=nf90_inq_varid(ncid1,"Zc",varid1)
-if (ierr/=nf90_noerr) write(*,*) "can't inq Zc", ierr
+if (ierr/=nf90_noerr) stop "can't inq Zc"
 ierr=nf90_get_var(ncid1,varid1,self%coarse_z)
-if (ierr/=nf90_noerr) write(*,*) "can't read Zc", ierr
+if (ierr/=nf90_noerr) stop "can't read Zc"
 
 ierr=nf90_inq_varid(ncid1,"Zi",varid1)
-if (ierr/=nf90_noerr) write(*,*) "can't inq Zi", ierr
+if (ierr/=nf90_noerr) stop "can't inq Zi"
 ierr=nf90_get_var(ncid1,varid1,self%coarse_ze)
-if (ierr/=nf90_noerr) write(*,*) "can't read Zi", ierr
+if (ierr/=nf90_noerr) stop "can't read Zi"
 
 ierr=nf90_close(ncid1)
-if (ierr/=nf90_noerr) write(*,*) "can't close PMB file", ierr 
+if (ierr/=nf90_noerr) stop "can't close PMB file"
 
 end subroutine ace_initialization
 
@@ -598,6 +716,7 @@ end subroutine ace_output_nc
 
 
 subroutine ace_tendency(ace,X,dXdt,rkstage)
+use omp_lib
 implicit none
 
 ! input/output variables
@@ -609,15 +728,17 @@ real, dimension(ace%ncols,ace%nz,ace%n_prog), intent(out) :: dXdt
 ! local variables
 integer :: i,n,k,ks,ke
 real :: dum1,dum2
+integer(4) :: start,finish
 real, dimension(ace%ncols,ace%nz,2) :: eps_tur
 real, dimension(ace%nz) :: rho0B, Tv
 real, dimension(ace%ncols,ace%nz,3) :: dXdz
 real, dimension(ace%ncols,ace%nz,2:ace%n_prog) :: Ci, rho0wC
 real, dimension(ace%ncols+1,ace%nz) :: mfc, Wc
-real, dimension(ace%ncols,ace%nz) ::Wi, Admfdz, ioflow, F
+real, dimension(ace%ncols,ace%nz) ::Wi, Admfdz, ioflow, F, FH, FHi, DHh
 
 
 ! initialization
+call system_clock(count=start)
 do k=1,ace%nz
   eps_tur(:          ,k,1) = ace%nju*ace%B/ace%A
   eps_tur(2:ace%ncols,k,2) = ace%nju*ace%B(1:ace%ncols-1)/ace%A(2:ace%ncols)
@@ -636,8 +757,16 @@ enddo
 dXdt = 0.
 mfc = 0.
 Wc = 0.
+F = 0.
+FH = 0.
+FHi = 0.
+DHh = 0.
+
+call system_clock(count=finish)
+!write(*,*) "initial", real(finish-start)/10000.  
 
 ! Compute tracer values Ci(zi) at interface points from C(zc=zi+dz/2)
+call system_clock(count=start)
 do i=1,ace%ncols
   do n=2,ace%n_prog
     call weno_vec(ace%n_weno,ace%nz,X(i,:,n),X(i,:,1),rho0wC(i,:,n))
@@ -659,10 +788,15 @@ do i=1,ace%ncols
   ! ioflow = -Bi*rho_0*u_n (minus h. mass flux * lateral boundary length)
   ioflow(i,:) = sum(Admfdz(1:i,:),1)
 enddo
+call system_clock(count=finish)
+!write(*,*) "inflow", real(finish-start)/10000.  
 
+!call omp_set_dynamic(.false.)
+!call omp_set_num_threads(ace%ncols/4)
+!!!!$omp parallel do private(i)
+call system_clock(count=start)
 do i=1,ace%ncols
   do n=2,ace%n_prog
-    dXdt(i,1:ace%nz  ,n) = 0.
     dXdt(i,1:ace%nz-1,n) = - ( rho0wC(i,2:ace%nz,n) - rho0wC(i,1:ace%nz-1,n) ) / ace%Ref(1:ace%nz-1,5) / ace%Ref(1:ace%nz-1,1)  ! vertical flux convergence
 
     dXdt(i,1:ace%nz-1,n) = dXdt(i,1:ace%nz-1,n) - eps_tur(i,1:ace%nz-1,1) * ( X(i,1:ace%nz-1,n) - X(i+1,1:ace%nz-1,n) )  ! interact outer
@@ -680,18 +814,33 @@ do i=1,ace%ncols
                         / ace%A(i) / ace%Ref(1:ace%nz-1,1)  ! inflow from inner
   enddo
 
-  F(i,1:ace%nz  ) = 0.
-  F(i,1:ace%nz-1) = - ( X(i,2:ace%nz,1) * Wi(i,2:ace%nz) - X(i,1:ace%nz-1,1) * Wi(i,1:ace%nz-1) ) / ace%Ref(1:ace%nz-1,5)  ! vertical flux convergence
-  F(i,1:ace%nz-1) = F(i,1:ace%nz-1) - eps_tur(i,1,1) * ( mfc(i,1:ace%nz-1) - mfc(i+1,1:ace%nz-1) )  ! interact outer
+  FH(i,1:ace%nz-1) = - eps_tur(i,1,1) * ( mfc(i,1:ace%nz-1) - mfc(i+1,1:ace%nz-1) )  ! interact outer
   if (i>1) &
-  F(i,1:ace%nz-1) = F(i,1:ace%nz-1) - eps_tur(i,1,2) * ( mfc(i,1:ace%nz-1) - mfc(i-1,1:ace%nz-1) )  ! interact inner
-  F(i,1:ace%nz-1) = F(i,1:ace%nz-1) + 0.5 * &
+  FH(i,1:ace%nz-1) = FH(i,1:ace%nz-1) - eps_tur(i,1,2) * ( mfc(i,1:ace%nz-1) - mfc(i-1,1:ace%nz-1) )  ! interact inner
+  FH(i,1:ace%nz-1) = FH(i,1:ace%nz-1) + 0.5 * &
                      ( ( ioflow(i  ,1:ace%nz-1) + abs(ioflow(i  ,1:ace%nz-1)) ) * Wc(i+1,1:ace%nz-1) &
                      + ( ioflow(i  ,1:ace%nz-1) - abs(ioflow(i  ,1:ace%nz-1)) ) * Wc(i  ,1:ace%nz-1) ) / ace%A(i)  ! inflow from outer
   if (i>1) &
-  F(i,1:ace%nz-1) = F(i,1:ace%nz-1) - 0.5 * &
+  FH(i,1:ace%nz-1) = FH(i,1:ace%nz-1) - 0.5 * &
                      ( ( ioflow(i-1,1:ace%nz-1) + abs(ioflow(i-1,1:ace%nz-1)) ) * Wc(i  ,1:ace%nz-1) &
                      + ( ioflow(i-1,1:ace%nz-1) - abs(ioflow(i-1,1:ace%nz-1)) ) * Wc(i-1,1:ace%nz-1) ) / ace%A(i)  ! inflow from inner
+
+  F(i,1:ace%nz-1) =  FH(i,1:ace%nz-1) - ( X(i,2:ace%nz,1) * Wi(i,2:ace%nz) &
+                                        - X(i,1:ace%nz-1,1) * Wi(i,1:ace%nz-1) ) / ace%Ref(1:ace%nz-1,5)  ! vertical flux convergence
+
+  if (ace%do_DHv) then 
+    F(i,1:ace%nz-1) = F(i,1:ace%nz-1) + FH(i,1:ace%nz-1)
+    FHi(i,2:ace%nz-1) = 0.5 * ( FH(i,1:ace%nz-2) + FH(i,2:ace%nz-1) )
+  endif
+
+  if (ace%do_DHh) then
+    if (i==1) then
+      DHh(i,:) = ioflow(i,:) ** 2.
+    else 
+      DHh(i,:) = ioflow(i,:) ** 2. - ioflow(i-1,:) ** 2. 
+    endif
+    DHh(i,:) = DHh(i,:) / ace%Ref(:,1) / ace%A(i)
+  endif
 
   if (rkstage==1) then
     do k=1,ace%nz
@@ -711,17 +860,36 @@ do i=1,ace%ncols
 
   F(i,1:ace%nz) = F(i,1:ace%nz) + rho0B(1:ace%nz)
 
-  !call pchip(nz,Ref(1:nz,4),F(i,1:nz),coarse_nz,coarse_z,coarse_F(i,1:coarse_nz),.True.)
-  ace%coarse_F(i,:) = sum(reshape(F(i,1:ace%nz),(/4,ace%nz/4/)),1)/4.
+  ace%coarse_F(i,:) = sum(reshape(F(i,1:ace%nz),(/2,ace%nz/2/)),1)/2.
+  ace%coarse_DHh(i,:) = sum(reshape(DHh(i,1:ace%nz),(/2,ace%nz/2/)),1)/2.
 enddo
+call system_clock(count=finish)
+!write(*,*) "advec", real(finish-start)/10000.  
+!!!$omp end parallel do
 
+call system_clock(count=start)
+!$omp parallel do collapse(2) schedule(guided,20)
 do i=1,ace%ncols
   do k=1,ace%coarse_nz+1
-    ace%dwdt(i,k) = sum( sum( ace%PMB(i,:,:,k) * ace%coarse_F(:,:) , 2 ), 1 )  
+    if (ace%do_DHh) then
+      ace%dwdt(i,k) = sum( sum( ace%PMB(i,:,:,k) * ace%coarse_F(:,:) &
+                              + ace%PMD(i,:,:,k) * ace%coarse_DHh(:,:), 2 ), 1 )  
+    else
+      ace%dwdt(i,k) = sum( sum( ace%PMB(i,:,:,k) * ace%coarse_F(:,:), 2 ), 1 )
+    endif
   enddo
+enddo
+!$omp end parallel do
+call system_clock(count=finish)
+write(*,*) "basis", real(finish-start)/10000.  
 
+call system_clock(count=start)
+do i=1,ace%ncols
   call pchip(ace%coarse_nz+1,ace%coarse_ze,ace%dwdt(i,1:ace%coarse_nz+1),ace%nz,ace%Ref(1:ace%nz,4),dXdt(i,1:ace%nz,1),.True.)
+  dXdt(i,1:ace%nz,1) = dXdt(i,1:ace%nz,1) - Fhi(i,1:ace%nz)
 enddo  
+call system_clock(count=finish)
+!write(*,*) "interp", real(finish-start)/10000.  
 
 ! single ACE
 if (ace%single_ace) dXdt(2:ace%ncols,:,:)=0.
