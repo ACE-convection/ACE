@@ -1,18 +1,18 @@
 &config
-PMB_PMD_file  = "./input_data/precomputed_mf_basis_88aces.nc",   ! File path of precomputed massflux basis
-case_name     = "test_88aces"                            ! Case name (will be used to read initial condition and output result)
+PMB_PMD_file  = "./input_data/mf_basis_smallsize.nc",   ! File path of precomputed massflux basis
+case_name     = "p3_smallsize"                            ! Case name (will be used to read initial condition and output result)
 nc_init       = .True.                                    ! Reading initial condition from nc file 
-n_prog        = 3,                                        ! Number of prognostic variables 
+n_prog        = 11,                                        ! Number of prognostic variables 
 n_weno        = 2,                                        ! Order of WENO scheme
-ncols         = 88,                                       ! Number of ACE columns
-nz            = 401,                                      ! Number of vertical grid points (including 1 halo point)
+ncols         = 8,                                       ! Number of ACE columns
+nz            = 141,                                      ! Number of vertical grid points (including 1 halo point)
 single_ace    = .False.,                                  ! Perform single ACE simulation
 do_microphy   = .True.,                                   ! Switch of microphysics (simple micorphy when n_prog=3, P3 scheme when n_prog=11)
-do_ImDiff     = .False.,                                   ! Apply implicit vertical diffusion or not
+do_ImDiff     = .True.,                                   ! Apply implicit vertical diffusion or not
 do_ImDamp     = .True.,                                  ! Upper-level Newtonian damping 
 do_DHv        = .False.,                                   ! Vertical 
-do_DHh        = .True.,                                   ! Horizontal
-dt            = 6.,                                       ! delta t for integrating ACE model
+do_DHh        = .False.,                                   ! Horizontal
+dt            = 5.,                                       ! delta t for integrating ACE model
 nju           = 0.09,                                     ! horiztonal diffusion rate (m^2/s)
 /
 

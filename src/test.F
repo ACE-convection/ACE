@@ -122,7 +122,7 @@ call ace%output()
 
 
 t_end=ace%t_now+dt_out
-do t=1,60*12 !24*10 ! 60 is mins, and 24 is hours
+do t=1,60*6 ! 60 is mins, and 24 is hours
   !write(*,*) ace%t_now,t_end,t
 
   ! call ace driver to integrate from t_now to t_end with dt
@@ -137,6 +137,6 @@ enddo
 
 call system_clock(count=finish)
 
-write(*,*) "time cost =",finish-start,"ms"
+write(*,*) "time cost =",(finish-start)/1000.,"s"
 
 end program test

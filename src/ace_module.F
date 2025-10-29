@@ -37,14 +37,14 @@ type ace_t
  ! arrays for PMB and PMD
   integer :: coarse_nz
   real, dimension(:), allocatable :: coarse_z, coarse_ze
-  real, dimension(:,:), allocatable :: coarse_F, coarse_DHh
+  real, dimension(:,:), allocatable :: coarse_F, coarse_DHv, coarse_DHh
   real, dimension(:,:), allocatable :: dwdt
-  real, dimension(:,:,:,:), allocatable :: PMB, PMD
+  real, dimension(:,:,:,:), allocatable :: PMB, PMDv, PMD
 
   ! array for calculating buoyancy and RH
   real, dimension(:,:), allocatable :: Ta, q, ql, qi
   real, dimension(:,:), allocatable :: the, th, qt
-  real, dimension(:,:), allocatable :: buoc, rh
+  real, dimension(:,:), allocatable :: buoc, rh, cloud
 
   ! array for env.
   real, dimension(:), allocatable :: Tv0, T0, q0, ql0, qi0
@@ -165,7 +165,7 @@ do while ( self%t_now < te)
 
 
   self%t_now = self%t_now + self%dt
-  write(*,*) self%t_now
+  !write(*,*) self%t_now
 enddo
 
 
@@ -282,6 +282,7 @@ allocate(self%X(self%ncols+1,self%nz,self%n_prog),&
          self%qt(self%ncols,self%nz),&
          self%rh(self%ncols,self%nz),&
          self%buoc(self%ncols,self%nz),&
+         self%cloud(self%ncols,self%nz),&
          self%Tv0(self%nz),&
          self%T0(self%nz),&
          self%q0(self%nz),&
@@ -357,7 +358,7 @@ if (nc_init) then
   if (ierr/=nf90_noerr) stop "can't inq pi_c"
   ierr=nf90_get_var(ncid1,varid1,self%Ref(:,8))
   if (ierr/=nf90_noerr) stop "can't read pi_c"
- 
+
   ! read IC
   ierr=nf90_inq_varid(ncid1,"X",varid1)
   if (ierr/=nf90_noerr) stop "can't inq X"
@@ -394,8 +395,10 @@ allocate(self%radius(self%ncols+1),&
          self%coarse_z(self%coarse_nz),&
          self%coarse_ze(self%coarse_nz+1),&
          self%coarse_F(self%ncols,self%coarse_nz),&
+         self%coarse_DHv(self%ncols,self%coarse_nz),&
          self%coarse_DHh(self%ncols,self%coarse_nz),&
          self%PMB(self%ncols,self%ncols,self%coarse_nz,self%coarse_nz+1),&
+         self%PMDv(self%ncols,self%ncols,self%coarse_nz,self%coarse_nz+1),&
          self%PMD(self%ncols,self%ncols,self%coarse_nz,self%coarse_nz+1),&
          self%dwdt(self%ncols,self%coarse_nz+1) )
 
@@ -424,6 +427,13 @@ ierr=nf90_inq_varid(ncid1,"PMB",varid1)
 if (ierr/=nf90_noerr) stop "can't inq PMB"
 ierr=nf90_get_var(ncid1,varid1,self%PMB)
 if (ierr/=nf90_noerr) stop "can't read PMB"
+
+if (self%do_DHv) then
+  ierr=nf90_inq_varid(ncid1,"PMDv",varid1)
+  if (ierr/=nf90_noerr) stop "can't inq PMDv"
+  ierr=nf90_get_var(ncid1,varid1,self%PMDv)
+  if (ierr/=nf90_noerr) stop "can't read PMDv"
+endif
 
 if (self%do_DHh) then
   ierr=nf90_inq_varid(ncid1,"PMD",varid1)
@@ -474,6 +484,7 @@ do k=1,self%nz
       self%the(i,k)=self%X(i,k,2)
       self%qt(i,k)=self%X(i,k,3)
       call inv_theta_e(self%X(i,k,2),self%X(i,k,3),self%Ref(k,7),self%Ta(i,k),self%q(i,k),self%ql(i,k),self%qi(i,k))
+      self%cloud(i,k)=self%ql(i,k)+self%qi(i,k)
       self%th(i,k)=self%Ta(i,k)/self%Ref(k,8)
     elseif (self%n_prog==11) then
       self%th(i,k)=self%X(i,k,2)
@@ -481,6 +492,7 @@ do k=1,self%nz
       self%q(i,k) =self%X(i,k,3)
       self%ql(i,k)=self%X(i,k,4)+self%X(i,k,6)
       self%qi(i,k)=self%X(i,k,8)
+      self%cloud(i,k)=self%X(i,k,4)+self%X(i,k,8)
       self%qt(i,k)=self%q(i,k)+self%ql(i,k)+self%qi(i,k)
       self%the(i,k)=theta_e(self%Ta(i,k),self%q(i,k),self%ql(i,k),self%qi(i,k),self%Ref(k,7)) 
     endif
@@ -607,6 +619,13 @@ if (first) then
   ierr=nf90_put_att(ncid1, varid1, 'units', 'kg kg^-1')
   if (ierr/=nf90_noerr) stop "cannot define qi units"
 
+  ierr=nf90_def_var(ncid1, "cloud", nf90_double, (/dimid1,dimid2,dimid3/), varid1)
+  if (ierr/=nf90_noerr) stop "cannot define cloud"
+  ierr=nf90_put_att(ncid1, varid1, 'long_name', 'Mixing ratio of cloud')
+  if (ierr/=nf90_noerr) stop "cannot define cloud longname"
+  ierr=nf90_put_att(ncid1, varid1, 'units', 'kg kg^-1')
+  if (ierr/=nf90_noerr) stop "cannot define cloud units"
+
   ierr=nf90_def_var(ncid1, "rh", nf90_double, (/dimid1,dimid2,dimid3/), varid1)
   if (ierr/=nf90_noerr) stop "cannot define rh"
   ierr=nf90_put_att(ncid1, varid1, 'long_name', 'Relatvie humidity')
@@ -700,7 +719,12 @@ if (ierr/=nf90_noerr) stop "cannot output qi"
 ierr=nf90_inq_varid(ncid1,"rh",varid1)
 if (ierr/=nf90_noerr) stop "cannot inq rh"
 ierr=nf90_put_var(ncid1,varid1,self%rh(1:self%ncols,1:self%nz),start=(/1,1,step+1/))
-if (ierr/=nf90_noerr) stop "cannot output trh"
+if (ierr/=nf90_noerr) stop "cannot output rh"
+
+ierr=nf90_inq_varid(ncid1,"cloud",varid1)
+if (ierr/=nf90_noerr) stop "cannot inq cloud"
+ierr=nf90_put_var(ncid1,varid1,self%cloud(1:self%ncols,1:self%nz),start=(/1,1,step+1/))
+if (ierr/=nf90_noerr) stop "cannot output cloud"
 
 ierr=nf90_inq_varid(ncid1,"B",varid1)
 if (ierr/=nf90_noerr) stop "cannot inq B"
@@ -734,7 +758,7 @@ real, dimension(ace%nz) :: rho0B, Tv
 real, dimension(ace%ncols,ace%nz,3) :: dXdz
 real, dimension(ace%ncols,ace%nz,2:ace%n_prog) :: Ci, rho0wC
 real, dimension(ace%ncols+1,ace%nz) :: mfc, Wc
-real, dimension(ace%ncols,ace%nz) ::Wi, Admfdz, ioflow, F, FH, FHi, DHh
+real, dimension(ace%ncols,ace%nz) ::Wi, Admfdz, ioflow, F, FH, DHv, DHh
 
 
 ! initialization
@@ -759,7 +783,7 @@ mfc = 0.
 Wc = 0.
 F = 0.
 FH = 0.
-FHi = 0.
+DHv = 0.
 DHh = 0.
 
 call system_clock(count=finish)
@@ -791,9 +815,6 @@ enddo
 call system_clock(count=finish)
 !write(*,*) "inflow", real(finish-start)/10000.  
 
-!call omp_set_dynamic(.false.)
-!call omp_set_num_threads(ace%ncols/4)
-!!!!$omp parallel do private(i)
 call system_clock(count=start)
 do i=1,ace%ncols
   do n=2,ace%n_prog
@@ -825,12 +846,15 @@ do i=1,ace%ncols
                      ( ( ioflow(i-1,1:ace%nz-1) + abs(ioflow(i-1,1:ace%nz-1)) ) * Wc(i  ,1:ace%nz-1) &
                      + ( ioflow(i-1,1:ace%nz-1) - abs(ioflow(i-1,1:ace%nz-1)) ) * Wc(i-1,1:ace%nz-1) ) / ace%A(i)  ! inflow from inner
 
-  F(i,1:ace%nz-1) =  FH(i,1:ace%nz-1) - ( X(i,2:ace%nz,1) * Wi(i,2:ace%nz) &
-                                        - X(i,1:ace%nz-1,1) * Wi(i,1:ace%nz-1) ) / ace%Ref(1:ace%nz-1,5)  ! vertical flux convergence
+  F(i,1:ace%nz-1) =  FH(i,1:ace%nz-1) &
+                      - ( X(i,2:ace%nz,1) * Wi(i,2:ace%nz) &
+                        - X(i,1:ace%nz-1,1) * Wi(i,1:ace%nz-1) ) / ace%Ref(1:ace%nz-1,5)  ! vertical flux convergence
 
-  if (ace%do_DHv) then 
-    F(i,1:ace%nz-1) = F(i,1:ace%nz-1) + FH(i,1:ace%nz-1)
-    FHi(i,2:ace%nz-1) = 0.5 * ( FH(i,1:ace%nz-2) + FH(i,2:ace%nz-1) )
+  if (ace%do_DHv) then
+    DHv(i,1)= - FH(i,1) - 2. * FH(i,1) + FH(i,2)
+    DHv(i,2:ace%nz-1) = FH(i,1:ace%nz-2) - 2. * FH(i,2:ace%nz-1) + FH(i,3:ace%nz)
+    DHv(i,ace%nz) = FH(i,ace%nz-1) - 2. * FH(i,ace%nz)
+    DHv(i,1:ace%nz) = DHv(i,1:ace%nz) / ( ace%Ref(1:ace%nz,5) ** 2. )
   endif
 
   if (ace%do_DHh) then
@@ -839,8 +863,13 @@ do i=1,ace%ncols
     else 
       DHh(i,:) = ioflow(i,:) ** 2. - ioflow(i-1,:) ** 2. 
     endif
-    DHh(i,:) = DHh(i,:) / ace%Ref(:,1) / ace%A(i)
+    DHh(i,:) = DHh(i,:) / ace%Ref(:,1) / ace%A(i) * 1e-6
   endif
+  !if (i==1) then
+  !  do k=1,10
+  !    write(*,*) ioflow(i,k),DHh(i,k)
+  !  enddo
+  !endif
 
   if (rkstage==1) then
     do k=1,ace%nz
@@ -862,37 +891,44 @@ do i=1,ace%ncols
 
   ace%coarse_F(i,:) = sum(reshape(F(i,1:ace%nz),(/2,ace%nz/2/)),1)/2.
   ace%coarse_DHh(i,:) = sum(reshape(DHh(i,1:ace%nz),(/2,ace%nz/2/)),1)/2.
+  ace%coarse_DHv(i,:) = sum(reshape(DHv(i,1:ace%nz),(/2,ace%nz/2/)),1)/2.
 enddo
 call system_clock(count=finish)
 !write(*,*) "advec", real(finish-start)/10000.  
-!!!$omp end parallel do
 
 call system_clock(count=start)
-!$omp parallel do collapse(2) schedule(guided,20)
+!$omp parallel do collapse(2) schedule(guided,10)
 do i=1,ace%ncols
   do k=1,ace%coarse_nz+1
+    ace%dwdt(i,k) = sum( sum( ace%PMB(i,:,:,k) * ace%coarse_F(:,:) , 2 ), 1 )
     if (ace%do_DHh) then
-      ace%dwdt(i,k) = sum( sum( ace%PMB(i,:,:,k) * ace%coarse_F(:,:) &
-                              + ace%PMD(i,:,:,k) * ace%coarse_DHh(:,:), 2 ), 1 )  
-    else
-      ace%dwdt(i,k) = sum( sum( ace%PMB(i,:,:,k) * ace%coarse_F(:,:), 2 ), 1 )
+      ace%dwdt(i,k) = ace%dwdt(i,k) + sum( sum( ace%PMD(i,:,:,k) * ace%coarse_DHh(:,:), 2 ), 1 ) 
+    endif
+    if (ace%do_DHv) then
+      ace%dwdt(i,k) = ace%dwdt(i,k) - sum( sum( ace%PMDv(i,:,:,k) * ace%coarse_DHv(:,:), 2 ), 1 ) 
     endif
   enddo
 enddo
 !$omp end parallel do
 call system_clock(count=finish)
-write(*,*) "basis", real(finish-start)/10000.  
+!write(*,*) "basis", real(finish-start)/10000.  
 
 call system_clock(count=start)
 do i=1,ace%ncols
   call pchip(ace%coarse_nz+1,ace%coarse_ze,ace%dwdt(i,1:ace%coarse_nz+1),ace%nz,ace%Ref(1:ace%nz,4),dXdt(i,1:ace%nz,1),.True.)
-  dXdt(i,1:ace%nz,1) = dXdt(i,1:ace%nz,1) - Fhi(i,1:ace%nz)
 enddo  
 call system_clock(count=finish)
 !write(*,*) "interp", real(finish-start)/10000.  
 
 ! single ACE
 if (ace%single_ace) dXdt(2:ace%ncols,:,:)=0.
+
+! domain-mean massflux conserved
+if (.True.) then
+  do k=1,ace%nz
+    dXdt(ace%ncols,k,1) = -sum(dXdt(1:ace%ncols-1,k,1)*ace%A(1:ace%ncols-1),1)/ace%A(ace%ncols)
+  enddo
+endif
 
 ! model top 
 dXdt(:,ace%nz-10:ace%nz,:)=0.
