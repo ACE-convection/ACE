@@ -26,12 +26,13 @@ type(ace_t) :: ace
 call ace%initialize("./namelist.input")
 
 
-allocate(z(ace%nz),T_e(ace%nz),q_e(ace%nz),Tv_e(ace%nz),the_e(ace%nz),rho_e(ace%nz),p_z(ace%nz))
-allocate(zm(ace%nzm),T_zm(ace%nzm),q_zm(ace%nzm),Tv_zm(ace%nzm),the_zm(ace%nzm),rho_zm(ace%nzm) &
-        ,p_zm(ace%nzm),th_zm(ace%nzm),thes_zm(ace%nzm),rh_zm(ace%nzm),tmp(ace%nzm))
-allocate(T4(ace%ncols,ace%nz),q4(ace%ncols,ace%nz),ql4(ace%ncols,ace%nz),qi4(ace%ncols,ace%nz),rh4(ace%ncols,ace%nz),b4(ace%ncols,ace%nz),Tv0(ace%nz))
-allocate(Xout(ace%ncols+1,ace%nz,ace%n_prog))
-
+!allocate(z(ace%nz),T_e(ace%nz),q_e(ace%nz),Tv_e(ace%nz),the_e(ace%nz),rho_e(ace%nz),p_z(ace%nz))
+!allocate(zm(ace%nzm),T_zm(ace%nzm),q_zm(ace%nzm),Tv_zm(ace%nzm),the_zm(ace%nzm),rho_zm(ace%nzm) &
+!        ,p_zm(ace%nzm),th_zm(ace%nzm),thes_zm(ace%nzm),rh_zm(ace%nzm),tmp(ace%nzm))
+!allocate(T4(ace%ncols,ace%nz),q4(ace%ncols,ace%nz),ql4(ace%ncols,ace%nz),qi4(ace%ncols,ace%nz),rh4(ace%ncols,ace%nz),b4(ace%ncols,ace%nz),Tv0(ace%nz))
+!allocate(Xout(ace%ncols+1,ace%nz,ace%n_prog))
+!
+!! read data from the binary file
 !fname="./input_data/ini_goamazon_314_88aces.dat"
 !open(20,file=trim(fname),access="direct",recl=ace%nz*2)
 !read(20,rec=5) tmp
@@ -52,7 +53,7 @@ allocate(Xout(ace%ncols+1,ace%nz,ace%n_prog))
 !z = tmp
 !close(20)
 !
-!
+!! set initial conditions
 !dz=100
 !do k=1,ace%nz
 !  ace%X(:,k,1)=0.
