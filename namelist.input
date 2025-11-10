@@ -1,0 +1,42 @@
+&config
+PMB_PMD_file  = "./input_data/mf_basis_smallsize.nc",   ! File path of precomputed massflux basis
+case_name     = "p3_smallsize"                            ! Case name (will be used to read initial condition and output result)
+nc_init       = .True.                                    ! Reading initial condition from nc file 
+n_prog        = 11,                                        ! Number of prognostic variables 
+n_weno        = 2,                                        ! Order of WENO scheme
+ncols         = 8,                                       ! Number of ACE columns
+nz            = 141,                                      ! Number of vertical grid points (including 1 halo point)
+single_ace    = .False.,                                  ! Perform single ACE simulation
+do_microphy   = .True.,                                   ! Switch of microphysics (simple micorphy when n_prog=3, P3 scheme when n_prog=11)
+do_ImDiff     = .True.,                                   ! Apply implicit vertical diffusion or not
+do_ImDamp     = .True.,                                  ! Upper-level Newtonian damping 
+do_DHv        = .False.,                                   ! Vertical 
+do_DHh        = .False.,                                   ! Horizontal
+dt            = 5.,                                       ! delta t for integrating ACE model
+nju           = 0.09,                                     ! horiztonal diffusion rate (m^2/s)
+/
+
+&sponge
+SLD           = 6.e3,                                     ! E-folding depth of damping (m)
+SLTau         = 180,                                      ! relaxation timescale (s)
+/
+
+! These options are for simple scheme 
+&microphy_simple_scheme
+qc_ramp       = 0.5e-3,                                   ! Ramping for precip when qc>qc_ramp (kg/kg)
+dqc           = 20.,                                      ! Transition for a smooth onset of precip ramp function (kg/kg)
+tau_pr        = 300.,                                     ! Relaxation timescale for precip (s)
+/
+
+! These options are for P3 microphysics scheme
+&microphy_p3_scheme
+ncat          = 1,
+/
+
+
+
+
+
+
+
+

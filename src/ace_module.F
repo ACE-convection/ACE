@@ -2,300 +2,1022 @@ module ace_module
 implicit none
 
 private
+public :: ace_t
 public :: weno, weno_vec, inv_theta_e, pchip, theta_e, ace_driver, ace_initialization, eval_qs
 
-! defien operator for grid interface
+! model setup by ace_t
+type ace_t
+  ! model setup
+  integer :: n_prog,n_weno,ncols,nz,nzm
+  real, dimension(:), allocatable :: radius, A, B
+  real, dimension(:,:), allocatable :: Ref
+  real, dimension(:,:,:), allocatable :: X, forcing
+  character(300) :: case_name
+  character(300) :: PMB_PMD_file
+  logical :: nc_init
+  logical :: single_ace,do_microphy,do_ImDiff,do_ImDamp
+  logical :: do_DHv,do_DHh
+  real :: dt
+  real :: t_now
 
+  ! parameters for ImPamp
+  real :: nju,SLD,SLTau
+
+  ! array for ImDiff
+  real, dimension(:,:), allocatable :: eddiffu 
+  integer, dimension(:,:), allocatable :: eddiwin
+  
+  ! constants for simple micrphysics scheme
+  real qc_ramp,dqc,tau_pr
+    
+  ! options for P3 microphysics scheme
+  integer :: ncat
+  logical :: log_predictNc,trplMomI,liqfrac
+
+ ! arrays for PMB and PMD
+  integer :: coarse_nz
+  real, dimension(:), allocatable :: coarse_z, coarse_ze
+  real, dimension(:,:), allocatable :: coarse_F, coarse_DHv, coarse_DHh
+  real, dimension(:,:), allocatable :: dwdt
+  real, dimension(:,:,:,:), allocatable :: PMB, PMDv, PMD
+
+  ! array for calculating buoyancy and RH
+  real, dimension(:,:), allocatable :: Ta, q, ql, qi
+  real, dimension(:,:), allocatable :: the, th, qt
+  real, dimension(:,:), allocatable :: buoc, rh, cloud
+
+  ! array for env.
+  real, dimension(:), allocatable :: Tv0, T0, q0, ql0, qi0
+
+  contains
+    procedure :: initialize=>ace_initialization
+    procedure :: integrate=>ace_driver
+    procedure :: diagnose=>ace_diagnostic
+    procedure :: output=>ace_output_nc 
+end type ace_t
+
+
+! constants
 real, parameter :: pi = 4.*atan(1.)
 real, parameter :: g = 9.80665 ! gravity constant 
-real, parameter :: nju = 0.09 ! Morrison (2017)
-! Spounge layer with Newtonian damping at domain top ztop
-real, parameter :: SLD = 6e3  ! e-folding depth in m
-real, parameter :: SLTau = 180 ! SL relaxation timescale in s
-! coefficients for precipitation sinks
-real, parameter :: qc_ramp = 0.5e-3 ! kg/kg; ramping for precip when qc>qc_ramp
-real, parameter :: dqc = 20 ! kg/kg; transition for a smooth onset of precip ramp function
-real, parameter :: tau_pr = 5*60 ! sec; relaxation timescale for precip
-
-integer :: coarse_nz
-real, dimension(:), allocatable :: coarse_z, coarse_ze
-real, dimension(:,:), allocatable :: coarse_F
-real, dimension(:,:), allocatable :: dwdt
-real*8, dimension(:,:,:,:), allocatable :: PMB
-real, dimension(:,:), allocatable, save :: Ta, q, ql, qi
+real, parameter :: eps = 222.044604925031e-018 ! a small real number
 
 contains
 
-subroutine ace_driver(ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing)
+subroutine ace_driver(self,te)
 implicit none
 
-! input/output variables
-integer, intent(in) :: ncols,nz,n_weno,n_prog
-real, dimension(ncols), intent(in) :: A, B
-real, dimension(nz,8), intent(in) :: Ref
-real, dimension(ncols+1,nz,n_prog), intent(inout) :: X
-real, intent(inout) :: t
-real, intent(in) :: te,dt
-real, dimension(ncols,nz), intent(in) :: B_forcing
+class(ace_t), intent(inout) :: self
+
+! input variables
+real, intent(in) :: te ! integrate ACE to te
 
 ! local variables
-real, dimension(ncols+1,nz,n_prog) :: yi
-real, dimension(ncols,nz,n_prog) :: K1,K2,tmp
+real, dimension(self%ncols,self%nz,self%n_prog) :: K1,K2,tmp
+real, dimension(self%ncols+1,self%nz,self%n_prog) :: yi
 real :: dum1
+integer(4) :: start, finish
 integer :: i,k
 
-yi = X
+yi = self%X
 
-do while ( t < te)
+do while ( self%t_now < te)
+  !write(*,*) self%t_now, te
+  call system_clock(count=start)
   ! update ace tendency
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,K1,1)
-  yi(1:ncols,:,:) = X(1:ncols,:,:) + K1 * dt / 6.
+  call ace_tendency(self,self%X,K1,1)
+  yi(1:self%ncols,:,:) = self%X(1:self%ncols,:,:) + K1 * self%dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,K2,2)
-  yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
+  call ace_tendency(self,yi,K2,2)
+  yi(1:self%ncols,:,:) = self%X(1:self%ncols,:,:) + ( K1 + K2 ) * self%dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,3)
+  call ace_tendency(self,yi,tmp,3)
   K2 = K2 + tmp
-  yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
+  yi(1:self%ncols,:,:) = self%X(1:self%ncols,:,:) + ( K1 + K2 ) * self%dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,4)
+  call ace_tendency(self,yi,tmp,4)
   K2 = K2 + tmp
-  yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
+  yi(1:self%ncols,:,:) = self%X(1:self%ncols,:,:) + ( K1 + K2 ) * self%dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,5)
+  call ace_tendency(self,yi,tmp,5)
   K2 = K2 + tmp
-  yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
+  yi(1:self%ncols,:,:) = self%X(1:self%ncols,:,:) + ( K1 + K2 ) * self%dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,6)
+  call ace_tendency(self,yi,tmp,6)
   K2 = ( K2 + tmp ) / 15.
-  yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt 
+  yi(1:self%ncols,:,:) = self%X(1:self%ncols,:,:) + ( K1 / 6. + K2 ) * self%dt 
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,7)
+  call ace_tendency(self,yi,tmp,7)
   K1 = K1 + tmp 
-  yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt 
+  yi(1:self%ncols,:,:) = self%X(1:self%ncols,:,:) + ( K1 / 6. + K2 ) * self%dt 
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,8)
+  call ace_tendency(self,yi,tmp,8)
   K1 = K1 + tmp 
-  yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt 
+  yi(1:self%ncols,:,:) = self%X(1:self%ncols,:,:) + ( K1 / 6. + K2 ) * self%dt 
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,9)
+  call ace_tendency(self,yi,tmp,9)
   K1 = K1 + tmp
 
-  yi = X
-  X(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt
-  
-  ! call physics here
-  if (n_prog==3) then
-    call precip_sinks(ncols,nz,n_prog,Ref(1:nz,7),K1(:,:,1:2)) ! simplified precipitation
-    X(1:ncols,:,2:n_prog) = X(1:ncols,:,2:n_prog) +  K1(:,:,1:2) * dt
-  elseif (n_prog==11) then
-    call p3_wrapper_ace(ncols,nz,n_prog,dt,yi,X,Ref)
-  else
-    write(*,*) "No suitable microphysics scheme"
-    stop
-  endif
+  yi = self%X
+  self%X(1:self%ncols,:,:) = self%X(1:self%ncols,:,:) + ( K1 / 6. + K2 ) * self%dt
+  call system_clock(count=finish)
+  !write(*,*) "dynamic", real(finish-start)/10000.  
 
-  ! NaN check
-  do k=1,nz
-  do i=1,ncols
-    if (X(i,k,2)/=X(i,k,2)) then
-      write(*,*) i,k,Ref(k,7)
-      write(*,*) yi(i,k,2:11)
-      write(*,*) X(i,k,2:11)
-      stop "check 2"
-    endif    
-  enddo
-  enddo
+  ! call physics here
+  call system_clock(count=start)
+  if (self%do_microphy) then
+    if (self%n_prog==3) then
+      call precip_sinks(self,K1(:,:,1:2)) ! simplified precipitation
+      self%X(1:self%ncols,:,2:self%n_prog) = self%X(1:self%ncols,:,2:self%n_prog) +  K1(:,:,1:2) * self%dt
+      
+      ! NaN check
+      do k=1,self%nz
+      do i=1,self%ncols
+        if (self%X(i,k,1)/=self%X(i,k,1)) then
+          write(*,*) "NaN is found at col=", i,", level=",k
+          stop
+        endif
+      enddo
+      enddo
+
+    elseif (self%n_prog==11) then
+      call p3_wrapper_ace(self,yi)
+    else
+      write(*,*) "No suitable microphysics scheme"
+      stop
+    endif
+  endif 
+  call system_clock(count=finish)
+  !write(*,*) "micro", real(finish-start)/10000.  
+
+
+  ! implicit diffusion of mass flux and racers
+  call system_clock(count=start)
+  if (self%do_ImDiff) call ImDiff(self)
+  call system_clock(count=finish)
+  !write(*,*) "ImDiff", real(finish-start)/10000.  
 
   ! implicit damping 
-  call ImDamp(ncols,nz,n_prog,X,Ref,dt)
+  call system_clock(count=start)
+  if (self%do_ImDamp) call ImDamp(self)
+  call system_clock(count=finish)
+  !write(*,*) "ImDamp", real(finish-start)/10000.  
 
 
-  t = t + dt
+  self%t_now = self%t_now + self%dt
+  !write(*,*) self%t_now
 enddo
 
 
 endsubroutine ace_driver
 
 
-subroutine ace_initialization(ncols,nz,nz_presolve,z_presolve,ze_presolve,fname)
+subroutine ace_initialization(self,fname)
+use netcdf
 implicit none
 
-! input variables
-integer, intent(in) :: ncols, nz, nz_presolve
-real, dimension(nz_presolve) :: z_presolve
-real, dimension(nz_presolve+1) :: ze_presolve
+! ace type
+class(ace_t), intent(inout) :: self
+
+! input variable
 character(*), intent(in) :: fname
 
 ! local variables
-integer :: i,j,k,n
+integer :: i,j,k,n, ii,kk
+integer :: ierr,ncid1,varid1,dimid1
 
-coarse_nz=nz_presolve
-allocate(coarse_z(coarse_nz),coarse_ze(coarse_nz+1))
-allocate(coarse_F(ncols,coarse_nz))
-allocate(PMB(ncols,ncols,coarse_nz,coarse_nz+1))
-allocate(dwdt(ncols,coarse_nz+1))
-allocate(Ta(ncols,nz),q(ncols,nz),ql(ncols,nz),qi(ncols,nz))
+integer :: n_prog=3,n_weno=2,ncols=8,nz=801
+character(300) :: PMB_PMD_file="./input_data/precomputed_mf_basis.nc"
+character(300) :: case_name="ACE_default_simulation"
+logical :: nc_init=.False.
+logical :: single_ace=.True.,do_microphy=.True.,do_ImDiff=.True.,do_ImDamp=.False.
+logical :: do_DHv=.True.,do_DHh=.True.
+real :: t_now = 0.
+real :: dt = 4.
+real :: nju = 0.09 ! Morrison (2017)
+namelist /config/ PMB_PMD_file,nc_init,case_name &
+                 ,n_prog,n_weno,ncols,nz &
+                 ,single_ace,do_microphy,do_ImDiff,do_ImDamp &
+                 ,do_DHv,do_DHh &
+                 ,t_now,dt,nju
+
+! parameters for ImDamp
+! Sponge layer with Newtonian damping at domain top ztop
+real :: SLD = 6e3  ! e-folding depth in m
+real :: SLTau = 180 ! SL relaxation timescale in s
+namelist /sponge/ SLD,SLTau
+
+! coefficients for precipitation sinks (simple microphysics scheme)
+real :: qc_ramp = 0.5e-3 ! kg/kg; ramping for precip when qc>qc_ramp
+real :: dqc = 20 ! kg/kg; transition for a smooth onset of precip ramp function
+real :: tau_pr = 5*60 ! sec; relaxation timescale for precip
+namelist /microphy_simple_scheme/ qc_ramp,dqc,tau_pr
+
+! options for P3 microphysics scheme
+integer :: ncat = 1 
+logical :: log_predictNc = .True.
+logical :: trplMomI = .False.
+logical :: liqfrac = .False.
+namelist /microphy_p3_scheme/ ncat,log_predictNc,trplMomI,liqfrac
 
 
-open(10,file=trim(fname),access="direct",recl=(coarse_nz+1)*2)
-n=1
-do k=1,ncols
-do j=1,ncols
-  do i=1,coarse_nz
-    read(10,rec=n) PMB(k,j,i,:)
-    n=n+1
-  enddo
-enddo
-enddo
+! open and read the namelist
+open(10,file=trim(fname),form="formatted")
+
+! ACE configuration
+read(10,config)
+self%PMB_PMD_file=PMB_PMD_file
+self%case_name=case_name
+self%nc_init=nc_init
+self%n_prog=n_prog
+self%n_weno=n_weno
+self%ncols=ncols
+self%nz=nz
+self%nzm=nz
+self%single_ace=single_ace
+self%do_microphy=do_microphy
+self%do_ImDiff=do_ImDiff
+self%do_ImDamp=do_ImDamp
+self%do_DHv=do_DHv
+self%do_DHh=do_DHh
+self%t_now=t_now
+self%dt=dt
+self%nju=nju
+
+! read constant for ImDamp
+if (self%do_ImDamp) then
+  read(10,sponge)
+  self%SLD=SLD
+  self%SLTau=SLTau 
+endif 
+
+! read options and constants for microphysics scheme
+if (self%do_microphy) then
+  if (self%n_prog==3) then ! simple microphysics
+    read(10,microphy_simple_scheme)
+    self%qc_ramp=qc_ramp
+    self%dqc=dqc
+    self%tau_pr=tau_pr
+  elseif (self%n_prog==11) then ! P3 microphysics
+    read(10,microphy_p3_scheme)
+    self%ncat=ncat
+    self%log_predictNc=log_predictNc
+    self%trplMomI=trplMomI
+    self%liqfrac=liqfrac
+  endif
+endif
+
 close(10)
 
-coarse_z = z_presolve
-coarse_ze = ze_presolve
+! allocate array according to namelist
+allocate(self%X(self%ncols+1,self%nz,self%n_prog),&
+         self%forcing(self%ncols+1,self%nz,self%n_prog),&
+         self%Ref(self%nz,8),&
+         self%Ta(self%ncols,self%nz),&
+         self%q(self%ncols,self%nz),&
+         self%ql(self%ncols,self%nz),&
+         self%qi(self%ncols,self%nz),&
+         self%the(self%ncols,self%nz),&
+         self%th(self%ncols,self%nz),&
+         self%qt(self%ncols,self%nz),&
+         self%rh(self%ncols,self%nz),&
+         self%buoc(self%ncols,self%nz),&
+         self%cloud(self%ncols,self%nz),&
+         self%Tv0(self%nz),&
+         self%T0(self%nz),&
+         self%q0(self%nz),&
+         self%ql0(self%nz),&
+         self%qi0(self%nz),&
+         self%eddiffu(self%ncols,self%nz),&
+         self%eddiwin(self%ncols,self%nz) )
+
+
+! read initial condition from nc file if nc_init is false.
+if (nc_init) then
+  ierr=nf90_open("./input_data/"//trim(self%case_name)//"_IC.nc",nf90_nowrite,ncid1)
+  if (ierr/=nf90_noerr) stop "can't open IC nc file"
+  
+  ierr=nf90_inq_dimid(ncid1,'ncols',dimid1)
+  if (ierr/=nf90_noerr) stop "can't inq ncols"
+  ierr=nf90_inquire_dimension(ncid1,dimid1,len=n)
+  if (ierr/=nf90_noerr) stop "can't read ncols"
+
+  if (n/=self%ncols) stop "ncols are inconsistent in IC file and namelist"
+
+  ierr=nf90_inq_dimid(ncid1,'nzc',dimid1)
+  if (ierr/=nf90_noerr) stop "can't inq nzc"
+  ierr=nf90_inquire_dimension(ncid1,dimid1,len=n)
+  if (ierr/=nf90_noerr) stop "can't read nzc"
+
+  if (n/=self%nz) stop "nz are inconsistent in IC file and namelist"
+ 
+  ierr=nf90_inq_dimid(ncid1,'n_prog',dimid1)
+  if (ierr/=nf90_noerr) stop "can't inq n_prog"
+  ierr=nf90_inquire_dimension(ncid1,dimid1,len=n)
+  if (ierr/=nf90_noerr) stop "can't read n_prog"
+
+  if (n/=self%n_prog) stop "n_prog are inconsistent in IC file and namelist"
+
+  ! read the reference varaibles
+  ierr=nf90_inq_varid(ncid1,"rho_c",varid1)
+  if (ierr/=nf90_noerr) stop "can't inq rho_c"
+  ierr=nf90_get_var(ncid1,varid1,self%Ref(:,1))
+  if (ierr/=nf90_noerr) stop "can't read rho_c"
+
+  ierr=nf90_inq_varid(ncid1,"rho_i",varid1)
+  if (ierr/=nf90_noerr) stop "can't inq rho_i"
+  ierr=nf90_get_var(ncid1,varid1,self%Ref(:,2))
+  if (ierr/=nf90_noerr) stop "can't read rho_i"
+
+  ierr=nf90_inq_varid(ncid1,"zc",varid1)
+  if (ierr/=nf90_noerr) stop "can't inq zc"
+  ierr=nf90_get_var(ncid1,varid1,self%Ref(:,3))
+  if (ierr/=nf90_noerr) stop "can't read zc"
+
+  ierr=nf90_inq_varid(ncid1,"zi",varid1)
+  if (ierr/=nf90_noerr) stop "can't inq zi"
+  ierr=nf90_get_var(ncid1,varid1,self%Ref(:,4))
+  if (ierr/=nf90_noerr) stop "can't read zi"
+
+  ierr=nf90_inq_varid(ncid1,"dzc",varid1)
+  if (ierr/=nf90_noerr) stop "can't inq dzc"
+  ierr=nf90_get_var(ncid1,varid1,self%Ref(:,5))
+  if (ierr/=nf90_noerr) stop "can't read dzc"
+
+  ierr=nf90_inq_varid(ncid1,"dzi",varid1)
+  if (ierr/=nf90_noerr) stop "can't inq dzi"
+  ierr=nf90_get_var(ncid1,varid1,self%Ref(:,6))
+  if (ierr/=nf90_noerr) stop "can't read dzi"
+
+  ierr=nf90_inq_varid(ncid1,"p_c",varid1)
+  if (ierr/=nf90_noerr) stop "can't inq p_c"
+  ierr=nf90_get_var(ncid1,varid1,self%Ref(:,7))
+  if (ierr/=nf90_noerr) stop "can't read p_c"
+
+  ierr=nf90_inq_varid(ncid1,"pi_c",varid1)
+  if (ierr/=nf90_noerr) stop "can't inq pi_c"
+  ierr=nf90_get_var(ncid1,varid1,self%Ref(:,8))
+  if (ierr/=nf90_noerr) stop "can't read pi_c"
+
+  ! read IC
+  ierr=nf90_inq_varid(ncid1,"X",varid1)
+  if (ierr/=nf90_noerr) stop "can't inq X"
+  ierr=nf90_get_var(ncid1,varid1,self%X)
+  if (ierr/=nf90_noerr) stop "can't read X"
+
+  ierr=nf90_close(ncid1)
+  if (ierr/=nf90_noerr) stop "can't close IC file"
+  
+  write(*,*) "Successfully reading IC from file: ./input_data/"//trim(self%case_name)//"_IC.nc" 
+else
+  write(*,*) "Setup initial condition before calling integrate()" 
+endif
+
+! read precomputed massflux basis
+ierr=nf90_open(trim(self%PMB_PMD_file),nf90_nowrite,ncid1)
+if (ierr/=nf90_noerr) stop "can't open PMB&PMD file"
+
+ierr=nf90_inq_dimid(ncid1,'nzc',dimid1)
+if (ierr/=nf90_noerr) stop "can't inq nzc"
+ierr=nf90_inquire_dimension(ncid1,dimid1,len=self%coarse_nz)
+if (ierr/=nf90_noerr) stop "can't read nzc"
+ierr=nf90_inq_dimid(ncid1,'ncols-response',dimid1)
+if (ierr/=nf90_noerr) stop "can't inq ncols"
+ierr=nf90_inquire_dimension(ncid1,dimid1,len=n)
+if (ierr/=nf90_noerr) stop "can't read ncols"
+
+if (n/=self%ncols) stop "ncols are inconsistent in PMB&PMD file and namelist"
+
+! allocate arrays according to PMB&PMD file
+allocate(self%radius(self%ncols+1),&
+         self%A(self%ncols+1),&
+         self%B(self%ncols+1),&
+         self%coarse_z(self%coarse_nz),&
+         self%coarse_ze(self%coarse_nz+1),&
+         self%coarse_F(self%ncols,self%coarse_nz),&
+         self%coarse_DHv(self%ncols,self%coarse_nz),&
+         self%coarse_DHh(self%ncols,self%coarse_nz),&
+         self%PMB(self%ncols,self%ncols,self%coarse_nz,self%coarse_nz+1),&
+         self%PMDv(self%ncols,self%ncols,self%coarse_nz,self%coarse_nz+1),&
+         self%PMD(self%ncols,self%ncols,self%coarse_nz,self%coarse_nz+1),&
+         self%dwdt(self%ncols,self%coarse_nz+1) )
+
+ierr=nf90_inq_varid(ncid1,"R",varid1)
+if (ierr/=nf90_noerr) stop "can't inq R"
+ierr=nf90_get_var(ncid1,varid1,self%radius(1:self%ncols))
+if (ierr/=nf90_noerr) stop "can't read R"
+
+self%radius(self%ncols+1)=self%radius(self%ncols)
+
+ierr=nf90_inq_varid(ncid1,"A",varid1)
+if (ierr/=nf90_noerr) stop "can't inq A"
+ierr=nf90_get_var(ncid1,varid1,self%A(1:self%ncols))
+if (ierr/=nf90_noerr) stop "can't read A"
+
+self%A(self%ncols+1)=self%A(self%ncols)
+
+ierr=nf90_inq_varid(ncid1,"B",varid1)
+if (ierr/=nf90_noerr) stop "can't inq B"
+ierr=nf90_get_var(ncid1,varid1,self%B(1:self%ncols))
+if (ierr/=nf90_noerr) stop "can't read B"
+
+self%B(self%ncols+1)=self%B(self%ncols)
+
+ierr=nf90_inq_varid(ncid1,"PMB",varid1)
+if (ierr/=nf90_noerr) stop "can't inq PMB"
+ierr=nf90_get_var(ncid1,varid1,self%PMB)
+if (ierr/=nf90_noerr) stop "can't read PMB"
+
+if (self%do_DHv) then
+  ierr=nf90_inq_varid(ncid1,"PMDv",varid1)
+  if (ierr/=nf90_noerr) stop "can't inq PMDv"
+  ierr=nf90_get_var(ncid1,varid1,self%PMDv)
+  if (ierr/=nf90_noerr) stop "can't read PMDv"
+endif
+
+if (self%do_DHh) then
+  ierr=nf90_inq_varid(ncid1,"PMD",varid1)
+  if (ierr/=nf90_noerr) stop "can't inq PMD"
+  ierr=nf90_get_var(ncid1,varid1,self%PMD)
+  if (ierr/=nf90_noerr) stop "can't read PMD"
+endif
+
+ierr=nf90_inq_varid(ncid1,"Zc",varid1)
+if (ierr/=nf90_noerr) stop "can't inq Zc"
+ierr=nf90_get_var(ncid1,varid1,self%coarse_z)
+if (ierr/=nf90_noerr) stop "can't read Zc"
+
+ierr=nf90_inq_varid(ncid1,"Zi",varid1)
+if (ierr/=nf90_noerr) stop "can't inq Zi"
+ierr=nf90_get_var(ncid1,varid1,self%coarse_ze)
+if (ierr/=nf90_noerr) stop "can't read Zi"
+
+ierr=nf90_close(ncid1)
+if (ierr/=nf90_noerr) stop "can't close PMB file"
 
 end subroutine ace_initialization
 
 
-subroutine ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,dXdt,rkstage)
+subroutine ace_diagnostic(self)
+implicit none
+
+class(ace_t) :: self
+
+! local variables
+real :: dum1
+integer :: i,k,ice
+
+do k=1,self%nz
+  ! calculate env. Tv
+  if (self%n_prog==3) then
+    call inv_theta_e(self%X(self%ncols+1,k,2),self%X(self%ncols+1,k,3),self%Ref(k,7),self%T0(k),self%q0(k),self%ql0(k),self%qi0(k))
+  elseif (self%n_prog==11) then
+    self%T0(k)=self%X(self%ncols+1,k,2)*self%Ref(k,8)
+    self%q0(k) =self%X(self%ncols+1,k,3)
+    self%ql0(k)=self%X(self%ncols+1,k,4)+self%X(self%ncols+1,k,6)
+    self%qi0(k)=self%X(self%ncols+1,k,8)
+  endif
+  self%Tv0(k) = self%T0(k) * ( 1. + 0.607789855072462 * self%q0(k) - self%ql0(k) - self%qi0(k) )
+
+  do i=1,self%ncols
+    if (self%n_prog==3) then
+      self%the(i,k)=self%X(i,k,2)
+      self%qt(i,k)=self%X(i,k,3)
+      call inv_theta_e(self%X(i,k,2),self%X(i,k,3),self%Ref(k,7),self%Ta(i,k),self%q(i,k),self%ql(i,k),self%qi(i,k))
+      self%cloud(i,k)=self%ql(i,k)+self%qi(i,k)
+      self%th(i,k)=self%Ta(i,k)/self%Ref(k,8)
+    elseif (self%n_prog==11) then
+      self%th(i,k)=self%X(i,k,2)
+      self%Ta(i,k)=self%X(i,k,2)*self%Ref(k,8)
+      self%q(i,k) =self%X(i,k,3)
+      self%ql(i,k)=self%X(i,k,4)+self%X(i,k,6)
+      self%qi(i,k)=self%X(i,k,8)
+      self%cloud(i,k)=self%X(i,k,4)+self%X(i,k,8)
+      self%qt(i,k)=self%q(i,k)+self%ql(i,k)+self%qi(i,k)
+      self%the(i,k)=theta_e(self%Ta(i,k),self%q(i,k),self%ql(i,k),self%qi(i,k),self%Ref(k,7)) 
+    endif
+    ice=0
+    if (self%Ta(i,k)<273.15) ice=1
+    self%rh(i,k)=self%q(i,k)/eval_qs(self%Ta(i,k),self%Ref(k,7),self%ql(i,k)+self%qi(i,k),ice) *100.
+    dum1=self%Ta(i,k)*(1.+0.607789855072462*self%q(i,k)-self%ql(i,k)-self%qi(i,k))
+    self%buoc(i,k)=g*(dum1-self%Tv0(k))/self%Tv0(k)
+  enddo
+enddo
+
+end subroutine ace_diagnostic
+
+
+subroutine ace_output_nc(self)
+use netcdf
+implicit none
+
+class(ace_t) :: self
+
+! local variables
+integer :: ierr,ncid1,varid1,dimid1,dimid2,dimid3
+integer :: step
+integer :: access,system
+real, dimension(:), allocatable :: time
+real, dimension(:,:), allocatable :: Xout
+character(300) :: fname
+logical :: first=.True.
+
+if (first) then
+  fname="./output"
+  ierr=access(trim(fname),' ')
+  if (ierr/=0) then
+    ierr=system("mkdir "//trim(fname))
+    if (ierr==0) then
+      write(*,*) "create folder ./output"
+    else 
+      write(*,*) "cannot create folder ./output"
+    endif
+  endif
+  
+  fname="./output/"//trim(self%case_name)//"_output.nc"
+
+  ierr=access(trim(fname),' ')
+  if (ierr==0) write(*,*) "A new run but nc file exists. Model will override the nc file."
+   
+  ierr=nf90_create(trim(fname),nf90_netcdf4,ncid1)
+  if (ierr/=nf90_noerr) stop "cannot create ncfile"
+
+  ierr=nf90_def_dim(ncid1, "ncols",     self%ncols, dimid1)
+  if (ierr/=nf90_noerr) stop "cannot define ncols"
+  ierr=nf90_def_dim(ncid1,    "zc",        self%nz, dimid2)
+  if (ierr/=nf90_noerr) stop "cannot define zc"
+  ierr=nf90_def_dim(ncid1,  "time", nf90_unlimited, dimid3)
+  if (ierr/=nf90_noerr) stop "cannot define time"
+
+  ierr=nf90_def_var(ncid1, "radius", nf90_double, (/dimid1/), varid1)
+  if (ierr/=nf90_noerr) stop "cannot define radius"
+  ierr=nf90_put_att(ncid1, varid1, 'long_name', 'Radius of ACE columns')
+  if (ierr/=nf90_noerr) stop "cannot define radius longname"
+  ierr=nf90_put_att(ncid1, varid1, 'units', 'm')
+  if (ierr/=nf90_noerr) stop "cannot define radius units"
+
+  ierr=nf90_def_var(ncid1, "height", nf90_double, (/dimid2/), varid1)
+  if (ierr/=nf90_noerr) stop "cannot define height"
+  ierr=nf90_put_att(ncid1, varid1, 'long_name', 'Height')
+  if (ierr/=nf90_noerr) stop "cannot define height longname"
+  ierr=nf90_put_att(ncid1, varid1, 'units', 'm')
+  if (ierr/=nf90_noerr) stop "cannot define height units"
+
+  ierr=nf90_def_var(ncid1, "time", nf90_double, (/dimid3/), varid1)
+  if (ierr/=nf90_noerr) stop "cannot define time"
+  ierr=nf90_put_att(ncid1, varid1, 'long_name', 'time of simulation')
+  if (ierr/=nf90_noerr) stop "cannot define time longname"
+  ierr=nf90_put_att(ncid1, varid1, 'units', 's')
+  if (ierr/=nf90_noerr) stop "cannot define time units"
+
+  ierr=nf90_def_var(ncid1, "mf", nf90_double, (/dimid1,dimid2,dimid3/), varid1)
+  if (ierr/=nf90_noerr) stop "cannot define mf"
+  ierr=nf90_put_att(ncid1, varid1, 'long_name', 'Vertical mass flux')
+  if (ierr/=nf90_noerr) stop "cannot define mf longname"
+  ierr=nf90_put_att(ncid1, varid1, 'units', 'kg m^2 s^-1')
+  if (ierr/=nf90_noerr) stop "cannot define mf units"
+
+  ierr=nf90_def_var(ncid1, "the", nf90_double, (/dimid1,dimid2,dimid3/), varid1)
+  if (ierr/=nf90_noerr) stop "cannot define the"
+  ierr=nf90_put_att(ncid1, varid1, 'long_name', 'Equivalent potential temperature')
+  if (ierr/=nf90_noerr) stop "cannot define the longname"
+  ierr=nf90_put_att(ncid1, varid1, 'units', 'K')
+  if (ierr/=nf90_noerr) stop "cannot define the units"
+
+  ierr=nf90_def_var(ncid1, "th", nf90_double, (/dimid1,dimid2,dimid3/), varid1)
+  if (ierr/=nf90_noerr) stop "cannot define th"
+  ierr=nf90_put_att(ncid1, varid1, 'long_name', 'Potential temperature')
+  if (ierr/=nf90_noerr) stop "cannot define th longname"
+  ierr=nf90_put_att(ncid1, varid1, 'units', 'K')
+  if (ierr/=nf90_noerr) stop "cannot define th units"
+
+  ierr=nf90_def_var(ncid1, "qt", nf90_double, (/dimid1,dimid2,dimid3/), varid1)
+  if (ierr/=nf90_noerr) stop "cannot define qt"
+  ierr=nf90_put_att(ncid1, varid1, 'long_name', 'Mixing ratio of total water')
+  if (ierr/=nf90_noerr) stop "cannot define qt longname"
+  ierr=nf90_put_att(ncid1, varid1, 'units', 'kg kg^-1')
+  if (ierr/=nf90_noerr) stop "cannot define qt units"
+
+  ierr=nf90_def_var(ncid1, "qv", nf90_double, (/dimid1,dimid2,dimid3/), varid1)
+  if (ierr/=nf90_noerr) stop "cannot define qv"
+  ierr=nf90_put_att(ncid1, varid1, 'long_name', 'Mixing ratio of water vapor')
+  if (ierr/=nf90_noerr) stop "cannot define qv longname"
+  ierr=nf90_put_att(ncid1, varid1, 'units', 'kg kg^-1')
+  if (ierr/=nf90_noerr) stop "cannot define qv units"
+
+  ierr=nf90_def_var(ncid1, "ql", nf90_double, (/dimid1,dimid2,dimid3/), varid1)
+  if (ierr/=nf90_noerr) stop "cannot define ql"
+  ierr=nf90_put_att(ncid1, varid1, 'long_name', 'Mixing ratio of liquid water')
+  if (ierr/=nf90_noerr) stop "cannot define ql longname"
+  ierr=nf90_put_att(ncid1, varid1, 'units', 'kg kg^-1')
+  if (ierr/=nf90_noerr) stop "cannot define ql units"
+
+  ierr=nf90_def_var(ncid1, "qi", nf90_double, (/dimid1,dimid2,dimid3/), varid1)
+  if (ierr/=nf90_noerr) stop "cannot define qi"
+  ierr=nf90_put_att(ncid1, varid1, 'long_name', 'Mixing ratio of ice')
+  if (ierr/=nf90_noerr) stop "cannot define qi longname"
+  ierr=nf90_put_att(ncid1, varid1, 'units', 'kg kg^-1')
+  if (ierr/=nf90_noerr) stop "cannot define qi units"
+
+  ierr=nf90_def_var(ncid1, "cloud", nf90_double, (/dimid1,dimid2,dimid3/), varid1)
+  if (ierr/=nf90_noerr) stop "cannot define cloud"
+  ierr=nf90_put_att(ncid1, varid1, 'long_name', 'Mixing ratio of cloud')
+  if (ierr/=nf90_noerr) stop "cannot define cloud longname"
+  ierr=nf90_put_att(ncid1, varid1, 'units', 'kg kg^-1')
+  if (ierr/=nf90_noerr) stop "cannot define cloud units"
+
+  ierr=nf90_def_var(ncid1, "rh", nf90_double, (/dimid1,dimid2,dimid3/), varid1)
+  if (ierr/=nf90_noerr) stop "cannot define rh"
+  ierr=nf90_put_att(ncid1, varid1, 'long_name', 'Relatvie humidity')
+  if (ierr/=nf90_noerr) stop "cannot define rh longname"
+  ierr=nf90_put_att(ncid1, varid1, 'units', '%')
+  if (ierr/=nf90_noerr) stop "cannot define rh units"
+
+  ierr=nf90_def_var(ncid1, "B", nf90_double, (/dimid1,dimid2,dimid3/), varid1)
+  if (ierr/=nf90_noerr) stop "cannot define B"
+  ierr=nf90_put_att(ncid1, varid1, 'long_name', 'Buoyancy')
+  if (ierr/=nf90_noerr) stop "cannot define B longname"
+  ierr=nf90_put_att(ncid1, varid1, 'units', 'm s^-2')
+  if (ierr/=nf90_noerr) stop "cannot define B units"
+
+  ierr=nf90_enddef(ncid1)
+  if (ierr/=nf90_noerr) stop "cannot leave define mode"
+
+  ! output coordinates
+  ierr=nf90_inq_varid(ncid1,"radius",varid1)
+  if (ierr/=nf90_noerr) stop "cannot inq radius"
+  ierr=nf90_put_var(ncid1,varid1,self%radius(1:self%ncols))
+  if (ierr/=nf90_noerr) stop "cannot output radius"
+
+  ierr=nf90_inq_varid(ncid1,"height",varid1)
+  if (ierr/=nf90_noerr) stop "cannot inq height"
+  ierr=nf90_put_var(ncid1,varid1,self%Ref(1:self%nz,3))
+  if (ierr/=nf90_noerr) stop "cannot output height"
+
+  ierr=nf90_close(ncid1)
+  if (ierr/=nf90_noerr) stop "cannot close nc file"
+  
+  write(*,*) "ACE results will be outputed to a new file:"//trim(fname)
+ 
+  first=.False.
+endif
+
+fname="./output/"//trim(self%case_name)//"_output.nc"
+ierr=access(trim(fname),' ')
+if (ierr/=0) stop "file does not exist. Please check!!!"
+
+ierr=nf90_open(trim(fname),nf90_write,ncid1)
+if (ierr/=nf90_noerr) stop "cannot open nc file"
+
+! inquire step
+ierr=nf90_inq_dimid(ncid1,'time',dimid1)
+if (ierr/=nf90_noerr) stop "can't inq time step"
+ierr=nf90_inquire_dimension(ncid1,dimid1,len=step)
+if (ierr/=nf90_noerr) stop "can't read time step"
+
+! output at step+1
+ierr=nf90_inq_varid(ncid1,"time",varid1)
+if (ierr/=nf90_noerr) stop "cannot inq time"
+ierr=nf90_put_var(ncid1,varid1,self%t_now,start=(/step+1/))
+if (ierr/=nf90_noerr) stop "cannot output time"
+
+ierr=nf90_inq_varid(ncid1,"mf",varid1)
+if (ierr/=nf90_noerr) stop "cannot inq the"
+ierr=nf90_put_var(ncid1,varid1,self%X(1:self%ncols,1:self%nz,1),start=(/1,1,step+1/))
+if (ierr/=nf90_noerr) stop "cannot output the"
+
+ierr=nf90_inq_varid(ncid1,"the",varid1)
+if (ierr/=nf90_noerr) stop "cannot inq the"
+ierr=nf90_put_var(ncid1,varid1,self%the(1:self%ncols,1:self%nz),start=(/1,1,step+1/))
+if (ierr/=nf90_noerr) stop "cannot output the"
+
+ierr=nf90_inq_varid(ncid1,"th",varid1)
+if (ierr/=nf90_noerr) stop "cannot inq th"
+ierr=nf90_put_var(ncid1,varid1,self%th(1:self%ncols,1:self%nz),start=(/1,1,step+1/))
+if (ierr/=nf90_noerr) stop "cannot output th"
+
+ierr=nf90_inq_varid(ncid1,"qt",varid1)
+if (ierr/=nf90_noerr) stop "cannot inq qt"
+ierr=nf90_put_var(ncid1,varid1,self%qt(1:self%ncols,1:self%nz),start=(/1,1,step+1/))
+if (ierr/=nf90_noerr) stop "cannot output qt"
+
+ierr=nf90_inq_varid(ncid1,"qv",varid1)
+if (ierr/=nf90_noerr) stop "cannot inq qv"
+ierr=nf90_put_var(ncid1,varid1,self%q(1:self%ncols,1:self%nz),start=(/1,1,step+1/))
+if (ierr/=nf90_noerr) stop "cannot output qv"
+
+ierr=nf90_inq_varid(ncid1,"ql",varid1)
+if (ierr/=nf90_noerr) stop "cannot inq ql"
+ierr=nf90_put_var(ncid1,varid1,self%ql(1:self%ncols,1:self%nz),start=(/1,1,step+1/))
+if (ierr/=nf90_noerr) stop "cannot output ql"
+
+ierr=nf90_inq_varid(ncid1,"qi",varid1)
+if (ierr/=nf90_noerr) stop "cannot inq qi"
+ierr=nf90_put_var(ncid1,varid1,self%qi(1:self%ncols,1:self%nz),start=(/1,1,step+1/))
+if (ierr/=nf90_noerr) stop "cannot output qi"
+
+ierr=nf90_inq_varid(ncid1,"rh",varid1)
+if (ierr/=nf90_noerr) stop "cannot inq rh"
+ierr=nf90_put_var(ncid1,varid1,self%rh(1:self%ncols,1:self%nz),start=(/1,1,step+1/))
+if (ierr/=nf90_noerr) stop "cannot output rh"
+
+ierr=nf90_inq_varid(ncid1,"cloud",varid1)
+if (ierr/=nf90_noerr) stop "cannot inq cloud"
+ierr=nf90_put_var(ncid1,varid1,self%cloud(1:self%ncols,1:self%nz),start=(/1,1,step+1/))
+if (ierr/=nf90_noerr) stop "cannot output cloud"
+
+ierr=nf90_inq_varid(ncid1,"B",varid1)
+if (ierr/=nf90_noerr) stop "cannot inq B"
+ierr=nf90_put_var(ncid1,varid1,self%buoc(1:self%ncols,1:self%nz),start=(/1,1,step+1/))
+if (ierr/=nf90_noerr) stop "cannot output B"
+
+ierr=nf90_close(ncid1)
+if (ierr/=nf90_noerr) stop "cannot close nc file"
+
+write(*,'(A,F14.1,A,A)') "ACE results at t=",self%t_now," are outputed to "//trim(fname)
+
+end subroutine ace_output_nc
+
+
+subroutine ace_tendency(ace,X,dXdt,rkstage)
+use omp_lib
 implicit none
 
 ! input/output variables
-integer, intent(in) :: ncols, nz, n_weno, n_prog, rkstage
-real, intent(in) :: dt
-real, dimension(ncols), intent(in) :: A, B ! ACE area and ACE outer perimeter [km^2, km]
-real, dimension(nz,8), intent(in) :: Ref ! reference varaibles: rhoc, rhoz, z, zm, dz, dzm, p, pi
-real, dimension(ncols+1,nz,n_prog), intent(in) :: X ! MF, theta_e, qt
-!real, dimension(ncols+1,nz,n_prog), intent(in) :: X ! MF, theta, qv, ql, qi
-real, dimension(ncols,nz,n_prog), intent(out) :: dXdt 
+type(ace_t), intent(inout) :: ace
+integer, intent(in) :: rkstage
+real, dimension(ace%ncols+1,ace%nz,ace%n_prog), intent(in) :: X
+real, dimension(ace%ncols,ace%nz,ace%n_prog), intent(out) :: dXdt 
 
 ! local variables
 integer :: i,n,k,ks,ke
 real :: dum1,dum2
-real, dimension(ncols,nz,2) :: eps_tur
-real, dimension(nz) :: rho0B, Tv, Tv0, T0, q0, ql0, qi0
-real, dimension(ncols,nz,3) :: dXdz
-real, dimension(ncols,nz,2:n_prog) :: Ci, rho0wC
-real, dimension(ncols+1,nz) :: mfc, Wc
-real, dimension(ncols,nz) ::Wi, Admfdz, ioflow, F
+integer(4) :: start,finish
+real, dimension(ace%ncols,ace%nz,2) :: eps_tur
+real, dimension(ace%nz) :: rho0B, Tv
+real, dimension(ace%ncols,ace%nz,3) :: dXdz
+real, dimension(ace%ncols,ace%nz,2:ace%n_prog) :: Ci, rho0wC
+real, dimension(ace%ncols+1,ace%nz) :: mfc, Wc
+real, dimension(ace%ncols,ace%nz) ::Wi, Admfdz, ioflow, F, FH, DHv, DHh
 
 
 ! initialization
-do k=1,nz
-  eps_tur(:      ,k,1) = nju*B/A
-  eps_tur(2:ncols,k,2) = nju*B(1:ncols-1)/A(2:ncols)
-  call inv_theta_e(X(ncols+1,k,2),X(ncols+1,k,3),Ref(k,7),T0(k),q0(k),ql0(k),qi0(k))
-  Tv0(k) = T0(k) * ( 1. + 0.607789855072462 * q0(k) - ql0(k) - qi0(k) )
+call system_clock(count=start)
+do k=1,ace%nz
+  eps_tur(:          ,k,1) = ace%nju*ace%B/ace%A
+  eps_tur(2:ace%ncols,k,2) = ace%nju*ace%B(1:ace%ncols-1)/ace%A(2:ace%ncols)
+  if (ace%n_prog==3) then
+    call inv_theta_e(ace%X(ace%ncols+1,k,2),ace%X(ace%ncols+1,k,3),ace%Ref(k,7),ace%T0(k),ace%q0(k),ace%ql0(k),ace%qi0(k))
+  elseif (ace%n_prog==11) then
+    ace%T0(k)=ace%X(ace%ncols+1,k,2)*ace%Ref(k,8)
+    ace%q0(k) =ace%X(ace%ncols+1,k,3)
+    ace%ql0(k)=ace%X(ace%ncols+1,k,4)+ace%X(ace%ncols+1,k,6)
+    ace%qi0(k)=ace%X(ace%ncols+1,k,8)
+  endif
+  ace%Tv0(k) = ace%T0(k) * ( 1. + 0.607789855072462 * ace%q0(k) - ace%ql0(k) - ace%qi0(k) )
 enddo
 
 ! fill with zeros
 dXdt = 0.
 mfc = 0.
 Wc = 0.
+F = 0.
+FH = 0.
+DHv = 0.
+DHh = 0.
+
+call system_clock(count=finish)
+!write(*,*) "initial", real(finish-start)/10000.  
 
 ! Compute tracer values Ci(zi) at interface points from C(zc=zi+dz/2)
-do i=1,ncols
-  do n=2,n_prog
-    call weno_vec(n_weno,nz,X(i,:,n),X(i,:,1),rho0wC(i,:,n))
+call system_clock(count=start)
+do i=1,ace%ncols
+  do n=2,ace%n_prog
+    call weno_vec(ace%n_weno,ace%nz,X(i,:,n),X(i,:,1),rho0wC(i,:,n))
     rho0wC(i,:,n) = X(i,:,1) * rho0wC(i,:,n)
     rho0wC(i,1,n) = 0. ! set surface fluxes to zero
   enddo
 
   ! Vertical velocity w(zi) (mass flux already at zi)
-  Wi(i,:) = X(i,:,1) / Ref(:,2)
+  Wi(i,:) = X(i,:,1) / ace%Ref(:,2)
 
   ! Vertical mass flux & velocity at zc=zi+dz/2
-  call weno_up3(nz,X(i,:,1),mfc(i,:))
-  Wc(i,:) = mfc(i,:) / Ref(:,1)
+  call weno_up3(ace%nz,X(i,:,1),mfc(i,:))
+  Wc(i,:) = mfc(i,:) / ace%Ref(:,1)
 
   ! Admfdz = (ACE area)*dmfdz for dynamic inflow/outflow at zc=zi+dz/2
-  Admfdz(i,nz) = 0.
-  Admfdz(i,1:nz-1) = A(i) * ( X(i,2:nz,1) - X(i,1:nz-1,1) ) / Ref(2:nz,6)
+  Admfdz(i,ace%nz) = 0.
+  Admfdz(i,1:ace%nz-1) = ace%A(i) * ( X(i,2:ace%nz,1) - X(i,1:ace%nz-1,1) ) / ace%Ref(2:ace%nz,6)
 
   ! ioflow = -Bi*rho_0*u_n (minus h. mass flux * lateral boundary length)
   ioflow(i,:) = sum(Admfdz(1:i,:),1)
 enddo
+call system_clock(count=finish)
+!write(*,*) "inflow", real(finish-start)/10000.  
 
-do i=1,ncols
-  do n=2,n_prog
-    dXdt(i,1:nz  ,n) = 0.
-    dXdt(i,1:nz-1,n) = - ( rho0wC(i,2:nz,n) - rho0wC(i,1:nz-1,n) ) / Ref(1:nz-1,5) / Ref(1:nz-1,1)  ! vertical flux convergence
+call system_clock(count=start)
+do i=1,ace%ncols
+  do n=2,ace%n_prog
+    dXdt(i,1:ace%nz-1,n) = - ( rho0wC(i,2:ace%nz,n) - rho0wC(i,1:ace%nz-1,n) ) / ace%Ref(1:ace%nz-1,5) / ace%Ref(1:ace%nz-1,1)  ! vertical flux convergence
 
-    dXdt(i,1:nz-1,n) = dXdt(i,1:nz-1,n) - eps_tur(i,1:nz-1,1) * ( X(i,1:nz-1,n) - X(i+1,1:nz-1,n) )  ! interact outer
+    dXdt(i,1:ace%nz-1,n) = dXdt(i,1:ace%nz-1,n) - eps_tur(i,1:ace%nz-1,1) * ( X(i,1:ace%nz-1,n) - X(i+1,1:ace%nz-1,n) )  ! interact outer
     if (i>1) &
-    dXdt(i,1:nz-1,n) = dXdt(i,1:nz-1,n) - eps_tur(i,1:nz-1,2) * ( X(i,1:nz-1,n) - X(i-1,1:nz-1,n) )  ! interact inner
+    dXdt(i,1:ace%nz-1,n) = dXdt(i,1:ace%nz-1,n) - eps_tur(i,1:ace%nz-1,2) * ( X(i,1:ace%nz-1,n) - X(i-1,1:ace%nz-1,n) )  ! interact inner
 
-    dXdt(i,1:nz-1,n) = dXdt(i,1:nz-1,n) + 0.5 * &
-                       ( ( ioflow(i  ,1:nz-1) + abs(ioflow(i  ,1:nz-1)) ) * X(i+1,1:nz-1,n) &
-                       + ( ioflow(i  ,1:nz-1) - abs(ioflow(i  ,1:nz-1)) ) * X(i  ,1:nz-1,n) ) &
-                        / A(i) / Ref(1:nz-1,1)  ! inflow from outer
+    dXdt(i,1:ace%nz-1,n) = dXdt(i,1:ace%nz-1,n) + 0.5 * &
+                       ( ( ioflow(i  ,1:ace%nz-1) + abs(ioflow(i  ,1:ace%nz-1)) ) * X(i+1,1:ace%nz-1,n) &
+                       + ( ioflow(i  ,1:ace%nz-1) - abs(ioflow(i  ,1:ace%nz-1)) ) * X(i  ,1:ace%nz-1,n) ) &
+                        / ace%A(i) / ace%Ref(1:ace%nz-1,1)  ! inflow from outer
     if (i>1) &
-    dXdt(i,1:nz-1,n) = dXdt(i,1:nz-1,n) - 0.5 * &
-                       ( ( ioflow(i-1,1:nz-1) + abs(ioflow(i-1,1:nz-1)) ) * X(i  ,1:nz-1,n) &
-                       + ( ioflow(i-1,1:nz-1) - abs(ioflow(i-1,1:nz-1)) ) * X(i-1,1:nz-1,n) ) &
-                        / A(i) / Ref(1:nz-1,1)  ! inflow from inner
+    dXdt(i,1:ace%nz-1,n) = dXdt(i,1:ace%nz-1,n) - 0.5 * &
+                       ( ( ioflow(i-1,1:ace%nz-1) + abs(ioflow(i-1,1:ace%nz-1)) ) * X(i  ,1:ace%nz-1,n) &
+                       + ( ioflow(i-1,1:ace%nz-1) - abs(ioflow(i-1,1:ace%nz-1)) ) * X(i-1,1:ace%nz-1,n) ) &
+                        / ace%A(i) / ace%Ref(1:ace%nz-1,1)  ! inflow from inner
   enddo
 
-  F(i,1:nz  ) = 0.
-  F(i,1:nz-1) = - ( X(i,2:nz,1) * Wi(i,2:nz) - X(i,1:nz-1,1) * Wi(i,1:nz-1) ) / Ref(1:nz-1,5)  ! vertical flux convergence
-  F(i,1:nz-1) = F(i,1:nz-1) - eps_tur(i,1,1) * ( mfc(i,1:nz-1) - mfc(i+1,1:nz-1) )  ! interact outer
+  FH(i,1:ace%nz-1) = - eps_tur(i,1,1) * ( mfc(i,1:ace%nz-1) - mfc(i+1,1:ace%nz-1) )  ! interact outer
   if (i>1) &
-  F(i,1:nz-1) = F(i,1:nz-1) - eps_tur(i,1,2) * ( mfc(i,1:nz-1) - mfc(i-1,1:nz-1) )  ! interact inner
-  F(i,1:nz-1) = F(i,1:nz-1) + 0.5 * &
-                     ( ( ioflow(i  ,1:nz-1) + abs(ioflow(i  ,1:nz-1)) ) * Wc(i+1,1:nz-1) &
-                     + ( ioflow(i  ,1:nz-1) - abs(ioflow(i  ,1:nz-1)) ) * Wc(i  ,1:nz-1) ) / A(i)  ! inflow from outer
+  FH(i,1:ace%nz-1) = FH(i,1:ace%nz-1) - eps_tur(i,1,2) * ( mfc(i,1:ace%nz-1) - mfc(i-1,1:ace%nz-1) )  ! interact inner
+  FH(i,1:ace%nz-1) = FH(i,1:ace%nz-1) + 0.5 * &
+                     ( ( ioflow(i  ,1:ace%nz-1) + abs(ioflow(i  ,1:ace%nz-1)) ) * Wc(i+1,1:ace%nz-1) &
+                     + ( ioflow(i  ,1:ace%nz-1) - abs(ioflow(i  ,1:ace%nz-1)) ) * Wc(i  ,1:ace%nz-1) ) / ace%A(i)  ! inflow from outer
   if (i>1) &
-  F(i,1:nz-1) = F(i,1:nz-1) - 0.5 * &
-                     ( ( ioflow(i-1,1:nz-1) + abs(ioflow(i-1,1:nz-1)) ) * Wc(i  ,1:nz-1) &
-                     + ( ioflow(i-1,1:nz-1) - abs(ioflow(i-1,1:nz-1)) ) * Wc(i-1,1:nz-1) ) / A(i)  ! inflow from inner
+  FH(i,1:ace%nz-1) = FH(i,1:ace%nz-1) - 0.5 * &
+                     ( ( ioflow(i-1,1:ace%nz-1) + abs(ioflow(i-1,1:ace%nz-1)) ) * Wc(i  ,1:ace%nz-1) &
+                     + ( ioflow(i-1,1:ace%nz-1) - abs(ioflow(i-1,1:ace%nz-1)) ) * Wc(i-1,1:ace%nz-1) ) / ace%A(i)  ! inflow from inner
+
+  F(i,1:ace%nz-1) =  FH(i,1:ace%nz-1) &
+                      - ( X(i,2:ace%nz,1) * Wi(i,2:ace%nz) &
+                        - X(i,1:ace%nz-1,1) * Wi(i,1:ace%nz-1) ) / ace%Ref(1:ace%nz-1,5)  ! vertical flux convergence
+
+  if (ace%do_DHv) then
+    DHv(i,1)= - FH(i,1) - 2. * FH(i,1) + FH(i,2)
+    DHv(i,2:ace%nz-1) = FH(i,1:ace%nz-2) - 2. * FH(i,2:ace%nz-1) + FH(i,3:ace%nz)
+    DHv(i,ace%nz) = FH(i,ace%nz-1) - 2. * FH(i,ace%nz)
+    DHv(i,1:ace%nz) = DHv(i,1:ace%nz) / ( ace%Ref(1:ace%nz,5) ** 2. )
+  endif
+
+  if (ace%do_DHh) then
+    if (i==1) then
+      DHh(i,:) = ioflow(i,:) ** 2.
+    else 
+      DHh(i,:) = ioflow(i,:) ** 2. - ioflow(i-1,:) ** 2. 
+    endif
+    DHh(i,:) = DHh(i,:) / ace%Ref(:,1) / ace%A(i) * 1e-6
+  endif
+  !if (i==1) then
+  !  do k=1,10
+  !    write(*,*) ioflow(i,k),DHh(i,k)
+  !  enddo
+  !endif
 
   if (rkstage==1) then
-    do k=1,nz
-      if (n_prog==3) then
-        call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Ta(i,k),q(i,k),ql(i,k),qi(i,k))
-      elseif (n_prog==11) then
-        Ta(i,:) = X(i,:,2) * Ref(:,8)
-        q(i,:)  = X(i,:,3)
-        ql(i,:) = X(i,:,4) + X(i,:,6)
-        qi(i,:) = X(i,:,8)
+    do k=1,ace%nz
+      if (ace%n_prog==3) then
+        call inv_theta_e(X(i,k,2),X(i,k,3),ace%Ref(k,7),ace%Ta(i,k),ace%q(i,k),ace%ql(i,k),ace%qi(i,k))
+      elseif (ace%n_prog==11) then
+        ace%Ta(i,:) = X(i,:,2) * ace%Ref(:,8)
+        ace%q(i,:)  = X(i,:,3)
+        ace%ql(i,:) = X(i,:,4) + X(i,:,6)
+        ace%qi(i,:) = X(i,:,8)
       endif
     enddo 
   endif
 
-  Tv(1:nz) = Ta(i,1:nz) * ( 1. + 0.607789855072462 * q(i,1:nz) - ql(i,1:nz) - qi(i,1:nz) )
-  rho0B(1:nz) = g * Ref(1:nz,1) * ( Tv(1:nz) - Tv0(1:nz) ) / Tv0(1:nz)
+  Tv(1:ace%nz) = ace%Ta(i,1:ace%nz) * ( 1. + 0.607789855072462 * ace%q(i,1:ace%nz) - ace%ql(i,1:ace%nz) - ace%qi(i,1:ace%nz) )
+  rho0B(1:ace%nz) = g * ace%Ref(1:ace%nz,1) * ( Tv(1:ace%nz) - ace%Tv0(1:ace%nz) ) / ace%Tv0(1:ace%nz)
 
-  F(i,1:nz) = F(i,1:nz) + rho0B(1:nz)
+  F(i,1:ace%nz) = F(i,1:ace%nz) + rho0B(1:ace%nz)
 
-  !call pchip(nz,Ref(1:nz,4),F(i,1:nz),coarse_nz,coarse_z,coarse_F(i,1:coarse_nz),.True.)
-  coarse_F(i,:) = sum(reshape(F(i,1:nz),(/4,nz/4/)),1)/4.
+  ace%coarse_F(i,:) = sum(reshape(F(i,1:ace%nz),(/2,ace%nz/2/)),1)/2.
+  ace%coarse_DHh(i,:) = sum(reshape(DHh(i,1:ace%nz),(/2,ace%nz/2/)),1)/2.
+  ace%coarse_DHv(i,:) = sum(reshape(DHv(i,1:ace%nz),(/2,ace%nz/2/)),1)/2.
 enddo
+call system_clock(count=finish)
+!write(*,*) "advec", real(finish-start)/10000.  
 
-do i=1,ncols
-  do k=1,coarse_nz+1
-    dwdt(i,k) = sum( sum( PMB(i,:,:,k) * coarse_F(:,:) , 2 ), 1 )  
+call system_clock(count=start)
+!$omp parallel do collapse(2) schedule(guided,10)
+do i=1,ace%ncols
+  do k=1,ace%coarse_nz+1
+    ace%dwdt(i,k) = sum( sum( ace%PMB(i,:,:,k) * ace%coarse_F(:,:) , 2 ), 1 )
+    if (ace%do_DHh) then
+      ace%dwdt(i,k) = ace%dwdt(i,k) + sum( sum( ace%PMD(i,:,:,k) * ace%coarse_DHh(:,:), 2 ), 1 ) 
+    endif
+    if (ace%do_DHv) then
+      ace%dwdt(i,k) = ace%dwdt(i,k) - sum( sum( ace%PMDv(i,:,:,k) * ace%coarse_DHv(:,:), 2 ), 1 ) 
+    endif
   enddo
+enddo
+!$omp end parallel do
+call system_clock(count=finish)
+!write(*,*) "basis", real(finish-start)/10000.  
 
-  call pchip(coarse_nz+1,coarse_ze,dwdt(i,1:coarse_nz+1),nz,Ref(1:nz,4),dXdt(i,1:nz,1),.True.)
+call system_clock(count=start)
+do i=1,ace%ncols
+  call pchip(ace%coarse_nz+1,ace%coarse_ze,ace%dwdt(i,1:ace%coarse_nz+1),ace%nz,ace%Ref(1:ace%nz,4),dXdt(i,1:ace%nz,1),.True.)
 enddo  
+call system_clock(count=finish)
+!write(*,*) "interp", real(finish-start)/10000.  
 
 ! single ACE
-!dXdt(2:ncols,:,:)=0.
+if (ace%single_ace) dXdt(2:ace%ncols,:,:)=0.
+
+! domain-mean massflux conserved
+if (.True.) then
+  do k=1,ace%nz
+    dXdt(ace%ncols,k,1) = -sum(dXdt(1:ace%ncols-1,k,1)*ace%A(1:ace%ncols-1),1)/ace%A(ace%ncols)
+  enddo
+endif
 
 ! model top 
-dXdt(:,nz-10:nz,:)=0.
+dXdt(:,ace%nz-10:ace%nz,:)=0.
 
 
 end subroutine ace_tendency
 
- 
-subroutine ImDamp(ncols,nz,n_prog,X,Ref,dt)
+subroutine ImDiff(ace)
 implicit none
 
 ! input/output variables
-integer, intent(in) :: ncols,nz,n_prog
-real, intent(in) :: dt
-real, dimension(ncols+1,nz,n_prog), intent(inout) :: X
-real, dimension(nz,7), intent(in) :: Ref
+type(ace_t), intent(inout) :: ace
+
+! local variable
+logical, save :: first = .True.
+integer :: i, k, ks, ke, info
+real :: dum1
+real, dimension(ace%ncols,ace%nz) :: wi, drho0wdz, mu_i, mu_c
+real, dimension(ace%nz) :: tmp, mu
+real, dimension(ace%nz,3) :: coeff
+
+if (first) then
+  do k=1,ace%nz
+    ace%eddiffu(:,k) = 5.e3 / ( 4. * pi ) / ace%Ref(k,5)
+    ace%eddiwin(:,k) = ceiling( 5.e3 / ( 2. * ace%Ref(k,5) ) ) 
+  enddo
+  first = .False.
+endif
+
+do k=1,ace%nz-1
+  wi(:,k) = ace%X(1:ace%ncols,k,1) / ace%Ref(k,2)
+  drho0wdz(:,k) = ( ace%X(1:ace%ncols,k+1,1) - ace%X(1:ace%ncols,k,1) ) / ace%Ref(k,5)
+enddo
+drho0wdz(:,ace%nz) = 0.
+
+do k=1,ace%nz
+  mu_i(:,k) = abs(drho0wdz(:,k)) * ( ace%eddiffu(:,k) * ( maxval(wi,2) - minval(wi,2) ) ) &
+               / (maxval(abs(drho0wdz)+eps,2))
+enddo
+
+do k=1,ace%nz-1
+  mu_c(:,k) = 0.5 * ( mu_i(:,k) + mu_i(:,k+1) )
+enddo
+
+do i=1,ace%ncols 
+
+  ! moving max
+  do k=1,ace%nz
+    ks = max(k-ace%eddiwin(i,k),1)
+    ke = min(k+ace%eddiwin(i,k),ace%nz)
+    tmp(k) = maxval(mu_i(i,ks:ke),1)
+  enddo
+ 
+  ! convolution
+  do k=1,ace%nz
+    ks = max(k-ace%eddiwin(i,k),1)
+    ke = min(k+ace%eddiwin(i,k),ace%nz)
+    
+    mu(k) = sum(tmp(ks:ke)*(1./(2.*ace%eddiwin(i,k)*ace%Ref(ks:ke,5)/ace%dt+1.)),1)
+  enddo
+ 
+  mu = mu * ace%dt / ace%Ref(:,5)
+  ! solve tridiagonal system
+  coeff = 0.
+  do k=1,ace%nz-1
+    coeff(k,1) = - mu(k)
+    coeff(k,3) = - mu(k+1)
+    coeff(k,2) = 1. -  coeff(k,1) - coeff(k,3)
+  enddo
+ 
+  tmp(:) = ace%X(i,:,1) 
+  call dgtsv(ace%nz-1,1,coeff(2:ace%nz-1,1),coeff(1:ace%nz-1,2),coeff(1:ace%nz-2,3),tmp(2:ace%nz),ace%nz-1,info)
+  if (info/=0) write(*,*) "ACE ImDiff: matrix cannot be solved", info
+
+  ace%X(i,2:ace%nz,1) = tmp(2:ace%nz)
+enddo
+
+! MF at the model top and surface
+ace%X(:,1,1) = 0.
+ace%X(:,ace%nz-10:ace%nz,1) = 0.
+
+end subroutine ImDiff
+
+ 
+subroutine ImDamp(ace)
+implicit none
+
+! input/output variables
+type(ace_t), intent(inout) :: ace 
 
 ! local variable
 integer :: i,k,n
@@ -303,46 +1025,44 @@ real, dimension(:), allocatable, save :: damp
 logical, save :: first = .True.
 
 if (first) then
-  allocate(damp(nz))
-  do k=1,nz
-    damp(k) = dt * exp( ( Ref(k,3) - Ref(nz,3) ) / SLD ) / SLTau
+  allocate(damp(ace%nz))
+  do k=1,ace%nz
+    damp(k) = ace%dt * exp( ( ace%Ref(k,3) - ace%Ref(ace%nz,3) ) / ace%SLD ) / ace%SLTau
   enddo
   first = .False.
 endif
 
-do k=1,nz
-  do i=1,ncols
-    X(i,k,1) = X(i,k,1) / ( 1. + damp(k) / Ref(k,2) )
-    do n=2,n_prog
-      X(i,k,n) = ( X(i,k,n) + damp(k) * X(ncols+1,k,n) / Ref(k,1) ) / ( 1. + damp(k) / Ref(k,1) )
+do k=1,ace%nz
+  do i=1,ace%ncols
+    ace%X(i,k,1) = ace%X(i,k,1) / ( 1. + damp(k) / ace%Ref(k,2) )
+    do n=2,ace%n_prog
+      ace%X(i,k,n) = ( ace%X(i,k,n) + damp(k) * ace%X(ace%ncols+1,k,n) / ace%Ref(k,1) ) / ( 1. + damp(k) / ace%Ref(k,1) )
     enddo
   enddo
 enddo
 
 end subroutine ImDamp
 
-subroutine precip_sinks(ncols,nz,n_prog,p,dXdt)
+subroutine precip_sinks(ace,dXdt)
 implicit none
 
 ! input/output variables
-integer, intent(in) :: ncols,nz,n_prog
-real, dimension(nz), intent(in) :: p
-real, dimension(ncols,nz,n_prog-1), intent(inout) :: dXdt
+type(ace_t) :: ace
+real, dimension(ace%ncols,ace%nz,ace%n_prog-1), intent(out) :: dXdt
 
 ! local variables
 integer :: i,k
 real :: qc, dql, dqi
 
 
-do k=1,nz
-do i=1,ncols
-  qc = ql(i,k) + qi(i,k)
-  !!!dqt(i,k) = - ( qc_ramp / dqc / tau_pr ) * log( 1. + exp( dqc / qc_ramp * ( qc - qc_ramp ) ) ) ! should use -r8 to compile
-  dXdt(i,k,2) = - ( qc_ramp / dqc / tau_pr ) * max( dqc / qc_ramp * ( qc - qc_ramp ) , 0. ) 
-  dql = 1.e-8 * ql(i,k) / qc
-  dqi = 1.e-8 * qi(i,k) / qc
-  dXdt(i,k,1) = dXdt(i,k,2) * ( theta_e(Ta(i,k),q(i,k),ql(i,k)+dql,qi(i,k)+dqi,p(k)) &
-                              - theta_e(Ta(i,k),q(i,k),ql(i,k),qi(i,k),p(k)) ) / 1.e-8
+do k=1,ace%nz
+do i=1,ace%ncols
+  qc = ace%ql(i,k) + ace%qi(i,k)
+  dXdt(i,k,2) = - ( ace%qc_ramp / ace%dqc / ace%tau_pr ) * max( ace%dqc / ace%qc_ramp * ( qc - ace%qc_ramp ) , 0. ) 
+  dql = 1.e-8 * ace%ql(i,k) / qc
+  dqi = 1.e-8 * ace%qi(i,k) / qc
+  dXdt(i,k,1) = dXdt(i,k,2) * ( theta_e(ace%Ta(i,k),ace%q(i,k),ace%ql(i,k)+dql,ace%qi(i,k)+dqi,ace%Ref(k,7)) &
+                              - theta_e(ace%Ta(i,k),ace%q(i,k),ace%ql(i,k),ace%qi(i,k),ace%Ref(k,7)) ) / 1.e-8
   if ( qc <= 0. ) then
     dXdt(i,k,:) = 0.
   endif 
@@ -352,29 +1072,22 @@ enddo
 end subroutine precip_sinks
 
 
-subroutine p3_wrapper_ace(ncols,nz,n_prog,dt,X_old,X,Ref)
+subroutine p3_wrapper_ace(ace,X_old)
 use microphy_p3
 implicit none
 
 ! input/output variables
-integer, intent(in) :: ncols, nz, n_prog
-real, intent(in) :: dt
-real, dimension(nz,8), intent(in) :: Ref ! reference varaibles: rhoc, rhoz, z, zm, dz, dzm, p, pi
-real, dimension(ncols+1,nz,n_prog), intent(in) :: X_old 
-real, dimension(ncols+1,nz,n_prog), intent(inout) :: X ! mf, th, qv, qc, nc, qr, nr, qi, ni, qrim, brim
+type(ace_t), intent(inout) :: ace
+real, dimension(ace%ncols+1,ace%nz,ace%n_prog), intent(in) :: X_old 
 
 ! local variables
 integer, save :: itt = 1
 logical, save :: first = .True.
-integer, parameter :: nCat = 1 ,&                ! the number of ice categories
-                      n_diag_2d = 1 ,&           ! size of 2d diagnostic array
+integer, parameter :: n_diag_2d = 1 ,&           ! size of 2d diagnostic array
                       n_diag_3d = 1              ! size of 3d diagnostic array
-logical, parameter :: log_predictNc = .True.  ,& ! predict cloud droplet number or not
-                      typeDiags_ON  = .False. ,& ! diagnose ice types or not
+logical, parameter :: typeDiags_ON  = .False. ,& ! diagnose ice types or not
                       debug_on      = .False. ,& ! debug mode
                       scpf_on       = .False. ,& ! cloud fraction version not used
-                      trplMomI      = .False. ,& ! triple moment ice
-                      liqfrac       = .False. ,& ! liquid fraction ice
                       abort_on_err  = .False.  ,& ! program aborts when encountering error
                       dowr          = .True.     ! print message or not
 real, parameter :: scpf_pfrac    = 0. ,&   ! dummy variable (not used), set to 0
@@ -383,36 +1096,36 @@ real, parameter :: scpf_pfrac    = 0. ,&   ! dummy variable (not used), set to 0
                    clbfact_sub   = 1.      ! calibration for sublimation
 character(3), parameter :: model = "ACE"
 integer :: i,j,k,stat
-real, dimension(ncols,nz) :: qc,nc,qr,nr,th_old,th,qv_old,qv, &
-                             qitot,qirim,qiliq,ni,birim,zi,ssat,w,p,dz, &
-                             diag_ze,diag_effc,diag_effi,diag_vmi,diag_di,diag_rhoi,cldfrac
-real, dimension(ncols,n_diag_2d) :: diag_2d
-real, dimension(ncols,nz,n_diag_3d) :: diag_3d
-real, dimension(ncols) :: precip_liq,precip_sol
+real, dimension(ace%ncols,ace%nz) :: qc,nc,qr,nr,th_old,th,qv_old,qv, &
+                                     qitot,qirim,qiliq,ni,birim,zi,ssat,w,p,dz, &
+                                     diag_ze,diag_effc,diag_effi,diag_vmi,diag_di,diag_rhoi,cldfrac
+real, dimension(ace%ncols,n_diag_2d) :: diag_2d
+real, dimension(ace%ncols,ace%nz,n_diag_3d) :: diag_3d
+real, dimension(ace%ncols) :: precip_liq,precip_sol
 
 if (first) then
-  call p3_init('./input_data/',ncat,trplMomI,liqfrac,trim(model),stat,abort_on_err,dowr)
+  call p3_init('./input_data/',ace%ncat,ace%trplMomI,ace%liqfrac,trim(model),stat,abort_on_err,dowr)
   if (stat/=0) stop "Failure of p3 initialization"
   first = .False.
 endif
 
-th_old = X_old(1:ncols,:,2)
-qv_old = X_old(1:ncols,:,3)
+th_old = X_old(1:ace%ncols,:,2)
+qv_old = X_old(1:ace%ncols,:,3)
 
-th    = X(1:ncols,:,2)
-qv    = X(1:ncols,:,3)
-qc    = X(1:ncols,:,4)
-nc    = X(1:ncols,:,5)
-qr    = X(1:ncols,:,6)
-nr    = X(1:ncols,:,7)
-qitot = X(1:ncols,:,8)
-ni    = X(1:ncols,:,9)
-qirim = X(1:ncols,:,10)
-birim = X(1:ncols,:,11)
+th    = ace%X(1:ace%ncols,:,2)
+qv    = ace%X(1:ace%ncols,:,3)
+qc    = ace%X(1:ace%ncols,:,4)
+nc    = ace%X(1:ace%ncols,:,5)
+qr    = ace%X(1:ace%ncols,:,6)
+nr    = ace%X(1:ace%ncols,:,7)
+qitot = ace%X(1:ace%ncols,:,8)
+ni    = ace%X(1:ace%ncols,:,9)
+qirim = ace%X(1:ace%ncols,:,10)
+birim = ace%X(1:ace%ncols,:,11)
 
-do k=1,nz
-  dz(:,k)   = Ref(k,5)
-  p(:,k)    = Ref(k,7)
+do k=1,ace%nz
+  dz(:,k)   = ace%Ref(k,5)
+  p(:,k)    = ace%Ref(k,7)
 enddo
 
 zi    = 0.
@@ -420,29 +1133,29 @@ ssat  = 0.
 w     = 0.
 qiliq = 0.
 
-call p3_main(qc,nc,qr,nr,th_old,th,qv_old,qv,dt, &
+call p3_main(qc,nc,qr,nr,th_old,th,qv_old,qv,ace%dt, &
              qitot,qirim,qiliq,ni,birim,zi,ssat,w, &
              p,dz,itt,precip_liq,precip_sol, &
-             1,ncols,1,nz,nCat, &
+             1,ace%ncols,1,ace%nz,ace%nCat, &
              diag_ze,diag_effc,diag_effi,diag_vmi,diag_di,diag_rhoi, &
-             n_diag_2d,diag_2d,n_diag_3d,diag_3d,log_predictNc,trim(model), &
+             n_diag_2d,diag_2d,n_diag_3d,diag_3d,ace%log_predictNc,trim(model), &
              clbfact_dep,clbfact_sub, &
              debug_on,scpf_on,scpf_pfrac,scpf_resfact,cldfrac,     &
-             trplMomI,liqfrac)
+             ace%trplMomI,ace%liqfrac)
 
 
 if (global_status == -1) stop "p3 stop"
 
-X(1:ncols,:,2)  = th
-X(1:ncols,:,3)  = qv
-X(1:ncols,:,4)  = qc
-X(1:ncols,:,5)  = nc
-X(1:ncols,:,6)  = qr
-X(1:ncols,:,7)  = nr
-X(1:ncols,:,8)  = qitot
-X(1:ncols,:,9)  = ni
-X(1:ncols,:,10) = qirim
-X(1:ncols,:,11) = birim
+ace%X(1:ace%ncols,:,2)  = th
+ace%X(1:ace%ncols,:,3)  = qv
+ace%X(1:ace%ncols,:,4)  = qc
+ace%X(1:ace%ncols,:,5)  = nc
+ace%X(1:ace%ncols,:,6)  = qr
+ace%X(1:ace%ncols,:,7)  = nr
+ace%X(1:ace%ncols,:,8)  = qitot
+ace%X(1:ace%ncols,:,9)  = ni
+ace%X(1:ace%ncols,:,10) = qirim
+ace%X(1:ace%ncols,:,11) = birim
 
 itt = itt + 1
 
