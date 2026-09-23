@@ -1,0 +1,51 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# MATLAB
+*.asv
+*.m~
+slprj/
+codegen/
+*.mex*
+
+# Fortran / compiler output
+*.o
+*.obj
+*.mod
+*.smod
+*.a
+*.so
+*.dll
+*.exe
+
+# Build directories
+build/
+cmake-build-*/
+
+# Runtime output
+output/
+outputs/
+run/
+runs/
+*.log
+
+# Scientific output
+*.nc
+*.nc4
+
+# Python utilities
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Temporary work
+tmp/
+scratch/
+migration_work/
