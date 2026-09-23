@@ -14,6 +14,16 @@ Inspected 2026-09-23. This is repository archaeology, before import. Archive pat
 
 See [version matrix](matlab_version_matrix.md) and [lineage and scientific findings](matlab_lineage.md).
 
+## Developer-defined migration convention
+
+For historical standalone MATLAB mains without their own utility directories, the assigned baseline is **v0.18-era root utilities by developer-defined migration convention.** This applies to `ace_v019_K24_8aces.m`, `ace_v019_dev_2d88aces.m`, and `ace_v020_dev_2d88aces.m`. The baseline is collection R: the 100 root utility files whose Git identity is recorded in the inventory. Snapshots with their own utilities retain their documented accompanying collections.
+
+The evidence categories are distinct:
+
+- **Git-confirmed historical facts:** the root utility bytes and their introduction in the MATLAB Git history.
+- **Source-code inference:** driver-family relationships and compatibility findings derived from source comparisons.
+- **Developer-defined migration decision:** assigning R to standalone mains for migration. This resolves the baseline selection; it does not establish which utilities, working directory or MATLAB path were used historically, prove numerical compatibility, or change the inferred source lineage.
+
 ## Archive collections
 
 R = archive root excluding the three snapshot directories and `.git`; S19 = `ACE_V019.3`; S20 = `ACE_V020`; S24 = `ACE_V024.87`. Recursive counts include backups, tests, autosaves and binary files.

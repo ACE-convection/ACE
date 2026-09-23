@@ -1,6 +1,6 @@
 # MATLAB development lineage reconstruction
 
-Inspected 2026-09-23. This report separates Git ancestry, source-family inference, and unresolved relationships. All archive source paths are relative to `migration_work/ACE_MATLAB/`. File identities, complete presence/absence lists, and Git trees are in [inventory](matlab_inventory.md); each distinguishable driver state is in [version matrix](matlab_version_matrix.md).
+Inspected 2026-09-23. This report separates Git ancestry, source-code inference, developer-defined migration decisions, and unresolved historical relationships. All archive source paths are relative to `migration_work/ACE_MATLAB/`. File identities, complete presence/absence lists, and Git trees are in [inventory](matlab_inventory.md); each distinguishable driver state is in [version matrix](matlab_version_matrix.md).
 
 ## Confirmed lineage
 
@@ -61,6 +61,16 @@ Arrows outside the explicit Git edge denote the most plausible development direc
 | p87 → GF87 | README's explicit description plus source diff: GPU/FFT helpers and device-aware paths added to the same model structure | Strong inference for derivation; no commit/date evidence establishing order |
 
 The original Git history supports v0.16 preceding the v0.18 introduction but neither confirms nor contradicts later numeric ordering: it simply stops tracking model changes at v0.18. It does contradict treating all archive files as committed releases, treating the archive root as the latest utility library, or treating each version number as a complete replacement snapshot.
+
+## Developer-defined migration convention
+
+For historical standalone MATLAB mains without their own utility directories, the assigned baseline is **v0.18-era root utilities by developer-defined migration convention.** This applies to `ace_v019_K24_8aces.m`, `ace_v019_dev_2d88aces.m`, and `ace_v020_dev_2d88aces.m`. The baseline is collection R: the 100 root utility files whose Git identity is recorded in the inventory. Snapshots with their own utilities retain their documented accompanying collections.
+
+The evidence categories are distinct:
+
+- **Git-confirmed historical facts:** the root utility bytes and their introduction in the MATLAB Git history.
+- **Source-code inference:** driver-family relationships and compatibility findings derived from source comparisons.
+- **Developer-defined migration decision:** assigning R to standalone mains for migration. This resolves the baseline selection; it does not establish which utilities, working directory or MATLAB path were used historically, prove numerical compatibility, or change the inferred source lineage.
 
 ## Main-program evolution and scientific changes
 
@@ -186,14 +196,14 @@ The inventory's presence/hash ledger is the exhaustive path-level record. It inc
 | Git v0.18 upload | Add `ace_v018_dev_8aces.m`; retain v0.16 and utilities; no rename/removal |
 | January Git v0.18 | Modify existing main only; no path additions/removals/renames |
 | S19 K24 versus root collection | Separate K24 main at a nested path; root v0.16/v0.18 mains are not included in S19; no evidence of deletion or rename |
-| Root K24, v0.19 2D, v0.20 2D | Three archive-only standalone additions relative to Git tip; no individually associated utility-tree change can be established |
+| Root K24, v0.19 2D, v0.20 2D | Three archive-only standalone additions relative to Git tip; R assigned by developer-defined migration convention; no historical utility-tree change established |
 | Packaged S20 | New main path `ACE_V020_2D88ACEs.m`; candidate successor/rename of standalone v0.20 with substantial scientific edits; no confirmed rename |
 | Packaged S24 | Add p87, GF87 and README compared with S20; S20 main absent from this collection; no confirmed driver rename |
 | p87 versus GF87 | Two coexisting mains share one utility package; GF is an added variant, not a replacement |
 
 ## Uncertain lineage and required developer review
 
-1. **Standalone utility provenance.** Root co-location resolves to R only when run from archive-root cwd. No script pins a library revision. S19 old-interface utilities are plausible alternatives for the standalone 2D mains; S20's disabled optional arguments rule out blindly substituting its libraries. Historical working-directory/path information is needed to establish actual pairings.
+1. **Standalone utility baseline resolved; historical provenance remains uncertain.** The three standalone mains are assigned v0.18-era root utilities by developer-defined migration convention. R-versus-S19 selection is no longer an open migration decision. No script pins the historically used library revision, and paths depend on `pwd`; actual historical pairings still require execution-environment evidence. S20/S24 API incompatibilities and the need to validate the assigned R combinations remain source-code findings.
 2. **K24 branch direction.** The root export experiment could derive from the packaged K24 family, or both could share an unsaved predecessor. It must not automatically become the parent of the 2D family merely because its filename/version matches.
 3. **Unrecorded intermediate versions.** No v0.17, v0.21–v0.23 or intermediate v0.24 main is present in these inputs. Experimental utility files are evidence of parallel work, not enough to assign new numbered releases or dates.
 4. **Missing data and build contracts.** S20/S24 `data/` directories are absent; standalone 2D basis binaries are absent; processed `acelevels_*` soundings are absent. S19 supplies Heaviside data but not the requested 2D file. Binary dimensions/contents and generator provenance remain unchecked. Even S24's kernel builder falls back to saving in `.` when `data/basis/` is absent, while the driver expects the data path.
@@ -203,10 +213,10 @@ The inventory's presence/hash ledger is the exhaustive path-level record. It inc
 
 ## Recommended next direction
 
-Review the uncertain standalone utility pairings and recover the missing basis/sounding provenance with the original developers. Preserve each artifact identity before selecting any import baseline. A subsequent, separately authorized validation task should use isolated copies and matched inputs to check WENO weights/boundaries, thermodynamic round trips (including ice and failure cases), weighted conservation, PMD/PMDv orientation and terrain/GPU equivalence. No source import or scientific correction is implied by these reports.
+Recover the missing basis/sounding provenance with the original developers and review compatibility of the standalone mains with their assigned R baseline. Preserve each artifact identity; the standalone utility baseline is now selected by convention, while selection of a model version for import remains a separate decision. A subsequent, separately authorized validation task should use isolated copies and matched inputs to check WENO weights/boundaries, thermodynamic round trips (including ice and failure cases), weighted conservation, PMD/PMDv orientation and terrain/GPU equivalence. No source import or scientific correction is implied by these reports.
 
 ## Verification of this archaeology task
 
 Verification consists of Git tree/blob inspection, recursive file inventories, byte comparisons, source diffs and inspection of active call paths. No MATLAB/Fortran simulation, kernel generation, checkpoint creation or historical-source modification was performed. Only the three requested Markdown reports were created in the unified repository; no commit was made.
 
-Final preservation check: all 319 archive files (excluding `.git`) have unchanged SHA-256 hashes and the same path set as at inspection start. Report links and table column counts were checked. Unified HEAD remains `1953c17`; Git status lists exactly the three requested reports as untracked files.
+Original archaeology preservation check (before the reports were committed): all 319 archive files (excluding `.git`) have unchanged SHA-256 hashes and the same path set as at inspection start. Report links and table column counts were checked. At that check, unified HEAD was `1953c17` and the three reports were untracked. For this convention update, the initial working tree was clean on `migration/matlab-history` at `4cbb7b9` (`Document MATLAB historical code lineage`); only these three reports are being updated, with no new commit.
