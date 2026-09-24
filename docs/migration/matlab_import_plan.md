@@ -1,6 +1,6 @@
 # MATLAB history import plan
 
-Status: in progress, updated 2026-09-24. The original Git history was joined at `141455d`. All 98 S19 files were committed through `b7b448b`, verified against the source archive, and marked with the annotated `matlab/snapshot/v0.19.3-k24` tag. The three standalone drivers were committed at `8ed7284` (D-1), `b3637f9` (D-2), and `d1bcc00` (D-3), with source bytes verified. S20 and S24 remain pending. The command blocks below are a migration record and guide for pending steps; do not rerun completed steps. The primary evidence is the [inventory](matlab_inventory.md), [version matrix](matlab_version_matrix.md), and [lineage report](matlab_lineage.md). Archive paths are relative to `migration_work/ACE_MATLAB/`, a read-only symlink to the historical working repository.
+Status: in progress, updated 2026-09-24. The original Git history was joined at `141455d`. All 98 S19 files were committed through `b7b448b`, verified against the source archive, and marked with the annotated `matlab/snapshot/v0.19.3-k24` tag. The three standalone drivers were committed at `8ed7284` (D-1), `b3637f9` (D-2), and `d1bcc00` (D-3), with source bytes verified. All 52 S20 files were committed through `bb040f8`, verified against the source archive and committed Git blobs, and marked with the annotated `matlab/snapshot/v0.20-package` tag. S24 remains pending. The command blocks below are a migration record and guide for pending steps; do not rerun completed steps. The primary evidence is the [inventory](matlab_inventory.md), [version matrix](matlab_version_matrix.md), and [lineage report](matlab_lineage.md). Archive paths are relative to `migration_work/ACE_MATLAB/`, a read-only symlink to the historical working repository.
 
 ## Recommendation and scope
 
@@ -64,6 +64,8 @@ Place all 52 supplied S20 files at `matlab/history/snapshots/ACE_V020/`. The S20
 | S20-6 `matlab: archive packaged S20 driver` | Entire `ACE_V020_2D88ACEs.m`; ace-struct layout, PMDv input, reference buoyancy, integration call, physics and I/O cannot be safely split by hunk. | S20-1–5; only then is the supplied source package complete. | No: `data/` and requested basis are absent. |
 
 After S20-6, verify **the committed S20 tree** against all 52 preserved files, then tag `matlab/snapshot/v0.20-package`. This is a reconstructed package state, not a release or a claim that standalone D-3 was its direct parent.
+
+Completed: S20-5 was committed at `9177f4d` and S20-6 at `bb040f8`. All 52 source, destination, and committed blob hashes matched. `git diff --cached --check` reported CRLF line endings and inherited trailing spaces in the two files; these were retained byte-for-byte. The annotated snapshot tag points to `bb040f8`.
 
 ### S20 family → S24 (`ACE_V024.87`)
 
