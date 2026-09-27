@@ -1,6 +1,12 @@
 # MATLAB standalone validation readiness
 
-Status: static review on 2026-09-24. This records the next checks after the source import; it does not certify execution or numerical equivalence. The three standalone mains are paired with `matlab/history/original_git/` utilities by developer convention, not by recovered runtime provenance. Historical files were not edited.
+Status: static review on 2026-09-24. This records checks for the standalone
+v0.19/v0.20 mains after source import; they are deferred while
+[unified v0.18 alignment](matlab_fortran_alignment_plan.md) is the current
+milestone. This does not certify execution or numerical equivalence. The three
+standalone mains are paired with `matlab/history/original_git/` utilities by
+developer convention, not by recovered runtime provenance. Historical files
+were not edited.
 
 ## Input provenance and immediate blockers
 

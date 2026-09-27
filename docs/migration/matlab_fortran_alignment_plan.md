@@ -21,6 +21,14 @@ record differences, and validate both implementations with matched inputs.
 The candidate commits, component audit, inputs, test gate, and release criteria
 are in [v0.18 alignment](v018_alignment.md).
 
+Progress as of 2026-09-28: the candidate source states and known differences
+have been documented in the static audit. The MATLAB eight-ACE basis and Manus
+sounding have been located, but the Fortran initialization and PMB binary
+inputs have not. No matched initial state, operator test, or short run has been
+completed; a unified v0.18 release has not been established. The next action
+is to review the candidate commits and classify the known scientific
+differences before deriving or recovering missing Fortran inputs.
+
 Action sequence for this milestone only:
 
 1. Review the candidate commits and the known scientific differences in the

@@ -13,6 +13,8 @@ ACE currently has two implementations with different roles:
 
 The two implementations share the same core model formulation, but they are not necessarily identical in all physical parameterizations. A major goal of this repository is to maintain consistency between the shared components of the MATLAB and Fortran implementations and to provide systematic tests for their numerical agreement.
 
+The current development milestone is [unified v0.18 alignment](docs/migration/matlab_fortran_alignment_plan.md): reconstruct the historical MATLAB and Fortran states, establish matched inputs, and validate their agreement. The earlier MATLAB S20/S24 active-layout staging is preserved for later milestones; it is not the current release baseline.
+
 ## Repository reorganization
 
 ACE has historically been developed through a series of MATLAB and Fortran code snapshots. Earlier MATLAB versions were not maintained using a systematic Git-based versioning workflow.

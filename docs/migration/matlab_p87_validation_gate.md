@@ -1,9 +1,10 @@
 # p87 MATLAB validation gate
 
-Status: conditional input and environment audit, 2026-09-26. Runtime testing is
-deferred until the developer selects a version after code organization. The
-developer confirmed that sounding files are the same across all versions. If
-p87 is selected, use the S19 GOAmazon file as its input. This is a plan for
+Status: conditional input and environment audit, 2026-09-26. This S24 gate is
+deferred while [unified v0.18 alignment](matlab_fortran_alignment_plan.md) is
+the current milestone. The developer confirmed that sounding files are the
+same across all versions. If p87 is later selected, use the S19 GOAmazon file
+as its input. This is a plan for
 validating the preserved `ACE_V024.87` CPU driver before adapting it for
 `matlab/active/`. No MATLAB run
 or numerical comparison has been performed.

@@ -1,13 +1,14 @@
 # MATLAB driver dependency map
 
-Static source review, 2026-09-26. This map records utility calls written in
-the preserved drivers and the input paths they construct. Direct calls include
+Static source review, updated 2026-09-28. The current milestone is
+[unified v0.18 alignment](matlab_fortran_alignment_plan.md); the S20 utility
+staging described here is deferred to the v0.20 milestone. This map records
+utility calls written in the preserved drivers and their input paths. Direct calls include
 local-function bodies, conditional branches, function handles such as
 `@ssprk93`, and constant-import scripts. Utility-to-utility calls were followed
 by matching names in the paired library. This is a source-level dependency
 map, not proof that every branch runs or that name scanning catches dynamic
-dispatch. Runtime testing remains deferred until the developer selects a
-version.
+dispatch. No driver has been validated through this map alone.
 
 ## Direct external calls by driver
 
@@ -33,10 +34,13 @@ and `eval_qsi2` through saturation helpers. S24's `inv_T_batch_warm` reaches
 `inv_T_batch`; GF87 also needs the GPU inversion when that branch is chosen.
 These are static call-chain observations, not an execution trace.
 
-The current `matlab/active/` utility set is therefore not a complete package
-for any of these drivers. The shared S20/S24 `eval_dTqs` and `eval_dTqsi`
-are present, but the S20 call chain still needs its paired
-`inv_T_from_theta_e` and `ssprk93`; the S24 p87 chain needs its paired
+The reviewed working-tree staging has the observed S20 external call chain,
+including the S20 `inv_T_from_theta_e` and external `ssprk93`. These two files
+remain uncommitted, and the package is not runnable because the S20 driver,
+its path setup, and runtime inputs are absent. This staging is not the v0.18
+validation source; use the
+original Git state identified in the v0.18 audit. The S24 p87 chain still needs
+its paired
 `inv_T_batch`, `inv_T_batch_warm`, and `inv_T_from_theta_e` (GF87 additionally
 needs the GPU inversion). Older R/S19 drivers require their own versions of changed APIs,
 including the global constants script and scalar inversion. Do not fill these
