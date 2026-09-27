@@ -8,8 +8,9 @@ no `data/` directory. Its README describes runtime files that are absent from
 the archive. No run or numerical equivalence has been demonstrated.
 
 Current copy progress: `matlab/active/numerics/` has two WENO functions;
-`matlab/active/thermodynamics/` has 23 functions, including the p87 sounding
-initialization call chain. All 25 files are byte-identical in S20 and S24;
+`matlab/active/thermodynamics/` has 25 functions, including the p87 sounding
+initialization call chain and two saturation derivatives used by its inversion
+utilities. All 27 files are byte-identical in S20 and S24;
 12 are also byte-identical in the original Git utility tree and S19. The latter
 group is `reconstruction_up3`, `ci`, `eval_B`, `eval_dTes`, `eval_es`,
 `eval_esi`, `eval_rho`, `eval_theta`, `eval_theta_e`, `eval_theta_l`,
@@ -104,7 +105,7 @@ baseline. `gputest_invTq.m` and its sample are tests, while the GF87 driver and
 
 ## Review gate and next step
 
-The work is on `refactor/matlab-active-layout`. The two WENO and 23
+The work is on `refactor/matlab-active-layout`. The two WENO and 25
 thermodynamics files already staged in `matlab/active/` are byte-identical to
 S20 and S24. No driver, path, API, constant, or numerical method has been
 changed by these copies.

@@ -34,11 +34,11 @@ and `eval_qsi2` through saturation helpers. S24's `inv_T_batch_warm` reaches
 These are static call-chain observations, not an execution trace.
 
 The current `matlab/active/` utility set is therefore not a complete package
-for any of these drivers. In particular, the S20 call chain still needs its
-paired `eval_dTqs`, `eval_dTqsi`, `inv_T_from_theta_e`, and `ssprk93`; the S24
-p87 chain needs its paired `eval_dTqs`, `eval_dTqsi`, `inv_T_batch`,
-`inv_T_batch_warm`, and `inv_T_from_theta_e` (GF87 additionally needs the GPU
-inversion). Older R/S19 drivers require their own versions of changed APIs,
+for any of these drivers. The shared S20/S24 `eval_dTqs` and `eval_dTqsi`
+are present, but the S20 call chain still needs its paired
+`inv_T_from_theta_e` and `ssprk93`; the S24 p87 chain needs its paired
+`inv_T_batch`, `inv_T_batch_warm`, and `inv_T_from_theta_e` (GF87 additionally
+needs the GPU inversion). Older R/S19 drivers require their own versions of changed APIs,
 including the global constants script and scalar inversion. Do not fill these
 gaps by matching filenames across versions.
 
