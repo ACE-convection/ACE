@@ -1,9 +1,9 @@
 # Unified ACE alignment roadmap
 
-Status: planning, 2026-09-28. This replaces the earlier strategy of advancing
-the active MATLAB layout on its own. The existing MATLAB staging work is
-preserved as historical work in progress; it is not the release baseline for
-the current milestone. Historical MATLAB and Fortran source remains untouched.
+Status: source candidates staged on `feature/v018-unified`, 2026-09-28. This
+replaces the earlier strategy of advancing the active MATLAB layout on its own.
+The S20 staging work remains on `refactor/matlab-active-layout` for a later
+milestone. Historical MATLAB and Fortran source remains untouched.
 
 ```text
 v0.18 unified validation and release
@@ -21,6 +21,21 @@ record differences, and validate both implementations with matched inputs.
 The candidate commits, component audit, inputs, test gate, and release criteria
 are in [v0.18 alignment](v018_alignment.md).
 
+## Source staging progress
+
+| Component | Pinned state | Current result |
+| --- | --- | --- |
+| MATLAB | Original Git `a328496` | `matlab/active/ace.m` and 20 named utility dependencies are byte-identical copies. The driver's original `pwd` and `../data/` assumptions remain. No runtime input has been installed for this layout. |
+| Fortran history | Original Git `ffdd734` | Non-squashed subtree merge `399b994` preserves the original history under `fortran/history/original_git/`, with `ffdd734` as a parent. The historical `v0.18` tag remains unchanged. |
+| Fortran active source | Original Git `ffdd734` | `fortran/active/makefile` and both `src/*.F` files are byte-identical copies. The original Intel compiler and binary input assumptions remain. |
+
+This fixes the source candidates for review, not their scientific agreement.
+No MATLAB-Fortran numerical comparison or active-layout run has been performed.
+The next decision is to classify the known differences in the audit, especially
+thermodynamic inversion, precipitation splitting, WENO boundaries, state
+mapping, and pressure-kernel ordering. Keep any correction separate from these
+byte-identical source copies.
+
 Action sequence for this milestone only:
 
 1. Review the candidate commits and the known scientific differences in the
@@ -30,9 +45,10 @@ Action sequence for this milestone only:
    inputs from the preserved MATLAB basis and Manus sounding. Record hashes,
    array ordering, units, compiler and binary record conventions. Keep the
    historical sources unchanged.
-3. Run each preserved candidate in an isolated, reproducible environment.
-   Compare the initial state, selected operators or one-step tendencies, and
-   a short run before considering an integrated source layout.
+3. Run each preserved candidate and its active-layout copy in isolated,
+   reproducible environments with the same reviewed inputs. Compare the
+   initial state, selected operators or one-step tendencies, and a short run
+   before treating the staged layout as validated.
 4. Document tolerances, numerical results, accepted differences and any
    corrections. Pin the jointly validated source and data provenance before
    declaring the unified release.
@@ -61,4 +77,5 @@ jointly validated unified release. Preserve its target and meaning.
 After validation, a unified release commit should contain the reviewed MATLAB
 and Fortran source states, validation instructions/results, and input
 provenance. Only then may an annotated `v0.18.0` tag identify the first unified
-ACE release. Do not create a branch, tag, release, or commit from this plan.
+ACE release. Do not merge the staged candidates into `main` or create that tag
+until the validation gate and scientific-difference review are complete.
