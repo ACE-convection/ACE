@@ -1,10 +1,28 @@
 # Active MATLAB layout proposal
 
-Status: proposal only, 2026-09-24. Source baseline: the 50 preserved files in
-`matlab/history/snapshots/ACE_V024.87/` (S24). The preserved Git history and
+Status: proposed layout with partial source copies, updated 2026-09-26. Source
+baseline: the 50 preserved files in `matlab/history/snapshots/ACE_V024.87/`
+(S24). The preserved Git history and
 snapshot remain untouched. S24 has two drivers, five utility directories, and
 no `data/` directory. Its README describes runtime files that are absent from
 the archive. No run or numerical equivalence has been demonstrated.
+
+Current copy progress: `matlab/active/numerics/` has two WENO functions;
+`matlab/active/thermodynamics/` has 23 functions, including the p87 sounding
+initialization call chain. All 25 files are byte-identical in S20 and S24;
+12 are also byte-identical in the original Git utility tree and S19. The latter
+group is `reconstruction_up3`, `ci`, `eval_B`, `eval_dTes`, `eval_es`,
+`eval_esi`, `eval_rho`, `eval_theta`, `eval_theta_e`, `eval_theta_l`,
+`eval_theta_v`, and `lv`. The only remaining S24 thermodynamics files with
+that same four-source byte identity are the unused `IMPORT_CONSTANTS.m` global
+script and comment-only `NOTE.m`; keep both historical-only. File identity does
+not imply equivalent behavior of different drivers. The active driver and
+basis builder have not been selected or copied. The developer will select a
+version for runtime testing after code organization. The conditional p87
+runtime input and reference-output gate is recorded in
+[`matlab_p87_validation_gate.md`](matlab_p87_validation_gate.md).
+The cross-version utility dispositions are recorded in
+[`matlab_shared_utility_inventory.md`](matlab_shared_utility_inventory.md).
 
 ## Proposed layout
 
@@ -20,7 +38,7 @@ matlab/
     thermodynamics/               # production thermodynamic functions and constants
     time_integration/             # reference SSPRK routine, only if needed
     numerics/                     # WENO and upwind reconstruction
-    README.md                     # new active-run instructions, written later
+    README.md                     # staging status now; run instructions after driver selection
 ```
 
 `matlab/history/` stays an inert archive. Keep local functions inside each
@@ -84,16 +102,16 @@ baseline. `gputest_invTq.m` and its sample are tests, while the GF87 driver and
   stay untracked. No conversion, data copy, or Fortran change is part of this
   proposal.
 
-## Review gate and first step
+## Review gate and next step
 
-Before active source work, developers should confirm (1) p87 as the primary
-driver, (2) whether GF87 joins the active track, and (3) whether the unused
-plume/global-constants/reference-time-integration files are needed by supported
-workflows. Establish a runnable input set and reference gate output before any
-claim of behavior preservation; MATLAB was unavailable for this review.
+The work is on `refactor/matlab-active-layout`. The two WENO and 23
+thermodynamics files already staged in `matlab/active/` are byte-identical to
+S20 and S24. No driver, path, API, constant, or numerical method has been
+changed by these copies.
 
-After approval, create a dedicated `refactor/matlab-active-layout` branch and
-copy only the two WENO files byte-for-byte into `matlab/active/numerics/`.
-Check copied hashes against S24 and review the diff. This first step does not
-change any driver, path, API, constant, or numerical method. Follow with small,
-separate copy and path-adaptation steps, each checked before proceeding.
+After code organization, developers will select a version for runtime testing
+and decide whether the GF87 variant and historical-only utilities belong in a
+supported workflow. Copy the chosen driver's remaining dependencies together
+with that driver in small, reviewed steps. Establish its runnable input set and
+reference gate output before any claim of behavior preservation; MATLAB was
+unavailable for this review.
