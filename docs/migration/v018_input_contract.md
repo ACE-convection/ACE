@@ -11,6 +11,14 @@ Fortran `ini_manus_208.dat` and `PMB.dat` were not found in this repository.
 | MATLAB eight-ACE basis | `matlab/history/original_git/data/basis/COMPOSITE_ACE_BASIS_8ACEs.mat` | `6053e923f12da0eb87cc0d65ea776e5fa9ba9bf6fe4dc4399fd1b4b9b645cf45` | MATLAB v7.3 HDF5 file; `DCASES=[5,10,15,25,35,45,55]` km, `Lx=Ly=64` km; `/PMB` is little-endian double with on-disk shape `(8,8,200,201)`. |
 | Manus sounding | `matlab/history/snapshots/ACE_V019.3/data/soundings/manus_3hr_ARMBEsonde_profiles.nc` | `b909a2a61b040c5efe5b2f22375bd04c1a93ab4018e427be797a9adc05e23032` | NetCDF with 37 pressure levels and 43,832 times; includes `pressure`, `pr`, `ta`, and `hus`. |
 
+Applying the MATLAB driver's complete-temperature, complete-humidity, and
+finite-precipitation filter to this NetCDF yields 5,211 profiles. Its profile
+208 is raw time index 7,616 in one-based indexing. The Fortran source's
+commented preprocessing uses the same validity filter and `nprof=208`, but
+its later interpolation and hydrostatic calculations are not identical to
+the MATLAB routines; the missing binary cannot be assumed to equal either
+reconstruction.
+
 The basis geometry values agree with the seven radial boundaries and 64 km
 outer square specified in `fortran/active/src/test.F`. This is a source-level
 geometry check, not proof that the historical Fortran PMB binary used this
