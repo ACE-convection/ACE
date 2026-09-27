@@ -34,7 +34,9 @@ No MATLAB-Fortran numerical comparison or active-layout run has been performed.
 The next decision is to classify the known differences in the audit, especially
 thermodynamic inversion, precipitation splitting, WENO boundaries, state
 mapping, and pressure-kernel ordering. Keep any correction separate from these
-byte-identical source copies.
+byte-identical source copies. The preserved input files, Fortran binary reads,
+and provisional PMB extraction are recorded in the
+[v0.18 input contract](v018_input_contract.md).
 
 Action sequence for this milestone only:
 
