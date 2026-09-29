@@ -1,5 +1,10 @@
 # MATLAB historical inventory
 
+This inventory records the pre-LFS archive and commit IDs. In the current Git
+history, MATLAB `data/` blobs are LFS pointers; their full original contents
+are verified by the [LFS manifest](matlab_data_lfs_manifest.tsv). Use the
+[commit map](matlab_data_lfs_commit_map.csv) for current rewritten IDs.
+
 Inspected 2026-09-23. This is repository archaeology, before import. Archive paths below are relative to `migration_work/ACE_MATLAB/`. The symlink resolves to the historical `../ACE_MATLAB` working repository; it was treated as read-only. Git objects were read from the unified repository's existing remote refs. No fetch, checkout, source normalization, model execution, import, or commit was performed.
 
 ## Evidence and limits

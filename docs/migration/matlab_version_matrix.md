@@ -1,5 +1,10 @@
 # MATLAB historical version matrix
 
+The Git commit IDs below identify the pre-LFS source history. For IDs in the
+current rewritten repository, use the [commit map](matlab_data_lfs_commit_map.csv).
+MATLAB `data/` contents are preserved through Git LFS with hashes in the
+[manifest](matlab_data_lfs_manifest.tsv).
+
 Inspected 2026-09-23. Paths are relative to `migration_work/ACE_MATLAB/`. Collection identifiers and byte identities are defined in [inventory](matlab_inventory.md); evidence and change classifications are in [lineage](matlab_lineage.md). Versions are artifact identifiers, not assertions of release order.
 
 “Source package” means a main plus accompanying libraries. It does not certify execution, correct physics, or complete input data. High confidence applies to observed contents and Git identities; medium confidence to inferred development relationships; low confidence to unresolved historical provenance. Developer-defined baseline assignments are decisions, not historical confidence ratings; they do not alter lineage confidence.

@@ -10,7 +10,7 @@ MATLAB run or numerical comparison has been performed.
 The 27 previously committed WENO and thermodynamics functions match S20 byte
 for byte. Two further byte-identical S20 copies,
 `util_thermodynamics/inv_T_from_theta_e.m` and `util_timeint/ssprk93.m`, were
-committed as byte-identical copies at `b09e19a` under
+committed as byte-identical copies at `9a5b7c7` under
 `matlab/active/thermodynamics/` and `matlab/active/time_integration/`.
 Static call tracing finds these two as the remaining direct external functions
 for the S20 driver; the existing utilities cover their named helper calls.

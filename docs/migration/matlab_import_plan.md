@@ -1,5 +1,11 @@
 # MATLAB history import plan
 
+This is a record of the **pre-LFS import**. The MATLAB data migration later
+rewrote the Git commits named below; their original IDs remain documented in
+the [LFS commit map](matlab_data_lfs_commit_map.csv), and the original Git
+graph is saved in the local pre-migration bundle. The original-ID preservation
+claims below describe the import at that time, not the current Git refs.
+
 Status: source import complete, updated 2026-09-24; runtime validation remains open. The original Git history was joined at `141455d`. All 98 S19 files were committed through `b7b448b`, verified against the source archive, and marked with the annotated `matlab/snapshot/v0.19.3-k24` tag. The three standalone drivers were committed at `8ed7284` (D-1), `b3637f9` (D-2), and `d1bcc00` (D-3), with source bytes verified. All 52 S20 files were committed through `bb040f8`, verified against the source archive and committed Git blobs, and marked with the annotated `matlab/snapshot/v0.20-package` tag. All 50 S24 files were committed through `6af974b`, verified against the source archive and committed Git blobs, and marked with the annotated `matlab/snapshot/v0.24.87-p87-gf87` tag. The command blocks below are a migration record; do not rerun completed steps. The primary evidence is the [inventory](matlab_inventory.md), [version matrix](matlab_version_matrix.md), and [lineage report](matlab_lineage.md). Archive paths are relative to `migration_work/ACE_MATLAB/`, a read-only symlink to the historical working repository.
 
 ## Recommendation and scope

@@ -3,7 +3,9 @@
 Status: source candidates staged for validation, 2026-09-29. This replaces
 the earlier strategy of advancing the active MATLAB layout on its own. The
 S20/S24 utility staging is preserved for later milestones. Historical MATLAB
-and Fortran source remains untouched.
+and Fortran source-code bytes remain untouched. MATLAB historical `data/`
+content is stored through Git LFS; see the
+[migration note](matlab_data_lfs_migration.md) for the commit-ID changes.
 
 ```text
 v0.18 unified validation and release
@@ -25,8 +27,8 @@ are in [v0.18 alignment](v018_alignment.md).
 
 | Component | Pinned state | Current result |
 | --- | --- | --- |
-| MATLAB | Original Git `a328496` | `matlab/active/ace.m` and 20 named utility dependencies are byte-identical copies. The driver's original `pwd` and `../data/` assumptions remain. No runtime input has been installed for this layout. |
-| Fortran history | Original Git `ffdd734` | Non-squashed subtree merge `399b994` preserves the original history under `fortran/history/original_git/`, with `ffdd734` as a parent. The historical `v0.18` tag remains unchanged. |
+| MATLAB | Original Git `a0f30cd` | `matlab/active/ace.m` and 20 named utility dependencies are byte-identical copies. The driver's original `pwd` and `../data/` assumptions remain. No runtime input has been installed for this layout. |
+| Fortran history | Original Git `ffdd734` | Non-squashed subtree merge `a870a67` preserves the original history under `fortran/history/original_git/`, with `ffdd734` as a parent. The historical `v0.18` tag remains unchanged. |
 | Fortran active source | Original Git `ffdd734` | `fortran/active/makefile` and both `src/*.F` files are byte-identical copies. The original Intel compiler and binary input assumptions remain. |
 
 This fixes the source candidates for review, not their scientific agreement.

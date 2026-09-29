@@ -15,6 +15,10 @@ The two implementations share the same core model formulation, but they are not 
 
 The current development milestone is [unified v0.18 alignment](docs/migration/matlab_fortran_alignment_plan.md). MATLAB and Fortran v0.18 source candidates are staged for validation; their scientific differences, required inputs, and numerical agreement remain under review. Earlier MATLAB S20/S24 utility staging is preserved for later milestones and is not the v0.18 validation source.
 
+Historical MATLAB `data/` files use Git LFS. Install Git LFS and run
+`git lfs pull` after cloning to obtain the MAT and NetCDF contents; see the
+[migration and provenance record](docs/migration/matlab_data_lfs_migration.md).
+
 ## Repository reorganization
 
 ACE has historically been developed through a series of MATLAB and Fortran code snapshots. Earlier MATLAB versions were not maintained using a systematic Git-based versioning workflow.

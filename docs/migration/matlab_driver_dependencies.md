@@ -38,7 +38,7 @@ The reviewed S20 staging has the observed external call chain, including its
 `inv_T_from_theta_e` and external `ssprk93`; both are committed copies. The
 S20 package is not runnable because its driver, path setup, and runtime inputs
 are absent. The separate v0.18 candidate is staged under `matlab/active/ace.m`
-and `matlab/active/util_*` from original Git `a328496`; its own runtime inputs
+and `matlab/active/util_*` from original Git `a0f30cd`; its own runtime inputs
 remain unresolved. The S24 p87 chain still needs
 its paired
 `inv_T_batch`, `inv_T_batch_warm`, and `inv_T_from_theta_e` (GF87 additionally

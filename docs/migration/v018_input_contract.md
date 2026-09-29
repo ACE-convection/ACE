@@ -3,6 +3,9 @@
 Status: static source and file inspection on 2026-09-28. No model run or
 MATLAB-to-Fortran numerical equivalence has been demonstrated. The historical
 Fortran `ini_manus_208.dat` and `PMB.dat` were not found in this repository.
+The preserved MATLAB MAT and NetCDF files are supplied through Git LFS;
+their contents and SHA-256 values are unchanged by the
+[storage migration](matlab_data_lfs_migration.md).
 
 ## Preserved source data
 

@@ -1,5 +1,10 @@
 # MATLAB development lineage reconstruction
 
+Commit IDs and byte-identity statements below describe the pre-LFS historical
+source. The current Git graph has the same lineage with MATLAB `data/` content
+stored through LFS pointers; see the [commit map](matlab_data_lfs_commit_map.csv)
+and [migration note](matlab_data_lfs_migration.md).
+
 Inspected 2026-09-23. This report separates Git ancestry, source-code inference, developer-defined migration decisions, and unresolved historical relationships. All archive source paths are relative to `migration_work/ACE_MATLAB/`. File identities, complete presence/absence lists, and Git trees are in [inventory](matlab_inventory.md); each distinguishable driver state is in [version matrix](matlab_version_matrix.md).
 
 ## Confirmed lineage
