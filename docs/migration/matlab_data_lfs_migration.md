@@ -1,5 +1,12 @@
 # MATLAB data Git LFS migration
 
+Role: historical-only storage/provenance record. The completed rewrite below
+must not be rerun for repository normalization. Preserve the commit map,
+manifest and current historical refs. Future shared runtime data architecture
+is defined by the [roadmap](matlab_fortran_alignment_plan.md); LFS storage
+does not establish a common runtime input interface. Manifest paths refer to
+the migration tree and remain historical evidence after source normalization.
+
 Status: verified Git LFS migration, 2026-09-29. The 17 files in the
 MATLAB historical `data/` directories retain their paths and contents in a
 Git LFS checkout. Normal Git history stores LFS pointers for their content.

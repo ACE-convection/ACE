@@ -1,5 +1,10 @@
 # MATLAB standalone validation readiness
 
+Role: historical-only standalone-driver readiness evidence. The input,
+interface and builder findings remain relevant to future review; this is not
+a current task list or an additional roadmap. The `history/` paths identify
+temporary preservation locations, recoverable through Git after normalization.
+
 Status: static review on 2026-09-24. This records checks for the standalone
 v0.19/v0.20 mains after source import; they are deferred while
 [unified v0.18 alignment](matlab_fortran_alignment_plan.md) is the current

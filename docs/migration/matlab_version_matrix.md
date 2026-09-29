@@ -1,5 +1,13 @@
 # MATLAB historical version matrix
 
+Role: historical-only archaeology reference. Inspection dates, paths,
+commit IDs, tool availability and unresolved findings below describe the
+recorded investigation. Import completion is tracked in the
+[import record](matlab_import_plan.md); current architecture and development
+order are in the [unified roadmap](matlab_fortran_alignment_plan.md).
+Archive/staging paths do not prescribe permanent source directories. Later
+v0.18 data inspection is recorded in the [input contract](v018_input_contract.md).
+
 The Git commit IDs below identify the pre-LFS source history. For IDs in the
 current rewritten repository, use the [commit map](matlab_data_lfs_commit_map.csv).
 MATLAB `data/` contents are preserved through Git LFS with hashes in the

@@ -4,9 +4,11 @@ Status: conditional input and environment audit, 2026-09-26. This S24 gate is
 deferred while [unified v0.18 alignment](matlab_fortran_alignment_plan.md) is
 the current milestone. The developer confirmed that sounding files are the
 same across all versions. If p87 is later selected, use the S19 GOAmazon file
-as its input. This is a plan for
-validating the preserved `ACE_V024.87` CPU driver before adapting it for
-`matlab/active/`. No MATLAB run
+as its input. This historical conditional checklist preserves input hashes,
+source contracts and reference-log requirements for the S24 CPU driver. Its
+former `matlab/active/` destination is superseded by the normalized source
+roots in the roadmap; any later validation supports the joint v0.24 milestone.
+It is not a current task list. No MATLAB run
 or numerical comparison has been performed.
 
 ## Required baseline
@@ -36,8 +38,9 @@ data and output outside the tracked historical snapshot.
    kernel, and physics presets. Save the complete console output and check both
    the final pass marker and every printed gate value. Compare GATE / G14c
    lines with a developer-supplied reference log from a matched input set.
-4. Only after this baseline is reproducible, run an active-layout version with
-   the same input hashes, presets, MATLAB version, and output location policy.
+4. Only after this baseline is reproducible, run a later reviewed normalized
+   version with the same input hashes, presets, MATLAB version, and output
+   location policy.
    Compare gate values and relevant output arrays; a successful textual copy or
    a pass marker by itself does not prove numerical equivalence.
 

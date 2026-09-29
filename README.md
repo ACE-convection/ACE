@@ -36,7 +36,22 @@ This repository is therefore currently being reorganized to:
 - establish regression and cross-implementation tests; and
 - provide a reproducible basis for future ACE development.
 
-Historical code will be preserved during this process. Refactoring and repository restructuring will be separated from changes to the scientific algorithms whenever possible.
+The [migration documentation index](docs/migration/README.md) distinguishes
+current guidance from historical evidence. The current `matlab/active/`,
+`matlab/history/`, `fortran/active/` and `fortran/history/` directories are
+temporary scaffolding. After v0.18 validation, a separately reviewed and
+validated normalization will place current sources directly in `matlab/` and
+`fortran/`, alongside shared `data/`, `tests/`, `docs/` and `tools/`. Only then
+can one repository commit containing both implementations become unified
+`v0.18.0`. Future `v0.20.0` likewise identifies both implementations; MATLAB
+and Fortran advance together in one ACE history.
+
+Git commits, branches and tags preserve historical versions after migration-only
+source copies leave the current tree. Existing historical tags keep their
+provenance meanings. Shared `ACE/data/` and common netCDF runtime inputs are
+the long-term direction; large inputs should not be ordinary Git blobs.
+Historical input contracts remain in effect pending separate interface review.
+Refactoring and repository restructuring remain separate from scientific changes.
 
 ## P3 microphysics
 

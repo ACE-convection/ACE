@@ -4,7 +4,9 @@
 
 ## 整體方向與目前進度
 
-開發順序是先完成 **v0.18 MATLAB／Fortran 對照與共同驗證**，再處理 v0.20 的發表與可重現性，最後推進 v0.24 的共同 active development。已保存的 S20／S24 MATLAB 工具程式屬於後續階段，不應混入 v0.18 測試。
+完整順序與架構以 [canonical roadmap](migration/matlab_fortran_alignment_plan.md) 為準：先完成 **v0.18 MATLAB／Fortran 對照與共同驗證**，再經獨立 review 做 repository normalization，驗證正規化後的 checkout，最後建立 unified `v0.18.0`。其後兩個實作沿同一個 ACE Git history 共同開發，視需要處理 v0.19，再到 v0.20.0 發表／可重現性 release 與 v0.24 共同開發目標。
+
+本文保留在 `docs/v018_developer_handoff.md`，作為 canonical 驗證操作文件；[migration index](migration/README.md) 是總入口。下列 `matlab/active/`、`fortran/active/` 與 `history/` 路徑只適用於目前的暫時 staging。驗證完成前保留這些目錄；正規化後目前原始碼直接位於 `matlab/`、`fortran/`，歷史由 commits／branches／tags 保存。本文的執行路徑須在該步驟更新並驗證。已保存的 S20／S24 工具程式屬於後續階段，不應混入 v0.18 測試。未來共用 `ACE/data/`／netCDF 的方向不改變本次測試的歷史輸入契約。
 
 | 項目 | 已完成 | 尚未完成 |
 | --- | --- | --- |
@@ -13,7 +15,7 @@
 | MATLAB 資料 | 八個 ACE 的 basis 與 Manus sounding 已保存在歷史目錄；17 個歷史 `data/` MAT／NC 檔已轉為 Git LFS，檔案大小及 SHA-256 驗證通過，GitHub `main` 已推送。 | `matlab/active/` 所預期的執行時 `../data/` 目錄尚未配置；active driver 尚未執行。 |
 | Fortran 資料與執行 | 已釐清直接存取的 binary record 順序；另有一份從 basis 擷取的 **未驗證 PMB 候選檔**，其做法與雜湊記於 input contract。 | 原始 `ini_manus_208.dat` 與 `PMB.dat` 未在倉庫中找到；active source 尚未 build 或執行。候選 PMB 不能直接當成已確認的歷史 input。 |
 
-本文件撰寫時，GitHub `main` 的 LFS 遷移提交是 `70e656b`。本文件完成後請以實際 checkout 的 `git rev-parse HEAD` 記錄測試版本；不要假設未來 `main` 仍停在這個提交。LFS 遷移改寫過 MATLAB 歷史 commit ID；本文使用改寫後 ID。若舊紀錄引用原 ID，請查 [commit map](migration/matlab_data_lfs_commit_map.csv)。Fortran 歷史 `v0.18` 標籤未改動。
+原交接紀錄記載 GitHub `main` 的 LFS 遷移提交是 `70e656b`；這是當時的狀態，並非本次重新查驗遠端的結果。本文件完成後請以實際 checkout 的 `git rev-parse HEAD` 記錄測試版本；不要假設未來 `main` 仍停在這個提交。LFS 遷移改寫過 MATLAB 歷史 commit ID；本文使用改寫後 ID。若舊紀錄引用原 ID，請查 [commit map](migration/matlab_data_lfs_commit_map.csv)。Fortran 歷史 `v0.18` 標籤未改動。
 
 ## 在另一台主機上先做什麼
 
@@ -42,7 +44,7 @@
 3. **逐層比較：** 先比較 `theta_e`、`qt`、MF、垂直網格、ACE 面積、壓力與 PMB 等初始狀態，再測 thermodynamics、WENO／upwind 邊界、PCHIP／pressure response、raw tendency、單一步長，以及短時間積分（例如 Fortran 的 15 steps／60 s 輸出間隔）。逐變數、level、ACE 回報最大絕對／相對誤差與 norm；區分運算精度與 `real*4` 輸出誤差。
 4. **科學差異處置：** 重點檢查 precipitation sink 的 stagewise／post-step 分裂與 onset 公式、MATLAB 的 `qt` clamp、ice branch 的 Newton derivative 符號、WENO 邊界及 sponge。這些是已知或疑似科學差異；需要數值證據與 developer 明確決定，不能靠寬鬆 tolerance 略過。
 
-每次實驗請至少留下：Git commit、原始碼／測試改動 diff、平台與工具版本、編譯旗標、input 路徑與 SHA-256、執行命令／工作目錄、設定開關、log、初始狀態摘要、比較指標與失敗原因。將測試結果與任何科學修正分開提交，以便定位差異。現有 Fortran `v0.18` tag 只是歷史 marker；共同 release `v0.18.0` 應等上述證據經 review 後再決定。
+每次實驗請至少留下：Git commit、原始碼／測試改動 diff、平台與工具版本、編譯旗標、input 路徑與 SHA-256、執行命令／工作目錄、設定開關、log、初始狀態摘要、比較指標與失敗原因。將測試結果與任何科學修正分開提交，以便定位差異。現有 Fortran `v0.18` tag 只是歷史 marker；共同 release `v0.18.0` 必須等上述證據、獨立審查的 repository normalization，以及正規化後的重驗結果都通過 review，才能標記含兩個實作的同一個 commit。
 
 ## 詳細文件
 

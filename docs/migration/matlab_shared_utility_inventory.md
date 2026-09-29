@@ -1,4 +1,4 @@
-# MATLAB utility identity and activation
+# MATLAB utility identity and staging record
 
 Static inventory, updated 2026-09-28. Compare the preserved utility trees in
 `matlab/history/original_git/` (R), `ACE_V019.3/` (S19), `ACE_V020/` (S20), and
@@ -6,7 +6,12 @@ Static inventory, updated 2026-09-28. Compare the preserved utility trees in
 relative path; it does not establish equivalent drivers or model results.
 The S20 copies are preserved staging for a later milestone. The current
 milestone is [unified v0.18 alignment](matlab_fortran_alignment_plan.md), using
-its historical candidate source states rather than `matlab/active/`.
+`matlab/active/ace.m` and `util_*` copied from `a0f30cd`. The later S20/S24
+copies described below occupy separate `numerics/`, `thermodynamics/` and
+`time_integration/` staging subdirectories and must not be mixed into that
+candidate. This historical-only inventory records temporary staging, not
+permanent activation or a future directory plan. "Keep in history" means
+preserve evidence through Git after normalization.
 Driver-level calls and input paths are mapped in
 [`matlab_driver_dependencies.md`](matlab_driver_dependencies.md).
 
