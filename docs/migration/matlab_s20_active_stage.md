@@ -4,14 +4,14 @@ Status: preserved S20 utility staging from the earlier MATLAB-only layout work.
 The current milestone is [unified v0.18 alignment](matlab_fortran_alignment_plan.md);
 S20 becomes the scientific baseline only for the later v0.20 milestone.
 The preserved package is `matlab/history/snapshots/ACE_V020/`; its driver is
-`ACE_V020_2D88ACEs.m`. No driver has been copied or adapted, and no MATLAB run
-or numerical comparison has been performed.
+`ACE_V020_2D88ACEs.m`. No S20 driver has been copied or adapted, and no S20
+MATLAB run or numerical comparison has been performed.
 
 The 27 previously committed WENO and thermodynamics functions match S20 byte
 for byte. Two further byte-identical S20 copies,
 `util_thermodynamics/inv_T_from_theta_e.m` and `util_timeint/ssprk93.m`, were
-placed in the working tree but remain uncommitted as of this note. A fresh
-checkout therefore lacks these two active-layout files.
+committed as byte-identical copies at `b09e19a` under
+`matlab/active/thermodynamics/` and `matlab/active/time_integration/`.
 Static call tracing finds these two as the remaining direct external functions
 for the S20 driver; the existing utilities cover their named helper calls.
 This is source-level evidence only, not a runtime dependency proof.

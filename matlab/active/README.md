@@ -1,26 +1,26 @@
-# Active MATLAB source staging
+# MATLAB source staging
 
-This directory contains reviewed utility copies from earlier MATLAB layout
-work. The current milestone is
-[unified v0.18 alignment](../../docs/migration/matlab_fortran_alignment_plan.md)
-using historical source states. These S20/S24 utility copies are preserved for
-later work; they are not the v0.18 validation source. No driver has been copied,
-this is not a runnable package, and sounding and basis dependent tests remain
-deferred.
+The current milestone is [unified v0.18 alignment](../../docs/migration/matlab_fortran_alignment_plan.md).
+`ace.m` is a byte-identical copy of the October 2024 MATLAB v0.18 driver at
+original Git commit `a328496`; only its filename changed. Its 20 named
+external utility dependencies under `util_weno/`, `util_plume/`, and
+`util_thermodynamics/` are byte-identical copies from the same commit. These
+directories form the v0.18 source candidate. The historical source is unchanged.
 
-The `numerics/` files and 25 thermodynamics functions are byte-identical to
-their counterparts in both preserved S20 and S24 snapshots. Two additional
-S20 copies, `inv_T_from_theta_e.m` and `time_integration/ssprk93.m`, remain
-uncommitted as of this note; the inversion differs from S24. Some shared files
-are also identical in the original Git utility tree and S19. See the
-[cross-version inventory](../../docs/migration/matlab_shared_utility_inventory.md)
-for exact groups and the files intentionally left in history.
-The [driver dependency map](../../docs/migration/matlab_driver_dependencies.md)
-records the missing utility and path contracts for each candidate main.
-The [S20 staging note](../../docs/migration/matlab_s20_active_stage.md) records
-the preserved utility copies and the later validation gate.
+The separate `numerics/`, `thermodynamics/`, and `time_integration/` directories
+contain utility copies staged from the later S20/S24 packages. They are
+preserved for later milestones and are not dependencies of the v0.18 candidate.
+See the [cross-version inventory](../../docs/migration/matlab_shared_utility_inventory.md)
+and [S20 staging note](../../docs/migration/matlab_s20_active_stage.md) for
+their identities and disposition. Do not add the entire `matlab/active/` tree
+recursively to the MATLAB path: names and signatures overlap across versions.
 
-Do not combine these utilities with a historical driver solely by adding this
-directory to the MATLAB path. Utility signatures and scientific behavior vary
-between versions; a driver and its complete dependency set must be chosen
-together.
+The v0.18 driver derives `util_*` paths from `pwd` and expects the eight-ACE
+basis and ARM soundings under `../data/` relative to `pwd`. Those inputs have
+not been installed for this active tree. No path, constant, equation, or
+numerical method has been changed in the source copies. The candidate has not
+been run or compared with Fortran. Use the preserved `a328496` source as the
+reference for any later runtime adaptation, and review adaptations separately.
+
+The original source contains trailing whitespace. It is retained in the
+source copies to preserve byte identity.
