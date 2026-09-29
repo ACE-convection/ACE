@@ -1,6 +1,6 @@
 # MATLAB data Git LFS migration
 
-Status: verified local migration candidate, 2026-09-29. The 17 files in the
+Status: verified Git LFS migration, 2026-09-29. The 17 files in the
 MATLAB historical `data/` directories retain their paths and contents in a
 Git LFS checkout. Normal Git history stores LFS pointers for their content.
 The [manifest](matlab_data_lfs_manifest.tsv) records every current file's path,
