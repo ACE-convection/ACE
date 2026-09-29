@@ -1,5 +1,10 @@
 # MATLAB driver dependency map
 
+Role: historical-only dependency and input-contract reference across MATLAB
+versions. Current v0.18 validation is governed by its audit and input contract;
+future milestones follow the unified roadmap. Any `active/` or `history/`
+location below is temporary staging or a recorded historical path.
+
 Static source review, updated 2026-09-28. The current milestone is
 [unified v0.18 alignment](matlab_fortran_alignment_plan.md); the S20 utility
 staging described here is deferred to the v0.20 milestone. This map records
@@ -61,3 +66,36 @@ files interchangeable. The standalone mains use additional paths and input
 contracts described in the validation-readiness document. Keep driver-local
 functions inside their preserved scripts until a version is selected; moving
 them would change call or workspace boundaries and requires separate review.
+
+## S20 package input and validation evidence
+
+Consolidated from the superseded S20-only staging note on 2026-09-30. The
+preserved package is `matlab/history/snapshots/ACE_V020/`, with driver
+`ACE_V020_2D88ACEs.m`. No S20 driver has been copied or adapted into staging;
+no S20 run, numerical comparison or matched reference output was recorded.
+MATLAB and Octave were unavailable in that review environment.
+
+The driver constructs `util_*` and `data/` paths from `pwd`; placing it in
+another layout alone does not produce a runnable package. Its default basis,
+`data/basis/COMPOSITE_ACE_BASIS_2D_V020.mat`, loads `D`, `PMB`, `PMD` and `PMDv`
+into the script workspace and is absent. The builder's prerequisite
+`PRECOMPUTED_VERTICAL_MODES_2D.mat` is also absent. Origin and array ordering
+need review before generation or substitution. The default `arm=3` selects
+`data/soundings/maoarmbeatmM1.c1.20140101.003000.nc` with `pidx=314`; a copy
+is preserved in S19. The developer-defined shared-sounding convention does
+not establish basis equivalence. No sounding was installed in the staging tree.
+
+The shared-utility inventory records the 27 common S20/S24 copies and the two
+additional S20 copies at `9a5b7c7`. Static tracing found those two
+(`inv_T_from_theta_e`, `ssprk93`) completed the observed direct external
+call chain; existing copies covered named helpers. This is not runtime proof.
+Six other common thermodynamics functions and the plume utilities remain
+historical evidence pending supported callers. S24 batch inversions, its local
+terrain integrator and its different scalar inversion must not be substituted
+into the S20 driver.
+
+At the joint v0.20 milestone, driver path/output contracts need separate
+review. Behavior-preservation evidence requires an unchanged S20 reference run
+with provenance-recorded inputs, followed by a matched run in the normalized
+layout. This records a validation prerequisite, not an implementation plan for
+unresolved Fortran or historical gaps.

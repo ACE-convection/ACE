@@ -1,5 +1,11 @@
 # MATLAB source staging
 
+This directory is temporary migration/alignment scaffolding. After the
+v0.18 gates pass, a separately reviewed normalization will promote the
+validated source directly into `matlab/` before unified `v0.18.0` is tagged.
+Historical and later-version copies remain recoverable through Git; the
+permanent layout is defined by the roadmap below.
+
 The current milestone is [unified v0.18 alignment](../../docs/migration/matlab_fortran_alignment_plan.md).
 `ace.m` is a byte-identical copy of the October 2024 MATLAB v0.18 driver at
 original Git commit `a0f30cd`; only its filename changed. Its 20 named

@@ -1,5 +1,13 @@
 # MATLAB development lineage reconstruction
 
+Role: historical-only archaeology reference. Inspection dates, paths,
+commit IDs, tool availability and unresolved findings below describe the
+recorded investigation. Import completion is tracked in the
+[import record](matlab_import_plan.md); current architecture and development
+order are in the [unified roadmap](matlab_fortran_alignment_plan.md).
+Archive/staging paths do not prescribe permanent source directories. Later
+v0.18 data inspection is recorded in the [input contract](v018_input_contract.md).
+
 Commit IDs and byte-identity statements below describe the pre-LFS historical
 source. The current Git graph has the same lineage with MATLAB `data/` content
 stored through LFS pointers; see the [commit map](matlab_data_lfs_commit_map.csv)
@@ -216,11 +224,11 @@ The inventory's presence/hash ledger is the exhaustive path-level record. It inc
 6. **Static execution concerns.** Duplicate v0.18 local function names, the K24 unconditional stop, the constant-mixing call, absent `V019_DEBUG`, hard-coded paths and missing data need review before any run. They were recorded, not fixed. User intent for scientific differences such as FHi sign, PMDv forcing and theta_il constants cannot be inferred safely.
 7. **Fortran cross-reference.** `ace-fortran/main` history includes `bb72a55` (2024-12-16, “can reproduce matlab version of ACE model v0.18”), `dcc51e6` (2025-12-06, MATLAB comparison), and `0f481a6` (2026-05-26, consistent MATLAB result claim). Their changed-file lists were inspected; these messages provide context, not MATLAB blob identities, regression evidence, or dates for the uncommitted snapshots. The December 2024 claim predates the January 2025 MATLAB diffusion commit.
 
-## Recommended next direction
+## Next direction recorded at the original archaeology stage
 
 Recover the missing basis/sounding provenance with the original developers and review compatibility of the standalone mains with their assigned R baseline. Preserve each artifact identity; the standalone utility baseline is now selected by convention, while selection of a model version for import remains a separate decision. A subsequent, separately authorized validation task should use isolated copies and matched inputs to check WENO weights/boundaries, thermodynamic round trips (including ice and failure cases), weighted conservation, PMD/PMDv orientation and terrain/GPU equivalence. No source import or scientific correction is implied by these reports.
 
-## Verification of this archaeology task
+## Verification recorded for the original archaeology task
 
 Verification consists of Git tree/blob inspection, recursive file inventories, byte comparisons, source diffs and inspection of active call paths. No MATLAB/Fortran simulation, kernel generation, checkpoint creation or historical-source modification was performed. Only the three requested Markdown reports were created in the unified repository; no commit was made.
 

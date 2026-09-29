@@ -1,5 +1,13 @@
 # MATLAB historical inventory
 
+Role: historical-only archaeology reference. Inspection dates, paths,
+commit IDs, tool availability and unresolved findings below describe the
+recorded investigation. Import completion is tracked in the
+[import record](matlab_import_plan.md); current architecture and development
+order are in the [unified roadmap](matlab_fortran_alignment_plan.md).
+Archive/staging paths do not prescribe permanent source directories. Later
+v0.18 data inspection is recorded in the [input contract](v018_input_contract.md).
+
 This inventory records the pre-LFS archive and commit IDs. In the current Git
 history, MATLAB `data/` blobs are LFS pointers; their full original contents
 are verified by the [LFS manifest](matlab_data_lfs_manifest.tsv). Use the
@@ -313,7 +321,8 @@ Counts below cover utility files only, recursively, by relative path.
 
 ## Reproducing the read-only inspection
 
-Run in the unified repository; Git commands read existing objects only:
+These were read-only commands for the pre-LFS investigation. Translate old
+IDs through the commit map and check archive/ref availability before reuse:
 
 ```sh
 git log --reverse --format='%H %aI %s' --stat ace-matlab/main

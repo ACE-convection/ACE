@@ -1,5 +1,12 @@
 # v0.18 input provenance and binary contract
 
+Role: canonical v0.18 input and data provenance. Paths under `history/` and
+`active/` identify preserved evidence and temporary validation staging. The
+[roadmap](matlab_fortran_alignment_plan.md#shared-runtime-data-direction)
+defines future shared `ACE/data/` and common netCDF inputs. It does not change
+the historical MAT/NetCDF and binary contracts recorded here; runtime data
+conversion and interface design are separate reviewed work.
+
 Status: static source and file inspection on 2026-09-28. No model run or
 MATLAB-to-Fortran numerical equivalence has been demonstrated. The historical
 Fortran `ini_manus_208.dat` and `PMB.dat` were not found in this repository.

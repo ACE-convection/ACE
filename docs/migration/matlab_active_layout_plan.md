@@ -1,12 +1,18 @@
-# Active MATLAB layout proposal
+# Superseded S24 MATLAB layout proposal
 
-This document records the earlier S24 layout proposal. S20 utility staging
-followed it and is recorded in
-[`matlab_s20_active_stage.md`](matlab_s20_active_stage.md). Both are deferred
-while the current milestone is [unified v0.18 alignment](matlab_fortran_alignment_plan.md).
-The S24 file map below remains a historical candidate plan.
+Classification: superseded planning with unique historical evidence. The
+MATLAB-only destination layout below has been replaced by the
+[unified roadmap](matlab_fortran_alignment_plan.md), including normalized
+`matlab/` and `fortran/` roots before `v0.18.0`. Do not resume this directory
+proposal when v0.24 work begins. S20 utility staging followed it and is
+recorded in the [S20 note](matlab_s20_active_stage.md).
 
-Status: proposed layout with partial source copies, updated 2026-09-26. Source
+Retain the 50-file map, byte-identity findings and I/O compatibility concerns
+as evidence for later joint review. References to candidate locations and
+instructions within that map record the old proposal, not approved future
+moves. The `history/` copies are temporary; their long-term archive is Git.
+
+Historical status on 2026-09-26: proposed layout with partial source copies. Source
 baseline: the 50 preserved files in `matlab/history/snapshots/ACE_V024.87/`
 (S24). The preserved Git history and
 snapshot remain untouched. S24 has two drivers, five utility directories, and
@@ -30,7 +36,7 @@ runtime input and reference-output gate is recorded in
 The cross-version utility dispositions are recorded in
 [`matlab_shared_utility_inventory.md`](matlab_shared_utility_inventory.md).
 
-## Proposed layout
+## Superseded proposed layout (historical record)
 
 ```text
 matlab/
@@ -47,7 +53,10 @@ matlab/
     README.md                     # staging status now; run instructions after driver selection
 ```
 
-`matlab/history/` stays an inert archive. Keep local functions inside each
+The old proposal treated `matlab/history/` as an inert archive in the working
+tree. That permanent-layout assumption is superseded: normalization removes
+migration-only copies from the current tree while preserving Git history.
+The scientific review concern remains: keep local functions inside each
 driver initially: extracting dynamics, pressure/terrain closure, diagnostics,
 or `ssprk93_topo` would change call and workspace boundaries and needs its own
 scientific review. The accelerated driver is a separate candidate, not a
@@ -84,7 +93,7 @@ tree do contain historical variants/backups; none is a source for this active
 baseline. `gputest_invTq.m` and its sample are tests, while the GF87 driver and
 `*_nogpu` inversion are experimental/variant candidates requiring review.
 
-## Names and path contracts to address later
+## Recorded names and path contracts for later joint review
 
 - Source names with version tokens: `ACE_V024p87.m` → `ace.m`,
   `ACE_V024GF87.m` → `ace_accelerated.m`, and
@@ -110,7 +119,7 @@ baseline. `gputest_invTq.m` and its sample are tests, while the GF87 driver and
 
 ## Historical review gate
 
-The work is on `refactor/matlab-active-layout`. At the time of this proposal,
+The proposal was developed on `refactor/matlab-active-layout`. At that time,
 the two WENO and 25 thermodynamics files staged in `matlab/active/` were
 byte-identical to S20 and S24. No driver, path, API, constant, or numerical
 method was changed by those copies.

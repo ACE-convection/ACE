@@ -1,5 +1,11 @@
 # Fortran v0.18 source candidate
 
+This directory is temporary migration/alignment scaffolding. The
+[unified roadmap](../../docs/migration/matlab_fortran_alignment_plan.md)
+requires v0.18 validation, a separately reviewed promotion into `fortran/`,
+and validation of that normalized checkout before unified `v0.18.0`.
+Historical source remains recoverable through Git.
+
 This directory stages the Fortran source at original Git commit `ffdd734`,
 the target of the historical Fortran `v0.18` tag. `makefile`,
 `src/ace_module.F`, and `src/test.F` are byte-identical copies from that

@@ -1,5 +1,12 @@
 # Unified ACE v0.18 alignment audit
 
+Role: canonical scientific/source audit for the first unified v0.18 release.
+The [roadmap](matlab_fortran_alignment_plan.md) defines milestone order and
+repository normalization; the [input contract](v018_input_contract.md) owns
+input evidence and the [handoff](../v018_developer_handoff.md) owns run steps.
+Any `active/` or `history/` path here identifies current temporary staging or
+a preserved historical tree, not the permanent source architecture.
+
 Status: static repository archaeology, 2026-09-28. No source modification or
 MATLAB–Fortran numerical run was performed. A matching label, commit message,
 or source-level formula is not proof of equivalent results. Paths below are
@@ -127,7 +134,7 @@ rows need explicit scientific decisions after focused evidence is available.
    Set quantitative tolerances only after a reviewed reference run and the
    known precision/splitting differences are understood.
 
-## Proposed unified release criteria
+## Unified release criteria
 
 - Both candidate histories and any reviewed corrections are pinned without
   rewriting the historical source or reusing source-history tags.
@@ -139,6 +146,13 @@ rows need explicit scientific decisions after focused evidence is available.
 - The validation report records checksums, configuration, numerical metrics,
   conservation results, compiler/precision effects and limitations. A clean
   build or one successful run alone does not establish equivalence.
-- Only a reviewed unified source state meeting these criteria is eligible for
-  the future annotated `v0.18.0` tag. Existing MATLAB history/snapshot tags and
+- After the scientific gates pass, complete the separately reviewed
+  [normalization step](matlab_fortran_alignment_plan.md#validation-normalization-and-release-gates):
+  promote validated sources directly into `matlab/` and `fortran/`, remove
+  migration-only copies from the current tree, and preserve all commits,
+  imported ancestry, tags and provenance. Revalidate the normalized paths,
+  build and execution against the agreed evidence before release.
+- Only a reviewed normalized repository commit containing BOTH validated
+  implementations and meeting these criteria is eligible for the future
+  annotated `v0.18.0` tag. Existing MATLAB history/snapshot tags and
   the Fortran `v0.18` tag remain distinct historical markers.
