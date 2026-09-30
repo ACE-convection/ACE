@@ -1,0 +1,52 @@
+function run_thermo(root,reports)
+addpath(fullfile(root,'matlab/active/util_thermodynamics'));
+global p_zc qc_ramp dqc tau_pr
+qc_ramp=0.5e-3; dqc=20; tau_pr=300;
+labels={'warm_unsaturated','ice_unsaturated','ice_near_freezing_unsaturated',...
+        'liquid_below_onset','liquid_at_onset','liquid_above_onset','liquid_heavy',...
+        'saturated_ice','mixed_phase','cold_unsaturated'};
+temperature=[300;250;269;285;285;285;285;250;273.1636783445389;200];
+pressure=[95000;30000;70000;90000;90000;90000;90000;30000;70000;10000];
+liquid=[0;0;0;0.00049;0.0005;0.00051;0.002;0;0.0003;0];
+ice=[0;0;0;0;0;0;0;0.001;0.0003;0];
+vapor=[0.01;0.0001;0.002;0;0;0;0;0;0;2e-6];
+for i=4:9
+ vapor(i)=eval_qsat(temperature(i),pressure(i))*(1-liquid(i)-ice(i));
+end
+qt=vapor+liquid+ice;
+theta=eval_theta_e(temperature,vapor,liquid,ice,pressure);
+input=[theta,qt,pressure,temperature,vapor,liquid,ice];
+fid=fopen(fullfile(reports,'thermo_input.bin'),'w','ieee-le'); fwrite(fid,input,'double'); fclose(fid);
+out=zeros(10,5);
+for i=1:10
+ [out(i,1),out(i,2),out(i,3),out(i,4)]=inv_T_from_theta_e(theta(i),qt(i),pressure(i));
+ out(i,5)=eval_theta_e(temperature(i),vapor(i),liquid(i),ice(i),pressure(i));
+end
+p_zc=pressure;
+[dtheta,dqt]=PRECIP_SINKS(temperature,vapor,liquid,ice);
+out=[out,dtheta,dqt];
+fid=fopen(fullfile(reports,'thermo_matlab.bin'),'w','ieee-le'); fwrite(fid,out,'double'); fclose(fid);
+fid=fopen(fullfile(reports,'thermo_labels.json'),'w'); fprintf(fid,'%s\n',jsonencode(labels)); fclose(fid);
+for mode={'single','multi','single_precip','multi_precip'}
+ if ~isfile(fullfile(reports,['matlab_' mode{1} '_history.mat'])), continue; end
+ h=load(fullfile(reports,['matlab_' mode{1} '_history.mat']));
+ p=ncread(fullfile(root,'data/input/manus208.nc'),'p_zc');
+ tv=ncread(fullfile(root,'data/input/manus208.nc'),'Tv_zc');
+ snapshot_times=[0,4,60,120];
+ diagnostic=zeros(801,5,8,4);
+ for t=1:4
+  index=snapshot_times(t)/4+1;
+  for a=1:8
+   for k=1:801
+    [diagnostic(k,1,a,t),diagnostic(k,2,a,t),diagnostic(k,3,a,t),diagnostic(k,4,a,t)]=...
+      inv_T_from_theta_e(h.history(k,1,a,index),h.history(k,2,a,index),p(k));
+   end
+  end
+  diagnostic(:,5,:,t)=9.80665*(diagnostic(:,1,:,t).*(1+0.607789855072462*diagnostic(:,2,:,t)-diagnostic(:,3,:,t)-diagnostic(:,4,:,t))-tv)./tv;
+ end
+ file=fullfile(reports,['matlab_' mode{1} '_diagnostics.nc']);
+ assert(~isfile(file),'Use a fresh diagnostics path');
+ nccreate(file,'diagnostic','Datatype','double','Dimensions',{'level',801,'diagnostic_variable',5,'ace',8,'diagnostic_time',4},'Format','netcdf4');
+ ncwrite(file,'diagnostic',diagnostic);
+end
+end

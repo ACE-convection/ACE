@@ -1,5 +1,17 @@
 # Unified ACE v0.18 alignment audit
 
+## Runtime comparison update (2026-09-30)
+
+After shared-input commit `2537f46`, MATLAB and GNU Fortran completed matched
+single-ACE and multi-ACE one-step/120-second tests, both dry and controlled
+precipitating cases. See [runtime report](../v018_runtime_comparison.md) and
+[machine-readable evidence](../v018_runtime_comparison.json). Dry trajectories
+agree to very small errors; precipitation activates clear divergence. No
+scientific correction, accepted tolerance or release equivalence follows.
+The static descriptions below retain the original archaeology baseline;
+missing-input and unavailable-MATLAB statements describe that earlier host.
+
+
 Role: canonical scientific/source audit for the first unified v0.18 release.
 The [roadmap](matlab_fortran_alignment_plan.md) defines milestone order and
 repository normalization; the [input contract](v018_input_contract.md) owns

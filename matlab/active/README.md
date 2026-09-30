@@ -5,9 +5,11 @@
 The active driver now reads `../../data/input/manus208.nc` by default;
 `ACE_INPUT_MODE=legacy` preserves the previous MAT/sounding input route.
 See [shared input schema, conversion and validation](../../docs/shared_input.md).
-Input conversion and reader initialization have been validated; full MATLAB
-integration still requires the driver's existing Statistics Toolbox and
-plotting dependencies. Historical snapshots remain unchanged. The staging
+Input conversion and reader initialization have been validated. The
+[runtime comparison](../../docs/v018_runtime_comparison.md) also executes
+the numerical routines in dry/precipitating single/multi short runs. The
+normal plotting driver retains its existing Statistics Toolbox and plotting
+dependencies. Historical snapshots remain unchanged. The staging
 identity description below records the pre-reader-migration source state.
 
 

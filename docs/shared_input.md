@@ -154,3 +154,13 @@ this host are recorded in `docs/shared_input_validation.json`; full dumps
 and logs are under the ignored temporary workspace. Both implementations
 reading the same input does not eliminate the known dynamics differences
 in the v0.18 alignment audit.
+
+## Cross-implementation runtime evidence
+
+The [single/multi runtime report](v018_runtime_comparison.md) now records
+actual dynamics integration in MATLAB and GNU Fortran, including matched
+one-step and 120-second dry/precipitating cases. It uses the input-validation
+path to initialize, then calls the actual numerical routines without the
+normal driver's unused Statistics/plotting diagnostics. Dry agreement does
+not extend to the controlled precipitating cases; review the scientific
+sink and inversion differences before claiming shared model behavior.
