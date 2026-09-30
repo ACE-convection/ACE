@@ -1,5 +1,18 @@
 # v0.18 input provenance and binary contract
 
+## Shared-input recovery and migration update
+
+On 2026-09-30 the original Manus 208 and additional GOAmazon 314 binaries
+were supplied from the external `ACE_FORTRAN/input_data/` directory.
+All twelve records match the active MATLAB preprocessing exactly; supplied
+PMB matches every preserved basis value and the previously derived hash.
+The active readers now have a shared NetCDF route; historical contracts below
+remain preserved evidence. See [schema and validation](../shared_input.md)
+and [machine-readable evidence](../shared_input_validation.json) for actual
+input hashes, numerical checks and remaining compiler/runtime limitations.
+The original generating compiler/version is still unconfirmed.
+
+
 Role: canonical v0.18 input and data provenance. Paths under `history/` and
 `active/` identify preserved evidence and temporary validation staging. The
 [roadmap](matlab_fortran_alignment_plan.md#shared-runtime-data-direction)

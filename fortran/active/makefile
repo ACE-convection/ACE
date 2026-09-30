@@ -12,10 +12,10 @@ VPATH = src
 
 # objects
 
-LIST = test.F ace_module.F
-ace_model.exe: test.o ace_module.o
-test.o: test.F ace_module.o
-ace_module.o: ace_module.F
+LIST = test.F ace_module.F ace_input.F
+ace_model.exe: test.o ace_module.o ace_input.o
+test.o: test.F ace_module.o ace_input.o
+ace_module.o: ace_module.F ace_input.o
 
 LIST_o = $(LIST:.F=.o)
 target = ace_model.exe

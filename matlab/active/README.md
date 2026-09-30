@@ -1,5 +1,16 @@
 # MATLAB source staging
 
+## Shared-input development state
+
+The active driver now reads `../../data/input/manus208.nc` by default;
+`ACE_INPUT_MODE=legacy` preserves the previous MAT/sounding input route.
+See [shared input schema, conversion and validation](../../docs/shared_input.md).
+Input conversion and reader initialization have been validated; full MATLAB
+integration still requires the driver's existing Statistics Toolbox and
+plotting dependencies. Historical snapshots remain unchanged. The staging
+identity description below records the pre-reader-migration source state.
+
+
 This directory is temporary migration/alignment scaffolding. After the
 v0.18 gates pass, a separately reviewed normalization will promote the
 validated source directly into `matlab/` before unified `v0.18.0` is tagged.

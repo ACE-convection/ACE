@@ -1,6 +1,7 @@
 program test
 use netcdf
 use ace_module
+use ace_input, only: read_case_profile
 implicit none
 
 integer, parameter :: np=37, n_weno=2
@@ -30,7 +31,46 @@ real, dimension(nzm) :: zm,T_zm,q_zm,Tv_zm,the_zm,rho_zm,p_zm,th_zm,thes_zm,rh_z
 real*8, dimension(nzm) :: tmp
 real, dimension(200) :: coarse_z
 real, dimension(201) :: coarse_ze
-character(300) :: path,fname
+character(300) :: path,fname,input_file,arg,validation_file,output_file
+logical :: shared_input
+integer :: argument, record_length, intervals, parse_status
+real*8 :: input_profile(801,12),diameters(7),input_lx,input_ly,input_dz
+real*8 :: input_coarse_z(200),input_coarse_ze(201)
+
+shared_input=.true.
+input_file='../../data/input/manus208.nc'
+validation_file=''
+output_file='./data/output_multiACE_manus208.dat'
+intervals=60*48
+argument=1
+do while (argument<=command_argument_count())
+  call get_command_argument(argument,arg)
+  select case(trim(arg))
+  case('--legacy-input')
+    shared_input=.false.
+  case('--input')
+    argument=argument+1
+    call get_command_argument(argument,input_file)
+    if (len_trim(input_file)==0) error stop 'Missing --input path'
+  case('--output')
+    argument=argument+1
+    call get_command_argument(argument,output_file)
+    if (len_trim(output_file)==0) error stop 'Missing --output path'
+  case('--intervals')
+    argument=argument+1
+    call get_command_argument(argument,arg)
+    read(arg,*,iostat=parse_status) intervals
+    if (parse_status/=0) error stop 'Invalid --intervals value'
+    if (intervals<1) error stop 'Intervals must be positive'
+  case('--validate-input')
+    argument=argument+1
+    call get_command_argument(argument,validation_file)
+    if (len_trim(validation_file)==0) error stop 'Missing validation output path'
+  case default
+    error stop 'Unknown command argument'
+  end select
+  argument=argument+1
+enddo
 
 path="./data/soundings/"
 fname=trim(path)//"manus_3hr_ARMBEsonde_profiles.nc"
@@ -146,7 +186,16 @@ allocate(X(ncols+1,nz,10),A(ncols+1),B(ncols+1),forcing(ncols,nz),Xout(ncols+1,n
         ,Tr(ncols,nz),q(ncols,nz),ql(ncols,nz),qi(ncols,nz))
 allocate(T4(ncols,nz),q4(ncols,nz),ql4(ncols,nz),qi4(ncols,nz),rh4(ncols,nz),b4(ncols,nz),Tv0(nz))
 
+if (shared_input) then
+  call read_case_profile(trim(input_file),input_profile,diameters,input_lx,input_ly,input_dz, &
+                         input_coarse_z,input_coarse_ze)
+  if (input_dz/=50.d0 .or. input_lx/=64000.d0 .or. input_ly/=64000.d0) &
+    error stop 'Shared case disagrees with v0.18 geometry/grid'
+  A(1:7)=diameters/1.d3
+  A(8:9)=0.
+else
 A=(/ 5., 10., 15., 25., 35., 45., 55., 0., 0./)
+endif
 A=A*1.e3
 B=pi*A
 B(ncols:ncols+1)=(64.e3+64.e3)*2.
@@ -159,8 +208,16 @@ enddo
 A(1)=0.25*pi*A(1)**2.
 
 
+if (shared_input) then
+  rho_zm=input_profile(:,5); zm=input_profile(:,6)
+  the_e=input_profile(:,7); q_e=input_profile(:,8); Tv_e=input_profile(:,9)
+  p_z=input_profile(:,10); rho_e=input_profile(:,11); z=input_profile(:,12)
+  if (any(z/=(/(25.d0+50.d0*(k-1),k=1,nz)/)) .or. &
+      any(zm/=(/(50.d0*(k-1),k=1,nz)/))) error stop 'Unexpected shared vertical grid'
+else
 fname="./input_data/ini_manus_208.dat"
-open(20,file=trim(fname),access="direct",recl=nz*2)
+inquire(iolength=record_length) tmp
+open(20,file=trim(fname),access="direct",recl=record_length)
 read(20,rec=5) tmp
 rho_zm = tmp
 read(20,rec=6) tmp
@@ -178,6 +235,7 @@ rho_e = tmp
 read(20,rec=12) tmp
 z = tmp
 close(20)
+endif
 
 
 do k=1,nz
@@ -217,17 +275,30 @@ do k=1,200
 enddo
 coarse_ze(201) = 40000.
 
-call ace_initialization(ncols,nz,200,coarse_z,coarse_ze,trim(fname))
+if (shared_input) then
+  fname=input_file
+  coarse_z=input_coarse_z
+  coarse_ze=input_coarse_ze
+endif
+call ace_initialization(ncols,nz,200,coarse_z,coarse_ze,trim(fname),netcdf_input=shared_input)
+
+if (len_trim(validation_file)>0) then
+  open(30,file=trim(validation_file),access='stream',form='unformatted',status='replace')
+  write(30) X,A,B,Tv0,coarse_z,coarse_ze
+  close(30)
+  stop
+endif
 
 
 
 call cpu_time(start)
 
 !open(10,file="./data/output_singleACE_manus208.dat",access="direct",recl=ncols*nz*8)
-open(10,file="./data/output_multiACE_manus208.dat",access="direct",recl=ncols*nz*9)
+inquire(iolength=record_length) Xout(1:ncols,:,1:3),T4,q4,ql4,qi4,rh4,b4
+open(10,file=trim(output_file),access="direct",recl=record_length)
 n=1
 
-do t=1,60*48 ! 60 is mins, and 48 is hours
+do t=1,intervals ! Each interval advances 15 steps / 60 seconds; default 48 hours
   write(*,*) ts,te
 
   ! output diagnostic

@@ -1,5 +1,13 @@
 # ACE v0.18 developer handoff
 
+> Shared-input development update: `feature/shared-netcdf-input` adds the
+> shared case NetCDF interface to the active drivers. See
+> [schema, operating instructions and validation](shared_input.md).
+> The original-input blockers and byte-identical active-source descriptions
+> below record the handoff baseline; they do not describe the new readers.
+> This does not complete the cross-implementation numerical release gates.
+
+
 更新日期：2026-09-30。本文是跨主機接手測試的入口；細節以文末連結的稽核與 input contract 為準。**目前的 v0.18 是待驗證的 MATLAB／Fortran 候選版本，尚非已驗證的共同 release。**
 
 ## 整體方向與目前進度

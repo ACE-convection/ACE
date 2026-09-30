@@ -1,5 +1,14 @@
 %% Directory/file paths
 dir_ace = pwd;
+addpath(dir_ace);
+input_mode = getenv('ACE_INPUT_MODE');
+if isempty(input_mode), input_mode = 'shared'; end
+assert(ismember(input_mode,{'shared','legacy'}), 'ACE_INPUT_MODE must be shared or legacy');
+shared_input = strcmp(input_mode,'shared');
+validating_input = ~isempty(getenv('ACE_VALIDATE_INPUT'));
+input_file = getenv('ACE_INPUT_FILE');
+if isempty(input_file), input_file = fullfile(dir_ace,'../../data/input/manus208.nc'); end
+if shared_input, input = read_shared_input(input_file); end
 
 % Subroutines
 dir_util_weno = [dir_ace '/util_weno/'];
@@ -12,6 +21,11 @@ dir_basis = [dir_ace '/../data/basis/'];
 
 % ARM best-estimate soundings (4 options from 3 sites)
 dir_armbe = [dir_ace '/../data/soundings/'];
+legacy_data = getenv('ACE_LEGACY_DATA');
+if ~isempty(legacy_data)
+  dir_basis = [fullfile(legacy_data,'basis') '/'];
+  dir_armbe = [fullfile(legacy_data,'soundings') '/'];
+end
 armfnlist = {'manus_3hr_ARMBEsonde_profiles.nc';
              'nauru_3hr_ARMBEsonde_profiles.nc';
              'maoarmbeatmM1.c1.20140101.003000.nc'};
@@ -26,7 +40,12 @@ global theta_e_zc qt_zc Tv_zc p_zc rho_zc rho_zi PMB damp
  
 %% Loading pre-computed massflux basis
 pcbsfn = 'COMPOSITE_ACE_BASIS_8ACEs.mat';
-load([dir_basis pcbsfn]) % PMB(201,200,forcing-region,response-region)
+if shared_input
+  PMB=input.PMB; Z=input.basis_z;
+  DCASES=input.diameter/1000; Lx=input.Lx/1000; Ly=input.Ly/1000;
+else
+  load([dir_basis pcbsfn]) % PMB(201,200,forcing-region,response-region)
+end
 D = DCASES; % Horizontal entity diameters in km
 Ni = length(D) + 1; % Number of ACEs
 Ai =[(pi/4)*[D(1)^2; D(2:end).^2-D(1:end-1).^2]; Lx*Ly-(pi/4)*D(end)^2]; % ACE area in km^2 (index i or ida)
@@ -69,6 +88,8 @@ theta_e_diag = 1; Tim = [];
 arm = 1;%3; %1=Manus/2=Nauru/3,4=GOAmazon
 armfn = armfnlist{arm};
 pidx = 208;%314; % Profile index for environment
+if shared_input, arm=input.arm; pidx=input.profile_index; armfn=armfnlist{arm}; end
+case_profile_index=pidx;
 
 % Verital grids setup
 dz = 50; % m; 5hPa~50m(surface)/250m(aloft)
@@ -77,6 +98,9 @@ ztop = 40e3; % m
 z = [dz/2:dz:ztop+dz/2]'; % z-grid for plume computation
 zm = [0:dz:ztop]'; % z-grid for mass-flux for entrainment rate
 p = [1000:-5:100]'*1e2; % 5-hPa grid
+if shared_input
+  assert(input.dz==dz && isequal(input.z,z) && isequal(input.zm,zm) && isequal(input.p,p), 'Input grid disagrees with driver');
+end
 
 % For precip sinks
 qc_ramp = 0.5e-3; % kg/kg; ramping for precip when qc>qc_ramp
@@ -127,9 +151,14 @@ EBT = 0*60*60; % sec; EBF turned on for t<EBT
 RIP = -1.5; % K/day
 zr = [0 9e3 14e3]';
 vr = [1 1.5 0]';
+if validating_input
+  RF=zeros(size(zm)); % Not part of the input dump; integration is skipped.
+else
 gf = normpdf([-20:20]'*dz,0,300); % Gaussian filter for smoothing
 vrzm = conv(interp1(zr,vr,zm,'linear',0),gf,'same');
 RF = vrzm/max(vrzm)*RIP/3600/24; % ~dT/dt in K/s
+
+end
 
 % Turbulent entrainment rate
 nju = 0.09; % Morrison (2017)
@@ -170,7 +199,23 @@ IMPORT_CONSTANTS
 Nzm = length(zm);
 
 %% Pre-processing sounding data
+if shared_input
+  plev=input.plev; pr=input.pr; ta=input.ta; hus=input.hus; prw=input.prw;
+  date=input.date; hh=input.hh;
+  T_p=input.T_p; q_p=input.q_p; rho_p=input.rho_p; z_p=input.z_p;
+  T_env=input.T_env; q_env=input.qt_zc; Tv_env=input.Tv_zc;
+  theta_e_env=input.theta_e_zc; rho_env=input.rho_zc; p_z=input.p_zc;
+  T_zm=input.T_zm; q_zm=input.qt_mf; Tv_zm=input.Tv_mf;
+  theta_e_zm=input.theta_e_mf; rho_zm=input.rho_mf; p_zm=input.p_mf;
+  theta_zm=input.theta_zm; theta_es_zm=input.theta_es_zm; rh_zm=input.rh_zm;
+  pidx=1; % The shared file contains exactly one selected profile.
+else
 [plev, pr, ta, hus, prw, date, hh] = LOAD_SOUNDINGS([dir_armbe armfn], arm);
+% Input validation needs only the selected profile, not all 5211 profiles.
+if ~isempty(getenv('ACE_VALIDATE_INPUT'))
+  ta=ta(:,pidx); hus=hus(:,pidx); date=date(pidx); hh=hh(pidx);
+  pr=pr(pidx); prw=prw(pidx); pidx=1;
+end
 
 % Interpolate sounding values to 5-hPa p-grid (_p)
 [T_p, q_p, rho_p, z_p] = INTERP_P_GRID(plev, ta, hus);
@@ -180,7 +225,10 @@ Nzm = length(zm);
  T_zm, q_zm, Tv_zm, theta_e_zm, rho_zm, p_zm,...
  theta_zm, theta_es_zm, rh_zm] = INTERP_Z_GRID(T_p, q_p, z_p);
 
+end
+
 %% Traditional plume computations
+if ~validating_input
 qc_cap = 0.5e-3;% kg/kg; capping condensate for traditional plumes
 % Deep-inflow B
 [theta_e_dib, qt_dib, T_dib, q_dib, ql_dib, qi_dib, B_dib]...
@@ -194,6 +242,8 @@ mixing = 0;
 mixing = 1e-3; %/m
 [theta_e_cne, qt_cne, T_cne, q_cne, ql_cne, qi_cne, B_cne]...
      = ENTRAIN_PLUME(T_p(:,pidx), q_p(:,pidx), rho_p(:,pidx), z_p(:,pidx), p, mixing);
+
+end
 
 %% Setup for time-integration
 day = date(pidx); % Can run multiple pidx cases (by adding a for-loop here)
@@ -242,6 +292,14 @@ if conti == 0
     end
     X0(BL,1)=eval_theta_e(T_zm(BL,pidx)+dTbl,X0(BL,2),(dqsat==1)*dqcbl*((T_zm(BL,pidx)+dTbl)>=T0),(dqsat==1)*dqcbl*((T_zm(BL,pidx)+dTbl)<T0),p_mf(BL));
   end
+end
+
+% Optional initialization-only dump for reader regression checks.
+validation_output=getenv('ACE_VALIDATE_INPUT');
+if ~isempty(validation_output)
+  save(validation_output,'X0','PMB','Z','z','zm','Ai','Bi','theta_e_mf','qt_mf',...
+       'Tv_mf','p_mf','rho_mf','theta_e_zc','qt_zc','Tv_zc','p_zc','rho_zc','case_profile_index');
+  return;
 end
 
 %% Time integration

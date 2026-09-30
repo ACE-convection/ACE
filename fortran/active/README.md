@@ -1,5 +1,16 @@
 # Fortran v0.18 source candidate
 
+## Shared-input development state
+
+The active candidate now defaults to `../../data/input/manus208.nc`.
+See [shared input schema, conversion and validation](../../docs/shared_input.md).
+The initial staging was byte-identical to `ffdd734`; the active input reader
+and portable record-length handling have since been modified on the
+`feature/shared-netcdf-input` branch. Historical source remains unchanged.
+GNU Fortran validation is separate from the original Intel environment.
+The historical staging description below records the pre-migration state.
+
+
 This directory is temporary migration/alignment scaffolding. The
 [unified roadmap](../../docs/migration/matlab_fortran_alignment_plan.md)
 requires v0.18 validation, a separately reviewed promotion into `fortran/`,

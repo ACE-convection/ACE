@@ -1,0 +1,146 @@
+{
+  "validated_at_utc": "2026-09-30T13:42:50.422796+00:00",
+  "baseline_commit": "0b46e2ceee428367a9f0afb227d807f10fbfe7ab",
+  "branch": "feature/shared-netcdf-input",
+  "tested_uncommitted_worktree": true,
+  "source_sha256": {
+    "matlab/active/ace.m": "93109a320a9f69f480aae32a90f29d452e880c2e458ec95c05d7338c5dcbfa85",
+    "matlab/active/read_shared_input.m": "197ff055ebeb53c36aed5c64e74c251126c0bc6421492336b8997031a6a2b1b2",
+    "fortran/active/src/test.F": "d5cf317f03302a5c044e2da4e5fed0efcbd46f89e4c9d90abe2268037d127bd9",
+    "fortran/active/src/ace_module.F": "4546dc669809ebffc3efdd3df60aa4b2c761065c85417757c181a14201e531bc",
+    "fortran/active/src/ace_input.F": "e349ea2a0326c37756f4b7f58e4905f01a7134fed5feb748993d5e819ee6a2da",
+    "fortran/active/makefile": "5127c51a7f933980bf86a1ea48079f1cbdbea3478ec99a6c4f66a720b209f5eb",
+    "tools/input/create_shared_input.m": "6cebf106fb4d3193d616f6f06caa0440355b5eb9bba017f0cfb8ada41b76f10d",
+    "tools/input/prepare_profile.txt": "2899b0b37123762b88a75547617c05facca4bb965dcf221bbc3ddb430bd04983",
+    "tests/input/validate_matlab.m": "ee801966f9a0dc4e933a8158d10d206fa89db23db02fd432396cd5182cc8d8a3",
+    "tests/input/validate_fortran.py": "645158ad67aeb3e389a371ee58d8d05e756c5285130053abe69c0bd6e3370aea",
+    "tests/input/read_case.f90": "7cc0482ff6e8a7e71a59768bc5d1f6c40a6addf80794bc774aa3f5a7d4b5d949"
+  },
+  "source_inputs": [
+    {
+      "path": "migration_work/shared_input/incoming/fortran/PMB.dat",
+      "resolved_path": "/scratch/peter50504/ACE_FORTRAN/input_data/PMB.dat",
+      "bytes": 20582400,
+      "sha256": "d112f87d5791ab92660d57eda496c466b2d41e9096b31f2e126c3c474c5b6dad"
+    },
+    {
+      "path": "migration_work/shared_input/incoming/fortran/ini_goamazon_314.dat",
+      "resolved_path": "/scratch/peter50504/ACE_FORTRAN/input_data/ini_goamazon_314.dat",
+      "bytes": 76896,
+      "sha256": "827616220506cbb11b1358033d61247d683664706bf7e5d394cb94862cfc4390"
+    },
+    {
+      "path": "migration_work/shared_input/incoming/fortran/ini_manus_208.dat",
+      "resolved_path": "/scratch/peter50504/ACE_FORTRAN/input_data/ini_manus_208.dat",
+      "bytes": 76896,
+      "sha256": "dc4a9efc51200005f5a58ad8a92cac212479b13dec70476e240ad240d93749e7"
+    },
+    {
+      "path": "/scratch/peter50504/ACE_MATLAB_old/basis/COMPOSITE_ACE_BASIS_8ACEs.mat",
+      "bytes": 19809507,
+      "sha256": "6053e923f12da0eb87cc0d65ea776e5fa9ba9bf6fe4dc4399fd1b4b9b645cf45",
+      "role": "actual MATLAB data; matches documented LFS object SHA-256"
+    },
+    {
+      "path": "/scratch/peter50504/ACE_MATLAB_old/soundings/manus_3hr_ARMBEsonde_profiles.nc",
+      "bytes": 40690446,
+      "sha256": "b909a2a61b040c5efe5b2f22375bd04c1a93ab4018e427be797a9adc05e23032",
+      "role": "actual MATLAB data; matches documented LFS object SHA-256"
+    },
+    {
+      "path": "/scratch/peter50504/ACE_MATLAB_old/soundings/maoarmbeatmM1.c1.20140101.003000.nc",
+      "bytes": 103316408,
+      "sha256": "57016c62474bb4a2faf6011d285ee280d9581f9dc791327c506207ae06cc362a",
+      "role": "additional GOAmazon local source; not verified against repository LFS manifest"
+    }
+  ],
+  "runtime_files": [
+    {
+      "path": "data/input/manus208.nc",
+      "bytes": 19757620,
+      "sha256": "85f8f5ebf0b4a0bca4a96b9b3f6f9b43a1d9bdb4470658b018dcd71d5219b1d9"
+    },
+    {
+      "path": "data/input/goamazon314.nc",
+      "bytes": 19757347,
+      "sha256": "31e43004576eb57373bc5e283245c573cc4590dd4da2ba99127c5ea40af91ba2"
+    }
+  ],
+  "legacy_input_comparison": {
+    "manus208": {
+      "all_12_records_exact": true,
+      "values": 9612,
+      "raw_time_index_one_based": 7616,
+      "max_abs": 0
+    },
+    "goamazon314": {
+      "all_12_records_exact": true,
+      "values": 9612,
+      "raw_time_index_one_based": 7806,
+      "max_abs": 0
+    },
+    "PMB": {
+      "shape_matlab": [
+        201,
+        200,
+        8,
+        8
+      ],
+      "exact_equal": true,
+      "differing_elements": 0,
+      "total_elements": 2572800.0,
+      "max_abs": 0,
+      "rms": 0,
+      "nonfinite_fortran": 0,
+      "nonfinite_matlab": 0
+    },
+    "coarse_edges": {
+      "units": "m",
+      "max_abs_m": 3.637978807091713e-12,
+      "differing_elements": 49,
+      "worst_index_one_based": 83,
+      "basis_value_at_worst": 16400.000000000004,
+      "fortran_value_at_worst": 16400.0,
+      "relative_to_200m_spacing": 1.8189894035458565e-14
+    }
+  },
+  "matlab": {
+    "initialization_fields": 18,
+    "all_exact_equal": true,
+    "wrong_PMB_order_rejected": true,
+    "matlab_version": "23.2.0.2668659 (R2023b) Update 9"
+  },
+  "fortran": {
+    "manus208_full_readback_exact": true,
+    "manus208_sha256": "85f8f5ebf0b4a0bca4a96b9b3f6f9b43a1d9bdb4470658b018dcd71d5219b1d9",
+    "goamazon314_full_readback_exact": true,
+    "goamazon314_sha256": "31e43004576eb57373bc5e283245c573cc4590dd4da2ba99127c5ea40af91ba2",
+    "init.bin": {
+      "byte_identical": true,
+      "finite": true,
+      "bytes": 586480
+    },
+    "120s.dat": {
+      "byte_identical": true,
+      "finite": true,
+      "bytes": 692064
+    },
+    "wrong_PMB_order_rejected": true
+  },
+  "converter_all_variable_roundtrip": "passed for fresh Manus 208 conversion after final converter checks",
+  "build": {
+    "compiler": "GNU Fortran 11.2.0",
+    "flags": "-O2 -ffree-form -fdefault-real-8 -fdefault-double-8 -ffree-line-length-none",
+    "netcdf_fortran": "4.6.2",
+    "include_path": "/home/peter50504/miniconda3/include",
+    "library_path": "/home/peter50504/miniconda3/lib"
+  },
+  "limitations": [
+    "Normal MATLAB run unavailable on this host because normpdf requires the missing Statistics Toolbox; initialization validation skips unused radiation/plume diagnostics and stops before integration.",
+    "Original Intel ifort build and Intel/GNU dynamics equivalence have not been verified.",
+    "No MATLAB/Fortran time integration equality claim is made.",
+    "Original input-generating compiler/version remains unconfirmed.",
+    "GOAmazon sounding is an external local source whose checksum is recorded, not a repository-pinned LFS input.",
+    "Generated NetCDF files and full temporary logs/dumps are not committed; runtime files are ignored by Git."
+  ]
+}

@@ -1,4 +1,5 @@
 module ace_module
+use ace_input, only: read_case_pmb
 implicit none
 
 private
@@ -95,7 +96,7 @@ enddo
 endsubroutine ace_driver
 
 
-subroutine ace_initialization(ncols,nz,nz_presolve,z_presolve,ze_presolve,fname)
+subroutine ace_initialization(ncols,nz,nz_presolve,z_presolve,ze_presolve,fname,netcdf_input)
 implicit none
 
 ! input variables
@@ -103,9 +104,11 @@ integer, intent(in) :: ncols, nz, nz_presolve
 real, dimension(nz_presolve) :: z_presolve
 real, dimension(nz_presolve+1) :: ze_presolve
 character(*), intent(in) :: fname
+logical, intent(in), optional :: netcdf_input
 
 ! local variables
-integer :: i,j,k,n
+integer :: i,j,k,n,record_length
+logical :: read_netcdf
 
 coarse_nz=nz_presolve
 allocate(coarse_z(coarse_nz),coarse_ze(coarse_nz+1))
@@ -115,7 +118,13 @@ allocate(dwdt(ncols,coarse_nz+1))
 allocate(T(ncols,nz),q(ncols,nz),ql(ncols,nz),qi(ncols,nz))
 
 
-open(10,file=trim(fname),access="direct",recl=(coarse_nz+1)*2)
+read_netcdf=.false.
+if (present(netcdf_input)) read_netcdf=netcdf_input
+if (read_netcdf) then
+  call read_case_pmb(fname,PMB)
+else
+inquire(iolength=record_length) PMB(1,1,1,:)
+open(10,file=trim(fname),access="direct",recl=record_length)
 n=1
 do k=1,ncols
 do j=1,ncols
@@ -126,6 +135,7 @@ do j=1,ncols
 enddo
 enddo
 close(10)
+endif
 
 coarse_z = z_presolve
 coarse_ze = ze_presolve

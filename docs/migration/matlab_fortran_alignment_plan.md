@@ -176,3 +176,15 @@ interface changes need their own review and validation; they are not part of
 this documentation update or automatically required by source normalization.
 The exact normalized runtime path setup must be decided and validated during
 that separately reviewed step.
+
+### Shared case-input implementation update (2026-09-30)
+
+The developer authorized shared NetCDF conversion and active-reader changes
+on `feature/shared-netcdf-input`. The [case schema](../shared_input.md) and
+[validation evidence](../shared_input_validation.json) now implement the
+runtime direction above: recovered inputs agree exactly, converters demand
+full equality, and each active implementation retains a legacy input route
+for regression checks. This reviewed task scope supersedes the missing-input
+and byte-identical-active-source descriptions for this branch only. It does
+not authorize normalization, alter historical snapshots, or satisfy the
+cross-implementation dynamics and unified release gates.
