@@ -22,7 +22,8 @@ def main():
                         help='Optional comparison.json from compare_ice_forward.py')
     parser.add_argument('--cases', nargs='+',
                         choices=['single','single_precip','multi','multi_precip',
-                                 'single_ice_precip','multi_ice_precip'],
+                                 'single_ice_precip','multi_ice_precip',
+                                 'single_mixed_precip','multi_mixed_precip'],
                         default=['single','single_precip','multi','multi_precip'])
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
@@ -98,6 +99,9 @@ def main():
                     'ql_exact_zero': True,
                     'sample_times_seconds': [0, 4, 60, 120],
                 }
+        if 'mixed_precip' in mode:
+            evidence = work / f'{mode}_mixed_evidence.json'
+            run['mixed_trajectory_evidence'] = json.loads(evidence.read_text())
         report['runs'][mode] = run
     report['thermo'] = json.loads((work / 'thermo_comparison.json').read_text())
     report['thermo']['scope'] = (
@@ -106,9 +110,14 @@ def main():
     trace = args.ice_diagnostic or work / 'ice_forward_trace/comparison.json'
     if trace.exists():
         report['ice_forward_diagnostic'] = json.loads(trace.read_text())
+    phase_build = work / 'phase_build_command.json'
+    if phase_build.exists():
+        report['supplementary_phase_build_command'] = json.loads(phase_build.read_text())
     report['limitations'] = [
         'No long production simulation, release equivalence or approved tolerance',
-        ('Mixed-phase sink is a standalone probe, not a mixed-phase trajectory'
+        ('Only the selected manufactured mixed-phase trajectories were tested'
+         if any('mixed_precip' in mode for mode in args.cases) else
+         'Mixed-phase sink is a standalone probe, not a mixed-phase trajectory'
          if any('ice_precip' in mode for mode in args.cases) else
          'Ice/mixed-phase sinks are standalone probes, not ice-precipitating trajectories'),
         'Existing MATLAB/Fortran reference-Tv, boundary and geometry differences retained',

@@ -15,7 +15,7 @@ parser.add_argument('work',type=Path)
 parser.add_argument('--matlab',default='matlab')
 parser.add_argument('--model',type=Path)
 parser.add_argument('--precip',action='store_true',help='Also run controlled near-onset precipitation cases')
-parser.add_argument('--experiments',nargs='+',choices=['dry','precip','ice_precip'],
+parser.add_argument('--experiments',nargs='+',choices=['dry','precip','ice_precip','mixed_precip'],
                     help='Select experiments explicitly; cannot combine with --precip')
 args=parser.parse_args()
 if args.precip and args.experiments:

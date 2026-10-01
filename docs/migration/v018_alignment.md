@@ -12,6 +12,19 @@ Counterexamples remain; full-domain equality and release equivalence are
 not established. The historical comparison rows below describe the original
 candidate states, not these subsequently reviewed corrections.
 
+## Mixed-phase trajectory check (2026-10-01)
+
+Production sources remain at the approved Ci alignment. Single/multi-ACE
+mixed-phase-onset clouds completed 4-second/120-second comparisons with finite
+states and tendencies. Twenty prescribed levels start near equal liquid/ice
+partition, well inside the existing phase-decision interval. All 31 sampled
+cloud-level phase masks match; the clouds evolve to pure phases rather than
+remaining mixed for the full 120 seconds. Common-input rediagnosis of both
+saved trajectories finds no phase disagreement in these states. See the
+[mixed trajectory report](../v018_mixed_precipitation_comparison.md) and
+[numerical evidence](../v018_mixed_precipitation_comparison.json).
+The prior endpoint counterexample remains unresolved.
+
 ## Ice-precipitating trajectory check (2026-10-01)
 
 The corrected production source `1ac8d27` completed single/multi-ACE
