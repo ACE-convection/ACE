@@ -27,7 +27,7 @@ p_zc=pressure;
 out=[out,dtheta,dqt];
 fid=fopen(fullfile(reports,'thermo_matlab.bin'),'w','ieee-le'); fwrite(fid,out,'double'); fclose(fid);
 fid=fopen(fullfile(reports,'thermo_labels.json'),'w'); fprintf(fid,'%s\n',jsonencode(labels)); fclose(fid);
-for mode={'single','multi','single_precip','multi_precip'}
+for mode={'single','multi','single_precip','multi_precip','single_ice_precip','multi_ice_precip'}
  if ~isfile(fullfile(reports,['matlab_' mode{1} '_history.mat'])), continue; end
  h=load(fullfile(reports,['matlab_' mode{1} '_history.mat']));
  p=ncread(fullfile(root,'data/input/manus208.nc'),'p_zc');

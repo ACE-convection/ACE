@@ -12,6 +12,17 @@ Counterexamples remain; full-domain equality and release equivalence are
 not established. The historical comparison rows below describe the original
 candidate states, not these subsequently reviewed corrections.
 
+## Ice-precipitating trajectory check (2026-10-01)
+
+The corrected production source `1ac8d27` completed single/multi-ACE
+ice-precipitating 4-second/120-second tests. Initial prognostic arrays match
+exactly, all states/tendencies are finite, and selected cold levels retain
+positive ice with zero liquid at four diagnostic snapshots. MATLAB's actual
+precipitation accumulator confirms active loss in all thirty updates.
+See the [ice trajectory report](../v018_ice_precipitation_comparison.md) and
+[numerical evidence](../v018_ice_precipitation_comparison.json).
+This is a focused pure-ice validation; the known endpoint ambiguity remains.
+
 ## Ice heat-capacity follow-up (2026-10-01)
 
 The approved follow-up aligns only Fortran `Ci`'s reference temperature to

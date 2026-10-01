@@ -144,7 +144,8 @@ def compare_thermo(work):
 if __name__ == '__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('work',type=Path)
-    parser.add_argument('mode',choices=['single','multi','single_precip','multi_precip','thermo'])
+    parser.add_argument('mode',choices=['single','multi','single_precip','multi_precip',
+                                     'single_ice_precip','multi_ice_precip','thermo'])
     parser.add_argument('--input',type=Path,default=Path('data/input/manus208.nc'))
     args=parser.parse_args()
     if args.mode=='thermo': compare_thermo(args.work)

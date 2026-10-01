@@ -20,6 +20,10 @@ def main():
     parser.add_argument('--build', type=Path, required=True)
     parser.add_argument('--ice-diagnostic', type=Path,
                         help='Optional comparison.json from compare_ice_forward.py')
+    parser.add_argument('--cases', nargs='+',
+                        choices=['single','single_precip','multi','multi_precip',
+                                 'single_ice_precip','multi_ice_precip'],
+                        default=['single','single_precip','multi','multi_precip'])
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
     work = args.work.resolve()
@@ -38,14 +42,14 @@ def main():
         'build_commands': json.loads((args.build / 'build_commands.json').read_text()),
         'compiler_version': subprocess.check_output(
             ['gfortran', '--version'], text=True).splitlines()[0],
-        'scope': 'Four matched 4-second/120-second trajectories; no acceptance tolerance or production source change',
+        'scope': 'Matched 4-second/120-second trajectories; no acceptance tolerance or production source change',
         'runs': {},
     }
     report['validation_tools_sha256'] = {
         str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
         for p in sorted((root / 'tests/alignment').glob('*')) if p.is_file()
     }
-    for mode in ['single', 'single_precip', 'multi', 'multi_precip']:
+    for mode in args.cases:
         run = json.loads((work / f'{mode}_comparison.json').read_text())
         with netCDF4.Dataset(work / f'matlab_{mode}.nc') as ds:
             matlab = np.asarray(ds['state'][:]).transpose(3, 2, 1, 0)
@@ -72,6 +76,28 @@ def main():
             'matlab': float(matlab[:, 1].min()),
             'fortran': float(fortran[:, 1].min()),
         }
+        if 'ice_precip' in mode:
+            evidence = work / f'{mode}_ice_evidence.json'
+            run['ice_precipitation_accumulation'] = json.loads(evidence.read_text())
+            with netCDF4.Dataset(work / f'matlab_{mode}_diagnostics.nc') as ds:
+                md = np.asarray(ds['diagnostic'][:]).transpose(3, 2, 1, 0)
+            fd = np.fromfile(work / f'fortran_{mode}_diagnostics.bin', dtype='<f8')
+            fd = fd.reshape((8, 801, 5, 4), order='F').transpose(1, 2, 0, 3)
+            pulse = run['pulse_ace'] - 1
+            run['ice_snapshot_ranges'] = {}
+            for language, diagnostic in [('matlab', md), ('fortran', fd)]:
+                selected = diagnostic[150:170, :, pulse, :]
+                assert np.isfinite(selected).all()
+                assert (selected[:, 0] < 273.1636783445389).all()
+                assert (selected[:, 3] > 0).all() and (selected[:, 2] == 0).all()
+                run['ice_snapshot_ranges'][language] = {
+                    'temperature_min_K': float(selected[:, 0].min()),
+                    'temperature_max_K': float(selected[:, 0].max()),
+                    'qi_min_kgkg': float(selected[:, 3].min()),
+                    'qi_max_kgkg': float(selected[:, 3].max()),
+                    'ql_exact_zero': True,
+                    'sample_times_seconds': [0, 4, 60, 120],
+                }
         report['runs'][mode] = run
     report['thermo'] = json.loads((work / 'thermo_comparison.json').read_text())
     report['thermo']['scope'] = (
@@ -82,7 +108,9 @@ def main():
         report['ice_forward_diagnostic'] = json.loads(trace.read_text())
     report['limitations'] = [
         'No long production simulation, release equivalence or approved tolerance',
-        'Ice/mixed-phase sinks are standalone probes, not ice-precipitating trajectories',
+        ('Mixed-phase sink is a standalone probe, not a mixed-phase trajectory'
+         if any('ice_precip' in mode for mode in args.cases) else
+         'Ice/mixed-phase sinks are standalone probes, not ice-precipitating trajectories'),
         'Existing MATLAB/Fortran reference-Tv, boundary and geometry differences retained',
         'The 1200-case pure-ice endpoint counterexample remains unresolved',
         'GNU binary64 build only; Intel compiler behavior not tested',

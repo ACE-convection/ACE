@@ -15,7 +15,12 @@ parser.add_argument('work',type=Path)
 parser.add_argument('--matlab',default='matlab')
 parser.add_argument('--model',type=Path)
 parser.add_argument('--precip',action='store_true',help='Also run controlled near-onset precipitation cases')
+parser.add_argument('--experiments',nargs='+',choices=['dry','precip','ice_precip'],
+                    help='Select experiments explicitly; cannot combine with --precip')
 args=parser.parse_args()
+if args.precip and args.experiments:
+    parser.error('Use either --precip or --experiments')
+experiments=args.experiments or (['dry','precip'] if args.precip else ['dry'])
 root=Path(__file__).resolve().parents[2]
 work=args.work.resolve()
 if work.exists() and any(work.iterdir()):
@@ -41,14 +46,14 @@ run([sys.executable,root/'tests/alignment/prepare.py',work],'prepare')
 run([model,'--input',input_file,'--validate-input',work/'fortran_base_init.bin'],'base_init')
 cases=[]
 for mode in ['single','multi']:
-    for experiment in (['dry','precip'] if args.precip else ['dry']):
-        label=mode if experiment=='dry' else mode+'_precip'
+    for experiment in experiments:
+        label=mode if experiment=='dry' else mode+'_'+experiment
         cases.append(label)
         quote=lambda p: str(p).replace("'","''")
         statement=f"addpath('{quote(work)}'); run_alignment_case('{quote(root)}','{mode}','{quote(work)}','{experiment}');"
         run([args.matlab,'-batch',statement],'matlab_'+label)
         command=[work/'fortran_case.exe',work/'fortran_base_init.bin',input_file,work/('fortran_'+label+'.bin'),mode]
-        if experiment=='precip': command.append(work/('initial_'+label+'.bin'))
+        if experiment!='dry': command.append(work/('initial_'+label+'.bin'))
         run(command,'fortran_'+label)
         run([sys.executable,root/'tests/alignment/compare.py',work,label,'--input',input_file],label+'_initial_comparison')
 matlab('run_thermo','matlab_probes')
