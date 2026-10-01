@@ -12,6 +12,18 @@ Counterexamples remain; full-domain equality and release equivalence are
 not established. The historical comparison rows below describe the original
 candidate states, not these subsequently reviewed corrections.
 
+## Single mixed-case residual diagnostic (2026-10-01)
+
+After reference-Tv alignment, identical-state one-step replay exactly
+reproduces both native single mixed-case histories. Common thermodynamic
+caches retain theta_e precipitation-sink differences up to 8.4267e-12 K/s;
+forward finite-difference numerator rounding produces a local 4-second
+step difference up to 3.3708e-11 K. The final native theta_e discrepancy
+also includes previously accumulated state drift. Production algorithms
+and constants remain unchanged; no causal percentage or acceptance
+tolerance is assigned. See the [residual diagnostic](../v018_mixed_residual_diagnostic.md)
+and [numerical evidence](../v018_mixed_residual_diagnostic.json).
+
 ## Reference-Tv production alignment (2026-10-01)
 
 Following review of the isolation experiment, the active Fortran module and
