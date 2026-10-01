@@ -457,6 +457,10 @@ global Nzm Ni turn_off_mf_diff
       disp(t)
       % SSPRK93 (low-storage) for explicit terms
       yn = SSPRK93(yn,dt,Inonneg);
+      % Post-dynamics precipitation, using the stage-1 thermodynamic cache
+      yn = ApplyPrecip(yn,dt);
+      % Non-negative qt, once after precipitation
+      yn(Inonneg) = yn(Inonneg).*(yn(Inonneg)>0);
       % Implicitly solving massflux diffusion
       if ~turn_off_mf_diff
         for i=1:Ni
@@ -482,8 +486,8 @@ global theta_e_zc qt_zc Tv_zc p_zc rho_zc rho_zi
     % Ivert (T,q,ql,qi) for buoyancy, precipitation, and radiation
     [T, Q, QL, QI] = INV_THETA_E(squeeze(X(:,1,:)), squeeze(X(:,2,:))); % (z,ACE-i)
   end
-  % Precipitation sinks
-  [dtheta_e, dqt] = PRECIP_SINKS(T, Q, QL, QI); % (z,ACE-i)
+  % Precipitation sinks (moved to ApplyPrecip after the complete RK step)
+%  [dtheta_e, dqt] = PRECIP_SINKS(T, Q, QL, QI); % (z,ACE-i)
 % % %   % Radiative forcing
 % % %   dT = 1e-8;  
 % % %   dtheta_e = dtheta_e+ RF.* ( eval_theta_e(T+dT,Q,QL,QI,p_mf) - eval_theta_e(T,Q,QL,QI,p_mf) )/1e-8;
@@ -531,9 +535,12 @@ global theta_e_zc qt_zc Tv_zc p_zc rho_zc rho_zi
         -[zeros(Nzm-1,1),ioflow(:,1:Ni-1)].*( ([zeros(Nzm-1,1),ioflow(:,1:Ni-1)]>0).*wc(1:end-1,:) + ([zeros(Nzm-1,1),ioflow(:,1:Ni-1)]<0).*[zeros(Nzm-1,1),wc(1:end-1,1:Ni-1)] ) )./Ai'...
       -squeeze( X(2:end,3,:).*wi(2:end,1,:)-X(1:end-1,3,:).*wi(1:end-1,1,:) )/dz; % Vertical mean flux convergence  
   % Recall X(z,var,ACE-i)=[theta_e,qt,MF,dtheta_e_pr_accum,pr_accum] 
-  dXdt = [ [dCdt;zeros(1,2,Ni)]+permute(cat(3,dtheta_e,dqt),[1,3,2]),...
-           permute(NONLOCAL_RESPONSE(T,Q,QL+QI,[F;zeros(1,Ni)]),[1,3,2]),... %+repmat(EBF*(t<EBT),[1,Ni]),[1,3,2]), ...
-           -permute(cat(3,dtheta_e,dqt),[1,3,2]) ]; % dXdt(z,var,ACE-i)
+%  dXdt = [ [dCdt;zeros(1,2,Ni)]+permute(cat(3,dtheta_e,dqt),[1,3,2]),...
+%           permute(NONLOCAL_RESPONSE(T,Q,QL+QI,[F;zeros(1,Ni)]),[1,3,2]),... %+repmat(EBF*(t<EBT),[1,Ni]),[1,3,2]), ...
+%           -permute(cat(3,dtheta_e,dqt),[1,3,2]) ]; % dXdt(z,var,ACE-i)
+  dXdt = [ [dCdt;zeros(1,2,Ni)],...
+           permute(NONLOCAL_RESPONSE(T,Q,QL+QI,[F;zeros(1,Ni)]),[1,3,2]),...
+           zeros(Nzm,2,Ni) ]; % Dynamics only; precipitation accumulation is post-step
   dXdt(end-10:end,1:3,:) = 0; % At domain top
   if one_ace_only==1
     dXdt(:,:,2:end) = 0; % Shut down additional ACEs
@@ -543,6 +550,21 @@ global theta_e_zc qt_zc Tv_zc p_zc rho_zc rho_zi
     dXdt(:,3,end) = -sum( dXdt(:,3,1:end-1).*permute(Ai(1:end-1),[3,2,1]),3 )/Ai(end);
   end 
   dXdt = dXdt(:);
+end
+
+function X = ApplyPrecip(X,dt)
+global Nzm Ni one_ace_only T Q QL QI
+  % T, Q (vapor), QL and QI are cached by expFun at RK stage 1.
+  % Retain this pre-dynamics state; do not diagnose a new post-dynamics state.
+  [dtheta_e, dqt] = PRECIP_SINKS(T, Q, QL, QI);
+  sink = permute(cat(3,dtheta_e,dqt),[1,3,2]);
+  dXdt = [sink,zeros(Nzm,1,Ni),-sink];
+  % Preserve the original precipitation masks, including accumulation slots.
+  dXdt(end-10:end,1:3,:) = 0;
+  if one_ace_only==1
+    dXdt(:,:,2:end) = 0;
+  end
+  X = X + dt*dXdt(:);
 end
 
 function X = ImDamp(X)
@@ -854,7 +876,7 @@ function yn = SSPRK93(yn,dt,Inonneg)
   yi = yn+dt*(K1/6+K2);
 %       yi(Inonneg) = yi(Inonneg).*(yi(Inonneg)>0);
   yn = yn + dt*((K1 + expFun(yi,9))/6+K2);
-  yn(Inonneg) = yn(Inonneg).*(yn(Inonneg)>0); % Non-negative qt
+%  yn(Inonneg) = yn(Inonneg).*(yn(Inonneg)>0); % Non-negative qt (moved after precipitation)
 end
 
 %%

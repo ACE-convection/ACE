@@ -85,6 +85,9 @@ do while ( t < te)
   call precip_sinks(ncols,nz,X(1:ncols,1:nz,10),K1(:,:,1),K1(:,:,2)) ! simplified precipitation
   X(1:ncols,:,1:2) = X(1:ncols,:,1:2) +  K1(:,:,1:2) * dt
 
+  ! Non-negative qt, once after precipitation
+  where ( X(1:ncols,:,2) < 0. ) X(1:ncols,:,2) = 0.
+
   ! implicit damping 
   call ImDamp(ncols,nz,X,dt)
 
