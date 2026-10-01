@@ -10,6 +10,14 @@ and portable record-length handling have since been modified on the
 GNU Fortran validation is separate from the original Intel environment.
 The historical staging description below records the pre-migration state.
 
+The active environmental buoyancy reference is the fixed input `Tv_zc`,
+used with input `rho_zc`, matching the MATLAB reference-state contract.
+`ace_initialization` requires `environment_tv(nz)` after `fname` and before
+the optional `netcdf_input` argument. Both the netCDF and legacy binary
+drivers pass their loaded reference profile; output buoyancy uses the same
+profile. Changing environmental theta_e/qt/p alone does not update this
+fixed reference. See the [reference-Tv alignment validation](../../docs/v018_reference_tv_alignment.md).
+
 
 This directory is temporary migration/alignment scaffolding. The
 [unified roadmap](../../docs/migration/matlab_fortran_alignment_plan.md)

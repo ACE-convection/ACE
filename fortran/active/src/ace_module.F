@@ -24,6 +24,8 @@ real, dimension(:,:), allocatable :: coarse_F
 real, dimension(:,:), allocatable :: dwdt
 real*8, dimension(:,:,:,:), allocatable :: PMB
 real, dimension(:,:), allocatable, save :: T, q, ql, qi
+! Fixed environmental density temperature, supplied with the input density.
+real, dimension(:), allocatable, save :: reference_tv
 
 contains
 
@@ -99,7 +101,7 @@ enddo
 endsubroutine ace_driver
 
 
-subroutine ace_initialization(ncols,nz,nz_presolve,z_presolve,ze_presolve,fname,netcdf_input)
+subroutine ace_initialization(ncols,nz,nz_presolve,z_presolve,ze_presolve,fname,environment_tv,netcdf_input)
 implicit none
 
 ! input variables
@@ -107,6 +109,7 @@ integer, intent(in) :: ncols, nz, nz_presolve
 real, dimension(nz_presolve) :: z_presolve
 real, dimension(nz_presolve+1) :: ze_presolve
 character(*), intent(in) :: fname
+real, dimension(nz), intent(in) :: environment_tv
 logical, intent(in), optional :: netcdf_input
 
 ! local variables
@@ -114,6 +117,8 @@ integer :: i,j,k,n,record_length
 logical :: read_netcdf
 
 coarse_nz=nz_presolve
+allocate(reference_tv(nz))
+reference_tv=environment_tv
 allocate(coarse_z(coarse_nz),coarse_ze(coarse_nz+1))
 allocate(coarse_F(ncols,coarse_nz))
 allocate(PMB(ncols,ncols,coarse_nz,coarse_nz+1))
@@ -159,7 +164,7 @@ real, dimension(ncols,nz,3), intent(out) :: dXdt
 integer :: i,n,k,ks,ke
 real :: MF_max, MF_min, MF_abs
 real, dimension(ncols,nz,2) :: eps_tur
-real, dimension(nz) :: rho0B, Tv, Tv0, T0, q0, ql0, qi0
+real, dimension(nz) :: rho0B, Tv
 real, dimension(ncols,nz,3) :: dXdz
 real, dimension(ncols,nz,2) :: Ci, rho0wC
 real, dimension(ncols+1,nz) :: mfc, Wc
@@ -170,8 +175,6 @@ real, dimension(ncols,nz) ::Wi, Admfdz, ioflow, F
 do k=1,nz
   eps_tur(:      ,k,1) = nju*B/A
   eps_tur(2:ncols,k,2) = nju*B(1:ncols-1)/A(2:ncols)
-  call inv_theta_e(X(ncols+1,k,1),X(ncols+1,k,2),X(ncols+1,k,10),T0(k),q0(k),ql0(k),qi0(k))
-  Tv0(k) = T0(k) * ( 1. + 0.607789855072462 * q0(k) - ql0(k) - qi0(k) )
 enddo
 
 ! fill with zeros
@@ -242,7 +245,7 @@ do i=1,ncols
   endif
   
   Tv(1:nz) = T(i,1:nz) * ( 1. + 0.607789855072462 * q(i,1:nz) - ql(i,1:nz) - qi(i,1:nz) )
-  rho0B(1:nz) = g * X(i,:,4) * ( Tv(1:nz) - Tv0(1:nz) ) / Tv0(1:nz)
+  rho0B(1:nz) = g * X(i,:,4) * ( Tv(1:nz) - reference_tv(1:nz) ) / reference_tv(1:nz)
   
   F(i,1:nz) = F(i,1:nz) + rho0B(1:nz)
 

@@ -6,6 +6,7 @@ integer, parameter :: ncols=8,nz=801
 real :: X(9,nz,10),A(9),B(9),Tv0(nz),cz(200),ce(201),forcing(8,nz)
 real :: tendency(8,nz,3),temperature(8,nz),vapor(8,nz),liquid(8,nz),ice(8,nz)
 real :: buoyancy(8,nz),weno(8,nz,2),upwind(8,nz),now,finish,dt,pi
+real :: profile(nz,12),diameters(7),lx,ly,dz
 character(500) :: initial_file,input_file,output_file,mode,override_file
 integer :: u,k,i,n,step,pulse
 call get_command_argument(1,initial_file)
@@ -15,7 +16,10 @@ call get_command_argument(4,mode)
 open(newunit=u,file=trim(initial_file),access='stream',form='unformatted',status='old')
 read(u) X,A,B,Tv0,cz,ce
 close(u)
-call ace_initialization(8,801,200,cz,ce,trim(input_file),netcdf_input=.true.)
+! Read the reference directly even when reusing a historical initialization dump.
+call read_case_profile(trim(input_file),profile,diameters,lx,ly,dz,cz,ce)
+Tv0=profile(:,9)
+call ace_initialization(8,801,200,cz,ce,trim(input_file),Tv0,netcdf_input=.true.)
 call set_alignment_single(trim(mode)=='single')
 pulse=8
 if (trim(mode)=='single') pulse=1

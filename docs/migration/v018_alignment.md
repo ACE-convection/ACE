@@ -12,6 +12,19 @@ Counterexamples remain; full-domain equality and release equivalence are
 not established. The historical comparison rows below describe the original
 candidate states, not these subsequently reviewed corrections.
 
+## Reference-Tv production alignment (2026-10-01)
+
+Following review of the isolation experiment, the active Fortran module and
+output driver now use fixed input `Tv_zc` with the input reference density,
+matching MATLAB. The module initialization requires this profile explicitly.
+Fresh MATLAB/Fortran dry, liquid-, ice- and mixed-phase runs cover single and
+multi ACE configurations for 30 updates at dt=4 s. All eight reference profiles
+match exactly; both mixed-phase Fortran prognostic histories exactly reproduce
+the earlier temporary shared-reference variant. Residual trajectory differences
+remain; no phase-endpoint, boundary, conservation or release-equivalence pass
+is claimed. See [production alignment validation](../v018_reference_tv_alignment.md)
+and [numerical evidence](../v018_reference_tv_alignment.json).
+
 ## Reference-Tv isolation diagnostic (2026-10-01)
 
 Paired temporary Fortran builds reuse the reviewed single/multi mixed-phase

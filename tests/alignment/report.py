@@ -20,6 +20,8 @@ def main():
     parser.add_argument('--build', type=Path, required=True)
     parser.add_argument('--ice-diagnostic', type=Path,
                         help='Optional comparison.json from compare_ice_forward.py')
+    parser.add_argument('--reference-tv-baseline', type=Path,
+                        help='Paired isolation workspace; require exact mixed-case history reproduction')
     parser.add_argument('--cases', nargs='+',
                         choices=['single','single_precip','multi','multi_precip',
                                  'single_ice_precip','multi_ice_precip',
@@ -41,14 +43,21 @@ def main():
         'branch': subprocess.check_output(
             ['git', 'branch', '--show-current'], cwd=root, text=True).strip(),
         'build_commands': json.loads((args.build / 'build_commands.json').read_text()),
+        'production_driver_sha256': hashlib.sha256(
+            (root / 'fortran/active/src/test.F').read_bytes()).hexdigest(),
         'compiler_version': subprocess.check_output(
             ['gfortran', '--version'], text=True).splitlines()[0],
-        'scope': 'Matched 4-second/120-second trajectories; no acceptance tolerance or production source change',
+        'scope': 'Current active sources: matched 4-second/120-second trajectories; no acceptance tolerance',
         'runs': {},
     }
     report['validation_tools_sha256'] = {
         str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
         for p in sorted((root / 'tests/alignment').glob('*')) if p.is_file()
+    }
+    report['build_artifacts_sha256'] = {
+        p.name: hashlib.sha256(p.read_bytes()).hexdigest()
+        for p in sorted(args.build.iterdir())
+        if p.is_file() and p.suffix in ['.exe', '.o', '.mod']
     }
     for mode in args.cases:
         run = json.loads((work / f'{mode}_comparison.json').read_text())
@@ -68,6 +77,15 @@ def main():
         assert np.array_equal(times, np.arange(0, 121, 4))
         assert np.isfinite(matlab).all() and np.isfinite(fortran).all()
         assert run['initial_state']['exact_equal']
+        if args.reference_tv_baseline and 'mixed_precip' in mode:
+            paired = args.reference_tv_baseline / 'shared_tv' / f'{mode}.bin'
+            prior = np.fromfile(paired, dtype='<f8')
+            assert prior.size == binary.size
+            count = 8 * 801 * 3
+            assert np.array_equal(binary[:count], prior[:count])
+            assert np.array_equal(binary[header:], prior[header:])
+            run['paired_shared_tv_history_reproduced_exactly'] = True
+            run['paired_shared_tv_baseline_sha256'] = hashlib.sha256(paired.read_bytes()).hexdigest()
         run['matlab_version'] = version
         run['all_31_samples'] = {
             name: metrics(matlab[:, j, :, :], fortran[:, j, :, :])
@@ -120,13 +138,20 @@ def main():
          'Mixed-phase sink is a standalone probe, not a mixed-phase trajectory'
          if any('ice_precip' in mode for mode in args.cases) else
          'Ice/mixed-phase sinks are standalone probes, not ice-precipitating trajectories'),
-        'Existing MATLAB/Fortran reference-Tv, boundary and geometry differences retained',
+        'Existing MATLAB/Fortran boundary and geometry differences retained',
         'The 1200-case pure-ice endpoint counterexample remains unresolved',
         'GNU binary64 build only; Intel compiler behavior not tested',
         'Water budgets are diagnostics, not a closed conservation test',
         'WENO levels 1 and 801 are unassigned by Fortran and excluded from operator metrics',
         'Plotting/plume/radiation diagnostics skipped through existing test access',
     ]
+    report['reference_tv_equal_in_all_cases'] = all(
+        run['diagnostics']['reference_tv']['exact_equal']
+        for run in report['runs'].values())
+    if not report['reference_tv_equal_in_all_cases']:
+        report['limitations'].append('MATLAB/Fortran reference-Tv differences remain in these runs')
+    if args.reference_tv_baseline:
+        assert report['reference_tv_equal_in_all_cases']
     report['artifacts'] = {
         str(p.relative_to(work)): {
             'bytes': p.stat().st_size,

@@ -250,7 +250,7 @@ do k=1,nz
   X(:,k,9)=dz
   X(:,k,10)=p_z(k)
   call inv_theta_e(X(1,k,1),X(1,k,2),X(1,k,10),Tr(1,k),q(1,k),ql(1,k),qi(1,k))
-  Tv0(k)=Tr(1,k)*(1.+0.607789855072462*q(1,k)-ql(1,k)-qi(1,k))
+  Tv0(k)=Tv_e(k)
 enddo
 
 
@@ -280,7 +280,7 @@ if (shared_input) then
   coarse_z=input_coarse_z
   coarse_ze=input_coarse_ze
 endif
-call ace_initialization(ncols,nz,200,coarse_z,coarse_ze,trim(fname),netcdf_input=shared_input)
+call ace_initialization(ncols,nz,200,coarse_z,coarse_ze,trim(fname),Tv0,netcdf_input=shared_input)
 
 if (len_trim(validation_file)>0) then
   open(30,file=trim(validation_file),access='stream',form='unformatted',status='replace')
