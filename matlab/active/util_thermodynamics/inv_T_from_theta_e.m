@@ -81,7 +81,18 @@ if T>=T0
 else
   qsat = eval_qsi(T,p,qt);
 end
-bsmeter = ~isreal(dT) || isnan(T) || (q>qsat);
+% Roundoff band for the no-condensate saturation check only.
+sat_roundoff = 0;
+if isreal(T) && isfinite(T) && T>0 && isreal(qsat) && isfinite(qsat)
+  if T>=T0
+    sat_slope = eval_dTqs(T,p,qt);
+  else
+    sat_slope = eval_dTqsi(T,p,qt);
+  end
+  sat_roundoff = 8*eps(1)*(max(abs(q),abs(qsat)) + abs(T*sat_slope));
+end
+% bsmeter = ~isreal(dT) || isnan(T) || (q>qsat);
+bsmeter = ~isreal(dT) || isnan(T) || (q-qsat>sat_roundoff);
 
 if bsmeter
   %% Step 2: determine condensate type(s) by comparing G(T0) & H(T0) to G0

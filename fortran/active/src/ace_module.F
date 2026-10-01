@@ -368,7 +368,7 @@ end function theta_e
 
  
 subroutine inv_theta_e(theta_e,qt,p,T,q,ql,qi)
-use, intrinsic :: ieee_arithmetic, only: ieee_is_nan
+use, intrinsic :: ieee_arithmetic, only: ieee_is_nan, ieee_is_finite
 implicit none
 
 ! parameters
@@ -386,6 +386,7 @@ real, intent(out) :: T,q,ql,qi
 integer :: ice
 real :: Cpl,Re,chi,F0,FT0,F,dFdT,R,e,gamma,dT,qc
 real :: G0,qsat,qsi,qs,dC,HT0,GT0,tmp,G,H,es,esi,dTqs,dTqsi,dGdT,dHdT
+real :: sat_roundoff,sat_slope
 
 Cpl = Cpd + (Cl-CPd)*qt
 Re = Rd*(1-qt)
@@ -437,7 +438,19 @@ if (T>=T0) ice = 0
 qsat = eval_qs(T,p,qt,ice)
 
 !if (q>qsat) then
-if (ieee_is_nan(T) .or. q>qsat) then
+! Roundoff band for the no-condensate saturation check only.
+sat_roundoff = 0.
+if (ieee_is_finite(T) .and. T>0. .and. ieee_is_finite(qsat)) then
+  es = eval_es(T,ice)
+  if (ice==0) then
+    sat_slope = 0.621971830985916*p*(1.-qt)/(p-es)**2 * (6743.769/T-4.8451)*es/T
+  else
+    sat_slope = 0.621971830985916*p*(1.-qt)/(p-es)**2 * (6111.72784/T+0.15215)*es/T
+  endif
+  sat_roundoff = 8*epsilon(T)*(max(abs(q),abs(qsat)) + abs(T*sat_slope))
+endif
+!if (ieee_is_nan(T) .or. q>qsat) then
+if (ieee_is_nan(T) .or. q-qsat>sat_roundoff) then
   ! Step 2: determine condensate type(s) by comparing G(T0) & H(T0) to G0
   G0 = theta_e * (p*Re/P0)**chi
   dC = 2083.900148084866
