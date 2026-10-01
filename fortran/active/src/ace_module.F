@@ -597,7 +597,8 @@ end function
 function Ci(T)
 implicit none
 
-real, parameter :: T0=273.1636783445389
+!real, parameter :: T0=273.1636783445389
+real, parameter :: T0=273.15
 real, intent(in) :: T
 real :: Ci
 

@@ -12,6 +12,17 @@ Counterexamples remain; full-domain equality and release equivalence are
 not established. The historical comparison rows below describe the original
 candidate states, not these subsequently reviewed corrections.
 
+## Ice heat-capacity follow-up (2026-10-01)
+
+The approved follow-up aligns only Fortran `Ci`'s reference temperature to
+MATLAB's 273.15 K, retaining its former declaration as a comment. See the
+[change and verification report](../v018_ice_heat_capacity_alignment.md) and
+[numerical evidence](../v018_ice_heat_capacity_alignment.json).
+The ten physics probes and four single/multi-ACE dry/liquid trajectories
+were rerun. The standalone ice forward-theta_e discrepancy is removed for
+the tested input; small finite-difference tendency differences remain.
+The earlier post-alignment report below records the pre-Ci source.
+
 ## Post-alignment timestep validation (2026-10-01)
 
 The committed aligned sources at `40d7cf2` completed matched single/multi-ACE
