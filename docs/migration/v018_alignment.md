@@ -12,6 +12,20 @@ Counterexamples remain; full-domain equality and release equivalence are
 not established. The historical comparison rows below describe the original
 candidate states, not these subsequently reviewed corrections.
 
+## Reference-Tv isolation diagnostic (2026-10-01)
+
+Paired temporary Fortran builds reuse the reviewed single/multi mixed-phase
+fixtures. Fresh controls exactly reproduce retained trajectories; replacing
+only tendency reference Tv with MATLAB's shared-input profile reduces maximum
+all-sample theta_e errors by 89.0%/96.6%, qt by 99.65%/99.84%, and MF by
+99.22%/99.80%. Initial buoyancy error decreases from 6.3012e-10 to
+3.7082e-15 m/s2. This identifies a dominant contribution for these cases,
+without approving a production reference-state change or resolving residual,
+endpoint or boundary differences. Production sources remain unchanged.
+See the [diagnostic report](../v018_reference_tv_diagnostic.md) and
+[numerical evidence](../v018_reference_tv_diagnostic.json). Next review the
+intended environmental reference-state contract before any scientific fix.
+
 ## Mixed-phase trajectory check (2026-10-01)
 
 Production sources remain at the approved Ci alignment. Single/multi-ACE
