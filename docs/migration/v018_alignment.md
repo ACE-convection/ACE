@@ -4,12 +4,25 @@
 
 Step 1 (`1b3443c`) aligns the Fortran precipitation onset formula. Step 2
 (`b70343c`) moves MATLAB precipitation after SSPRK93 and applies qt clipping
-after precipitation in both implementations. The Step 3 working-tree
-inversion changes and focused/grid failure review are recorded in
+after precipitation in both implementations. Step 3 and approved inverse
+follow-ups were committed in `516da38`, `1b00033` and `b5eaf39`, with test
+evidence in `40d7cf2`. The inversion changes and focused/grid failure review are recorded in
 [thermodynamic alignment evidence](../v018_thermodynamic_alignment.md).
 Counterexamples remain; full-domain equality and release equivalence are
 not established. The historical comparison rows below describe the original
 candidate states, not these subsequently reviewed corrections.
+
+## Post-alignment timestep validation (2026-10-01)
+
+The committed aligned sources at `40d7cf2` completed matched single/multi-ACE
+dry and liquid-precipitating 4-second/120-second tests. All trajectories are
+finite and initial prognostic arrays match exactly. See the
+[aligned runtime report](../v018_aligned_runtime_comparison.md) and
+[numerical evidence](../v018_aligned_runtime_comparison.json).
+Standalone ice probes identify a remaining forward-theta_e/Ci-reference
+difference affecting the precipitation thermodynamic adjustment. A temporary
+diagnostic confirms its contribution; no production correction was applied.
+The earlier endpoint counterexample and other documented limitations remain.
 
 ## Runtime comparison update (2026-09-30)
 
