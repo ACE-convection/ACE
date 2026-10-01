@@ -120,7 +120,8 @@ if bsmeter
       R = RE + 461.5*qs;
       LVoT = lv(T)./T;
       G = T .* R.^chi .* exp(qs.*LVoT./CPL);
-      dGdT = 1./T + ( (461.5*RE./R+LVoT).*eval_dTqs(T,p,qt) - 1867292.*qs./T.^2 )./CPL;
+      %dGdT = 1./T + ( (461.5*RE./R+LVoT).*eval_dTqs(T,p,qt) - 1867292.*qs./T.^2 )./CPL;
+      dGdT = 1./T + ( (461.5*RE./R+LVoT).*eval_dTqs(T,p,qt) - 3134708.*qs./T.^2 )./CPL;
       dGdT = dGdT.*G;
       dT = -(G-G0)./dGdT;
       T = T + dT;
@@ -149,8 +150,10 @@ if bsmeter
       R = RE + 461.5*qsi;
       H = T .* R.^chi .* (T0./T).^(dC*qi./CPL) ...
             .* exp((qsi.*LVoT - 0.3337e6/T0*qi)./CPL);
+      %dHdT = 1./T + ( ( 461.5*RE./R + LVoT + dC*log(T/T0) + 1221.611899584641 ).*dTqsi ...
+      %- ( (1867292./T-dC).*qsi + dC*qt )./T )./CPL;
       dHdT = 1./T + ( ( 461.5*RE./R + LVoT + dC*log(T/T0) + 1221.611899584641 ).*dTqsi ...
-                     - ( (1867292./T-dC).*qsi + dC*qt )./T )./CPL;
+                     - ( (3134708./T-dC).*qsi + dC*qt )./T )./CPL;
       dHdT = dHdT.*H;
       dT = -(H-G0)./dHdT;
       T = T + dT;

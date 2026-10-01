@@ -481,7 +481,8 @@ if (ieee_is_nan(T) .or. q-qsat>sat_roundoff) then
       es = eval_es(T,0)
       !dTqs = (1.-qt)* EPS/Rv * p * Lv(T) * es / ( ( p-es )*T )**2.
       dTqs = 0.621971830985916*p*(1.-qt)/(p-es)**2 * (6743.769/T-4.8451)*es/T
-      dGdT = 1./T + ( (Rv*Re/R+Lv(T)/T)*dTqs - (Lv0-Cpvmcl*273.15)*qs/T**2. )/Cpl
+      !dGdT = 1./T + ( (Rv*Re/R+Lv(T)/T)*dTqs - (Lv0-Cpvmcl*273.15)*qs/T**2. )/Cpl
+      dGdT = 1./T + ( (Rv*Re/R+Lv(T)/T)*dTqs - (Lv0+Cpvmcl*273.15)*qs/T**2. )/Cpl
       dGdT = dGdT*G
       dT = -(G-G0)/dGdT
       T = T + dT
@@ -513,8 +514,10 @@ if (ieee_is_nan(T) .or. q-qsat>sat_roundoff) then
       esi = eval_es(T,1)
       !dTqsi = (1.-qt)* EPS*LS/RV * p * esi / ( ( p-esi )*T )**2.
       dTqsi = 0.621971830985916*p*(1.-qt)/(p-esi)**2 * (6111.72784/T+0.15215)*esi/T
+      !dHdT = 1./T + ( ( Rv*Re/R + Lv(T)/T + dC*log(T/T0) + Lf/T0 )*dTqsi &
+      !- ( ((Lv0-Cpvmcl*273.15)/T-dC)*qsi + dC*qt )/T )/Cpl
       dHdT = 1./T + ( ( Rv*Re/R + Lv(T)/T + dC*log(T/T0) + Lf/T0 )*dTqsi &
-                     - ( ((Lv0-Cpvmcl*273.15)/T-dC)*qsi + dC*qt )/T )/Cpl
+                     - ( ((Lv0+Cpvmcl*273.15)/T-dC)*qsi + dC*qt )/T )/Cpl
       dHdT = dHdT*H
       dT = -(H-G0)/dHdT
       T = T + dT
