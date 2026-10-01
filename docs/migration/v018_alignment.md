@@ -12,6 +12,19 @@ Counterexamples remain; full-domain equality and release equivalence are
 not established. The historical comparison rows below describe the original
 candidate states, not these subsequently reviewed corrections.
 
+## Forward theta_e evaluation diagnostic (2026-10-01)
+
+Matched-cache probes show that replacing forward EPS with MATLAB's literal
+does not reduce the maximum sink discrepancy, and staged factors/products
+preserving the original order exactly reproduce native evaluation. At the
+previous worst point, an identical main-exp argument yields results one
+binary64 increment apart; substituting only that result removes the local
+numerator/sink difference. Remaining maximum sink error shifts to a state
+with a pressure-power result difference. These are temporary standalone
+diagnostics; production algorithms and constants remain unchanged.
+See [forward evaluation diagnostic](../v018_forward_evaluation_diagnostic.md)
+and [numerical evidence](../v018_forward_evaluation_diagnostic.json).
+
 ## Single mixed-case residual diagnostic (2026-10-01)
 
 After reference-Tv alignment, identical-state one-step replay exactly
