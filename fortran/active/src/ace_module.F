@@ -368,6 +368,7 @@ end function theta_e
 
  
 subroutine inv_theta_e(theta_e,qt,p,T,q,ql,qi)
+use, intrinsic :: ieee_arithmetic, only: ieee_is_nan
 implicit none
 
 ! parameters
@@ -393,7 +394,8 @@ chi = Re/Cpl
 ! Step 1: solve assuming no condensate & check consistency
 R = Re + Rv*qt
 gamma = Rv*qt / Cpl
-e = p*qt / (EPS+ (1-EPS)*qt)
+!e = p*qt / (EPS+ (1-EPS)*qt)
+e = p*qt / (0.621971830985916 + 0.378028169014084*qt)
 
 F0 = theta_e * (p*Re/R/P0)**chi * e**gamma
 !FT0 = T0 * polysvp1(T0,0)**gamma * exp(qt*Lv(T0)/Cpl/T0)
@@ -403,15 +405,20 @@ T = T0
 if (F0>=FT0) T = 400.
 
 dT = 9999.
-do while (abs(dT)>tol)
-  ice = 0
-  if (F0<FT0) ice = 1 ! ice exist
+!do while (abs(dT)>tol)
+!  ice = 0
+!  if (F0<FT0) ice = 1 ! ice exist
+do while (abs(dT)>tol .and. .not.ieee_is_nan(T))
+  ice = 1
+  if (F0>=FT0) ice = 0
   !F = T * polysvp1(T,ice)**gamma * exp(qt*Lv(T)/Cpl/T)
-  F = T * eval_es(T,ice) **gamma * exp(qt*Lv(T)/Cpl/T)
+!  F = T * eval_es(T,ice) **gamma * exp(qt*Lv(T)/Cpl/T)
+  F = T * eval_es(T,ice) **gamma * exp(qt/Cpl*Lv(T)/T)
   if (ice==0) then
     dFdT = ( 1. - CPVMCL*qt/CPL)/T
   else
-    dFdT = ( 1. + 300708.*qt/CPL/T )/T
+    !dFdT = ( 1. + 300708.*qt/CPL/T )/T
+    dFdT = ( 1. - 300708.*qt/CPL/T )/T
   endif
   dFdT = dFdT*F
   dT = -(F-F0)/dFdT
@@ -422,12 +429,15 @@ ql = 0.
 qi = 0.
 
 
-ice = 0
-if (T<T0) ice = 1
+!ice = 0
+!if (T<T0) ice = 1
+ice = 1
+if (T>=T0) ice = 0
 !qsat = qv_sat(T,p,ice)*(1.-qt)
 qsat = eval_qs(T,p,qt,ice)
 
-if (q>qsat) then
+!if (q>qsat) then
+if (ieee_is_nan(T) .or. q>qsat) then
   ! Step 2: determine condensate type(s) by comparing G(T0) & H(T0) to G0
   G0 = theta_e * (p*Re/P0)**chi
   dC = 2083.900148084866
@@ -436,23 +446,28 @@ if (q>qsat) then
   HT0 = T0 * (RE+RV*qsi)**chi * exp( (qsi*Lv(T0)-Lf*(qt-qsi))/Cpl/T0 )
   !qs = qv_sat(T0,p,0) * ( 1. - qt )
   qs = eval_qs(T0,p,qt,0)
-  GT0 =  T0 * (RE+RV*qs)**chi * exp(qs*Lv(T0)/CPL/T0)
+!  GT0 =  T0 * (RE+RV*qs)**chi * exp(qs*Lv(T0)/CPL/T0)
+  GT0 =  T0 * (RE+RV*qs)**chi * exp(qs*LvoT/CPL)
 
   ! 3 cases: liquid-only, ice-only, co-existing
   if (G0>GT0 .and. G0>HT0) then ! liquid-only
     ! estimate initial T
-    tmp = log(qt*p) - log(610.78*EPS)
-    T = 237.3*tmp/(17.27-tmp) + T0
+    !tmp = log(qt*p) - log(610.78*EPS)
+    tmp = log(p*qt) - 5.939876353793538
+    !T = 237.3*tmp/(17.27-tmp) + T0
+    T = 237.3*tmp/(17.27-tmp) + 273.15
 
     dT = 9999.
     do while (abs(dT)>tol)
       !qs = qv_sat(T,p,0)*(1.-qt)
       qs = eval_qs(T,p,qt,0)
       R = Re + Rv*qs
-      G = T * R**chi *exp(qs*Lv(T)/Cpl/T)
+!      G = T * R**chi *exp(qs*Lv(T)/Cpl/T)
+      G = T * R**chi *exp(qs*(Lv(T)/T)/Cpl)
       !es = polysvp1(T,0)
       es = eval_es(T,0)
-      dTqs = (1.-qt)* EPS/Rv * p * Lv(T) * es / ( ( p-es )*T )**2.
+      !dTqs = (1.-qt)* EPS/Rv * p * Lv(T) * es / ( ( p-es )*T )**2.
+      dTqs = 0.621971830985916*p*(1.-qt)/(p-es)**2 * (6743.769/T-4.8451)*es/T
       dGdT = 1./T + ( (Rv*Re/R+Lv(T)/T)*dTqs - (Lv0-Cpvmcl*273.15)*qs/T**2. )/Cpl
       dGdT = dGdT*G
       dT = -(G-G0)/dGdT
@@ -469,8 +484,10 @@ if (q>qsat) then
 
   elseif (G0<GT0 .and. G0<HT0) then ! ice-only
     ! estimate initial T
-    tmp = log(qt*p) - log(610.78*EPS)
-    T = 265.5*tmp/(21.875-tmp) + T0   
+    !tmp = log(qt*p) - log(610.78*EPS)
+    tmp = log(p*qt) - 5.939876353793538
+    !T = 265.5*tmp/(21.875-tmp) + T0
+    T = 265.5*tmp/(21.875-tmp) + 273.16
 
     dT = 9999.
     do while (abs(dT)>tol)
@@ -481,7 +498,8 @@ if (q>qsat) then
       H = T * R**chi * (T0/T)**(dC*qi/Cpl) * exp((qsi*Lv(T)/T - Lf/T0*qi)/Cpl)
       !esi = polysvp1(T,1)
       esi = eval_es(T,1)
-      dTqsi = (1.-qt)* EPS*LS/RV * p * esi / ( ( p-esi )*T )**2.
+      !dTqsi = (1.-qt)* EPS*LS/RV * p * esi / ( ( p-esi )*T )**2.
+      dTqsi = 0.621971830985916*p*(1.-qt)/(p-esi)**2 * (6111.72784/T+0.15215)*esi/T
       dHdT = 1./T + ( ( Rv*Re/R + Lv(T)/T + dC*log(T/T0) + Lf/T0 )*dTqsi &
                      - ( ((Lv0-Cpvmcl*273.15)/T-dC)*qsi + dC*qt )/T )/Cpl
       dHdT = dHdT*H
