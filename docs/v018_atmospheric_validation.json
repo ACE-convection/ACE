@@ -1,0 +1,322 @@
+{
+  "case_count": 1200,
+  "seed": 180103,
+  "category_names": [
+    "unsaturated",
+    "liquid",
+    "ice",
+    "mixed_T0",
+    "near_boundary"
+  ],
+  "category_summaries": [
+    {
+      "name": "unsaturated",
+      "cases": 300,
+      "finite_pairs": 300,
+      "exact_outputs": 280,
+      "branch_mismatches": 0,
+      "iteration_mismatches": 0,
+      "status_mismatches": 0,
+      "max_abs": [
+        5.684341886080802e-14,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "liquid",
+      "cases": 250,
+      "finite_pairs": 250,
+      "exact_outputs": 219,
+      "branch_mismatches": 0,
+      "iteration_mismatches": 0,
+      "status_mismatches": 0,
+      "max_abs": [
+        5.684341886080802e-14,
+        1.214306433183765e-16,
+        1.214306433183765e-16,
+        0
+      ]
+    },
+    {
+      "name": "ice",
+      "cases": 250,
+      "finite_pairs": 250,
+      "exact_outputs": 178,
+      "branch_mismatches": 0,
+      "iteration_mismatches": 0,
+      "status_mismatches": 0,
+      "max_abs": [
+        8.526512829121202e-14,
+        2.0816681711721685e-17,
+        0,
+        2.0816681711721685e-17
+      ]
+    },
+    {
+      "name": "mixed_T0",
+      "cases": 200,
+      "finite_pairs": 200,
+      "exact_outputs": 188,
+      "branch_mismatches": 0,
+      "iteration_mismatches": 0,
+      "status_mismatches": 0,
+      "max_abs": [
+        0,
+        0,
+        1.7988207090268061e-16,
+        1.7988207090268061e-16
+      ]
+    },
+    {
+      "name": "near_boundary",
+      "cases": 200,
+      "finite_pairs": 200,
+      "exact_outputs": 175,
+      "branch_mismatches": 1,
+      "iteration_mismatches": 1,
+      "status_mismatches": 0,
+      "max_abs": [
+        2.7057467377744615e-11,
+        8.192231615300472e-15,
+        3.729655473350135e-17,
+        8.19184960344126e-15
+      ]
+    }
+  ],
+  "finite_real_converged_pairs": 1200,
+  "exactly_equal_four_outputs": 1040,
+  "branch_mismatches": 1,
+  "iteration_mismatches": 1,
+  "status_mismatches": 0,
+  "max_absolute_difference": [
+    2.7057467377744615e-11,
+    8.192231615300472e-15,
+    1.7988207090268061e-16,
+    8.19184960344126e-15
+  ],
+  "max_relative_difference_nonzero_matlab": [
+    9.905221492740801e-14,
+    2.2432799174824534e-12,
+    1,
+    0.005220692928334125
+  ],
+  "generation_attempts": [
+    313,
+    614,
+    333,
+    200,
+    205
+  ],
+  "generation_rejections": [
+    13,
+    364,
+    83,
+    0,
+    5
+  ],
+  "direct_matlab_checks": 1200,
+  "direct_fortran_checks": 1200,
+  "matlab_version": "23.2.0.2668659 (R2023b) Update 9",
+  "acceptance_tolerance": "None; raw differences reported",
+  "scope": "1200 stratified synthetic atmospheric states; no Cartesian sweep; theta_e 200..400 K; no-condensate es>p trials excluded.",
+  "source_sha256": {
+    "fortran/active/src/ace_module.F": "b94faaeff3816118f8ce414626339ccfffbd0d1a0df2157ae9e60a34a9af86cf",
+    "matlab/active/util_thermodynamics/inv_T_from_theta_e.m": "a8ec61cc98ca480ac3d95d10d1ddb892dbbdb1cfeb186083264d1a7b7cf28011"
+  },
+  "production_sources_unchanged": true,
+  "test_source_sha256": {
+    "tests/thermodynamics/validate_atmosphere.py": "6aa9e83f4026cab204fc5389c071ead50aab397fdec9acd72b47aea80bbdd759",
+    "tests/thermodynamics/validate_atmosphere.m": "49681969b357ca7c3edfdf356604cabd69f088dfb3e08b37479a45df69935789",
+    "tests/thermodynamics/sweep_inversion.py": "5870e5e552040e489f7e1ed2798e42eb053398e07c8c61146f95e9649f02c515"
+  },
+  "csv": {
+    "path": "tests/thermodynamics/results/atmospheric_validation.csv",
+    "sha256": "164a6b89bb9ad879785d3deade4b00b53560800e4932f93e332cbb6d8765ce74",
+    "relative_zero_reference": "blank, undefined"
+  },
+  "layer_envelopes_pmin_pmax_hPa_Tmin_Tmax_K": [
+    [
+      900,
+      1050,
+      255,
+      310
+    ],
+    [
+      700,
+      900,
+      245,
+      295
+    ],
+    [
+      500,
+      700,
+      235,
+      285
+    ],
+    [
+      300,
+      500,
+      215,
+      270
+    ],
+    [
+      150,
+      300,
+      195,
+      240
+    ],
+    [
+      100,
+      150,
+      195,
+      225
+    ]
+  ],
+  "actual_ranges": {
+    "pressure_hPa": [
+      100.1477603316929,
+      1049.9044162420873
+    ],
+    "constructed_temperature_K": [
+      195.02220200913908,
+      307.96898191146937
+    ],
+    "theta_e_K": [
+      254.21757338305784,
+      399.76052937314967
+    ],
+    "qt_gkg": [
+      0,
+      35.11368670435436
+    ]
+  },
+  "branch_counts": {
+    "matlab": {
+      "0": 360,
+      "1": 307,
+      "2": 314,
+      "3": 219
+    },
+    "fortran": {
+      "0": 360,
+      "1": 307,
+      "2": 315,
+      "3": 218
+    }
+  },
+  "max_water_closure_error": {
+    "matlab": 8.673617379884035e-19,
+    "fortran": 8.673617379884035e-19
+  },
+  "nonnegative_water_outputs": true,
+  "counterexamples": [
+    {
+      "case_id": 1106,
+      "subtype": "T0_endpoint_or_offset_0",
+      "input_theta_e_qt_p": [
+        279.38459687185775,
+        0.0036545877784970367,
+        104359.54196921516
+      ],
+      "constructed_T_qv_ql_qi": [
+        273.1636783445389,
+        0.003651898967871248,
+        0,
+        2.6888106257886007e-06
+      ],
+      "matlab": [
+        273.1636783445389,
+        0.0036518989678712486,
+        3.8201185921168945e-19,
+        2.688810625787723e-06,
+        0,
+        0,
+        0,
+        0,
+        3,
+        2,
+        0,
+        0,
+        0
+      ],
+      "fortran": [
+        273.16367834456594,
+        0.003651898967879441,
+        0,
+        2.6888106175958736e-06,
+        0,
+        0,
+        0,
+        0,
+        2,
+        2,
+        2,
+        0,
+        0
+      ],
+      "absolute_difference": [
+        2.7057467377744615e-11,
+        8.192231615300472e-15,
+        3.8201185921168945e-19,
+        8.19184960344126e-15
+      ],
+      "relative_difference_nonzero_matlab": [
+        9.905221492740801e-14,
+        2.2432799174824534e-12,
+        1,
+        3.0466443136140713e-09
+      ]
+    }
+  ],
+  "worst_relative_examples": {
+    "T": {
+      "case_id": 1106,
+      "relative": 9.905221492740801e-14,
+      "absolute": 2.7057467377744615e-11,
+      "matlab_value": 273.1636783445389,
+      "fortran_value": 273.16367834456594
+    },
+    "qv": {
+      "case_id": 1106,
+      "relative": 2.2432799174824534e-12,
+      "absolute": 8.192231615300472e-15,
+      "matlab_value": 0.0036518989678712486,
+      "fortran_value": 0.003651898967879441
+    },
+    "ql": {
+      "case_id": 1106,
+      "relative": 1,
+      "absolute": 3.8201185921168945e-19,
+      "matlab_value": 3.8201185921168945e-19,
+      "fortran_value": 0
+    },
+    "qi": {
+      "case_id": 1005,
+      "relative": 0.005220692928334125,
+      "absolute": 3.7269449679189215e-20,
+      "matlab_value": 7.138793679459243e-18,
+      "fortran_value": 7.101524229780054e-18
+    }
+  },
+  "case_1106_trace": {
+    "matlab": "PHASE 1386.5482808172565 1386.5527575812357 1386.5482808172562 -0.0044767639792553382 2.2737367544323206e-13\nG0_FACTORS 298.45888423590634 0.28111717326995228 4.9628658714252927\nRESULT 273.16367834453888 0.0036518989678712486 3.8201185921168945e-19 2.6888106257877232e-06 3 2 0 0 0\n",
+    "fortran": "PHASE    1.38654828081725645E+03   1.38655275758123616E+03   1.38654828081725668E+03  -4.47676397971008555E-03  -2.27373675443232059E-13\nG0_FACTORS    2.98458884235906339E+02   2.81117173269952281E-01   4.96286587142529267E+00\n",
+    "finding": "HT0 last-bit differences reverse sign of G0-HT0 at pure ice endpoint. G0 and recorded G0 factors match. No model fix applied; precise origin of HT0 rounding not attributed."
+  },
+  "max_iterations": {
+    "matlab": {
+      "no_condensate": 3,
+      "condensate": 4
+    },
+    "fortran": {
+      "no_condensate": 3,
+      "condensate": 4
+    }
+  },
+  "max_constructed_state_T_roundtrip_error_K": {
+    "matlab": 1.022543756334926e-07,
+    "fortran": 1.0225431879007374e-07
+  }
+}

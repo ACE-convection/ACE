@@ -1,5 +1,16 @@
 # Unified ACE v0.18 alignment audit
 
+## Controlled alignment update
+
+Step 1 (`1b3443c`) aligns the Fortran precipitation onset formula. Step 2
+(`b70343c`) moves MATLAB precipitation after SSPRK93 and applies qt clipping
+after precipitation in both implementations. The Step 3 working-tree
+inversion changes and focused/grid failure review are recorded in
+[thermodynamic alignment evidence](../v018_thermodynamic_alignment.md).
+Counterexamples remain; full-domain equality and release equivalence are
+not established. The historical comparison rows below describe the original
+candidate states, not these subsequently reviewed corrections.
+
 ## Runtime comparison update (2026-09-30)
 
 After shared-input commit `2537f46`, MATLAB and GNU Fortran completed matched

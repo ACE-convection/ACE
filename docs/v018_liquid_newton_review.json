@@ -1,0 +1,134 @@
+{
+  "input": [
+    306.88985331179157,
+    0.006877346663836725,
+    90000
+  ],
+  "forward_temperature_K": 280,
+  "original_coefficient": 1867292.0,
+  "analytic_coefficient": 3134708.0,
+  "current_derivative_at_280": 11.083753902397838,
+  "analytic_derivative_at_280": 10.929045328595539,
+  "relative_derivative_error_at_280": 0.01415572624605268,
+  "finite_difference_columns": [
+    "h_K",
+    "dGdT",
+    "relative_difference_from_analytic"
+  ],
+  "finite_difference": [
+    [
+      0.1,
+      10.929086810037916,
+      3.7955229509844513e-06
+    ],
+    [
+      0.01,
+      10.929045743409915,
+      3.795522519615479e-08
+    ],
+    [
+      0.001,
+      10.929045332545684,
+      3.6143551253936455e-10
+    ],
+    [
+      0.0001,
+      10.929045326975029,
+      1.482755263364395e-10
+    ]
+  ],
+  "trace_columns": [
+    "T_before",
+    "G_minus_G0",
+    "derivative",
+    "dT",
+    "T_after"
+  ],
+  "current_trace": [
+    [
+      280.0528122392077,
+      0.5777465891860629,
+      11.105516414157261,
+      -0.05202338798487158,
+      280.0007888512228
+    ],
+    [
+      280.0007888512228,
+      0.008621515408094638,
+      11.084078440864673,
+      -0.000777828797774375,
+      280.00001102242504
+    ]
+  ],
+  "current_extra_iterations_test_only": [
+    [
+      280.00001102242504,
+      0.00012046460733472486,
+      11.083758436984647,
+      -1.0868570261577934e-05,
+      280.0000001538548
+    ],
+    [
+      280.0000001538548,
+      1.6814860828162637e-06,
+      11.083753965693159,
+      -1.517072724657062e-07,
+      280.0000000021475
+    ],
+    [
+      280.0000000021475,
+      2.3469738152925856e-08,
+      11.08375390328129,
+      -2.1174900090462816e-09,
+      280.00000000003
+    ],
+    [
+      280.00000000003,
+      3.2810021366458386e-10,
+      11.0837539024102,
+      -2.960190352054256e-11,
+      280.0000000000004
+    ]
+  ],
+  "hypothetical_correct_derivative_trace": [
+    [
+      280.0528122392077,
+      0.5777465891860629,
+      10.950235076180743,
+      -0.05276111290457987,
+      280.0000511263031
+    ],
+    [
+      280.0000511263031,
+      0.0005587622076745902,
+      10.92906580829192,
+      -5.112625520569703e-05,
+      280.0000000000479
+    ]
+  ],
+  "active_output": [
+    280.00001102242504,
+    0.006877346663836725,
+    0,
+    0
+  ],
+  "current_T_error_K": 1.1022425042028772e-05,
+  "hypothetical_T_error_K": 4.7919002099661157e-11,
+  "G_residual_at_280": -2.2737367544323206e-13,
+  "G_residual_at_current_final": 0.00012046460733472486,
+  "G_residual_at_hypothetical_final": 5.236415745457634e-10,
+  "existing_Newton_stop_K": 0.001,
+  "production_modified": false,
+  "scope": "Single T=280 K, p=90000 Pa liquid saturation input; no sweep. Current and hypothetical derivative diagnostics only.",
+  "source_sha256": {
+    "fortran/active/src/ace_module.F": "4f3beeab8a82574fafb248811ec9477d0fcf8df9e580609aa37ee01387ee614f",
+    "matlab/active/util_thermodynamics/inv_T_from_theta_e.m": "22cd64bf3437f42d86f56f7dfc688c13ee0712a77ba3c8d138c25b7e0baf5f5c"
+  },
+  "production_sources_unchanged": true,
+  "interpretation": "Both active implementations use Lv0-Cpvmcl*Tref in their liquid derivative. The derivative of the implemented Lv(T)/T requires Lv0+Cpvmcl*Tref. Hypothetical diagnostic retains existing Newton stopping threshold; it does not change production code.",
+  "proposed_liquid_only_changes": {
+    "matlab": "1867292 -> 3134708 in dGdT",
+    "fortran": "Lv0-Cpvmcl*273.15 -> Lv0+Cpvmcl*273.15 in dGdT"
+  },
+  "ice_coefficient_note": "The same coefficient occurs in dHdT. Its full ice derivative has not been reviewed in this follow-up and is not changed."
+}
