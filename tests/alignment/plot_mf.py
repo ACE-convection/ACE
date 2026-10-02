@@ -53,7 +53,7 @@ def main():
     axes[-1].set_xlabel('Time (hours)')
     bubble = report.get('bubble', {}).get('enabled', False)
     fig.suptitle(f"{report['case'].upper()} profile {report['profile_index']} · ACE 1 · "
-                 f"{report['duration_seconds']/3600:g} hours · precipitation disabled\n"
+                 f"{report['duration_seconds']/3600:g} hours · precipitation {report['precipitation']}\n"
                  f"{'Bubble: +1 K, saturated, levels 11–51' if bubble else 'No initial thermal bubble'}\n"
                  'MATLAB / Fortran share one color scale; difference uses its own scale', fontsize=12)
     for extension in ['png', 'pdf']:

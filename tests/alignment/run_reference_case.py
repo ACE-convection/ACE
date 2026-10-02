@@ -18,11 +18,13 @@ def main():
     parser.add_argument('--check-only', action='store_true', help='Verify case/input/reference without integration')
     parser.add_argument('--verify-run', action='store_true', help='Verify and compare an existing completed run without integration')
     parser.add_argument('--matlab', default='matlab')
+    parser.add_argument('--case', choices=['manus_saturated_bubble', 'manus_saturated_bubble_precip'],
+                        default='manus_saturated_bubble', help='Select the archived Manus reference configuration')
     args = parser.parse_args()
     if args.check_only and args.verify_run:
         parser.error('Use either --check-only or --verify-run')
     root = Path(__file__).resolve().parents[2]
-    case_path = root/'tests/cases/manus_saturated_bubble.json'
+    case_path = root/'tests/cases'/ (args.case+'.json')
     case = json.loads(case_path.read_text())
     input_file = root/case['input']['path']
     if not input_file.exists():
@@ -38,7 +40,9 @@ def main():
     for name, expected in case['reference']['files_sha256'].items():
         assert sha(reference/name) == expected, 'Reference hash mismatch: '+name
     integration = case['integration']
-    assert integration['dt_seconds'] == 4 and not integration['precipitation']
+    precipitation = args.case == 'manus_saturated_bubble_precip'
+    assert case['case_id'] == args.case
+    assert integration['dt_seconds'] == 4 and integration['precipitation'] == precipitation
     assert integration['duration_seconds'] == 10800 and integration['output_step_seconds'] == 60
     assert integration['method'] == 'SSPRK93' and not integration['mf_diffusion']
     assert case['bubble']['levels_one_based'] == [11, 51]
@@ -50,23 +54,44 @@ def main():
         assert np.array_equal(data['height_m'], np.arange(0, 40001, 50))
         for name in ['matlab', 'fortran']:
             assert data[name].shape == (181, 801) and np.isfinite(data[name]).all()
-    print('Canonical Manus case, pinned input and archived reference verified.', flush=True)
+    if precipitation:
+        with np.load(reference/'precipitation.npz') as data:
+            water = data['matlab_qt_accumulation']
+            sinks = data['fortran_step_diagnostics']
+            assert water.shape == (181, 8, 801) and np.isfinite(water).all()
+            assert np.all(water[0] == 0) and np.all(np.diff(water, axis=0) >= 0) and water[-1].max() > 0
+            assert sinks.shape == (2700, 4) and np.isfinite(sinks).all()
+            assert np.array_equal(sinks[:, 0], np.arange(4, 10801, 4))
+            assert np.all(sinks[:, 3] >= 0) and sinks[:, 1].sum() > 0
+    print(args.case+': pinned input and archived reference verified.', flush=True)
     if args.check_only:
         return
     if args.work is None:
         parser.error('Provide a fresh output directory')
     work = args.work.resolve()
     if not args.verify_run:
-        subprocess.run([sys.executable, str(root/'tests/alignment/run_sounding_case.py'),
+        command = [sys.executable, str(root/'tests/alignment/run_sounding_case.py'),
                         str(work), '--input', str(input_file), '--saturated-bubble',
                         '--duration', str(integration['duration_seconds']),
                         '--output-step', str(integration['output_step_seconds']),
-                        '--matlab', args.matlab], check=True)
+                        '--matlab', args.matlab]
+        if precipitation:
+            command.append('--precipitation')
+        subprocess.run(command, check=True)
     report = json.loads((work/'results.json').read_text())
     assert report['case'] == 'manus' and report['profile_index'] == 208
     assert report['input_sha256'] == case['input']['sha256']
     assert report['duration_seconds'] == 10800 and report['dt_seconds'] == 4
-    assert report['output_step_seconds'] == 60 and report['precipitation'] == 'disabled'
+    assert report['output_step_seconds'] == 60
+    assert report['precipitation'] == ('enabled' if precipitation else 'disabled')
+    if precipitation:
+        validation = report['precipitation_validation']
+        assert validation['matlab_accumulation_finite_monotonic']
+        assert validation['matlab_final_qt_removal_max_kg_per_kg'] > 0
+        assert validation['fortran_sink_finite_nonnegative']
+        assert validation['fortran_updates_with_positive_loss'] > 0
+        for name in ['precipitation.npz', 'matlab.nc', 'fortran.bin']:
+            assert sha(work/name) == report['artifacts_sha256'][name], 'Run artifact hash mismatch: '+name
     assert report['bubble']['enabled'] and report['bubble']['levels_one_based'] == [11, 51]
     assert report['bubble']['delta_T_K'] == 1 and report['finite_outputs']
     assert all(value['qt_min'] >= 0 for value in report['ranges'].values())

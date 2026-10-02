@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run a single active ACE with precipitation disabled in temporary sources."""
+"""Run a single active ACE with optional native precipitation in temporary sources."""
 import argparse
 from concurrent.futures import ThreadPoolExecutor
 import difflib
@@ -27,6 +27,8 @@ def main():
     parser.add_argument('--duration', type=int, default=10800)
     parser.add_argument('--output-step', type=int, default=60)
     parser.add_argument('--matlab', default='matlab')
+    parser.add_argument('--precipitation', action='store_true',
+                        help='Retain each implementation\'s native precipitation scheme')
     parser.add_argument('--saturated-bubble', action='store_true',
                         help='Enable original MATLAB bubble: levels 11:51, +1 K, saturated, no initial condensate')
     parser.add_argument('--analyze-existing', action='store_true',
@@ -60,17 +62,24 @@ def main():
     if not args.analyze_existing:
         manifest['input_file_sha256'] = digest(input_file)
         manifest['input_file'] = str(input_file)
-        manifest['scope'] = 'single ACE 1; precipitation disabled in temporary sources; actual active numerical routines'
+        manifest['precipitation'] = 'enabled' if args.precipitation else 'disabled'
+        manifest['scope'] = ('single ACE 1; precipitation '+manifest['precipitation']+
+                             '; actual active numerical routines')
         (work/'configuration.json').write_text(json.dumps(manifest, indent=2)+'\n')
     if not args.analyze_existing:
         original = (work/'ace_module.F').read_text()
         call = '  call precip_sinks(ncols,nz,X(1:ncols,1:nz,10),K1(:,:,1),K1(:,:,2)) ! simplified precipitation'
         update = '  X(1:ncols,:,1:2) = X(1:ncols,:,1:2) +  K1(:,:,1:2) * dt'
         assert original.count(call) == original.count(update) == 1
-        changed = original.replace(call, '  ! Precipitation disabled for this experiment').replace(update, '')
+        changed = original if args.precipitation else original.replace(
+            call, '  ! Precipitation disabled for this experiment').replace(update, '')
+        if args.precipitation:
+            # Observe native sinks before the update, without changing their masks or values.
+            changed = changed.replace(call, call+"\n  write(97,*) t+dt, sum(-K1(:,:,2)*dt), maxval(-K1(:,:,2)*dt), minval(-K1(:,:,2)*dt)")
         (work/'ace_module.F').write_text(changed)
-        (work/'fortran_no_precip.diff').write_text(''.join(difflib.unified_diff(
-            original.splitlines(True), changed.splitlines(True), fromfile='prepared/ace_module.F', tofile='no_precip/ace_module.F')))
+        mode = 'native_precip' if args.precipitation else 'no_precip'
+        (work/('fortran_'+mode+'.diff')).write_text(''.join(difflib.unified_diff(
+            original.splitlines(True), changed.splitlines(True), fromfile='prepared/ace_module.F', tofile=mode+'/ace_module.F')))
         source = (root/'matlab/active/ace.m').read_text()
         initialization = source
         if args.saturated_bubble:
@@ -84,12 +93,21 @@ def main():
         original_local = source[source.index('function X = timeint('):]
         call = '      yn = ApplyPrecip(yn,dt);'
         assert original_local.count(call) == 1
-        local = original_local.replace(call, '      % Precipitation disabled for this experiment')
+        local = original_local if args.precipitation else original_local.replace(
+            call, '      % Precipitation disabled for this experiment')
         local = local.replace('      yn = ImDamp(yn);',
             "      yn = ImDamp(yn);\n      assert(all(isfinite(yn)),'Nonfinite trajectory');", 1)
-        (work/'matlab_no_precip.diff').write_text(''.join(difflib.unified_diff(
-            original_local.splitlines(True), local.splitlines(True), fromfile='active/local_functions', tofile='no_precip/local_functions')))
+        (work/('matlab_'+mode+'.diff')).write_text(''.join(difflib.unified_diff(
+            original_local.splitlines(True), local.splitlines(True), fromfile='active/local_functions', tofile=mode+'/local_functions')))
         header = (root/'tests/alignment/matlab_sounding_case.txt').read_text()
+        if args.precipitation:
+            header = header.replace("assert(all(history(:,4:5,:,:)==0,'all'),'Precipitation accumulation is nonzero');",
+                "assert(all(isfinite(history(:,4:5,:,:)),'all'),'Nonfinite precipitation accumulation');")
+            header = header.replace("ncwriteatt(file,'/','precipitation','disabled in temporary timeint');",
+                "nccreate(file,'precipitation_accumulation','Datatype','double','Dimensions',...\n"
+                "    {'level',Nzm,'sink',2,'ace',Ni,'time',numel(times)});\n"
+                "ncwrite(file,'precipitation_accumulation',history(:,4:5,:,:));\n"
+                "ncwriteatt(file,'/','precipitation','enabled native scheme');")
         (work/'run_sounding_case.m').write_text(header+'\n'+local)
         flags = ['-O2', '-ffree-form', '-fdefault-real-8', '-fdefault-double-8', '-ffree-line-length-none']
         include = subprocess.check_output(['nf-config', '--fflags'], text=True).split()
@@ -118,6 +136,8 @@ def main():
         (work/'commands.json').write_text(json.dumps(commands, indent=2)+'\n')
     elif (work/'commands.json').exists():
         commands = json.loads((work/'commands.json').read_text())
+    precipitation = 'enabled' if args.precipitation else 'disabled'
+    assert manifest.get('precipitation', 'disabled') == precipitation, 'Preserved run precipitation setting mismatch'
     times = np.arange(0, args.duration+1, args.output_step)
     f = np.fromfile(work/'fortran.bin', dtype='<f8').reshape((8, 801, 3, len(times)), order='F').transpose(3, 2, 1, 0)
     with netCDF4.Dataset(work/'matlab.nc') as ds:
@@ -127,11 +147,14 @@ def main():
         assert np.array_equal(ds['time'][:], times)
         assert np.array_equal(ds['zm'][:], heights)
         assert int(ds.profile_index) == profile
+        assert ds.precipitation == ('enabled native scheme' if args.precipitation else 'disabled in temporary timeint')
+        if args.precipitation:
+            accumulation = np.asarray(ds['precipitation_accumulation'][:])
     assert f.shape == m.shape and np.isfinite(f).all() and np.isfinite(m).all()
     np.savez_compressed(work/'mf.npz', time_seconds=times, height_m=heights,
                         matlab=m[:, 2, :, 0], fortran=f[:, 2, :, 0])
     report = {'case': case, 'profile_index': profile, 'duration_seconds': args.duration,
-              'dt_seconds': 4, 'output_step_seconds': args.output_step, 'precipitation': 'disabled',
+              'dt_seconds': 4, 'output_step_seconds': args.output_step, 'precipitation': precipitation,
               'single_policy': 'ACE 1 tendency active; 8 ACE geometry/PMB retained; original damping retained',
               'pulse': 'ACE 1: 0.03*sin(pi*z/1000) kg m-2 s-1 at 0-1000 m',
               'mf_diffusion': 'disabled as in active defaults',
@@ -147,10 +170,32 @@ def main():
               'gfortran_version': subprocess.check_output(['gfortran', '--version'], text=True).splitlines()[0],
               'comparison_status': 'Descriptive errors only; no byte equality or acceptance tolerance required',
               'mf': metrics(m[:, 2, :, 0], f[:, 2, :, 0]),
+              'prognostic': {field: metrics(m[:, j], f[:, j])
+                             for j, field in enumerate(['theta_e', 'qt', 'MF'])},
               'initial_state': {field: metrics(m[0, j], f[0, j]) for j, field in enumerate(['theta_e','qt','MF'])},
               'ranges': {name: {'mf_min': float(a[:, 2, :, 0].min()), 'mf_max': float(a[:, 2, :, 0].max()),
                                 'qt_min': float(a[:, 1].min()), 'qt_max': float(a[:, 1].max())}
                          for name, a in [('matlab', m), ('fortran', f)]}}
+    if args.precipitation:
+        water = accumulation[:, :, 1, :]
+        sinks = np.loadtxt(work/'fort.97')
+        assert water.shape == (len(times), 8, 801) and np.isfinite(water).all()
+        assert np.all(water[0] == 0) and np.all(np.diff(water, axis=0) >= 0)
+        assert water[-1].max() > 0, 'MATLAB precipitation did not act'
+        assert sinks.shape == (args.duration//4, 4) and np.isfinite(sinks).all()
+        assert np.array_equal(sinks[:, 0], np.arange(4, args.duration+1, 4))
+        assert np.all(sinks[:, 3] >= 0) and sinks[:, 1].sum() > 0, 'Invalid or inactive Fortran precipitation'
+        assert all(value['qt_min'] >= 0 for value in report['ranges'].values())
+        report['precipitation_validation'] = {
+            'matlab_accumulation_finite_monotonic': True,
+            'matlab_final_qt_removal_max_kg_per_kg': float(water[-1].max()),
+            'matlab_final_qt_removal_sum_kg_per_kg': float(water[-1].sum()),
+            'fortran_sink_finite_nonnegative': True,
+            'fortran_updates_with_positive_loss': int(np.count_nonzero(sinks[:, 1] > 0)),
+            'fortran_qt_removal_sum_kg_per_kg': float(sinks[:, 1].sum()),
+            'scope': 'Native sink diagnostics; unweighted sums are not a physical domain-water budget; native precipitation masks retained'}
+        np.savez_compressed(work/'precipitation.npz', time_seconds=times,
+                            matlab_qt_accumulation=water, fortran_step_diagnostics=sinks)
     for name, value in manifest['sources_sha256'].items():
         assert digest(root/name) == value, 'Source changed during experiment: '+name
     report['experiment_sources_sha256'] = {str(p.relative_to(root)): digest(p) for p in
@@ -160,7 +205,8 @@ def main():
         report['execution_record'] = 'Original runner preserved as runner_executed.py; see generated sources, patches and model logs'
     report['analysis_only'] = args.analyze_existing
     report['artifacts_sha256'] = {str(p.relative_to(work)): digest(p) for p in work.iterdir()
-                                if p.is_file() and p.suffix in ['.F', '.m', '.py', '.diff', '.bin', '.nc', '.npz', '.exe']}
+                                if p.is_file() and (p.name == 'fort.97' or
+                                   p.suffix in ['.F', '.m', '.py', '.diff', '.bin', '.nc', '.npz', '.exe'])}
     (work/'results.json').write_text(json.dumps(report, indent=2, allow_nan=False)+'\n')
     print('Complete:', work, flush=True)
 

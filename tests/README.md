@@ -66,3 +66,33 @@ MF errors/norms and compare evolution/physical interpretation. **Do not
 require byte equality.** No numerical acceptance tolerance is prescribed;
 the measured v0.18 differences are observations, not thresholds to impose
 on v0.20/v0.24. Additional scientific, budget and physics tests are needed.
+
+## Additional precipitation-enabled Manus case
+
+`manus_saturated_bubble_precip` adds the native precipitation scheme to the
+same fixed Manus sounding, saturated bubble, common initial state and timing.
+The original precipitation-disabled case remains the default. The fixed
+definition is [`cases/manus_saturated_bubble_precip.json`](cases/manus_saturated_bubble_precip.json);
+see [the completed three-hour report](../docs/manus208_single_saturated_bubble_precip_3h.md).
+
+```bash
+python3 tests/alignment/run_reference_case.py --case manus_saturated_bubble_precip --check-only
+python3 tests/alignment/run_reference_case.py migration_work/manus_precip_reference --case manus_saturated_bubble_precip
+python3 tests/alignment/plot_mf.py migration_work/manus_precip_reference
+```
+
+For an existing completed run, append `--verify-run` to the second command.
+The precipitation reference archives MF arrays, metadata, initialization
+evidence, and `precipitation.npz`: MATLAB's saved cumulative qt sink and
+Fortran's per-step sink diagnostics (time, sum, maximum and minimum qt removal).
+Require finite, nonnegative Fortran sinks with positive total removal, and a
+finite MATLAB accumulation starting at zero, increasing monotonically and
+ending positive, in addition to the existing execution checks.
+
+Both codes retain their native post-dynamics precipitation masks: MATLAB
+masks prognostic sinks in the top eleven levels and masks all precipitation
+slots in ACEs 2–8; Fortran applies precipitation across all levels and ACEs.
+The single-ACE mask applies to dynamics in Fortran. No precipitation formula,
+mask, constant or phase selection is changed for this test. Passing the
+execution checks does not settle these differences or establish a closed
+water budget or scientific equivalence. Later-version adapters remain future work.
