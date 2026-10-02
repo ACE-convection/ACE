@@ -12,6 +12,19 @@ Counterexamples remain; full-domain equality and release equivalence are
 not established. The historical comparison rows below describe the original
 candidate states, not these subsequently reviewed corrections.
 
+## Pressure-power follow-up diagnostic (2026-10-01)
+
+A fresh forward run exactly reproduces the retained six-variant metrics.
+An exact-input pressure-power substitution removes the previously identified
+record 500 discrepancy. Combined with the temporary EPS-literal/main-exp
+substitutions, maximum matched-state theta_e sink difference falls from
+4.996031e-12 to 5.956591e-14 K/s. The remaining worst point first differs
+in ice saturation pressure, then the perturbed humidity power. Production
+sources and finite-difference increment remain unchanged; this is not a
+trajectory or release acceptance. See the
+[pressure-power diagnostic](../v018_pressure_power_diagnostic.md) and
+[numerical evidence](../v018_pressure_power_diagnostic.json).
+
 ## Forward theta_e evaluation diagnostic (2026-10-01)
 
 Matched-cache probes show that replacing forward EPS with MATLAB's literal
