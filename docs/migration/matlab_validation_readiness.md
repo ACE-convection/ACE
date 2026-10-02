@@ -6,9 +6,11 @@ a current task list or an additional roadmap. The `history/` paths identify
 temporary preservation locations, recoverable through Git after normalization.
 
 Status: static review on 2026-09-24. This records checks for the standalone
-v0.19/v0.20 mains after source import; they are deferred while
-[unified v0.18 alignment](matlab_fortran_alignment_plan.md) is the current
-milestone. This does not certify execution or numerical equivalence. The three
+v0.19/v0.20 mains after source import; their validation was deferred while
+[unified v0.18 alignment](matlab_fortran_alignment_plan.md) was the
+current milestone at that review. v0.18.0 is now complete; these standalone
+input questions remain relevant to later-version work. This does not certify
+execution or numerical equivalence. The three
 standalone mains are paired with `matlab/history/original_git/` utilities by
 developer convention, not by recovered runtime provenance. Historical files
 were not edited.

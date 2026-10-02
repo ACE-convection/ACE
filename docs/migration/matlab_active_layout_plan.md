@@ -5,7 +5,8 @@ MATLAB-only destination layout below has been replaced by the
 [unified roadmap](matlab_fortran_alignment_plan.md), including normalized
 `matlab/` and `fortran/` roots before `v0.18.0`. Do not resume this directory
 proposal when v0.24 work begins. S20 utility staging followed it and is
-recorded in the [S20 note](matlab_s20_active_stage.md).
+recorded in the [utility inventory](matlab_shared_utility_inventory.md)
+and [S20 dependency/input evidence](matlab_driver_dependencies.md#s20-package-input-and-validation-evidence).
 
 Retain the 50-file map, byte-identity findings and I/O compatibility concerns
 as evidence for later joint review. References to candidate locations and

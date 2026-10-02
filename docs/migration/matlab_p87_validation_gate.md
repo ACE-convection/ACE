@@ -1,8 +1,10 @@
 # p87 MATLAB validation gate
 
-Status: conditional input and environment audit, 2026-09-26. This S24 gate is
-deferred while [unified v0.18 alignment](matlab_fortran_alignment_plan.md) is
-the current milestone. The developer confirmed that sounding files are the
+Status: conditional input and environment audit, 2026-09-26. This S24 gate was
+deferred while [unified v0.18 alignment](matlab_fortran_alignment_plan.md) was
+the current milestone at that review. v0.18.0 is now complete; the S24
+kernel/reference questions below remain relevant to later work.
+The developer confirmed that sounding files are the
 same across all versions. If p87 is later selected, use the S19 GOAmazon file
 as its input. This historical conditional checklist preserves input hashes,
 source contracts and reference-log requirements for the S24 CPU driver. Its

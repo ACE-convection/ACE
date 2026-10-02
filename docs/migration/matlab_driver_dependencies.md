@@ -5,9 +5,9 @@ versions. Current v0.18 validation is governed by its audit and input contract;
 future milestones follow the unified roadmap. Any `active/` or `history/`
 location below is temporary staging or a recorded historical path.
 
-Static source review, updated 2026-09-28. The current milestone is
-[unified v0.18 alignment](matlab_fortran_alignment_plan.md); the S20 utility
-staging described here is deferred to the v0.20 milestone. This map records
+Static source review, 2026-09-28; status clarified 2026-10-02.
+[v0.18.0](../releases/v0.18.0.md) is complete. The former S20 utility
+staging described here is evidence for the later v0.20 milestone. This map records
 utility calls written in the preserved drivers and their input paths. Direct calls include
 local-function bodies, conditional branches, function handles such as
 `@ssprk93`, and constant-import scripts. Utility-to-utility calls were followed
@@ -39,13 +39,13 @@ and `eval_qsi2` through saturation helpers. S24's `inv_T_batch_warm` reaches
 `inv_T_batch`; GF87 also needs the GPU inversion when that branch is chosen.
 These are static call-chain observations, not an execution trace.
 
-The reviewed S20 staging has the observed external call chain, including its
-`inv_T_from_theta_e` and external `ssprk93`; both are committed copies. The
-S20 package is not runnable because its driver, path setup, and runtime inputs
-are absent. The separate v0.18 candidate is staged under `matlab/active/ace.m`
-and `matlab/active/util_*` from original Git `a0f30cd`; its own runtime inputs
-remain unresolved. The S24 p87 chain still needs
-its paired
+The reviewed S20 staging contained the observed external call chain, including
+`inv_T_from_theta_e` and external `ssprk93`, as committed copies. It did not
+contain an adapted driver, path setup or runtime inputs; no S20 execution
+was established. The separate v0.18 candidate was staged from original Git `a0f30cd`.
+Its inputs are now recovered and shared readers validated; current release
+sources are under `matlab/` after reviewed alignment and normalization.
+The S24 p87 chain still needs its paired
 `inv_T_batch`, `inv_T_batch_warm`, and `inv_T_from_theta_e` (GF87 additionally
 needs the GPU inversion). Older R/S19 drivers require their own versions of changed APIs,
 including the global constants script and scalar inversion. Do not fill these
