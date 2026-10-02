@@ -1,0 +1,122 @@
+function run_alignment_case(root, mode, reports, experiment)
+% This header is joined to exact active ace.m local functions by prepare.py.
+settings.root=root; settings.mode=mode; settings.reports=reports;
+if nargin<4, experiment='dry'; end
+settings.experiment=experiment; settings.label=mode;
+assert(ismember(experiment,{'dry','precip','ice_precip','mixed_precip'}),'Unknown experiment');
+if ~strcmp(experiment,'dry'), settings.label=[mode '_' experiment]; end
+previous=pwd;
+cd(fullfile(settings.root,'matlab'));
+setenv('ACE_INPUT_MODE','shared');
+setenv('ACE_VALIDATE_INPUT',fullfile(settings.reports,['matlab_' settings.label '_init.mat']));
+ace;
+setenv('ACE_VALIDATE_INPUT','');
+global one_ace_only T Q QL QI
+one_ace_only=strcmp(settings.mode,'single');
+state=reshape(X0,[Nzm,5,Ni]);
+state(:,3,:)=0;
+if one_ace_only, pulse_ace=1; else, pulse_ace=Ni; end
+state(:,3,pulse_ace)=MF;
+if strcmp(settings.experiment,'precip')
+  % Controlled common condensate perturbation around the original sink onset.
+  for level=11:30
+    if level<=16, condensate=0.00049;
+    elseif level<=23, condensate=0.0005;
+    else, condensate=0.00051; end
+    temperature=inv_T_from_theta_e(state(level,1,pulse_ace),state(level,2,pulse_ace),p_zc(level));
+    assert(temperature>273.1636783445389,'Precipitation perturbation requires liquid phase');
+    vapor=eval_qs(temperature,p_zc(level))*(1-condensate);
+    state(level,1,pulse_ace)=eval_theta_e(temperature,vapor,condensate,0,p_zc(level));
+    state(level,2,pulse_ace)=vapor+condensate;
+  end
+  fid=fopen(fullfile(settings.reports,['initial_' settings.label '.bin']),'w','ieee-le');
+  fwrite(fid,permute(state(:,1:3,:),[3,1,2]),'double'); fclose(fid);
+end
+if strcmp(settings.experiment,'ice_precip')
+  % Ice-onset perturbation at cold levels; common input exported to Fortran.
+  for level=151:170
+    if level<=156, condensate=0.00049;
+    elseif level<=163, condensate=0.0005;
+    else, condensate=0.00051; end
+    temperature=inv_T_from_theta_e(state(level,1,pulse_ace),state(level,2,pulse_ace),p_zc(level));
+    assert(temperature<263.15,'Ice perturbation requires a cold state');
+    assert(eval_esi(temperature)<p_zc(level),'Ice saturation pressure exceeds p');
+    vapor=eval_qsi(temperature,p_zc(level))*(1-condensate);
+    state(level,1,pulse_ace)=eval_theta_e(temperature,vapor,0,condensate,p_zc(level));
+    state(level,2,pulse_ace)=vapor+condensate;
+    assert(state(level,1,pulse_ace)<=400,'theta_e exceeds reviewed test range');
+  end
+  fid=fopen(fullfile(settings.reports,['initial_' settings.label '.bin']),'w','ieee-le');
+  fwrite(fid,permute(state(:,1:3,:),[3,1,2]),'double'); fclose(fid);
+end
+if strcmp(settings.experiment,'mixed_precip')
+  % Interior mixed phase at model T0; no change to the production inverse.
+  temperature=273.1636783445389;
+  for level=91:110
+    if level<=96, condensate=0.00049;
+    elseif level<=103, condensate=0.0005;
+    else, condensate=0.00051; end
+    pressure=p_zc(level);
+    es=eval_es(temperature); esi=eval_esi(temperature);
+    assert(max(es,esi)<pressure,'Saturation pressure exceeds p');
+    s=0.5*0.621971830985916*(es/(pressure-es)+esi/(pressure-esi));
+    vapor=s/(1+s)*(1-condensate);
+    liquid=0.5*condensate; ice=0.5*condensate;
+    theta=eval_theta_e(temperature,vapor,liquid,ice,pressure);
+    total=vapor+condensate;
+    assert(theta<=400,'theta_e exceeds reviewed test range');
+    [Td,qd,qld,qid]=inv_T_from_theta_e(theta,total,pressure);
+    assert(Td==temperature && qld>0 && qid>0,'Initial state is not mixed phase');
+    fraction=qid/(qld+qid);
+    assert(fraction>0.25 && fraction<0.75,'Mixed partition too close to endpoint');
+    RE=(1-total)*287.04; CPL=1005.7+3184.3*total; chi=RE/CPL;
+    G0=theta*(pressure*RE/1e5)^chi;
+    qs=eval_qs(temperature,pressure,total); qsi=eval_qsi(temperature,pressure,total);
+    GT0=temperature*(RE+461.5*qs)^chi*exp(qs*9155.566660243245/CPL);
+    HT0=temperature*(RE+461.5*qsi)^chi*exp((qsi*2.500968266240670e6-0.3337e6*(total-qsi))/CPL/temperature);
+    margin=(G0-min(GT0,HT0))/abs(GT0-HT0);
+    assert(margin>0.25 && margin<0.75,'Phase decision too close to endpoint');
+    state(level,1,pulse_ace)=theta; state(level,2,pulse_ace)=total;
+  end
+  fid=fopen(fullfile(settings.reports,['initial_' settings.label '.bin']),'w','ieee-le');
+  fwrite(fid,permute(state(:,1:3,:),[3,1,2]),'double'); fclose(fid);
+end
+initial=state;
+raw=reshape(expFun(state(:),1),[Nzm,5,Ni]);
+initial_temperature=T; initial_vapor=Q; initial_liquid=QL; initial_ice=QI;
+initial_buoyancy=g.*(eval_Tv(T,Q,QL+QI)-Tv_zc)./Tv_zc;
+weno=reconstruction_weno_vec(k,state(:,1:2,:),state(:,3,:));
+upwind=squeeze(reconstruction_up3(state(:,3,:)));
+times=0:4:120;
+history=timeint(times,state(:),dt)';
+history=reshape(history,[Nzm,5,Ni,numel(times)]);
+file=fullfile(settings.reports,['matlab_' settings.label '.nc']);
+assert(~isfile(file),'Use a fresh report directory');
+write_array(file,'state',history(:,1:3,:,:),{'level',Nzm,'variable',3,'ace',Ni,'time',numel(times)});
+write_array(file,'time',times(:),{'time',numel(times)});
+write_array(file,'initial_state',initial(:,1:3,:),{'level',Nzm,'variable',3,'ace',Ni});
+write_array(file,'raw_tendency',raw(:,1:3,:),{'level',Nzm,'variable',3,'ace',Ni});
+write_array(file,'initial_temperature',initial_temperature,{'level',Nzm,'ace',Ni});
+write_array(file,'initial_vapor',initial_vapor,{'level',Nzm,'ace',Ni});
+write_array(file,'initial_liquid',initial_liquid,{'level',Nzm,'ace',Ni});
+write_array(file,'initial_ice',initial_ice,{'level',Nzm,'ace',Ni});
+write_array(file,'initial_buoyancy',initial_buoyancy,{'level',Nzm,'ace',Ni});
+write_array(file,'weno',weno,{'level',Nzm,'tracer',2,'ace',Ni});
+write_array(file,'upwind',upwind,{'level',Nzm,'ace',Ni});
+write_array(file,'reference_tv',Tv_zc,{'level',Nzm});
+write_array(file,'areas_m2',Ai*1e6,{'ace',Ni});
+write_array(file,'perimeters_m',Bi*1000,{'ace',Ni});
+ncwriteatt(file,'/','case_mode',settings.mode);
+ncwriteatt(file,'/','experiment',settings.experiment);
+ncwriteatt(file,'/','pulse_ace',pulse_ace);
+ncwriteatt(file,'/','single_policy','existing tendency mask; full PMB and geometry retained');
+ncwriteatt(file,'/','matlab_version',version);
+ncwriteatt(file,'/','skipped_diagnostics','plume/radiation/plotting only; actual timeint/expFun/SSPRK93/ImDamp called');
+save(fullfile(settings.reports,['matlab_' settings.label '_history.mat']),'history','initial','raw','times');
+cd(previous);
+end
+
+function write_array(file,name,value,dims)
+nccreate(file,name,'Datatype','double','Dimensions',dims,'Format','netcdf4');
+ncwrite(file,name,value);
+end

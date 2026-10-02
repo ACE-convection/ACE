@@ -1,5 +1,151 @@
 # Unified ACE v0.18 alignment audit
 
+## Developer acceptance update (2026-10-02)
+
+The developer accepts the current tested singleACE and twelve-hour multiACE
+physical evolution as sufficient for v0.18, with documented discrepancies
+and untested budgets retained. See the [release record](../releases/v0.18.0.md).
+This bounded acceptance supersedes the broader release gates at the end of
+this historical audit for this milestone. It does not reclassify known
+counterexamples as resolved. Source-root normalization and revalidation are
+performed separately before local main/tag publication.
+
+## Controlled alignment update
+
+Step 1 (`1b3443c`) aligns the Fortran precipitation onset formula. Step 2
+(`b70343c`) moves MATLAB precipitation after SSPRK93 and applies qt clipping
+after precipitation in both implementations. Step 3 and approved inverse
+follow-ups were committed in `516da38`, `1b00033` and `b5eaf39`, with test
+evidence in `40d7cf2`. The inversion changes and focused/grid failure review are recorded in
+[thermodynamic alignment evidence](../v018_thermodynamic_alignment.md).
+Counterexamples remain; full-domain equality and release equivalence are
+not established. The historical comparison rows below describe the original
+candidate states, not these subsequently reviewed corrections.
+
+## Pressure-power follow-up diagnostic (2026-10-01)
+
+A fresh forward run exactly reproduces the retained six-variant metrics.
+An exact-input pressure-power substitution removes the previously identified
+record 500 discrepancy. Combined with the temporary EPS-literal/main-exp
+substitutions, maximum matched-state theta_e sink difference falls from
+4.996031e-12 to 5.956591e-14 K/s. The remaining worst point first differs
+in ice saturation pressure, then the perturbed humidity power. Production
+sources and finite-difference increment remain unchanged; this is not a
+trajectory or release acceptance. See the
+[pressure-power diagnostic](../v018_pressure_power_diagnostic.md) and
+[numerical evidence](../v018_pressure_power_diagnostic.json).
+
+## Forward theta_e evaluation diagnostic (2026-10-01)
+
+Matched-cache probes show that replacing forward EPS with MATLAB's literal
+does not reduce the maximum sink discrepancy, and staged factors/products
+preserving the original order exactly reproduce native evaluation. At the
+previous worst point, an identical main-exp argument yields results one
+binary64 increment apart; substituting only that result removes the local
+numerator/sink difference. Remaining maximum sink error shifts to a state
+with a pressure-power result difference. These are temporary standalone
+diagnostics; production algorithms and constants remain unchanged.
+See [forward evaluation diagnostic](../v018_forward_evaluation_diagnostic.md)
+and [numerical evidence](../v018_forward_evaluation_diagnostic.json).
+
+## Single mixed-case residual diagnostic (2026-10-01)
+
+After reference-Tv alignment, identical-state one-step replay exactly
+reproduces both native single mixed-case histories. Common thermodynamic
+caches retain theta_e precipitation-sink differences up to 8.4267e-12 K/s;
+forward finite-difference numerator rounding produces a local 4-second
+step difference up to 3.3708e-11 K. The final native theta_e discrepancy
+also includes previously accumulated state drift. Production algorithms
+and constants remain unchanged; no causal percentage or acceptance
+tolerance is assigned. See the [residual diagnostic](../v018_mixed_residual_diagnostic.md)
+and [numerical evidence](../v018_mixed_residual_diagnostic.json).
+
+## Reference-Tv production alignment (2026-10-01)
+
+Following review of the isolation experiment, the active Fortran module and
+output driver now use fixed input `Tv_zc` with the input reference density,
+matching MATLAB. The module initialization requires this profile explicitly.
+Fresh MATLAB/Fortran dry, liquid-, ice- and mixed-phase runs cover single and
+multi ACE configurations for 30 updates at dt=4 s. All eight reference profiles
+match exactly; both mixed-phase Fortran prognostic histories exactly reproduce
+the earlier temporary shared-reference variant. Residual trajectory differences
+remain; no phase-endpoint, boundary, conservation or release-equivalence pass
+is claimed. See [production alignment validation](../v018_reference_tv_alignment.md)
+and [numerical evidence](../v018_reference_tv_alignment.json).
+
+## Reference-Tv isolation diagnostic (2026-10-01)
+
+Paired temporary Fortran builds reuse the reviewed single/multi mixed-phase
+fixtures. Fresh controls exactly reproduce retained trajectories; replacing
+only tendency reference Tv with MATLAB's shared-input profile reduces maximum
+all-sample theta_e errors by 89.0%/96.6%, qt by 99.65%/99.84%, and MF by
+99.22%/99.80%. Initial buoyancy error decreases from 6.3012e-10 to
+3.7082e-15 m/s2. This identifies a dominant contribution for these cases,
+without approving a production reference-state change or resolving residual,
+endpoint or boundary differences. Production sources remain unchanged.
+See the [diagnostic report](../v018_reference_tv_diagnostic.md) and
+[numerical evidence](../v018_reference_tv_diagnostic.json). Next review the
+intended environmental reference-state contract before any scientific fix.
+
+## Mixed-phase trajectory check (2026-10-01)
+
+Production sources remain at the approved Ci alignment. Single/multi-ACE
+mixed-phase-onset clouds completed 4-second/120-second comparisons with finite
+states and tendencies. Twenty prescribed levels start near equal liquid/ice
+partition, well inside the existing phase-decision interval. All 31 sampled
+cloud-level phase masks match; the clouds evolve to pure phases rather than
+remaining mixed for the full 120 seconds. Common-input rediagnosis of both
+saved trajectories finds no phase disagreement in these states. See the
+[mixed trajectory report](../v018_mixed_precipitation_comparison.md) and
+[numerical evidence](../v018_mixed_precipitation_comparison.json).
+The prior endpoint counterexample remains unresolved.
+
+## Ice-precipitating trajectory check (2026-10-01)
+
+The corrected production source `1ac8d27` completed single/multi-ACE
+ice-precipitating 4-second/120-second tests. Initial prognostic arrays match
+exactly, all states/tendencies are finite, and selected cold levels retain
+positive ice with zero liquid at four diagnostic snapshots. MATLAB's actual
+precipitation accumulator confirms active loss in all thirty updates.
+See the [ice trajectory report](../v018_ice_precipitation_comparison.md) and
+[numerical evidence](../v018_ice_precipitation_comparison.json).
+This is a focused pure-ice validation; the known endpoint ambiguity remains.
+
+## Ice heat-capacity follow-up (2026-10-01)
+
+The approved follow-up aligns only Fortran `Ci`'s reference temperature to
+MATLAB's 273.15 K, retaining its former declaration as a comment. See the
+[change and verification report](../v018_ice_heat_capacity_alignment.md) and
+[numerical evidence](../v018_ice_heat_capacity_alignment.json).
+The ten physics probes and four single/multi-ACE dry/liquid trajectories
+were rerun. The standalone ice forward-theta_e discrepancy is removed for
+the tested input; small finite-difference tendency differences remain.
+The earlier post-alignment report below records the pre-Ci source.
+
+## Post-alignment timestep validation (2026-10-01)
+
+The committed aligned sources at `40d7cf2` completed matched single/multi-ACE
+dry and liquid-precipitating 4-second/120-second tests. All trajectories are
+finite and initial prognostic arrays match exactly. See the
+[aligned runtime report](../v018_aligned_runtime_comparison.md) and
+[numerical evidence](../v018_aligned_runtime_comparison.json).
+Standalone ice probes identify a remaining forward-theta_e/Ci-reference
+difference affecting the precipitation thermodynamic adjustment. A temporary
+diagnostic confirms its contribution; no production correction was applied.
+The earlier endpoint counterexample and other documented limitations remain.
+
+## Runtime comparison update (2026-09-30)
+
+After shared-input commit `2537f46`, MATLAB and GNU Fortran completed matched
+single-ACE and multi-ACE one-step/120-second tests, both dry and controlled
+precipitating cases. See [runtime report](../v018_runtime_comparison.md) and
+[machine-readable evidence](../v018_runtime_comparison.json). Dry trajectories
+agree to very small errors; precipitation activates clear divergence. No
+scientific correction, accepted tolerance or release equivalence follows.
+The static descriptions below retain the original archaeology baseline;
+missing-input and unavailable-MATLAB statements describe that earlier host.
+
+
 Role: canonical scientific/source audit for the first unified v0.18 release.
 The [roadmap](matlab_fortran_alignment_plan.md) defines milestone order and
 repository normalization; the [input contract](v018_input_contract.md) owns

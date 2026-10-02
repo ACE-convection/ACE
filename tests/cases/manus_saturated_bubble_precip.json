@@ -1,0 +1,69 @@
+{
+  "schema": "ACE-reference-case-1",
+  "case_id": "manus_saturated_bubble_precip",
+  "status": "additional precipitation-enabled comparison case; completed v0.18 execution checks",
+  "input": {
+    "path": "data/input/manus208.nc",
+    "sha256": "85f8f5ebf0b4a0bca4a96b9b3f6f9b43a1d9bdb4470658b018dcd71d5219b1d9",
+    "case_name": "manus",
+    "profile_index": 208,
+    "arm": 1
+  },
+  "integration": {
+    "duration_seconds": 10800,
+    "dt_seconds": 4,
+    "output_step_seconds": 60,
+    "method": "SSPRK93",
+    "precipitation": true,
+    "mf_diffusion": false,
+    "damping": "existing model damping",
+    "precipitation_policy": "native post-SSPRK93 sink using stage-1 thermodynamic cache, then qt clamp and damping; retain native masks"
+  },
+  "single_ace": {
+    "active_ace_one_based": 1,
+    "policy": "tendency mask; eight-ACE geometry and full PMB retained"
+  },
+  "bubble": {
+    "levels_one_based": [
+      11,
+      51
+    ],
+    "delta_temperature_K": 1,
+    "saturated": true,
+    "initial_condensate_kg_per_kg": 0,
+    "coordinate_policy": "original MATLAB T_zm and p_mf; 500\u20132500 m",
+    "initial_state_policy": "MATLAB exports theta_e/qt/MF for both implementations"
+  },
+  "initial_mf": {
+    "amplitude_kg_m2_s": 0.03,
+    "base_m": 0,
+    "top_m": 1000,
+    "shape": "sin(pi*z/1000)"
+  },
+  "grid": {
+    "dz_m": 50,
+    "top_m": 40000,
+    "mf_levels": 801
+  },
+  "comparison": {
+    "byte_equality_required": false,
+    "numerical_tolerance": "not prescribed; report error metrics and scientific findings",
+    "plot_panels": [
+      "MATLAB",
+      "Fortran",
+      "Fortran-MATLAB"
+    ],
+    "plot_height_km": 20
+  },
+  "reference": {
+    "source_commit": "2a58571f81a5009b05262ca331507263502075c8",
+    "path": "tests/reference/manus_saturated_bubble_precip",
+    "files_sha256": {
+      "bubble_validation.json": "4680bae632874ef4dc3fd179ec1811b4bf4dc77e25057aa0ceff672ef2ecfa71",
+      "initial_state.bin": "2fbb0c2361f238756f8828b3de12fe4bdd13dad98669d1654955714950677bbb",
+      "mf.npz": "4def89f34a90995f2e7a0271ed56b43d6b9389b9c0a031075b0ae103dcc31994",
+      "precipitation.npz": "77b5dbaa385fae0711c1fe75cf8f8cc565c84cd102d78d369bd95c25785c364f",
+      "results.json": "896de5d75379e9c0c9ddf9655514296412bb80db48fdb57d33d8b6b816234810"
+    }
+  }
+}

@@ -1,0 +1,522 @@
+{
+  "scope": "Same implementation before/after source normalization; exact equality is not a MATLAB/Fortran acceptance criterion",
+  "previous": "migration_work/manus208_single_saturated_bubble_precip_review",
+  "current": "migration_work/v018_normalized_single_precip",
+  "baseline_commits": [
+    "2a58571f81a5009b05262ca331507263502075c8",
+    "9665658aa808174c3af6e3a770cee8c456bec823"
+  ],
+  "production_sources_sha256": [
+    {
+      "matlab/active/ace.m": "14ecab89df0e05b9b86299fd78fe3f493f03e2bab9a9eb05a5d6fb2b40c71324",
+      "fortran/active/src/ace_module.F": "e343be3bfeb9baaa516962af66aaf7d5c674d7aefd76393cfc0ca6a998f69b31",
+      "fortran/active/src/ace_input.F": "e349ea2a0326c37756f4b7f58e4905f01a7134fed5feb748993d5e819ee6a2da",
+      "tests/alignment/matlab_case.txt": "7a765b87234d7b274a48981da3026004fe05ddfdccee36c631c6dfef02921807",
+      "tests/alignment/fortran_case.f90": "c964e5a94568af2c74ca723abce400088a9b54c772d4500c0db388b475dc41c0",
+      "tests/alignment/fortran_thermo.f90": "6c2f0a0c957f7034fe0de3fb869d1da70d96ff4b16ed6dddd01d028739879fda",
+      "tests/alignment/fortran_diagnostics.f90": "73bb53c20f633407814872523fb8fd0bdb5e2e410296bf935d7133993a628355",
+      "tests/alignment/prepare.py": "d3e0f8f26bcbd52cd57db3a0a934d1c9be946b1364ab23380100975c40a2067d",
+      "tests/alignment/matlab_thermo.txt": "fbe907731261cb70db34c794d37270243d6ae4b2abb6ebf4e0c9d70dd6650bac",
+      "matlab/active/util_weno/reconstruction_up3.m": "748ac867a4a5ef7089db896e1fcd5a20c8b1dfcaa461c3aac34a410f20c66c20",
+      "matlab/active/util_weno/reconstruction_weno.m": "fd5478923021e54188d5996365fd942e047298f2b223a68d6bd97c7f13a961c1",
+      "matlab/active/util_weno/reconstruction_weno_vec.m": "f5f5fc42c9a97068543ae54d53bff7d50c721f1d30f2765b831b9fbc76811c02",
+      "matlab/active/util_plume/entrain_plume_calc.m": "0a066663dcd5fc6289b1659af79f0877ffab5754e4909f0998966a6e96b646a0",
+      "matlab/active/util_thermodynamics/IMPORT_CONSTANTS.m": "9fde477680e8eea17fc2f5f2aca61ef95d556fbc4c4f7f676cc53f6d3d82ba89",
+      "matlab/active/util_thermodynamics/ci.m": "dba544e76ce1e74136daff7fd988670f68000c8835732344d5ac6c20697389ce",
+      "matlab/active/util_thermodynamics/eval_Tv.m": "4b0b113e2ff4a09e89c8809a6830b52e6356e97be282b464cd9f74b0b07b7eb3",
+      "matlab/active/util_thermodynamics/eval_dTqs.m": "f8fb651a0ee10b7b387b2704b2c91051efdf04300362bbb9db32e7f50efb3ad1",
+      "matlab/active/util_thermodynamics/eval_dTqsi.m": "9b91370ac36d0dc2a439b8ee56134775fd1ffba1cc02465094b4764bfc891bc5",
+      "matlab/active/util_thermodynamics/eval_es.m": "a6d89db08505d726edae0b520d69360da23aed5dd4079697797302cdaab6ec2c",
+      "matlab/active/util_thermodynamics/eval_esi.m": "13e7d32f678a1b8e9a0f97e326dbaf94027a3e09b808f424e3b02c427f1813db",
+      "matlab/active/util_thermodynamics/eval_q.m": "2cf06b7958e5cbd69ee53e967e90124a14f646cef878d662d879e48863fbfb46",
+      "matlab/active/util_thermodynamics/eval_qs.m": "79e9bdd57cec8a7b47136b7ea9e59d998c37cd85a472e24bba33c341510f7dcd",
+      "matlab/active/util_thermodynamics/eval_qsat.m": "a4adf98fe96720aedc55a4a37747b2a613fa2bf36cce8bf63af10a12ad193cae",
+      "matlab/active/util_thermodynamics/eval_qsi.m": "03bb4474d8239134858e40633baceaa4a7893e2bd8d4ae282709712e4c992f50",
+      "matlab/active/util_thermodynamics/eval_theta.m": "c69e40c66320d5d1b0d62365db0897cbdc87a9c523c0aecd211945780811d71b",
+      "matlab/active/util_thermodynamics/eval_theta_e.m": "631d04f3cac84824255fb4404068081bab52bb163efe37800559c223988a9843",
+      "matlab/active/util_thermodynamics/eval_theta_es.m": "2e1ad11546d8b5162017a76755eaaecd64d74f489b20b925dd3c84c1ccb0dc6e",
+      "matlab/active/util_thermodynamics/inv_T_from_theta_e.m": "a8ec61cc98ca480ac3d95d10d1ddb892dbbdb1cfeb186083264d1a7b7cf28011",
+      "matlab/active/util_thermodynamics/lv.m": "c389332e53409f9a3f01adc2641fd140e0e59f4c4ad88ad49914724b7021a2d1"
+    },
+    {
+      "matlab/ace.m": "3d7d2d258cdc7a59ea75c7ab5fc01dcd2712db1e9bb3a228386ae121a318d9ad",
+      "fortran/src/ace_module.F": "e343be3bfeb9baaa516962af66aaf7d5c674d7aefd76393cfc0ca6a998f69b31",
+      "fortran/src/ace_input.F": "e349ea2a0326c37756f4b7f58e4905f01a7134fed5feb748993d5e819ee6a2da",
+      "tests/alignment/matlab_case.txt": "163285ef6a937649aa5682362b0d885398f5ee8550d8b9bd05083fc722e46524",
+      "tests/alignment/fortran_case.f90": "c964e5a94568af2c74ca723abce400088a9b54c772d4500c0db388b475dc41c0",
+      "tests/alignment/fortran_thermo.f90": "6c2f0a0c957f7034fe0de3fb869d1da70d96ff4b16ed6dddd01d028739879fda",
+      "tests/alignment/fortran_diagnostics.f90": "73bb53c20f633407814872523fb8fd0bdb5e2e410296bf935d7133993a628355",
+      "tests/alignment/prepare.py": "25d85b9cbc9d86f455929aa3dad291fff38892e777b4a68e63d9d1551c98b436",
+      "tests/alignment/matlab_thermo.txt": "35587653d6e8ffd8040ccfa17ca52b75d04ccad5d10362aa18b515be72d55fbb",
+      "matlab/util_weno/reconstruction_up3.m": "748ac867a4a5ef7089db896e1fcd5a20c8b1dfcaa461c3aac34a410f20c66c20",
+      "matlab/util_weno/reconstruction_weno.m": "fd5478923021e54188d5996365fd942e047298f2b223a68d6bd97c7f13a961c1",
+      "matlab/util_weno/reconstruction_weno_vec.m": "f5f5fc42c9a97068543ae54d53bff7d50c721f1d30f2765b831b9fbc76811c02",
+      "matlab/util_plume/entrain_plume_calc.m": "0a066663dcd5fc6289b1659af79f0877ffab5754e4909f0998966a6e96b646a0",
+      "matlab/util_thermodynamics/IMPORT_CONSTANTS.m": "9fde477680e8eea17fc2f5f2aca61ef95d556fbc4c4f7f676cc53f6d3d82ba89",
+      "matlab/util_thermodynamics/ci.m": "dba544e76ce1e74136daff7fd988670f68000c8835732344d5ac6c20697389ce",
+      "matlab/util_thermodynamics/eval_Tv.m": "4b0b113e2ff4a09e89c8809a6830b52e6356e97be282b464cd9f74b0b07b7eb3",
+      "matlab/util_thermodynamics/eval_dTqs.m": "f8fb651a0ee10b7b387b2704b2c91051efdf04300362bbb9db32e7f50efb3ad1",
+      "matlab/util_thermodynamics/eval_dTqsi.m": "9b91370ac36d0dc2a439b8ee56134775fd1ffba1cc02465094b4764bfc891bc5",
+      "matlab/util_thermodynamics/eval_es.m": "a6d89db08505d726edae0b520d69360da23aed5dd4079697797302cdaab6ec2c",
+      "matlab/util_thermodynamics/eval_esi.m": "13e7d32f678a1b8e9a0f97e326dbaf94027a3e09b808f424e3b02c427f1813db",
+      "matlab/util_thermodynamics/eval_q.m": "2cf06b7958e5cbd69ee53e967e90124a14f646cef878d662d879e48863fbfb46",
+      "matlab/util_thermodynamics/eval_qs.m": "79e9bdd57cec8a7b47136b7ea9e59d998c37cd85a472e24bba33c341510f7dcd",
+      "matlab/util_thermodynamics/eval_qsat.m": "a4adf98fe96720aedc55a4a37747b2a613fa2bf36cce8bf63af10a12ad193cae",
+      "matlab/util_thermodynamics/eval_qsi.m": "03bb4474d8239134858e40633baceaa4a7893e2bd8d4ae282709712e4c992f50",
+      "matlab/util_thermodynamics/eval_theta.m": "c69e40c66320d5d1b0d62365db0897cbdc87a9c523c0aecd211945780811d71b",
+      "matlab/util_thermodynamics/eval_theta_e.m": "631d04f3cac84824255fb4404068081bab52bb163efe37800559c223988a9843",
+      "matlab/util_thermodynamics/eval_theta_es.m": "2e1ad11546d8b5162017a76755eaaecd64d74f489b20b925dd3c84c1ccb0dc6e",
+      "matlab/util_thermodynamics/inv_T_from_theta_e.m": "a8ec61cc98ca480ac3d95d10d1ddb892dbbdb1cfeb186083264d1a7b7cf28011",
+      "matlab/util_thermodynamics/lv.m": "c389332e53409f9a3f01adc2641fd140e0e59f4c4ad88ad49914724b7021a2d1"
+    }
+  ],
+  "commands": [
+    [
+      {
+        "argv": [
+          "/home/peter50504/miniconda3/bin/python3",
+          "/scratch/peter50504/ACE/tests/alignment/prepare.py",
+          "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_precip_review"
+        ],
+        "cwd": "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_precip_review"
+      },
+      {
+        "argv": [
+          "gfortran",
+          "-O2",
+          "-ffree-form",
+          "-fdefault-real-8",
+          "-fdefault-double-8",
+          "-ffree-line-length-none",
+          "-I/home/peter50504/miniconda3/include",
+          "-I/home/peter50504/miniconda3/include",
+          "-c",
+          "ace_module.F"
+        ],
+        "cwd": "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_precip_review"
+      },
+      {
+        "argv": [
+          "gfortran",
+          "-O2",
+          "-ffree-form",
+          "-fdefault-real-8",
+          "-fdefault-double-8",
+          "-ffree-line-length-none",
+          "-I/home/peter50504/miniconda3/include",
+          "-I/home/peter50504/miniconda3/include",
+          "/scratch/peter50504/ACE/fortran/active/src/test.F",
+          "ace_module.o",
+          "ace_input.o",
+          "-L/home/peter50504/miniconda3/lib",
+          "-lnetcdff",
+          "-lnetcdf",
+          "-Wl,-rpath,/home/peter50504/miniconda3/lib",
+          "-o",
+          "base_model.exe"
+        ],
+        "cwd": "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_precip_review"
+      },
+      {
+        "argv": [
+          "gfortran",
+          "-O2",
+          "-ffree-form",
+          "-fdefault-real-8",
+          "-fdefault-double-8",
+          "-ffree-line-length-none",
+          "-I/home/peter50504/miniconda3/include",
+          "-I/home/peter50504/miniconda3/include",
+          "/scratch/peter50504/ACE/tests/alignment/fortran_sounding_case.f90",
+          "ace_module.o",
+          "ace_input.o",
+          "-L/home/peter50504/miniconda3/lib",
+          "-lnetcdff",
+          "-lnetcdf",
+          "-Wl,-rpath,/home/peter50504/miniconda3/lib",
+          "-o",
+          "case.exe"
+        ],
+        "cwd": "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_precip_review"
+      },
+      {
+        "argv": [
+          "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_precip_review/base_model.exe",
+          "--input",
+          "/scratch/peter50504/ACE/data/input/manus208.nc",
+          "--validate-input",
+          "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_precip_review/fortran_init.bin"
+        ],
+        "cwd": "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_precip_review"
+      },
+      {
+        "argv": [
+          "matlab",
+          "-batch",
+          "addpath('/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_precip_review'); run_sounding_case('/scratch/peter50504/ACE','/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_precip_review','/scratch/peter50504/ACE/data/input/manus208.nc',10800,60,true);"
+        ],
+        "cwd": "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_precip_review"
+      },
+      {
+        "argv": [
+          "matlab",
+          "-batch",
+          "addpath('/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_precip_review'); run_sounding_case('/scratch/peter50504/ACE','/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_precip_review','/scratch/peter50504/ACE/data/input/manus208.nc',10800,60);"
+        ],
+        "cwd": "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_precip_review"
+      },
+      {
+        "argv": [
+          "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_precip_review/case.exe",
+          "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_precip_review/fortran_init.bin",
+          "/scratch/peter50504/ACE/data/input/manus208.nc",
+          "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_precip_review/fortran.bin",
+          "10800",
+          "60",
+          "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_precip_review/initial_override.bin"
+        ],
+        "cwd": "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_precip_review"
+      }
+    ],
+    [
+      {
+        "argv": [
+          "/home/peter50504/miniconda3/bin/python3",
+          "/scratch/peter50504/ACE/tests/alignment/prepare.py",
+          "/scratch/peter50504/ACE/migration_work/v018_normalized_single_precip"
+        ],
+        "cwd": "/scratch/peter50504/ACE/migration_work/v018_normalized_single_precip"
+      },
+      {
+        "argv": [
+          "gfortran",
+          "-O2",
+          "-ffree-form",
+          "-fdefault-real-8",
+          "-fdefault-double-8",
+          "-ffree-line-length-none",
+          "-I/home/peter50504/miniconda3/include",
+          "-I/home/peter50504/miniconda3/include",
+          "-c",
+          "ace_module.F"
+        ],
+        "cwd": "/scratch/peter50504/ACE/migration_work/v018_normalized_single_precip"
+      },
+      {
+        "argv": [
+          "gfortran",
+          "-O2",
+          "-ffree-form",
+          "-fdefault-real-8",
+          "-fdefault-double-8",
+          "-ffree-line-length-none",
+          "-I/home/peter50504/miniconda3/include",
+          "-I/home/peter50504/miniconda3/include",
+          "/scratch/peter50504/ACE/fortran/src/test.F",
+          "ace_module.o",
+          "ace_input.o",
+          "-L/home/peter50504/miniconda3/lib",
+          "-lnetcdff",
+          "-lnetcdf",
+          "-Wl,-rpath,/home/peter50504/miniconda3/lib",
+          "-o",
+          "base_model.exe"
+        ],
+        "cwd": "/scratch/peter50504/ACE/migration_work/v018_normalized_single_precip"
+      },
+      {
+        "argv": [
+          "gfortran",
+          "-O2",
+          "-ffree-form",
+          "-fdefault-real-8",
+          "-fdefault-double-8",
+          "-ffree-line-length-none",
+          "-I/home/peter50504/miniconda3/include",
+          "-I/home/peter50504/miniconda3/include",
+          "/scratch/peter50504/ACE/tests/alignment/fortran_sounding_case.f90",
+          "ace_module.o",
+          "ace_input.o",
+          "-L/home/peter50504/miniconda3/lib",
+          "-lnetcdff",
+          "-lnetcdf",
+          "-Wl,-rpath,/home/peter50504/miniconda3/lib",
+          "-o",
+          "case.exe"
+        ],
+        "cwd": "/scratch/peter50504/ACE/migration_work/v018_normalized_single_precip"
+      },
+      {
+        "argv": [
+          "/scratch/peter50504/ACE/migration_work/v018_normalized_single_precip/base_model.exe",
+          "--input",
+          "/scratch/peter50504/ACE/data/input/manus208.nc",
+          "--validate-input",
+          "/scratch/peter50504/ACE/migration_work/v018_normalized_single_precip/fortran_init.bin"
+        ],
+        "cwd": "/scratch/peter50504/ACE/migration_work/v018_normalized_single_precip"
+      },
+      {
+        "argv": [
+          "matlab",
+          "-batch",
+          "addpath('/scratch/peter50504/ACE/migration_work/v018_normalized_single_precip'); run_sounding_case('/scratch/peter50504/ACE','/scratch/peter50504/ACE/migration_work/v018_normalized_single_precip','/scratch/peter50504/ACE/data/input/manus208.nc',10800,60,true,'single');"
+        ],
+        "cwd": "/scratch/peter50504/ACE/migration_work/v018_normalized_single_precip"
+      },
+      {
+        "argv": [
+          "matlab",
+          "-batch",
+          "addpath('/scratch/peter50504/ACE/migration_work/v018_normalized_single_precip'); run_sounding_case('/scratch/peter50504/ACE','/scratch/peter50504/ACE/migration_work/v018_normalized_single_precip','/scratch/peter50504/ACE/data/input/manus208.nc',10800,60,false,'single');"
+        ],
+        "cwd": "/scratch/peter50504/ACE/migration_work/v018_normalized_single_precip"
+      },
+      {
+        "argv": [
+          "/scratch/peter50504/ACE/migration_work/v018_normalized_single_precip/case.exe",
+          "/scratch/peter50504/ACE/migration_work/v018_normalized_single_precip/fortran_init.bin",
+          "/scratch/peter50504/ACE/data/input/manus208.nc",
+          "/scratch/peter50504/ACE/migration_work/v018_normalized_single_precip/fortran.bin",
+          "10800",
+          "60",
+          "/scratch/peter50504/ACE/migration_work/v018_normalized_single_precip/initial_override.bin",
+          "single"
+        ],
+        "cwd": "/scratch/peter50504/ACE/migration_work/v018_normalized_single_precip"
+      }
+    ]
+  ],
+  "input_sha256": "85f8f5ebf0b4a0bca4a96b9b3f6f9b43a1d9bdb4470658b018dcd71d5219b1d9",
+  "matlab": {
+    "prognostic": {
+      "theta_e": {
+        "shape": [
+          181,
+          8,
+          801
+        ],
+        "exact_equal": true,
+        "max_abs_difference": 0.0
+      },
+      "qt": {
+        "shape": [
+          181,
+          8,
+          801
+        ],
+        "exact_equal": true,
+        "max_abs_difference": 0.0
+      },
+      "MF": {
+        "shape": [
+          181,
+          8,
+          801
+        ],
+        "exact_equal": true,
+        "max_abs_difference": 0.0
+      }
+    },
+    "time": {
+      "shape": [
+        181
+      ],
+      "exact_equal": true,
+      "max_abs_difference": 0.0
+    },
+    "zm": {
+      "shape": [
+        801
+      ],
+      "exact_equal": true,
+      "max_abs_difference": 0.0
+    },
+    "precipitation_accumulation": {
+      "shape": [
+        181,
+        8,
+        2,
+        801
+      ],
+      "exact_equal": true,
+      "max_abs_difference": 0.0
+    }
+  },
+  "current_run_validation": {
+    "finite_outputs": true,
+    "prognostic": {
+      "theta_e": {
+        "exact_equal": false,
+        "max_abs": 7.914900379546452e-08,
+        "rms": 6.289249907155621e-10,
+        "relative_l2": 1.0112910581948323e-12,
+        "max_rel_nonzero_reference": 2.2183549095660773e-10,
+        "zero_reference_max_abs": 0,
+        "worst_index_one_based": [
+          147,
+          313,
+          1
+        ],
+        "matlab_at_worst": 356.7914378991165,
+        "fortran_at_worst": 356.7914378199675
+      },
+      "qt": {
+        "exact_equal": false,
+        "max_abs": 1.3638836154211686e-11,
+        "rms": 9.825096615101644e-14,
+        "relative_l2": 2.0932325424178603e-11,
+        "max_rel_nonzero_reference": 4.479531438874745e-08,
+        "zero_reference_max_abs": 0,
+        "worst_index_one_based": [
+          164,
+          313,
+          1
+        ],
+        "matlab_at_worst": 0.0019116064941209964,
+        "fortran_at_worst": 0.0019116065077598326
+      },
+      "MF": {
+        "exact_equal": false,
+        "max_abs": 3.802017367604549e-09,
+        "rms": 1.3307921932452187e-10,
+        "relative_l2": 6.170948218771557e-11,
+        "max_rel_nonzero_reference": 6.543089171990724e-05,
+        "zero_reference_max_abs": 0.0,
+        "worst_index_one_based": [
+          53,
+          257,
+          1
+        ],
+        "matlab_at_worst": 7.093075454165585,
+        "fortran_at_worst": 7.093075457967602
+      }
+    },
+    "initial_state": {
+      "theta_e": {
+        "exact_equal": true,
+        "max_abs": 0.0,
+        "rms": 0.0,
+        "relative_l2": 0.0,
+        "max_rel_nonzero_reference": 0.0,
+        "zero_reference_max_abs": 0,
+        "worst_index_one_based": [
+          1,
+          1
+        ],
+        "matlab_at_worst": 357.0878098025499,
+        "fortran_at_worst": 357.0878098025499
+      },
+      "qt": {
+        "exact_equal": true,
+        "max_abs": 0.0,
+        "rms": 0.0,
+        "relative_l2": 0.0,
+        "max_rel_nonzero_reference": 0.0,
+        "zero_reference_max_abs": 0,
+        "worst_index_one_based": [
+          1,
+          1
+        ],
+        "matlab_at_worst": 0.021408736537780727,
+        "fortran_at_worst": 0.021408736537780727
+      },
+      "MF": {
+        "exact_equal": true,
+        "max_abs": 0.0,
+        "rms": 0.0,
+        "relative_l2": 0.0,
+        "max_rel_nonzero_reference": 0.0,
+        "zero_reference_max_abs": 0.0,
+        "worst_index_one_based": [
+          1,
+          1
+        ],
+        "matlab_at_worst": 0.0,
+        "fortran_at_worst": 0.0
+      }
+    },
+    "ranges": {
+      "matlab": {
+        "mf_min": -0.11972783359741006,
+        "mf_max": 16.046092538014907,
+        "qt_min": 2.583502650483451e-06,
+        "qt_max": 0.021408736537780727
+      },
+      "fortran": {
+        "mf_min": -0.11972783341705391,
+        "mf_max": 16.046092538609194,
+        "qt_min": 2.583502650483959e-06,
+        "qt_max": 0.021408736537780727
+      }
+    },
+    "precipitation_validation": {
+      "matlab_accumulation_finite_monotonic": true,
+      "matlab_final_qt_removal_max_kg_per_kg": 0.1580208671404651,
+      "matlab_final_qt_removal_sum_kg_per_kg": 33.94502081349898,
+      "fortran_sink_finite_nonnegative": true,
+      "fortran_updates_with_positive_loss": 2700,
+      "fortran_qt_removal_sum_kg_per_kg": 33.94502081377489,
+      "scope": "Native sink diagnostics; unweighted sums are not a physical domain-water budget; native precipitation masks retained"
+    },
+    "matlab_version": "23.2.0.2668659 (R2023b) Update 9",
+    "gfortran_version": "GNU Fortran (conda-forge gcc 11.2.0-16) 11.2.0"
+  },
+  "initial_seed": {
+    "shape": [
+      19224
+    ],
+    "exact_equal": true,
+    "max_abs_difference": 0.0
+  },
+  "fortran": {
+    "theta_e": {
+      "shape": [
+        8,
+        801,
+        181
+      ],
+      "exact_equal": true,
+      "max_abs_difference": 0.0
+    },
+    "qt": {
+      "shape": [
+        8,
+        801,
+        181
+      ],
+      "exact_equal": true,
+      "max_abs_difference": 0.0
+    },
+    "MF": {
+      "shape": [
+        8,
+        801,
+        181
+      ],
+      "exact_equal": true,
+      "max_abs_difference": 0.0
+    },
+    "precipitation": {
+      "shape": [
+        2700,
+        4
+      ],
+      "exact_equal": true,
+      "max_abs_difference": 0.0
+    }
+  },
+  "artifact_sha256": [
+    {
+      "matlab.nc": "33ea8605a6c3445acde5f78c737eac6f0f89d4818bd0ca6a0d4dde6cb00d8fd0",
+      "fortran.bin": "86c78c74cfb7b7c261072daa51e8bf73701d66b4ac17fd6314f39894dc1f4168",
+      "initial_override.bin": "2fbb0c2361f238756f8828b3de12fe4bdd13dad98669d1654955714950677bbb"
+    },
+    {
+      "matlab.nc": "c08aee19a231f571b3944a81c29fbb3f4c2054a78a7902ba02413528ee048653",
+      "fortran.bin": "86c78c74cfb7b7c261072daa51e8bf73701d66b4ac17fd6314f39894dc1f4168",
+      "initial_override.bin": "2fbb0c2361f238756f8828b3de12fe4bdd13dad98669d1654955714950677bbb"
+    }
+  ],
+  "status": "passed: all saved numerical values exactly reproduced"
+}

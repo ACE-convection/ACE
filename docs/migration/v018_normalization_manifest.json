@@ -1,0 +1,2394 @@
+{
+  "recovery_commit": "c9ae729be1e9d6ff214693bb09abaa9344def0e7",
+  "backup_path": "/scratch/peter50504/ACE/migration_work/v018_pre_normalization",
+  "entries": [
+    {
+      "old_path": "fortran/.gitkeep",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "old_path": "fortran/active/README.md",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "035064c70e4a0f962f9db29d18283d4b6035c71ae7d0c638acfa321d1d414907"
+    },
+    {
+      "old_path": "fortran/active/makefile",
+      "new_path": "fortran/makefile",
+      "disposition": "promote",
+      "sha256_before": "5127c51a7f933980bf86a1ea48079f1cbdbea3478ec99a6c4f66a720b209f5eb",
+      "sha256_after": "5127c51a7f933980bf86a1ea48079f1cbdbea3478ec99a6c4f66a720b209f5eb",
+      "byte_identical": true
+    },
+    {
+      "old_path": "fortran/active/src/ace_input.F",
+      "new_path": "fortran/src/ace_input.F",
+      "disposition": "promote",
+      "sha256_before": "e349ea2a0326c37756f4b7f58e4905f01a7134fed5feb748993d5e819ee6a2da",
+      "sha256_after": "e349ea2a0326c37756f4b7f58e4905f01a7134fed5feb748993d5e819ee6a2da",
+      "byte_identical": true
+    },
+    {
+      "old_path": "fortran/active/src/ace_module.F",
+      "new_path": "fortran/src/ace_module.F",
+      "disposition": "promote",
+      "sha256_before": "e343be3bfeb9baaa516962af66aaf7d5c674d7aefd76393cfc0ca6a998f69b31",
+      "sha256_after": "e343be3bfeb9baaa516962af66aaf7d5c674d7aefd76393cfc0ca6a998f69b31",
+      "byte_identical": true
+    },
+    {
+      "old_path": "fortran/active/src/test.F",
+      "new_path": "fortran/src/test.F",
+      "disposition": "promote",
+      "sha256_before": "f6457dd15093fda504b5fd5204e608958774bafa0438296320d8ee87d3bddfe1",
+      "sha256_after": "07c8114571393c8d26b84a2efe665f3c8c6d1c9365718775c8998975f3eacd89",
+      "byte_identical": false
+    },
+    {
+      "old_path": "fortran/history/original_git/.gitignore",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "b783c857cba5e305bf42fb581b1a0dadb0be63f4fe693f5d8b4f5ce3dbc7b20e"
+    },
+    {
+      "old_path": "fortran/history/original_git/LICENSE",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+    },
+    {
+      "old_path": "fortran/history/original_git/README.md",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "261665caa714a8f7c033da559cc921e388234d88dcc1f09663137b930816b3c1"
+    },
+    {
+      "old_path": "fortran/history/original_git/makefile",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "7b88dc1ec3494b52e2ff8b963cb8fedb28f952034d7c2b462aa77664b6975a42"
+    },
+    {
+      "old_path": "fortran/history/original_git/src/ace_module.F",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "4346855172917f9bba81ca0cc63b6d2837185d6e8925cfa79b14615aa24aac23"
+    },
+    {
+      "old_path": "fortran/history/original_git/src/test.F",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "a7f1541e12f3e264c74452c46b0355315c29def2e291f06f7d9e0239f2815174"
+    },
+    {
+      "old_path": "matlab/.gitkeep",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "old_path": "matlab/active/README.md",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "354ff63224da32b106b860538e5980d4868985f279db7b3f0d4b243bf2fdc66a"
+    },
+    {
+      "old_path": "matlab/active/ace.m",
+      "new_path": "matlab/ace.m",
+      "disposition": "promote",
+      "sha256_before": "14ecab89df0e05b9b86299fd78fe3f493f03e2bab9a9eb05a5d6fb2b40c71324",
+      "sha256_after": "3d7d2d258cdc7a59ea75c7ab5fc01dcd2712db1e9bb3a228386ae121a318d9ad",
+      "byte_identical": false
+    },
+    {
+      "old_path": "matlab/active/numerics/reconstruction_up3.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "748ac867a4a5ef7089db896e1fcd5a20c8b1dfcaa461c3aac34a410f20c66c20"
+    },
+    {
+      "old_path": "matlab/active/numerics/reconstruction_weno_vec.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "7db699727a68b1838a177e57c02b53901b90256cfc99c6172da338529e9ebdf4"
+    },
+    {
+      "old_path": "matlab/active/read_shared_input.m",
+      "new_path": "matlab/read_shared_input.m",
+      "disposition": "promote",
+      "sha256_before": "197ff055ebeb53c36aed5c64e74c251126c0bc6421492336b8997031a6a2b1b2",
+      "sha256_after": "197ff055ebeb53c36aed5c64e74c251126c0bc6421492336b8997031a6a2b1b2",
+      "byte_identical": true
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/IMPORT_CONSTANTS_NOGLOBAL.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "68056228f1419b0d3708c72682d0e6fee0bcdc1f5f3a1d09c1ea822113297499"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/ci.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "dba544e76ce1e74136daff7fd988670f68000c8835732344d5ac6c20697389ce"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/eval_B.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "4260dae12c5e40d915ce2ac348b85d3358d9470dd9ad17bf3771a0e803647e6b"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/eval_Tv.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "d86992e3f9ef64bbf038424876b9c2c3b2a6ec1d2f23f673a553bca014213690"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/eval_dTes.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "dccd232253f4422bdb334a7089c5065459c0207def6cde54714fa1fa97bcf116"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/eval_dTqs.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "35e4585653c828cb6bede2d25914c66d71b59c7894ad4e877180ffd57c57a74a"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/eval_dTqsi.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "5ce3913522b068b98badfdd279ab0fa1ad0ed9a7ce751e5fd4ef2b688a734de6"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/eval_es.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "a6d89db08505d726edae0b520d69360da23aed5dd4079697797302cdaab6ec2c"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/eval_esi.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "13e7d32f678a1b8e9a0f97e326dbaf94027a3e09b808f424e3b02c427f1813db"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/eval_esscl.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "7fa1acdff3547765addb2f6295b0d0cfaff96436356c4dfefdb2d0caeb981724"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/eval_q.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "19fc7e2235e52c12948b3b10654a90ea45b9391a7b1821a3a39d2683ca02be8c"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/eval_q2.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "f0986c79fc1b362ca92e188977b04d073a31b9bb3e27b96fc5b35968539f1f11"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/eval_qs.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "09f7e3c707ed1eaacb9baba896cc8ab9cb16e742fa7dc823273b8cc2c71fe402"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/eval_qs2.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "6c1f03213c04a6e98dd515d5ce98ebcba6a2cd8f62e99ebd750599af8978671d"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/eval_qsat.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "1aff97bbd0e4b66c33e817aa99741056ccf95ab30840c787a6a4a81b0a516310"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/eval_qsat2.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "16a75d060676e65e16d4fdee2067716db779a2f6d9dbd3ac6b278051091e4a3d"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/eval_qsi.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "5a92de14d0b02b6394a2f186aafc8cf75530d322db4582ce52045c4f9b30f270"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/eval_qsi2.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "3c7b3674ea2e00c004aa526c3a0c79cf6c2f039d2b989d98a15ef3f2cc12161e"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/eval_rho.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "b22b7816d5199e9f025304b57719f7ab68367e5222ac351224ba7ee8a2f2c91a"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/eval_theta.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "c69e40c66320d5d1b0d62365db0897cbdc87a9c523c0aecd211945780811d71b"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/eval_theta_e.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "631d04f3cac84824255fb4404068081bab52bb163efe37800559c223988a9843"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/eval_theta_es.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "39ff2e6d87d2bc4ad2f0b33922e524b2998e64939bec58e908b76fce8ef32b79"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/eval_theta_l.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "6628625f218e53e004623b44871ad6984a13b6308264d123193464143292c90d"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/eval_theta_v.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "f531d0ca252a777616935340b23079911faa5f79ef890e2de9371cf094413274"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/inv_T_from_theta_e.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "e001fe0db37d6bff77b3e0b15ac8491fb84a2c3774c07622854d97062bcce440"
+    },
+    {
+      "old_path": "matlab/active/thermodynamics/lv.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "c389332e53409f9a3f01adc2641fd140e0e59f4c4ad88ad49914724b7021a2d1"
+    },
+    {
+      "old_path": "matlab/active/time_integration/ssprk93.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "b23650cbd13f1854deb9970282f0c6b4edbe4e0a660a6f2421b51d1da8042ae0"
+    },
+    {
+      "old_path": "matlab/active/util_plume/entrain_plume_calc.m",
+      "new_path": "matlab/util_plume/entrain_plume_calc.m",
+      "disposition": "promote",
+      "sha256_before": "0a066663dcd5fc6289b1659af79f0877ffab5754e4909f0998966a6e96b646a0",
+      "sha256_after": "0a066663dcd5fc6289b1659af79f0877ffab5754e4909f0998966a6e96b646a0",
+      "byte_identical": true
+    },
+    {
+      "old_path": "matlab/active/util_thermodynamics/IMPORT_CONSTANTS.m",
+      "new_path": "matlab/util_thermodynamics/IMPORT_CONSTANTS.m",
+      "disposition": "promote",
+      "sha256_before": "9fde477680e8eea17fc2f5f2aca61ef95d556fbc4c4f7f676cc53f6d3d82ba89",
+      "sha256_after": "9fde477680e8eea17fc2f5f2aca61ef95d556fbc4c4f7f676cc53f6d3d82ba89",
+      "byte_identical": true
+    },
+    {
+      "old_path": "matlab/active/util_thermodynamics/ci.m",
+      "new_path": "matlab/util_thermodynamics/ci.m",
+      "disposition": "promote",
+      "sha256_before": "dba544e76ce1e74136daff7fd988670f68000c8835732344d5ac6c20697389ce",
+      "sha256_after": "dba544e76ce1e74136daff7fd988670f68000c8835732344d5ac6c20697389ce",
+      "byte_identical": true
+    },
+    {
+      "old_path": "matlab/active/util_thermodynamics/eval_Tv.m",
+      "new_path": "matlab/util_thermodynamics/eval_Tv.m",
+      "disposition": "promote",
+      "sha256_before": "4b0b113e2ff4a09e89c8809a6830b52e6356e97be282b464cd9f74b0b07b7eb3",
+      "sha256_after": "4b0b113e2ff4a09e89c8809a6830b52e6356e97be282b464cd9f74b0b07b7eb3",
+      "byte_identical": true
+    },
+    {
+      "old_path": "matlab/active/util_thermodynamics/eval_dTqs.m",
+      "new_path": "matlab/util_thermodynamics/eval_dTqs.m",
+      "disposition": "promote",
+      "sha256_before": "f8fb651a0ee10b7b387b2704b2c91051efdf04300362bbb9db32e7f50efb3ad1",
+      "sha256_after": "f8fb651a0ee10b7b387b2704b2c91051efdf04300362bbb9db32e7f50efb3ad1",
+      "byte_identical": true
+    },
+    {
+      "old_path": "matlab/active/util_thermodynamics/eval_dTqsi.m",
+      "new_path": "matlab/util_thermodynamics/eval_dTqsi.m",
+      "disposition": "promote",
+      "sha256_before": "9b91370ac36d0dc2a439b8ee56134775fd1ffba1cc02465094b4764bfc891bc5",
+      "sha256_after": "9b91370ac36d0dc2a439b8ee56134775fd1ffba1cc02465094b4764bfc891bc5",
+      "byte_identical": true
+    },
+    {
+      "old_path": "matlab/active/util_thermodynamics/eval_es.m",
+      "new_path": "matlab/util_thermodynamics/eval_es.m",
+      "disposition": "promote",
+      "sha256_before": "a6d89db08505d726edae0b520d69360da23aed5dd4079697797302cdaab6ec2c",
+      "sha256_after": "a6d89db08505d726edae0b520d69360da23aed5dd4079697797302cdaab6ec2c",
+      "byte_identical": true
+    },
+    {
+      "old_path": "matlab/active/util_thermodynamics/eval_esi.m",
+      "new_path": "matlab/util_thermodynamics/eval_esi.m",
+      "disposition": "promote",
+      "sha256_before": "13e7d32f678a1b8e9a0f97e326dbaf94027a3e09b808f424e3b02c427f1813db",
+      "sha256_after": "13e7d32f678a1b8e9a0f97e326dbaf94027a3e09b808f424e3b02c427f1813db",
+      "byte_identical": true
+    },
+    {
+      "old_path": "matlab/active/util_thermodynamics/eval_q.m",
+      "new_path": "matlab/util_thermodynamics/eval_q.m",
+      "disposition": "promote",
+      "sha256_before": "2cf06b7958e5cbd69ee53e967e90124a14f646cef878d662d879e48863fbfb46",
+      "sha256_after": "2cf06b7958e5cbd69ee53e967e90124a14f646cef878d662d879e48863fbfb46",
+      "byte_identical": true
+    },
+    {
+      "old_path": "matlab/active/util_thermodynamics/eval_qs.m",
+      "new_path": "matlab/util_thermodynamics/eval_qs.m",
+      "disposition": "promote",
+      "sha256_before": "79e9bdd57cec8a7b47136b7ea9e59d998c37cd85a472e24bba33c341510f7dcd",
+      "sha256_after": "79e9bdd57cec8a7b47136b7ea9e59d998c37cd85a472e24bba33c341510f7dcd",
+      "byte_identical": true
+    },
+    {
+      "old_path": "matlab/active/util_thermodynamics/eval_qsat.m",
+      "new_path": "matlab/util_thermodynamics/eval_qsat.m",
+      "disposition": "promote",
+      "sha256_before": "a4adf98fe96720aedc55a4a37747b2a613fa2bf36cce8bf63af10a12ad193cae",
+      "sha256_after": "a4adf98fe96720aedc55a4a37747b2a613fa2bf36cce8bf63af10a12ad193cae",
+      "byte_identical": true
+    },
+    {
+      "old_path": "matlab/active/util_thermodynamics/eval_qsi.m",
+      "new_path": "matlab/util_thermodynamics/eval_qsi.m",
+      "disposition": "promote",
+      "sha256_before": "03bb4474d8239134858e40633baceaa4a7893e2bd8d4ae282709712e4c992f50",
+      "sha256_after": "03bb4474d8239134858e40633baceaa4a7893e2bd8d4ae282709712e4c992f50",
+      "byte_identical": true
+    },
+    {
+      "old_path": "matlab/active/util_thermodynamics/eval_theta.m",
+      "new_path": "matlab/util_thermodynamics/eval_theta.m",
+      "disposition": "promote",
+      "sha256_before": "c69e40c66320d5d1b0d62365db0897cbdc87a9c523c0aecd211945780811d71b",
+      "sha256_after": "c69e40c66320d5d1b0d62365db0897cbdc87a9c523c0aecd211945780811d71b",
+      "byte_identical": true
+    },
+    {
+      "old_path": "matlab/active/util_thermodynamics/eval_theta_e.m",
+      "new_path": "matlab/util_thermodynamics/eval_theta_e.m",
+      "disposition": "promote",
+      "sha256_before": "631d04f3cac84824255fb4404068081bab52bb163efe37800559c223988a9843",
+      "sha256_after": "631d04f3cac84824255fb4404068081bab52bb163efe37800559c223988a9843",
+      "byte_identical": true
+    },
+    {
+      "old_path": "matlab/active/util_thermodynamics/eval_theta_es.m",
+      "new_path": "matlab/util_thermodynamics/eval_theta_es.m",
+      "disposition": "promote",
+      "sha256_before": "2e1ad11546d8b5162017a76755eaaecd64d74f489b20b925dd3c84c1ccb0dc6e",
+      "sha256_after": "2e1ad11546d8b5162017a76755eaaecd64d74f489b20b925dd3c84c1ccb0dc6e",
+      "byte_identical": true
+    },
+    {
+      "old_path": "matlab/active/util_thermodynamics/inv_T_from_theta_e.m",
+      "new_path": "matlab/util_thermodynamics/inv_T_from_theta_e.m",
+      "disposition": "promote",
+      "sha256_before": "a8ec61cc98ca480ac3d95d10d1ddb892dbbdb1cfeb186083264d1a7b7cf28011",
+      "sha256_after": "a8ec61cc98ca480ac3d95d10d1ddb892dbbdb1cfeb186083264d1a7b7cf28011",
+      "byte_identical": true
+    },
+    {
+      "old_path": "matlab/active/util_thermodynamics/lv.m",
+      "new_path": "matlab/util_thermodynamics/lv.m",
+      "disposition": "promote",
+      "sha256_before": "c389332e53409f9a3f01adc2641fd140e0e59f4c4ad88ad49914724b7021a2d1",
+      "sha256_after": "c389332e53409f9a3f01adc2641fd140e0e59f4c4ad88ad49914724b7021a2d1",
+      "byte_identical": true
+    },
+    {
+      "old_path": "matlab/active/util_weno/reconstruction_up3.m",
+      "new_path": "matlab/util_weno/reconstruction_up3.m",
+      "disposition": "promote",
+      "sha256_before": "748ac867a4a5ef7089db896e1fcd5a20c8b1dfcaa461c3aac34a410f20c66c20",
+      "sha256_after": "748ac867a4a5ef7089db896e1fcd5a20c8b1dfcaa461c3aac34a410f20c66c20",
+      "byte_identical": true
+    },
+    {
+      "old_path": "matlab/active/util_weno/reconstruction_weno.m",
+      "new_path": "matlab/util_weno/reconstruction_weno.m",
+      "disposition": "promote",
+      "sha256_before": "fd5478923021e54188d5996365fd942e047298f2b223a68d6bd97c7f13a961c1",
+      "sha256_after": "fd5478923021e54188d5996365fd942e047298f2b223a68d6bd97c7f13a961c1",
+      "byte_identical": true
+    },
+    {
+      "old_path": "matlab/active/util_weno/reconstruction_weno_vec.m",
+      "new_path": "matlab/util_weno/reconstruction_weno_vec.m",
+      "disposition": "promote",
+      "sha256_before": "f5f5fc42c9a97068543ae54d53bff7d50c721f1d30f2765b831b9fbc76811c02",
+      "sha256_after": "f5f5fc42c9a97068543ae54d53bff7d50c721f1d30f2765b831b9fbc76811c02",
+      "byte_identical": true
+    },
+    {
+      "old_path": "matlab/history/original_git/LICENSE",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+    },
+    {
+      "old_path": "matlab/history/original_git/README.md",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "0c1edb55f97b90251506585a4e62057f088d46765d666f9500a96045708232a3"
+    },
+    {
+      "old_path": "matlab/history/original_git/ace_v016_dev_8aces.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "ef2a7bb8a30c5fa356b4e4ae1165b986030af3630d940f6f221f20a094b51537"
+    },
+    {
+      "old_path": "matlab/history/original_git/ace_v018_dev_8aces.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "3c693f677f2ccb92da5bdfdfc79270d49039339254e54c57975fc1fd1a027a1b"
+    },
+    {
+      "old_path": "matlab/history/original_git/data/basis/COMPOSITE_ACE_BASIS_8ACEs.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "9ddb96545aeb4f30202df774a9f2de2e94e96ad0420b965cb53b5c8fe4b16ee8"
+    },
+    {
+      "old_path": "matlab/history/original_git/data/basis/PRECOMPUTED_MATCHING_STEP_BASIS_ASYMM_d~10KM.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "c795ea40c3e8584f16b6aeeb76b5dd215d5859ab4364fb716ed678d9ae450114"
+    },
+    {
+      "old_path": "matlab/history/original_git/data/basis/PRECOMPUTED_MATCHING_STEP_BASIS_ASYMM_d~15KM.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "bbb5352a326d766b719068cf4990c87ce68d1830374ac24eedf771ae730fcd02"
+    },
+    {
+      "old_path": "matlab/history/original_git/data/basis/PRECOMPUTED_MATCHING_STEP_BASIS_ASYMM_d~3KM.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "b9a4231622edb305c5851ecc564bf97ea0115a0e434918630be6f69bd32496d8"
+    },
+    {
+      "old_path": "matlab/history/original_git/data/basis/PRECOMPUTED_MATCHING_STEP_BASIS_ASYMM_d~5KM.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "2547b9d91d94a4ff648c3d2305c216b1205447204f927595e2765cac7adc80bb"
+    },
+    {
+      "old_path": "matlab/history/original_git/data/basis/PRECOMPUTED_MATCHING_STEP_BASIS_d=10KM.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "fb9efbd09c513b5f6604ec283408723ef88fb09b8b844fc1f3a51558a5fce7c2"
+    },
+    {
+      "old_path": "matlab/history/original_git/data/basis/PRECOMPUTED_MATCHING_STEP_BASIS_d=15KM.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "64962d4f2277a8f43c62e6182dcf44d9430604b266c3f6a892f4c60c56c3141b"
+    },
+    {
+      "old_path": "matlab/history/original_git/data/basis/PRECOMPUTED_MATCHING_STEP_BASIS_d=1KM.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "588ad0a60660a6f36f7944f815836f07fb819da93ada43a911e968b717c78686"
+    },
+    {
+      "old_path": "matlab/history/original_git/data/basis/PRECOMPUTED_MATCHING_STEP_BASIS_d=20KM.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "92b1a695cd717ec89ad8f788b9dd91e075836a4dc7f9c67b2988e26f080e8802"
+    },
+    {
+      "old_path": "matlab/history/original_git/data/basis/PRECOMPUTED_MATCHING_STEP_BASIS_d=25KM.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "d38b4688ebee4987574a9ccff850a8e4eaac0cf2a2664e607a61056819157eb3"
+    },
+    {
+      "old_path": "matlab/history/original_git/data/basis/PRECOMPUTED_MATCHING_STEP_BASIS_d=3KM.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "aa1d9a54f14dc3ac68f6e9747925ace8ea1736b20067ea90b0bcbc201a7ad7bf"
+    },
+    {
+      "old_path": "matlab/history/original_git/data/basis/PRECOMPUTED_MATCHING_STEP_BASIS_d=5KM.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "17eb7b01a4ed5ff88f58894ade09f806ce177e64b84a221b84910d6aaaa3812d"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_basis/COLLECT_PRECOMPUTE_VERTICAL_MODES.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "607831e7e5f91aed0873c01624769b97457c9bb3d1f40242723c40e140c067ab"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_basis/PRECOMPUTE_COMPOSITE_ACE_BASIS.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "a4554508ebb7dd80c31f878c06b3e2b6721fed612f0f7baee592c4bba807d6d4"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_basis/PRECOMPUTE_MASSFLUX_BASIS.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "d0dbd2c4055cb6e42704aa6e51bbf1629e1acd4ec4f841627568130e82c00481"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_basis/PRECOMPUTE_MASSFLUX_BASIS_SQ.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "e566602923712769dd0a1e3cac89054a581e56c2430046692212ae04350250bf"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_basis/PRECOMPUTE_VERTICAL_MODES.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "0d3437a76dd822456bb64ce66d5ebdf117c0575e085c08caad96e4941f8b2bf4"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_basis/PRECOMPUTE_VERTICAL_MODES_PF.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "4cb320220c8099ed8739fe1762c5a337e6f08a52bc92c46e4d74615ac24832f5"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_basis/WKB_VERTICAL_SOLUTIONS_RECONSTRUCT_UTIL.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "0b0021c6e402975dabe976b6166dbc8aafe72ed8d18007c836449929cac7222a"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_plume/cin_cape_calc.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "d3dd0639db6bb06259a6ea94ee1c3e0df2afbd80cdb873ba3af687ec54e6d639"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_plume/entrain_plume_calc.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "0a066663dcd5fc6289b1659af79f0877ffab5754e4909f0998966a6e96b646a0"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_plume/trad_plume.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "ad8d87e97f3b54bccdcd6cf7d385a382752be9129c73b9ea2ad5c7062dc8f180"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/IMPORT_CONSTANTS.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "9fde477680e8eea17fc2f5f2aca61ef95d556fbc4c4f7f676cc53f6d3d82ba89"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/NOTE.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "d8b2a2c3dab6cdcb343cb18974af1bce8d4f7a60c36d1e98bd1aeb736748b9fc"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/IMPORT_CONSTANTS.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "9fde477680e8eea17fc2f5f2aca61ef95d556fbc4c4f7f676cc53f6d3d82ba89"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/ci.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "dba544e76ce1e74136daff7fd988670f68000c8835732344d5ac6c20697389ce"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/eval_B.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "f7c5a58542999993609ed2ec212ed8aea6473d937afebb4fc118b2d626240428"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/eval_Tv.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "8ff84ebd96ff52fd8ac6eb99b554cb58a676442ab02490b782921781d3fda81f"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/eval_dTes.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "dccd232253f4422bdb334a7089c5065459c0207def6cde54714fa1fa97bcf116"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/eval_dTqs.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "58dc2591626cc63a299f1c705ebe589f3c1582725204567fe4e9d662514bafcf"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/eval_dTqsi.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "30e84f58aa1ce375689a196bce300c4c284cca7e4beb2a77bd3ba1e7fb3eab8e"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/eval_dTqsscl.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "4538b2896b4890542966bfeef7c67422efcde6efb96e6140bcf9d3863128de03"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/eval_es.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "a6d89db08505d726edae0b520d69360da23aed5dd4079697797302cdaab6ec2c"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/eval_esi.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "13e7d32f678a1b8e9a0f97e326dbaf94027a3e09b808f424e3b02c427f1813db"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/eval_esscl.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "b2347af96367646abfd99ef40cc437b3756c873a9356fedea7e1524009395b52"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/eval_q.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "851fe9cc38b18f6dab80c50becb4d8078748c03f5b7a4b8c14861e24f4dfca34"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/eval_qs.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "79e9bdd57cec8a7b47136b7ea9e59d998c37cd85a472e24bba33c341510f7dcd"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/eval_qsat.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "a4adf98fe96720aedc55a4a37747b2a613fa2bf36cce8bf63af10a12ad193cae"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/eval_qsi.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "03bb4474d8239134858e40633baceaa4a7893e2bd8d4ae282709712e4c992f50"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/eval_qsscl.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "8ac0d465e0a182a17fc4ada279d6c34437b484c4dc92d7796a41ac07dc2910c4"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/eval_rho.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "8e6de77fee6f9c523fcc1f5effcb03a9de86a3994c9116927ea47b14c7595db2"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/eval_theta.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "b88972c43b5758d54e8bf3e112a4e2e622713072882b8c8882fcacf25d7093e6"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/eval_theta_e.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "39b2deb6c84306fd353acee81818edd5ccc8f920ef05740f1e351c25880fdda8"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/eval_theta_es.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "b2ed4a5e85fd9306b5ae025e3af6019b6edc24cc94fd7430c60726340c9a2641"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/eval_theta_il.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "fd886aac3847e9a8e8aa2e3d76b6af9675eb5909dd220114102f697e10988450"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/eval_theta_l.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "7cfd29458c0366ece2d6ff8ec300efe15974bb10c8e7a41bdc3c33357b7fe8e7"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/eval_theta_v.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "07fa7707099bf9790e2686d4dc195eee1d8a76641043126c191e8c63316a9a8a"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/inv_T_from_theta_e.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "193430a8ffb49882f053ef6d187f5f41fb0367d0aa5710ff15c82908f1aeff56"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/inv_T_from_theta_il.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "97a6292b54c6a470a5b3e7226aa987d13b1ac34507007ab9e16ead9d6c297871"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/bak/lv.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "3dc1c0bdacdc746dafb391d3ae783dbaf859c260f230a0d967f33c4fc42de102"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/ci.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "dba544e76ce1e74136daff7fd988670f68000c8835732344d5ac6c20697389ce"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/eval_B.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "4260dae12c5e40d915ce2ac348b85d3358d9470dd9ad17bf3771a0e803647e6b"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/eval_Tv.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "4b0b113e2ff4a09e89c8809a6830b52e6356e97be282b464cd9f74b0b07b7eb3"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/eval_dTes.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "dccd232253f4422bdb334a7089c5065459c0207def6cde54714fa1fa97bcf116"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/eval_dTqs.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "f8fb651a0ee10b7b387b2704b2c91051efdf04300362bbb9db32e7f50efb3ad1"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/eval_dTqsi.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "9b91370ac36d0dc2a439b8ee56134775fd1ffba1cc02465094b4764bfc891bc5"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/eval_dTqsscl.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "3855ccb95b4dd8a2895d0629c9a8a9d8b726bcdfecdf84f98098c071b6e8e5ee"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/eval_es.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "a6d89db08505d726edae0b520d69360da23aed5dd4079697797302cdaab6ec2c"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/eval_esi.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "13e7d32f678a1b8e9a0f97e326dbaf94027a3e09b808f424e3b02c427f1813db"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/eval_esscl.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "b2347af96367646abfd99ef40cc437b3756c873a9356fedea7e1524009395b52"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/eval_h.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "b9ce02ddd168b4e58be2dfee015a13b6ae7907a27db8245f37a8dacdbb8f1780"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/eval_q.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "2cf06b7958e5cbd69ee53e967e90124a14f646cef878d662d879e48863fbfb46"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/eval_qs.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "79e9bdd57cec8a7b47136b7ea9e59d998c37cd85a472e24bba33c341510f7dcd"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/eval_qsat.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "a4adf98fe96720aedc55a4a37747b2a613fa2bf36cce8bf63af10a12ad193cae"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/eval_qsi.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "03bb4474d8239134858e40633baceaa4a7893e2bd8d4ae282709712e4c992f50"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/eval_qsscl.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "f86c795dfdcd8c3d8e5acf6773d6ffc1fb5cbd1ad7cf02aa37440048feb8a978"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/eval_rho.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "b22b7816d5199e9f025304b57719f7ab68367e5222ac351224ba7ee8a2f2c91a"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/eval_theta.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "c69e40c66320d5d1b0d62365db0897cbdc87a9c523c0aecd211945780811d71b"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/eval_theta_e.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "631d04f3cac84824255fb4404068081bab52bb163efe37800559c223988a9843"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/eval_theta_es.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "2e1ad11546d8b5162017a76755eaaecd64d74f489b20b925dd3c84c1ccb0dc6e"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/eval_theta_il.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "785fc6f23c6a3dad20d23c45a77632b5cc41848dbb27c34036e542a97a6a3883"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/eval_theta_l.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "6628625f218e53e004623b44871ad6984a13b6308264d123193464143292c90d"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/eval_theta_v.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "f531d0ca252a777616935340b23079911faa5f79ef890e2de9371cf094413274"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/inv_T_from_h.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "c65be1712576cced16b486b17a8139d0f15d7092726b567f382c7928e7cbaeff"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/inv_T_from_theta_e.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "22d548b7a49508fd53fba167a5f0c94c174935bb3527793dff721338b2ceb53c"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/inv_T_from_theta_il.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "0f7cd1f96d0fa299932c85e3179b5f80a7f68b5a12f282f69f8b05f6c31985c9"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/lv.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "c389332e53409f9a3f01adc2641fd140e0e59f4c4ad88ad49914724b7021a2d1"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/test_inv_T_from_h.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "e9c1346546211de8b7cf2446cdfd29455ed95932729e32fbfdf22b91474543e6"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/tests-inv_T_from_theta/inv_T_from_theta_e.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "dd57339da740f923b6771afa480fb58c41e8da97664076ff2eecaf10439a89aa"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/tests-inv_T_from_theta/inv_T_from_theta_il_new.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "cdffdcb842e76ddb2e70c491ebd1a639a9355f784a8a0b995fd74328f6e9159f"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/tests-inv_T_from_theta/test_inv_T_from_theta_e_cases.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "0faf8c7f3cea148185e06b9fd50e1ea94a180089364abcd75676917b7207ed92"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/tests-inv_T_from_theta/test_inv_T_from_theta_e_icefree.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "472e747e12703e93b6872369db168d96d13d9ffb7593c7290f53dea968aef5f8"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/tests-inv_T_from_theta/test_inv_T_from_theta_e_iceliquidcoexist.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "8286bbc711fdf5485b860d262026a7efca3a01d14cb8afd636e814ae94220348"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/tests-inv_T_from_theta/test_inv_T_from_theta_e_liquidfree.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "e0c44ee0d0bafb1b93c2eb278059db6fcdfd39407100dbc81647521c3056f404"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/tests-inv_T_from_theta/test_inv_T_from_theta_e_new.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "6ebbf3164264d81c03965d39203501062a0aaab21373fc2bc4193699b3dfc10a"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/tests-inv_T_from_theta/test_inv_T_from_theta_e_qcfree.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "1256a9af643494405a7ff943ffe18d3d8e494181eb13b811787ae3e3521b8918"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/tests-inv_T_from_theta/test_inv_T_from_theta_il_icefree.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "5f1a2811e6229b6696949959763d1057cf8b1ec0c531d0cbff51e92c9933181e"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/tests-inv_T_from_theta/test_inv_T_from_theta_il_iceliquidcoexist.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "829fe92ac5a64b1a3d0768e7724eca499ba3456d408e323f0255ba86a2b477f8"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/tests-inv_T_from_theta/test_inv_T_from_theta_il_liquidfree.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "5b8fe8cf06e0d02ffdd25de344249fc8867418b8247bfc28be699617bd3ea19f"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/tests-inv_T_from_theta/test_inv_T_from_theta_il_new.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "376cea0f1d874fd15b332ed3874493a5a4c76efb46762ef7ac411f050c7e1859"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_thermodynamics/tests-inv_T_from_theta/test_inv_T_from_theta_il_qcfree.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "1898e944513dec4677e5952bdcf0928b5d48bbf0c16e9c2fce76db33c341d47b"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_timeint/ImDiffMF.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "946a5dd8c0261b57e563e1e3c95b3bf5793eeece1f5dc95d21197df6bae6f5b4"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_timeint/ebs23.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "333e7a16e2a912618bebfb4d7fa040ef5e0b0af86199cc433ea7da5797f711f1"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_timeint/essprk54.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "97926e20d5149e2feae4c9443a3c5af1c6283752ba300d6d8c2b2e0538d39430"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_timeint/rkf45.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "0b1628d67709ea607eebb192bd6ace0e15ea7c638cd1156ea601ad0f8d8e0870"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_timeint/ssprk22.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "431a3a1817370801b07acc3925dcc67f252bec66788ac025d0526c735de889b6"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_timeint/ssprk3.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "3f1b3c4727135e77652ff20e5ad555ccc83dccdbae81e3f804b60c47133c85fb"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_timeint/ssprk33.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "2d299fe1384cb89c43fe92f366bb4ab972a9bbd039bd2c9cc9adcc87e6dabce9"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_weno/NOTE.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "6e9b2f5f5fc8ab6cf9a29627504e3b611a63472a9d3bb1b29dcf9c9b84e8af6a"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_weno/dyn_entrainment_detrainment_calc.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "0a01ad81f7ca2b08aeb15bddb9525a7c05791b2be66cedfeaf74bce5b6386292"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_weno/reconstruction_alphar.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "09c7272658ba86cf96b57e06a544758e9fb7e9ca030e16cf5f8b753866c0d05d"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_weno/reconstruction_betar.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "e365695af34bb0fe49933639b2c607c0740a3e714670d235061c2f8be914ce61"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_weno/reconstruction_cd2.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "bc89ef76a1afe3875fca60c569871ffec8fb9d9ee3a0b484ce50630c183bf7b1"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_weno/reconstruction_cd4.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "b7a0da564c3ad6500e0931a4cd093243bb91e4234ac48cf3fe2a98b10b0e8cf0"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_weno/reconstruction_cij.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "8e79bf8a61def69504cbc10467725d06582016ae4b898c404cfec6aa90958413"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_weno/reconstruction_dr.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "98c18187a592502ac8768216d284bfdd07c5276148c76ff38230e8fbdedffcd3"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_weno/reconstruction_up3.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "748ac867a4a5ef7089db896e1fcd5a20c8b1dfcaa461c3aac34a410f20c66c20"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_weno/reconstruction_weno-bak.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "c37132aa2465388a777bb03290fdc596e777ce2592ead0e99bf7ddb504e16853"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_weno/reconstruction_weno.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "fd5478923021e54188d5996365fd942e047298f2b223a68d6bd97c7f13a961c1"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_weno/reconstruction_weno_vec.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "f5f5fc42c9a97068543ae54d53bff7d50c721f1d30f2765b831b9fbc76811c02"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_weno/reconstruction_wenoz.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "9958d49ce6a29294299aff61884cc5e7497b0922fc29f5e25770cb489c49c5a8"
+    },
+    {
+      "old_path": "matlab/history/original_git/util_weno/reconstruction_wr.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "e94f3917cb4d000b3028fc7039d4c1cec51141f41c44fae9f770af83fc0e1e93"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/ace_v019_K24_8aces.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "760fde0352f2e691c060212057d9c19aceb60fa2c75e66897963f4062d8cfd18"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/data/basis/COMPOSITE_ACE_BASIS_Heaviside_4ACEs.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "30f46694dba1c4c45c4b7a3ef8795cfe319475aa9ec324a977a6560338b9daa4"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/data/basis/COMPOSITE_ACE_BASIS_Heaviside_7ACEs.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "aed536086f853ad50f3883e81d6a351e0cc0fd889b62ec8266bb1abe24a83ae3"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/data/soundings/manus_3hr_ARMBEsonde_profiles.nc",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "6b729c7fa6111fc984bb1f31986f29722b953e697ca0e840c3da48ada1305f61"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/data/soundings/maoarmbeatmM1.c1.20140101.003000.nc",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "70eb3cf930e47f71a435fe13feabf90b190e0af94f92f983ef94accd9f0c8a1c"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/data/soundings/nauru_3hr_ARMBEsonde_profiles.nc",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "1f9d96ad7907fb2c485ae5ee8c996b4cca03e6b6bf911bd6e4a46aeb7f0043d8"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/4jupyter/PRECOMPUTE_VERTICAL_MODES.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "02276754b336487748c4485c65c2c9c5dc2a96d8459907147f8d25029c1a5f65"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/4jupyter/PRECOMPUTE_VERTICAL_MODES_PF.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "d600dc714f218e59c9f52dd8b4619e1cbe9c551ac8b45fef33b64029a3315d85"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/4jupyter/WKB_VERTICAL_SOLUTIONS_RECONSTRUCT_UTIL.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "0b0021c6e402975dabe976b6166dbc8aafe72ed8d18007c836449929cac7222a"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/COLLECT_PRECOMPUTE_VERTICAL_MODES.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "c88d70d04432e84e6207b9004857122038371b63095b1fa615425e290e016abd"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/COLLECT_PRECOMPUTE_VERTICAL_MODES_DH.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "c69cc5a1e976aecf562d26fbc3b90e90892fc898e4c4245f444787abe3d13ff9"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/COLLECT_PRECOMPUTE_VERTICAL_MODES_hires.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "ad6a82501d4bb6f304d5cc712c26d5e350d04baf6f048d5817da5d7a80058c06"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/DH_VERTICAL_SOLUTIONS_RECONSTRUCT_UTIL.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "c79ad1e7b100c390bdf9503ffd14272155c09a717c62379e4cbb83dde307083b"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/PRECOMPUTE_COMPOSITE_ACE_BASIS.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "4c18ebfd1d601d3f1d7e9a1f657630b02ba82d9cc7790711c4bdc6fe8225d5bd"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/PRECOMPUTE_COMPOSITE_ACE_BASIS_2D.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "39bec67cc64692346f6b3f2535c4b11cb79e9762af4e08813875cbe123c17f77"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/PRECOMPUTE_COMPOSITE_ACE_BASIS_ADZtemp.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "352e3bd0755bef8bb4347cc0b6dfce48fd79f8b65e1f4aae254da12a1d007a6c"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/PRECOMPUTE_COMPOSITE_ACE_BASIS_DHtemp.asv",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "3ee4cb45e31f58c3a31b017ad0badfae27350fba733f2ca959e6755250d31109"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/PRECOMPUTE_COMPOSITE_ACE_BASIS_DHtemp.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "18dcd5e9ad07e25e4a0b03d7ed5efc1950fe15b7762783215dbb51e2882e875d"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/PRECOMPUTE_COMPOSITE_ACE_BASIS_hires.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "0f28e70b53b7cb3ac9007c9016f324a19e48c1f4b9182be4fce03a48eb38917f"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/PRECOMPUTE_MASSFLUX_BASIS.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "d0dbd2c4055cb6e42704aa6e51bbf1629e1acd4ec4f841627568130e82c00481"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/PRECOMPUTE_MASSFLUX_BASIS_SQ.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "e566602923712769dd0a1e3cac89054a581e56c2430046692212ae04350250bf"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/PRECOMPUTE_MASSFLUX_BASIS_bak.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "0f3e6cd25075ad2cd631da06177004733ac3838e17ff45a7bcacf3146f82ad91"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/PRECOMPUTE_VERTICAL_MODES-bak.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "7cd5b90c320b54b1749363288463e7468eafa4367960a9ac4c197b38e74a5d6f"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/PRECOMPUTE_VERTICAL_MODES.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "cb0019e675783dd189027dbba1f61cddde510a6a1f953784b9ae8c3bc5b57f3b"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/PRECOMPUTE_VERTICAL_MODES_2D.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "dc5577edae439045d4094493e663cba18f57dc641930825d7f7104181cfd6483"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/PRECOMPUTE_VERTICAL_MODES_DHtemp.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "d3b795d473a206ea04affee0aebc87128b6269b757544890c8d02594f19c2cb3"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/PRECOMPUTE_VERTICAL_MODES_PF.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "4cb320220c8099ed8739fe1762c5a337e6f08a52bc92c46e4d74615ac24832f5"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/PRECOMPUTE_VERTICAL_MODES_diff_res.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "096b2d10a4e4ff9a82831061ba7768d224dd80f37f92275726e4fa061bf19e2f"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/PRECOMPUTE_VERTICAL_MODES_hires.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "11a571aab6f19edca437faa1e7956e53010edc66d61c6fcea0e6623334c084dd"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/VERTICAL_SOLUTIONS_RECONSTRUCT_UTIL-bak.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "1593a2ff1a7a8de34cf8946070a37e99e4ccee3c8060652c2606bd4f799d4101"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/VERTICAL_SOLUTIONS_RECONSTRUCT_UTIL.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "cf6add6b78fbf258d0d6cc36ad22cfdfb84b60a11b76e355d6ed9cb43242a006"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/WKB_VERTICAL_SOLUTIONS_RECONSTRUCT_UTIL-bak.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "030a9fb38fdd0c05958813471a429634a0945c1320a9082d6300ca09768819bf"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/WKB_VERTICAL_SOLUTIONS_RECONSTRUCT_UTIL.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "0b0021c6e402975dabe976b6166dbc8aafe72ed8d18007c836449929cac7222a"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/hires-temp/COMPOSITE_ACE_BASIS_hires_01.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "7e334cd2d501d4577274eb7fa36fbe49b7cbd012a6f103efa204b5ea8b37f1fc"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/hires-temp/COMPOSITE_ACE_BASIS_hires_02.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "2ba325224630bb3aca7b7fec7f0edecf6a15715fa484a74c9a901b8e95bbe9a9"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/hires-temp/COMPOSITE_ACE_BASIS_hires_03.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "6d00c84f511c49d2d94725e5d45956fd4fdcb221561643ee7abbde99fe91e523"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/hires-temp/COMPOSITE_ACE_BASIS_hires_04.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "572993011d75e0d19fe1a29e0dab37ad658fe04b68d8130feb88c1f9f643f710"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/hires-temp/COMPOSITE_ACE_BASIS_hires_05.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "40dd45f272e35914a39fbced8adab1b94391b538a4314a3b4360487d1e8cc0fd"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/hires-temp/COMPOSITE_ACE_BASIS_hires_06.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "20cd1e37cf0f583c48bd8a58bb7e954d9cc2b03f27719dad7c762ae58d164530"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/hires-temp/COMPOSITE_ACE_BASIS_hires_07.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "345de41e778714bc605c2f88eabdb7ec3cab31dcf9f507d27ed2831df93b2d82"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/hires-temp/COMPOSITE_ACE_BASIS_hires_08.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "4082dcab67178bf7dcc10f0399b51a6e66dfc77eb1cf478c1bf99f446b956981"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/hires-temp/COMPOSITE_ACE_BASIS_hires_09.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "239217cfa828c61a06c276c5f5218ebe285cd296c6cebcfb204b56352a535fdf"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_basis/hires-temp/COMPOSITE_ACE_BASIS_hires_10.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "e675754919c6b26267305519d8d996b19322a33c3485d8cb7318493e03048d98"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_plume/cin_cape_calc.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "d3dd0639db6bb06259a6ea94ee1c3e0df2afbd80cdb873ba3af687ec54e6d639"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_plume/entrain_plume_calc-bak.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "9eb6efe5e14525693ca8658a4935e3c6f86002e65788d4a3684012f434e6133b"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_plume/entrain_plume_calc.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "ab7a4297ca87f31a331d28d2d462429ecbe0d5084fb8056a29bdab577ceddeed"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_plume/entrain_plume_calc_steady.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "228cd6ad5dd5ea1baa0e339e9b98b3c6542042a41747346d077a5354566ca5e5"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_plume/trad_plume-bak.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "cdc544ced17f5bb397930bc577e9672ed7d1ccc7df64e0bfa6861e88191bf2bb"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_plume/trad_plume.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "ad8d87e97f3b54bccdcd6cf7d385a382752be9129c73b9ea2ad5c7062dc8f180"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_plume/trad_plume_BnoVirtual.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "6264177e40feb3cfe0ef625d4f344cce17a2bf52a9a9c76a034c01e9aee7ec4f"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/IMPORT_CONSTANTS.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "9fde477680e8eea17fc2f5f2aca61ef95d556fbc4c4f7f676cc53f6d3d82ba89"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/NOTE.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "d8b2a2c3dab6cdcb343cb18974af1bce8d4f7a60c36d1e98bd1aeb736748b9fc"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/ci.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "dba544e76ce1e74136daff7fd988670f68000c8835732344d5ac6c20697389ce"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/eval_B.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "4260dae12c5e40d915ce2ac348b85d3358d9470dd9ad17bf3771a0e803647e6b"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/eval_Tv.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "4b0b113e2ff4a09e89c8809a6830b52e6356e97be282b464cd9f74b0b07b7eb3"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/eval_dTes.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "dccd232253f4422bdb334a7089c5065459c0207def6cde54714fa1fa97bcf116"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/eval_dTqs.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "f8fb651a0ee10b7b387b2704b2c91051efdf04300362bbb9db32e7f50efb3ad1"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/eval_dTqsi.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "9b91370ac36d0dc2a439b8ee56134775fd1ffba1cc02465094b4764bfc891bc5"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/eval_dTqsscl.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "ed29306fff3d94ae15433c2aa2704e27b88a44e615d88dd688b864f09b64ef2d"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/eval_es.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "a6d89db08505d726edae0b520d69360da23aed5dd4079697797302cdaab6ec2c"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/eval_esi.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "13e7d32f678a1b8e9a0f97e326dbaf94027a3e09b808f424e3b02c427f1813db"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/eval_esscl.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "9410bdcb5632e0cf324dc5d09ed04e3d0564e93286858d60757d86fe87c26e98"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/eval_h.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "0841319866e25e4ac3554108e2b25b8744cd1a19b607d0658963a59adfa1a85b"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/eval_q.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "2cf06b7958e5cbd69ee53e967e90124a14f646cef878d662d879e48863fbfb46"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/eval_qs.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "79e9bdd57cec8a7b47136b7ea9e59d998c37cd85a472e24bba33c341510f7dcd"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/eval_qsat.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "21b76eef222d7628944b393d00ce67e4b8197a1cd2299ced95609d1b8aeb0d10"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/eval_qsi.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "03bb4474d8239134858e40633baceaa4a7893e2bd8d4ae282709712e4c992f50"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/eval_qsscl.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "f86c795dfdcd8c3d8e5acf6773d6ffc1fb5cbd1ad7cf02aa37440048feb8a978"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/eval_rho.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "b22b7816d5199e9f025304b57719f7ab68367e5222ac351224ba7ee8a2f2c91a"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/eval_theta.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "c69e40c66320d5d1b0d62365db0897cbdc87a9c523c0aecd211945780811d71b"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/eval_theta_e.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "631d04f3cac84824255fb4404068081bab52bb163efe37800559c223988a9843"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/eval_theta_e_check.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "03c3f2a1cff5c5887fe06fb5185781fd46df830b085e615d4c8a446e2848fe6e"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/eval_theta_es.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "2e1ad11546d8b5162017a76755eaaecd64d74f489b20b925dd3c84c1ccb0dc6e"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/eval_theta_il.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "785fc6f23c6a3dad20d23c45a77632b5cc41848dbb27c34036e542a97a6a3883"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/eval_theta_l.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "6628625f218e53e004623b44871ad6984a13b6308264d123193464143292c90d"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/eval_theta_v.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "f531d0ca252a777616935340b23079911faa5f79ef890e2de9371cf094413274"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/inv_T_from_h.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "58b9c14e51d89c03969c2fc6cdae6e05aa92114ac07787c6ebeb2742b60cadc9"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/inv_T_from_theta_e.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "22d548b7a49508fd53fba167a5f0c94c174935bb3527793dff721338b2ceb53c"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/inv_T_from_theta_il.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "0f7cd1f96d0fa299932c85e3179b5f80a7f68b5a12f282f69f8b05f6c31985c9"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/lv.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "c389332e53409f9a3f01adc2641fd140e0e59f4c4ad88ad49914724b7021a2d1"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_thermodynamics/test_inv_T_from_h.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "ba543a1bbf4f4344ec471176ebfd5ff78abfd8ad09263975a1ce84f6b83e1dd4"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_weno/NOTE.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "6e9b2f5f5fc8ab6cf9a29627504e3b611a63472a9d3bb1b29dcf9c9b84e8af6a"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_weno/dyn_entrainment_detrainment_calc.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "0a01ad81f7ca2b08aeb15bddb9525a7c05791b2be66cedfeaf74bce5b6386292"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_weno/reconstruction_alphar.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "09c7272658ba86cf96b57e06a544758e9fb7e9ca030e16cf5f8b753866c0d05d"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_weno/reconstruction_betar.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "e365695af34bb0fe49933639b2c607c0740a3e714670d235061c2f8be914ce61"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_weno/reconstruction_cd2.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "bc89ef76a1afe3875fca60c569871ffec8fb9d9ee3a0b484ce50630c183bf7b1"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_weno/reconstruction_cd4.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "b7a0da564c3ad6500e0931a4cd093243bb91e4234ac48cf3fe2a98b10b0e8cf0"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_weno/reconstruction_cij.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "8e79bf8a61def69504cbc10467725d06582016ae4b898c404cfec6aa90958413"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_weno/reconstruction_dr.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "98c18187a592502ac8768216d284bfdd07c5276148c76ff38230e8fbdedffcd3"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_weno/reconstruction_up3.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "748ac867a4a5ef7089db896e1fcd5a20c8b1dfcaa461c3aac34a410f20c66c20"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_weno/reconstruction_weno.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "e1af336e74c090d72c90694e69bc3ed59b52d924b837c2ea9f9a0ac3c93d0f7f"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_weno/reconstruction_weno_dtypo456.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "c37132aa2465388a777bb03290fdc596e777ce2592ead0e99bf7ddb504e16853"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_weno/reconstruction_weno_pbc_ve_dtypo456.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "dd560f7f9fbe305188e3e219b81fc9db1b561329646e67bad8604959680c9460"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_weno/reconstruction_weno_vec.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "95c67acab95c5a44207940957a56d9906d3c7b771a75c57dacd21761dc62f093"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_weno/reconstruction_weno_vec_dtypo456.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "ffff9cbae4ae7e566e27d91255f233841800a8e4344d5c469d32b218c860d9e5"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_weno/reconstruction_weno_vec_k56asym.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "a8e5ec5b23882b5f99659b32055bb9f691a06e76cb4269b3f67ff8eb8476874c"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_weno/reconstruction_wenoz__dtypo456.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "9958d49ce6a29294299aff61884cc5e7497b0922fc29f5e25770cb489c49c5a8"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V019.3/util_weno/reconstruction_wr.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "e94f3917cb4d000b3028fc7039d4c1cec51141f41c44fae9f770af83fc0e1e93"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/ACE_V020_2D88ACEs.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "3a5b33e48b2a085aa1fa5524a923167cd97b3acb60a2f01b11935c058f87397a"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_basis/COLLECT_PRECOMPUTE_VERTICAL_MODES_2D.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "caca37f99f09200a648ff791a444c424811bf5ecdd8c58dde8eb208fab4274fc"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_basis/PRECOMPUTE_COMPOSITE_ACE_BASIS_2D.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "338aad46c71a9ec08ef8fabba9552f0bbb208ec30e4b6ae5baa9b76060c92b7c"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_basis/PRECOMPUTE_VERTICAL_MODES_2D.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "1de958b52e5e378f47d2b50bd04e5f8626836444ebcc65053b5fc4d8caa66d9a"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_basis/uneven_tests/COLLECT_PRECOMPUTE_VERTICAL_MODES_2D.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "40af7d61aa58d08ad13078b7007eda6224e0e4d9b4e206c88e34a526b4a62ead"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_basis/uneven_tests/PRECOMPUTE_COMPOSITE_ACE_BASIS_2D_4uneven.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "acd47fb0839b88924d681c6531d21f358b19a1cdf9a459fdd55607a2cc938961"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_basis/uneven_tests/PRECOMPUTE_COMPOSITE_ACE_BASIS_2D_truncate.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "4c98737aa0950e786b62a0c7401a486a3083e305749627eb3cfbb77aa3ad8609"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_basis/uneven_tests/PRECOMPUTE_VERTICAL_MODES_2D.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "a48f64b41c2c440714e611c7981921c6c6d7e50834e78f06bf2d0b3758b690e8"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_basis/uneven_tests/vertical_solutions_reconstruct_util.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "48e242ae4d6b298fe5bfae6355e5f13a552a8ffc6f4cff1091a1ee447f15409d"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_basis/vertical_solutions_reconstruct_util.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "48e242ae4d6b298fe5bfae6355e5f13a552a8ffc6f4cff1091a1ee447f15409d"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_plume/cin_cape_calc.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "d3dd0639db6bb06259a6ea94ee1c3e0df2afbd80cdb873ba3af687ec54e6d639"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_plume/entrain_plume_calc.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "ea1fe088e0a9383878477f507dfacde96f1af2233ff6dfde305089e7a2045c7d"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/GPUTEST_SAMPLE.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "81b5712c6f20721c0cf9192bd8eb79ff74f6a1c591efdb47050f58642848ce7c"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/IMPORT_CONSTANTS.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "9fde477680e8eea17fc2f5f2aca61ef95d556fbc4c4f7f676cc53f6d3d82ba89"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/IMPORT_CONSTANTS_NOGLOBAL.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "68056228f1419b0d3708c72682d0e6fee0bcdc1f5f3a1d09c1ea822113297499"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/NOTE.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "d8b2a2c3dab6cdcb343cb18974af1bce8d4f7a60c36d1e98bd1aeb736748b9fc"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/ci.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "dba544e76ce1e74136daff7fd988670f68000c8835732344d5ac6c20697389ce"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_B.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "4260dae12c5e40d915ce2ac348b85d3358d9470dd9ad17bf3771a0e803647e6b"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_Tv.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "d86992e3f9ef64bbf038424876b9c2c3b2a6ec1d2f23f673a553bca014213690"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_dTes.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "dccd232253f4422bdb334a7089c5065459c0207def6cde54714fa1fa97bcf116"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_dTqs.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "35e4585653c828cb6bede2d25914c66d71b59c7894ad4e877180ffd57c57a74a"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_dTqsi.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "5ce3913522b068b98badfdd279ab0fa1ad0ed9a7ce751e5fd4ef2b688a734de6"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_dTqsscl.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "4e025fb26f0deb388b8c7551fdd5ca5160d4aa7c2f13d0dd230c3177851cedde"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_es.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "a6d89db08505d726edae0b520d69360da23aed5dd4079697797302cdaab6ec2c"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_esi.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "13e7d32f678a1b8e9a0f97e326dbaf94027a3e09b808f424e3b02c427f1813db"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_esscl.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "7fa1acdff3547765addb2f6295b0d0cfaff96436356c4dfefdb2d0caeb981724"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_h.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "6a6bc3c9990469ae0296dfac8f234dfcbccb3851aa3faa6bececb536f271497b"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_q.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "19fc7e2235e52c12948b3b10654a90ea45b9391a7b1821a3a39d2683ca02be8c"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_q2.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "f0986c79fc1b362ca92e188977b04d073a31b9bb3e27b96fc5b35968539f1f11"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_qs.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "09f7e3c707ed1eaacb9baba896cc8ab9cb16e742fa7dc823273b8cc2c71fe402"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_qs2.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "6c1f03213c04a6e98dd515d5ce98ebcba6a2cd8f62e99ebd750599af8978671d"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_qsat.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "1aff97bbd0e4b66c33e817aa99741056ccf95ab30840c787a6a4a81b0a516310"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_qsat2.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "16a75d060676e65e16d4fdee2067716db779a2f6d9dbd3ac6b278051091e4a3d"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_qsi.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "5a92de14d0b02b6394a2f186aafc8cf75530d322db4582ce52045c4f9b30f270"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_qsi2.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "3c7b3674ea2e00c004aa526c3a0c79cf6c2f039d2b989d98a15ef3f2cc12161e"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_qsscl.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "1b47aa01ca8ec7e9ee2368d4f83d601767c7fe793766ee475cdc18cd7e60cf82"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_rho.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "b22b7816d5199e9f025304b57719f7ab68367e5222ac351224ba7ee8a2f2c91a"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_theta.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "c69e40c66320d5d1b0d62365db0897cbdc87a9c523c0aecd211945780811d71b"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_theta_e.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "631d04f3cac84824255fb4404068081bab52bb163efe37800559c223988a9843"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_theta_es.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "39ff2e6d87d2bc4ad2f0b33922e524b2998e64939bec58e908b76fce8ef32b79"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_theta_il.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "359b4d62245072deccbef8128ceb7d3ffa55c2ac728193e22797b2f3e73adbeb"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_theta_l.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "6628625f218e53e004623b44871ad6984a13b6308264d123193464143292c90d"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_theta_v.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "f531d0ca252a777616935340b23079911faa5f79ef890e2de9371cf094413274"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/gputest_invTq.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "c2918e5cb0aa97278730069c6f4edf4b2a09c1bb56eb0411882fa2a73d1c219f"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/inv_T_from_h.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "73621892b81e2179d9cda710b56de9bb5d6a8883c36b71d432ce25d6b584faed"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/inv_T_from_theta_e.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "e001fe0db37d6bff77b3e0b15ac8491fb84a2c3774c07622854d97062bcce440"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/inv_T_from_theta_e_nogpu.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "0b57c816e4dee65cef71a3bd61535c28f926b506dfe1f11f8e05a7832f187eed"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/inv_T_from_theta_il.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "1377036c47679caa1c76cbb779b80e289241dbe8ea10b4db922a56d3d1217658"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_thermodynamics/lv.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "c389332e53409f9a3f01adc2641fd140e0e59f4c4ad88ad49914724b7021a2d1"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_timeint/ssprk93.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "b23650cbd13f1854deb9970282f0c6b4edbe4e0a660a6f2421b51d1da8042ae0"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_weno/reconstruction_up3.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "748ac867a4a5ef7089db896e1fcd5a20c8b1dfcaa461c3aac34a410f20c66c20"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V020/util_weno/reconstruction_weno_vec.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "7db699727a68b1838a177e57c02b53901b90256cfc99c6172da338529e9ebdf4"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/ACE_V024GF87.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "60bdfb26deb2eac1bc766003f367cabe504b7a6baedbaa1bca80ba45e87206f7"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/ACE_V024p87.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "2cee66602ee92842e265fedd5f7b9989c52ef0c7db42042d03005c1c6e238252"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/README.md",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "0cfaf2e2ea35e0ef24283902892c1ec3dae3a5feb7842c34d0019d84d502c0e5"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_basis/V024p87_CONSTRUCT_KERNELS.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "bd979aa949cdf99533743ded70683b31f86b173cbd51cfa5f330c63f36201ec9"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_basis/util_layergreen.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "803340c71ac3574fd6694b0c375167de4746a01f0dfd074270e868b9b23a32be"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_plume/cin_cape_calc.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "d3dd0639db6bb06259a6ea94ee1c3e0df2afbd80cdb873ba3af687ec54e6d639"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_plume/entrain_plume_calc.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "ea1fe088e0a9383878477f507dfacde96f1af2233ff6dfde305089e7a2045c7d"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/GPUTEST_SAMPLE.mat",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "81b5712c6f20721c0cf9192bd8eb79ff74f6a1c591efdb47050f58642848ce7c"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/IMPORT_CONSTANTS.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "9fde477680e8eea17fc2f5f2aca61ef95d556fbc4c4f7f676cc53f6d3d82ba89"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/IMPORT_CONSTANTS_NOGLOBAL.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "68056228f1419b0d3708c72682d0e6fee0bcdc1f5f3a1d09c1ea822113297499"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/NOTE.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "d8b2a2c3dab6cdcb343cb18974af1bce8d4f7a60c36d1e98bd1aeb736748b9fc"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/ci.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "dba544e76ce1e74136daff7fd988670f68000c8835732344d5ac6c20697389ce"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_B.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "4260dae12c5e40d915ce2ac348b85d3358d9470dd9ad17bf3771a0e803647e6b"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_Tv.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "d86992e3f9ef64bbf038424876b9c2c3b2a6ec1d2f23f673a553bca014213690"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_dTes.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "dccd232253f4422bdb334a7089c5065459c0207def6cde54714fa1fa97bcf116"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_dTqs.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "35e4585653c828cb6bede2d25914c66d71b59c7894ad4e877180ffd57c57a74a"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_dTqsi.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "5ce3913522b068b98badfdd279ab0fa1ad0ed9a7ce751e5fd4ef2b688a734de6"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_dTqsscl.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "4e025fb26f0deb388b8c7551fdd5ca5160d4aa7c2f13d0dd230c3177851cedde"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_es.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "a6d89db08505d726edae0b520d69360da23aed5dd4079697797302cdaab6ec2c"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_esi.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "13e7d32f678a1b8e9a0f97e326dbaf94027a3e09b808f424e3b02c427f1813db"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_esscl.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "7fa1acdff3547765addb2f6295b0d0cfaff96436356c4dfefdb2d0caeb981724"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_h.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "6a6bc3c9990469ae0296dfac8f234dfcbccb3851aa3faa6bececb536f271497b"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_q.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "19fc7e2235e52c12948b3b10654a90ea45b9391a7b1821a3a39d2683ca02be8c"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_q2.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "f0986c79fc1b362ca92e188977b04d073a31b9bb3e27b96fc5b35968539f1f11"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_qs.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "09f7e3c707ed1eaacb9baba896cc8ab9cb16e742fa7dc823273b8cc2c71fe402"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_qs2.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "6c1f03213c04a6e98dd515d5ce98ebcba6a2cd8f62e99ebd750599af8978671d"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_qsat.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "1aff97bbd0e4b66c33e817aa99741056ccf95ab30840c787a6a4a81b0a516310"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_qsat2.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "16a75d060676e65e16d4fdee2067716db779a2f6d9dbd3ac6b278051091e4a3d"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_qsi.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "5a92de14d0b02b6394a2f186aafc8cf75530d322db4582ce52045c4f9b30f270"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_qsi2.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "3c7b3674ea2e00c004aa526c3a0c79cf6c2f039d2b989d98a15ef3f2cc12161e"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_qsscl.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "1b47aa01ca8ec7e9ee2368d4f83d601767c7fe793766ee475cdc18cd7e60cf82"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_rho.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "b22b7816d5199e9f025304b57719f7ab68367e5222ac351224ba7ee8a2f2c91a"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_theta.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "c69e40c66320d5d1b0d62365db0897cbdc87a9c523c0aecd211945780811d71b"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_theta_e.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "631d04f3cac84824255fb4404068081bab52bb163efe37800559c223988a9843"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_theta_es.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "39ff2e6d87d2bc4ad2f0b33922e524b2998e64939bec58e908b76fce8ef32b79"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_theta_il.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "359b4d62245072deccbef8128ceb7d3ffa55c2ac728193e22797b2f3e73adbeb"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_theta_l.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "6628625f218e53e004623b44871ad6984a13b6308264d123193464143292c90d"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/eval_theta_v.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "f531d0ca252a777616935340b23079911faa5f79ef890e2de9371cf094413274"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/gputest_invTq.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "c2918e5cb0aa97278730069c6f4edf4b2a09c1bb56eb0411882fa2a73d1c219f"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/inv_T_batch.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "563462a1adb169102c02be7c86d46a04322c5ef452aaaa699ad72f596b6546be"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/inv_T_batch_warm.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "61c8c2ca14824798704c44aef802c59ebf1bc96c0cb7489cc4e44a0bb36ef4f9"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/inv_T_from_h.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "73621892b81e2179d9cda710b56de9bb5d6a8883c36b71d432ce25d6b584faed"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/inv_T_from_theta_e.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "ee8517503a80738a5f44a6328b90e112bccda1c6587f693d43d9893fd734d89f"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/inv_T_from_theta_e_gpu.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "e80e35965b0cf6cb289b90237aed1fb2c32b451897a338eaf7df6ef0ddaa0e3d"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/inv_T_from_theta_e_nogpu.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "0b57c816e4dee65cef71a3bd61535c28f926b506dfe1f11f8e05a7832f187eed"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/inv_T_from_theta_il.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "1377036c47679caa1c76cbb779b80e289241dbe8ea10b4db922a56d3d1217658"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_thermodynamics/lv.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "c389332e53409f9a3f01adc2641fd140e0e59f4c4ad88ad49914724b7021a2d1"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_timeint/ssprk93.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "b23650cbd13f1854deb9970282f0c6b4edbe4e0a660a6f2421b51d1da8042ae0"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_weno/reconstruction_up3.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "748ac867a4a5ef7089db896e1fcd5a20c8b1dfcaa461c3aac34a410f20c66c20"
+    },
+    {
+      "old_path": "matlab/history/snapshots/ACE_V024.87/util_weno/reconstruction_weno_vec.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "7db699727a68b1838a177e57c02b53901b90256cfc99c6172da338529e9ebdf4"
+    },
+    {
+      "old_path": "matlab/history/standalone/ace_v019_K24_8aces.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "d338d4b1724720015853e6405d8bb863f3d1b86d906a5bad033190cdbfa98371"
+    },
+    {
+      "old_path": "matlab/history/standalone/ace_v019_dev_2d88aces.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "06f67c523580373dc540a4f64952d6e98bd6224158889887e7e903ac3c45fde2"
+    },
+    {
+      "old_path": "matlab/history/standalone/ace_v020_dev_2d88aces.m",
+      "new_path": null,
+      "disposition": "retire migration-only copy; preserved in Git and local backup",
+      "sha256_before": "71b7e2a95c7597adc1f2697ed00537e02edfdcab0d1c80b7f314e93dc176299c"
+    }
+  ],
+  "test_and_tool_path_adaptations": [
+    "tests/thermodynamics/validate_mixed.m",
+    "tests/thermodynamics/validate_liquid.py",
+    "tests/thermodynamics/sweep_inversion.py",
+    "tests/thermodynamics/sweep_inversion.m",
+    "tests/thermodynamics/validate_liquid.m",
+    "tests/thermodynamics/validate_mixed.py",
+    "tests/thermodynamics/preview_phase_endpoints.py",
+    "tests/thermodynamics/trace_mismatches.py",
+    "tests/thermodynamics/make_liquid_boundary.m",
+    "tests/thermodynamics/validate_ice.py",
+    "tests/thermodynamics/validate_ice.m",
+    "tests/thermodynamics/review_liquid_newton.m",
+    "tests/thermodynamics/validate_atmosphere.py",
+    "tests/thermodynamics/validate_atmosphere.m",
+    "tests/thermodynamics/preview_phase_endpoints.m",
+    "tests/alignment/matlab_case.txt",
+    "tests/alignment/matlab_mixed_evidence.m",
+    "tests/alignment/matlab_mixed_replay.txt",
+    "tests/alignment/prepare.py",
+    "tests/alignment/matlab_sounding_case.txt",
+    "tests/alignment/run.py",
+    "tests/alignment/run_sounding_case.py",
+    "tests/alignment/replay_mixed_residual.py",
+    "tests/alignment/matlab_forward_probe.m",
+    "tests/alignment/isolate_reference_tv.py",
+    "tests/alignment/matlab_thermo.txt",
+    "tests/alignment/report.py",
+    "tests/input/validate_matlab.m",
+    "tools/input/create_shared_input.m"
+  ],
+  "source_changes": "Only MATLAB/Fortran driver default shared-input paths change from ../../data to ../data; all numerical routines unchanged."
+}

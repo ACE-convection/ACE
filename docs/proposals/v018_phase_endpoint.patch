@@ -1,0 +1,63 @@
+--- a/matlab/active/util_thermodynamics/inv_T_from_theta_e.m
++++ b/matlab/active/util_thermodynamics/inv_T_from_theta_e.m
+@@ -107,8 +107,13 @@
+   qs = eval_qs(T0,p,qt);
+   GT0 = T0 .* (RE+461.5*qs).^chi .* exp(qs.*9155.566660243245./CPL);
+     
++  phase_roundoff = 0;
++  if isreal([G0,GT0,HT0]) && all(isfinite([G0,GT0,HT0]))
++    phase_roundoff = 8*eps(1)*max(abs([G0,GT0,HT0]));
++  end
+   % 3 cases: liquid-only, ice-only, co-existing
+-  if G0>GT0 && G0>HT0 % Liquid-only
++  %if G0>GT0 && G0>HT0 % Liquid-only
++  if G0-GT0>phase_roundoff && G0-HT0>phase_roundoff % Liquid-only
+     % Set inital T for liquid with Tetens: es(T)~610.78*exp(17.27*(T-273.16)/(T-35.86))
+     LOG = log(p.*qt) - 5.939876353793538;
+     T = 237.3*LOG./(17.27-LOG) + 273.15;
+@@ -135,7 +140,8 @@
+     end
+ %     step = 2; 
+   
+-  elseif G0<GT0 && G0<HT0 % Ice-only
++  %elseif G0<GT0 && G0<HT0 % Ice-only
++  elseif G0-GT0<-phase_roundoff && G0-HT0<-phase_roundoff % Ice-only
+     % Set initial T with Tetens for ice: esi(T)~610.78*exp(21.875*(T-273.16)/(T-7.66))
+     LOG = log(p.*qt) - 5.939876353793538;
+     T = 265.5*LOG./(21.875-LOG) + 273.16;
+--- a/fortran/active/src/ace_module.F
++++ b/fortran/active/src/ace_module.F
+@@ -386,7 +386,7 @@
+ integer :: ice
+ real :: Cpl,Re,chi,F0,FT0,F,dFdT,R,e,gamma,dT,qc
+ real :: G0,qsat,qsi,qs,dC,HT0,GT0,tmp,G,H,es,esi,dTqs,dTqsi,dGdT,dHdT
+-real :: sat_roundoff,sat_slope
++real :: sat_roundoff,sat_slope,phase_roundoff
+ 
+ Cpl = Cpd + (Cl-CPd)*qt
+ Re = Rd*(1-qt)
+@@ -462,8 +462,13 @@
+ !  GT0 =  T0 * (RE+RV*qs)**chi * exp(qs*Lv(T0)/CPL/T0)
+   GT0 =  T0 * (RE+RV*qs)**chi * exp(qs*LvoT/CPL)
+ 
++  phase_roundoff = 0.
++  if (all(ieee_is_finite([G0,GT0,HT0]))) then
++    phase_roundoff = 8*epsilon(G0)*max(abs(G0),abs(GT0),abs(HT0))
++  endif
+   ! 3 cases: liquid-only, ice-only, co-existing
+-  if (G0>GT0 .and. G0>HT0) then ! liquid-only
++  !if (G0>GT0 .and. G0>HT0) then ! liquid-only
++  if (G0-GT0>phase_roundoff .and. G0-HT0>phase_roundoff) then ! liquid-only
+     ! estimate initial T
+     !tmp = log(qt*p) - log(610.78*EPS)
+     tmp = log(p*qt) - 5.939876353793538
+@@ -496,7 +501,8 @@
+       ql = 0.
+     endif
+ 
+-  elseif (G0<GT0 .and. G0<HT0) then ! ice-only
++  !elseif (G0<GT0 .and. G0<HT0) then ! ice-only
++  elseif (G0-GT0<-phase_roundoff .and. G0-HT0<-phase_roundoff) then ! ice-only
+     ! estimate initial T
+     !tmp = log(qt*p) - log(610.78*EPS)
+     tmp = log(p*qt) - 5.939876353793538

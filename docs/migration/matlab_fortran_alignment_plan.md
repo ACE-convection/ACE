@@ -1,10 +1,31 @@
 # Unified ACE alignment and release roadmap
 
+## Current milestone decision (2026-10-02)
+
+The developer accepted the current v0.18 Manus singleACE and twelve-hour
+multiACE evidence as sufficient and authorized normalization before merge
+and tag. The [v0.18.0 release record](../releases/v0.18.0.md) now owns the
+accepted scope, retained limitations and local release procedure. The
+[normalization map](v018_normalization.md) promotes the tested sources to
+`matlab/` and `fortran/`, preserving pre-normalization recovery commit
+`c9ae729`. Broader budget/phase/compiler gates below are retained as the
+original planning baseline, not additional blockers for this accepted milestone.
+
+The remaining sections preserve historical staging descriptions and the
+joint development direction toward v0.20/v0.24. Current operating paths are
+in the source-root READMEs and [test instructions](../../tests/README.md).
+
 Status: canonical forward roadmap, architecture clarified 2026-09-30.
 v0.18 source candidates are staged; numerical validation and repository
 normalization remain open. Historical import is largely complete; its facts
 and verification record belong in the [import record](matlab_import_plan.md).
 Start at the [documentation index](README.md) for document roles.
+
+The developer-designated [initial runtime reference case](../../tests/README.md)
+is Manus 208, single ACE, a saturated +1 K bubble at levels 11–51,
+precipitation off, and three hours at dt=4 s. Initial v0.20 and v0.24
+comparisons must reuse that case contract and document any version adapter.
+Use descriptive errors and scientific review; byte equality is not required.
 
 ## Repository philosophy and development sequence
 
@@ -176,3 +197,15 @@ interface changes need their own review and validation; they are not part of
 this documentation update or automatically required by source normalization.
 The exact normalized runtime path setup must be decided and validated during
 that separately reviewed step.
+
+### Shared case-input implementation update (2026-09-30)
+
+The developer authorized shared NetCDF conversion and active-reader changes
+on `feature/shared-netcdf-input`. The [case schema](../shared_input.md) and
+[validation evidence](../shared_input_validation.json) now implement the
+runtime direction above: recovered inputs agree exactly, converters demand
+full equality, and each active implementation retains a legacy input route
+for regression checks. This reviewed task scope supersedes the missing-input
+and byte-identical-active-source descriptions for this branch only. It does
+not authorize normalization, alter historical snapshots, or satisfy the
+cross-implementation dynamics and unified release gates.

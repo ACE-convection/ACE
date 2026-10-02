@@ -1,0 +1,270 @@
+{
+  "case": "manus",
+  "profile_index": 208,
+  "duration_seconds": 10800,
+  "dt_seconds": 4,
+  "output_step_seconds": 60,
+  "precipitation": "disabled",
+  "single_policy": "ACE 1 tendency active; 8 ACE geometry/PMB retained; original damping retained",
+  "pulse": "ACE 1: 0.03*sin(pi*z/1000) kg m-2 s-1 at 0-1000 m",
+  "mf_diffusion": "disabled as in active defaults",
+  "bubble": {
+    "enabled": true,
+    "levels_one_based": [
+      11,
+      51
+    ],
+    "delta_T_K": 1,
+    "saturation": "original eval_qsat; no initial condensate",
+    "coordinate_policy": "original MATLAB T_zm and p_mf; applied to prognostic theta_e/qt slots",
+    "fortran_initialization": "common MATLAB-exported state"
+  },
+  "finite_outputs": true,
+  "input_file": "/scratch/peter50504/ACE/data/input/manus208.nc",
+  "input_sha256": "85f8f5ebf0b4a0bca4a96b9b3f6f9b43a1d9bdb4470658b018dcd71d5219b1d9",
+  "baseline_commit": "afa0b2417bcf6ac6c6287a6148b1404b2ee797ca",
+  "production_sources_sha256": {
+    "matlab/active/ace.m": "14ecab89df0e05b9b86299fd78fe3f493f03e2bab9a9eb05a5d6fb2b40c71324",
+    "fortran/active/src/ace_module.F": "e343be3bfeb9baaa516962af66aaf7d5c674d7aefd76393cfc0ca6a998f69b31",
+    "fortran/active/src/ace_input.F": "e349ea2a0326c37756f4b7f58e4905f01a7134fed5feb748993d5e819ee6a2da",
+    "tests/alignment/matlab_case.txt": "7a765b87234d7b274a48981da3026004fe05ddfdccee36c631c6dfef02921807",
+    "tests/alignment/fortran_case.f90": "c964e5a94568af2c74ca723abce400088a9b54c772d4500c0db388b475dc41c0",
+    "tests/alignment/fortran_thermo.f90": "6c2f0a0c957f7034fe0de3fb869d1da70d96ff4b16ed6dddd01d028739879fda",
+    "tests/alignment/fortran_diagnostics.f90": "73bb53c20f633407814872523fb8fd0bdb5e2e410296bf935d7133993a628355",
+    "tests/alignment/prepare.py": "d3e0f8f26bcbd52cd57db3a0a934d1c9be946b1364ab23380100975c40a2067d",
+    "tests/alignment/matlab_thermo.txt": "fbe907731261cb70db34c794d37270243d6ae4b2abb6ebf4e0c9d70dd6650bac",
+    "matlab/active/util_weno/reconstruction_up3.m": "748ac867a4a5ef7089db896e1fcd5a20c8b1dfcaa461c3aac34a410f20c66c20",
+    "matlab/active/util_weno/reconstruction_weno.m": "fd5478923021e54188d5996365fd942e047298f2b223a68d6bd97c7f13a961c1",
+    "matlab/active/util_weno/reconstruction_weno_vec.m": "f5f5fc42c9a97068543ae54d53bff7d50c721f1d30f2765b831b9fbc76811c02",
+    "matlab/active/util_plume/entrain_plume_calc.m": "0a066663dcd5fc6289b1659af79f0877ffab5754e4909f0998966a6e96b646a0",
+    "matlab/active/util_thermodynamics/IMPORT_CONSTANTS.m": "9fde477680e8eea17fc2f5f2aca61ef95d556fbc4c4f7f676cc53f6d3d82ba89",
+    "matlab/active/util_thermodynamics/ci.m": "dba544e76ce1e74136daff7fd988670f68000c8835732344d5ac6c20697389ce",
+    "matlab/active/util_thermodynamics/eval_Tv.m": "4b0b113e2ff4a09e89c8809a6830b52e6356e97be282b464cd9f74b0b07b7eb3",
+    "matlab/active/util_thermodynamics/eval_dTqs.m": "f8fb651a0ee10b7b387b2704b2c91051efdf04300362bbb9db32e7f50efb3ad1",
+    "matlab/active/util_thermodynamics/eval_dTqsi.m": "9b91370ac36d0dc2a439b8ee56134775fd1ffba1cc02465094b4764bfc891bc5",
+    "matlab/active/util_thermodynamics/eval_es.m": "a6d89db08505d726edae0b520d69360da23aed5dd4079697797302cdaab6ec2c",
+    "matlab/active/util_thermodynamics/eval_esi.m": "13e7d32f678a1b8e9a0f97e326dbaf94027a3e09b808f424e3b02c427f1813db",
+    "matlab/active/util_thermodynamics/eval_q.m": "2cf06b7958e5cbd69ee53e967e90124a14f646cef878d662d879e48863fbfb46",
+    "matlab/active/util_thermodynamics/eval_qs.m": "79e9bdd57cec8a7b47136b7ea9e59d998c37cd85a472e24bba33c341510f7dcd",
+    "matlab/active/util_thermodynamics/eval_qsat.m": "a4adf98fe96720aedc55a4a37747b2a613fa2bf36cce8bf63af10a12ad193cae",
+    "matlab/active/util_thermodynamics/eval_qsi.m": "03bb4474d8239134858e40633baceaa4a7893e2bd8d4ae282709712e4c992f50",
+    "matlab/active/util_thermodynamics/eval_theta.m": "c69e40c66320d5d1b0d62365db0897cbdc87a9c523c0aecd211945780811d71b",
+    "matlab/active/util_thermodynamics/eval_theta_e.m": "631d04f3cac84824255fb4404068081bab52bb163efe37800559c223988a9843",
+    "matlab/active/util_thermodynamics/eval_theta_es.m": "2e1ad11546d8b5162017a76755eaaecd64d74f489b20b925dd3c84c1ccb0dc6e",
+    "matlab/active/util_thermodynamics/inv_T_from_theta_e.m": "a8ec61cc98ca480ac3d95d10d1ddb892dbbdb1cfeb186083264d1a7b7cf28011",
+    "matlab/active/util_thermodynamics/lv.m": "c389332e53409f9a3f01adc2641fd140e0e59f4c4ad88ad49914724b7021a2d1"
+  },
+  "commands": [
+    {
+      "argv": [
+        "/home/peter50504/miniconda3/bin/python3",
+        "/scratch/peter50504/ACE/tests/alignment/prepare.py",
+        "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_3h"
+      ],
+      "cwd": "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_3h"
+    },
+    {
+      "argv": [
+        "gfortran",
+        "-O2",
+        "-ffree-form",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-ffree-line-length-none",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "ace_module.F"
+      ],
+      "cwd": "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_3h"
+    },
+    {
+      "argv": [
+        "gfortran",
+        "-O2",
+        "-ffree-form",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-ffree-line-length-none",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "/scratch/peter50504/ACE/fortran/active/src/test.F",
+        "ace_module.o",
+        "ace_input.o",
+        "-L/home/peter50504/miniconda3/lib",
+        "-lnetcdff",
+        "-lnetcdf",
+        "-Wl,-rpath,/home/peter50504/miniconda3/lib",
+        "-o",
+        "base_model.exe"
+      ],
+      "cwd": "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_3h"
+    },
+    {
+      "argv": [
+        "gfortran",
+        "-O2",
+        "-ffree-form",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-ffree-line-length-none",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "/scratch/peter50504/ACE/tests/alignment/fortran_sounding_case.f90",
+        "ace_module.o",
+        "ace_input.o",
+        "-L/home/peter50504/miniconda3/lib",
+        "-lnetcdff",
+        "-lnetcdf",
+        "-Wl,-rpath,/home/peter50504/miniconda3/lib",
+        "-o",
+        "case.exe"
+      ],
+      "cwd": "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_3h"
+    },
+    {
+      "argv": [
+        "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_3h/base_model.exe",
+        "--input",
+        "/scratch/peter50504/ACE/data/input/manus208.nc",
+        "--validate-input",
+        "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_3h/fortran_init.bin"
+      ],
+      "cwd": "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_3h"
+    },
+    {
+      "argv": [
+        "matlab",
+        "-batch",
+        "addpath('/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_3h'); run_sounding_case('/scratch/peter50504/ACE','/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_3h','/scratch/peter50504/ACE/data/input/manus208.nc',10800,60,true);"
+      ],
+      "cwd": "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_3h"
+    },
+    {
+      "argv": [
+        "matlab",
+        "-batch",
+        "addpath('/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_3h'); run_sounding_case('/scratch/peter50504/ACE','/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_3h','/scratch/peter50504/ACE/data/input/manus208.nc',10800,60);"
+      ],
+      "cwd": "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_3h"
+    },
+    {
+      "argv": [
+        "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_3h/case.exe",
+        "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_3h/fortran_init.bin",
+        "/scratch/peter50504/ACE/data/input/manus208.nc",
+        "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_3h/fortran.bin",
+        "10800",
+        "60",
+        "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_3h/initial_override.bin"
+      ],
+      "cwd": "/scratch/peter50504/ACE/migration_work/manus208_single_saturated_bubble_3h"
+    }
+  ],
+  "matlab_version": "23.2.0.2668659 (R2023b) Update 9",
+  "gfortran_version": "GNU Fortran (conda-forge gcc 11.2.0-16) 11.2.0",
+  "comparison_status": "Descriptive errors only; no byte equality or acceptance tolerance required",
+  "mf": {
+    "exact_equal": false,
+    "max_abs": 6.448175327022909e-13,
+    "rms": 7.502137391927885e-14,
+    "relative_l2": 1.3579812576440596e-14,
+    "max_rel_nonzero_reference": 7.322300346822338e-08,
+    "zero_reference_max_abs": 0.0,
+    "worst_index_one_based": [
+      180,
+      304
+    ],
+    "matlab_at_worst": 2.421011348598222,
+    "fortran_at_worst": 2.421011348597577
+  },
+  "initial_state": {
+    "theta_e": {
+      "exact_equal": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "relative_l2": 0.0,
+      "max_rel_nonzero_reference": 0.0,
+      "zero_reference_max_abs": 0,
+      "worst_index_one_based": [
+        1,
+        1
+      ],
+      "matlab_at_worst": 357.0878098025499,
+      "fortran_at_worst": 357.0878098025499
+    },
+    "qt": {
+      "exact_equal": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "relative_l2": 0.0,
+      "max_rel_nonzero_reference": 0.0,
+      "zero_reference_max_abs": 0,
+      "worst_index_one_based": [
+        1,
+        1
+      ],
+      "matlab_at_worst": 0.021408736537780727,
+      "fortran_at_worst": 0.021408736537780727
+    },
+    "MF": {
+      "exact_equal": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "relative_l2": 0.0,
+      "max_rel_nonzero_reference": 0.0,
+      "zero_reference_max_abs": 0.0,
+      "worst_index_one_based": [
+        1,
+        1
+      ],
+      "matlab_at_worst": 0.0,
+      "fortran_at_worst": 0.0
+    }
+  },
+  "ranges": {
+    "matlab": {
+      "mf_min": -0.14953681880247183,
+      "mf_max": 15.247965561249764,
+      "qt_min": 2.583523698556013e-06,
+      "qt_max": 0.021408736537780727
+    },
+    "fortran": {
+      "mf_min": -0.14953681880240638,
+      "mf_max": 15.247965561249941,
+      "qt_min": 2.583523698556012e-06,
+      "qt_max": 0.021408736537780727
+    }
+  },
+  "experiment_sources_sha256": {
+    "tests/alignment/run_sounding_case.py": "f22c6c3d5b6f0860cd1c76d6b37e15068a25df8de896f2198b4b1b150d7d1eb6",
+    "tests/alignment/matlab_sounding_case.txt": "98d4e6cebe9b8c2cf0de6c258bf72e18e0c4745ce2e4d1b14bfdbd1424ad2527",
+    "tests/alignment/fortran_sounding_case.f90": "bcdad44b31fd248f933b9bd81c2ecea0ee47fe363a86f613667823e82c0a2973"
+  },
+  "original_runner_sha256": "f22c6c3d5b6f0860cd1c76d6b37e15068a25df8de896f2198b4b1b150d7d1eb6",
+  "execution_record": "Original runner preserved as runner_executed.py; see generated sources, patches and model logs",
+  "analysis_only": false,
+  "artifacts_sha256": {
+    "runner_executed.py": "f22c6c3d5b6f0860cd1c76d6b37e15068a25df8de896f2198b4b1b150d7d1eb6",
+    "fortran_no_precip.diff": "629a1489fcffcd3d79367b5171770c634ffa43b175e71dd2def8ec5df2972684",
+    "base_model.exe": "b4275d8e7012eea401cd3ee5ec64a0acd6d7fd55b6a7e2f60677e821f8984214",
+    "fortran_diagnostics.exe": "b39c98873ecebd18174f5814ce5fd8c4b465f7a1151d581949b324e3f46fb330",
+    "case.exe": "54f8cf328b64906145673dcd7fea9a582d456336310adc5f94c97477910726bc",
+    "bubble_initial.bin": "db3b90127815e3c24754aaee6a3e956423caaa4f4c63e36a43310a55d137d067",
+    "run_alignment_case.m": "944926abcadcf246517a2866e56eda0abae8703f622429b425dbb4ab0799c267",
+    "fortran_thermo.exe": "4b7f4333ced8ee5db4403ece8681ccf16b0de1b6aaa906d662509201fb963cf3",
+    "mf.npz": "7ec88cd3c96b74cd04116cd2f4c0065feafd70cfada4acd9b0b32777c94f72bd",
+    "fortran_case.exe": "ffea3e9d5351beca7d6c0cb55ba0f2fe10d9eda1b35040607cc6033e18d6efdc",
+    "fortran_init.bin": "192e9a34250d003a074848000a58ad8d184f0d25a057e880f2ad872f686f86a9",
+    "matlab.nc": "1f1325185cb83f7f478eb1308f0d0de37aa46097ff0eea3bc437969effb91b42",
+    "run_sounding_case.m": "6f544b3e82f0fed7ad377000cc954f1fa567ed7d85d04a83d484eaa478af1ba2",
+    "matlab_no_precip.diff": "9bf40220ce6ca202a1f99251f335dfdb7f9357ade6021ac7085469923792fdaf",
+    "bubble_initialization.diff": "c82e3bc790cbd70f99c293c2111580b84087b8a74620d00ccec9c6c33a4a3134",
+    "fortran.bin": "0a520b05ee431b23349c21fdab102c8e1cd6fd1ad31f58e8bf3e72b0f37b8ab8",
+    "initialize_sounding.m": "a0e9578d75a556fe21c522f2523d8eaedf343c7b916a36f37b9803f0115937e1",
+    "fortran_access.diff": "6b7b9c4ce58dbf91b62fff63e2284f89724b983d45e4a2d93dfc03fa8b0f4d15",
+    "initial_override.bin": "2fbb0c2361f238756f8828b3de12fe4bdd13dad98669d1654955714950677bbb",
+    "run_thermo.m": "b7e86d11d326718a1c49047a3bc29e57ab62258878c59933b606371363e47c74",
+    "ace_module.F": "3aa20938058837725982527ab1f203b9a4620f5dabbd852172b59028c957cb44"
+  }
+}

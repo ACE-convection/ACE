@@ -1,0 +1,77 @@
+{
+  "baseline_commit": "b70343cbf28e26915bf6e0dfa9821c6ec295bdf8",
+  "branch": "feature/shared-netcdf-input",
+  "source_sha256": {
+    "fortran/active/src/ace_module.F": "b94faaeff3816118f8ce414626339ccfffbd0d1a0df2157ae9e60a34a9af86cf",
+    "matlab/active/util_thermodynamics/inv_T_from_theta_e.m": "a8ec61cc98ca480ac3d95d10d1ddb892dbbdb1cfeb186083264d1a7b7cf28011"
+  },
+  "fortran_outside_inverse_unchanged": true,
+  "only_two_active_source_files_changed": [
+    "fortran/active/src/ace_module.F",
+    "matlab/active/util_thermodynamics/inv_T_from_theta_e.m"
+  ],
+  "metrics": {
+    "liquid": {
+      "cases": 25,
+      "finite_real_converged": 25,
+      "exactly_equal": 20,
+      "max_abs": [
+        5.684341886080802e-14,
+        5.898059818321144e-17,
+        5.898059818321144e-17,
+        0
+      ],
+      "branch_mismatches": 0,
+      "iteration_mismatches": 0,
+      "status_mismatches": 0,
+      "evidence": "docs/v018_liquid_derivative_validation.json"
+    },
+    "ice": {
+      "cases": 25,
+      "finite_real_converged": 25,
+      "exactly_equal": 21,
+      "max_abs": [
+        5.684341886080802e-14,
+        2.949029909160572e-17,
+        0,
+        2.949029909160572e-17
+      ],
+      "branch_mismatches": 0,
+      "iteration_mismatches": 0,
+      "status_mismatches": 0,
+      "evidence": "docs/v018_ice_derivative_validation.json"
+    },
+    "mixed_phase": {
+      "cases": 25,
+      "finite_real_converged": 25,
+      "exactly_equal": 23,
+      "max_abs": [
+        5.684341886080802e-14,
+        1.6479873021779667e-17,
+        1.8561541192951836e-16,
+        1.8561541192951836e-16
+      ],
+      "branch_mismatches": 0,
+      "iteration_mismatches": 0,
+      "status_mismatches": 0,
+      "evidence": "docs/v018_mixed_phase_validation.json"
+    }
+  },
+  "verification": "Recomputed from existing per-case evidence; no new MATLAB or sweep runs.",
+  "not_a_full_domain_or_model_regression_pass": true,
+  "review_patches": [
+    {
+      "path": "migration_work/thermodynamic_alignment/review/01-fortran-inversion-alignment.patch",
+      "sha256": "f23bf1dd83de29256647c6e0dc6977cbb441b17e23822d4c2319ca4723a94d37"
+    },
+    {
+      "path": "migration_work/thermodynamic_alignment/review/02-shared-saturation-roundoff.patch",
+      "sha256": "0aab410f8adaa1275bd28613f9359620bb645aedf71f88e7b3662c974d0c87fd"
+    },
+    {
+      "path": "migration_work/thermodynamic_alignment/review/03-condensate-newton-derivatives.patch",
+      "sha256": "fcbebe41c7356012644b6ebc5bb6c1fd4f3b50455577be6ee9ffa39fd8ae609d"
+    }
+  ],
+  "patch_sequence_reproduces_final_sources": true
+}

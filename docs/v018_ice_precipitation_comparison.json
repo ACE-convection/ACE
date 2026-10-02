@@ -1,0 +1,5108 @@
+{
+  "validated_at_utc": "2026-10-01T08:47:25.129636+00:00",
+  "configuration": {
+    "baseline_commit": "1ac8d27195feb77d070af981976e955e36525c1b",
+    "sources_sha256": {
+      "matlab/active/ace.m": "14ecab89df0e05b9b86299fd78fe3f493f03e2bab9a9eb05a5d6fb2b40c71324",
+      "fortran/active/src/ace_module.F": "87834e2709ab723efc0554d72737dc554c76ad0813552f5c87fa31e6519d4453",
+      "fortran/active/src/ace_input.F": "e349ea2a0326c37756f4b7f58e4905f01a7134fed5feb748993d5e819ee6a2da",
+      "tests/alignment/matlab_case.txt": "6acfb7dfb9de82653180d1a97a652694cdd3acb03fffe5407bb7ba2415362c38",
+      "tests/alignment/fortran_case.f90": "d0f148140fd737c5f26d0dcde8773cc3ffa945564a746942d4beb3bd8bd0da47",
+      "tests/alignment/fortran_thermo.f90": "6c2f0a0c957f7034fe0de3fb869d1da70d96ff4b16ed6dddd01d028739879fda",
+      "tests/alignment/fortran_diagnostics.f90": "73bb53c20f633407814872523fb8fd0bdb5e2e410296bf935d7133993a628355",
+      "tests/alignment/prepare.py": "d3e0f8f26bcbd52cd57db3a0a934d1c9be946b1364ab23380100975c40a2067d",
+      "tests/alignment/matlab_thermo.txt": "5df3506f2d2eaa4c9881260ebc4d6cc3119bd1f89bd19d4ace1f04e78e991eed",
+      "matlab/active/util_weno/reconstruction_up3.m": "748ac867a4a5ef7089db896e1fcd5a20c8b1dfcaa461c3aac34a410f20c66c20",
+      "matlab/active/util_weno/reconstruction_weno.m": "fd5478923021e54188d5996365fd942e047298f2b223a68d6bd97c7f13a961c1",
+      "matlab/active/util_weno/reconstruction_weno_vec.m": "f5f5fc42c9a97068543ae54d53bff7d50c721f1d30f2765b831b9fbc76811c02",
+      "matlab/active/util_plume/entrain_plume_calc.m": "0a066663dcd5fc6289b1659af79f0877ffab5754e4909f0998966a6e96b646a0",
+      "matlab/active/util_thermodynamics/IMPORT_CONSTANTS.m": "9fde477680e8eea17fc2f5f2aca61ef95d556fbc4c4f7f676cc53f6d3d82ba89",
+      "matlab/active/util_thermodynamics/ci.m": "dba544e76ce1e74136daff7fd988670f68000c8835732344d5ac6c20697389ce",
+      "matlab/active/util_thermodynamics/eval_Tv.m": "4b0b113e2ff4a09e89c8809a6830b52e6356e97be282b464cd9f74b0b07b7eb3",
+      "matlab/active/util_thermodynamics/eval_dTqs.m": "f8fb651a0ee10b7b387b2704b2c91051efdf04300362bbb9db32e7f50efb3ad1",
+      "matlab/active/util_thermodynamics/eval_dTqsi.m": "9b91370ac36d0dc2a439b8ee56134775fd1ffba1cc02465094b4764bfc891bc5",
+      "matlab/active/util_thermodynamics/eval_es.m": "a6d89db08505d726edae0b520d69360da23aed5dd4079697797302cdaab6ec2c",
+      "matlab/active/util_thermodynamics/eval_esi.m": "13e7d32f678a1b8e9a0f97e326dbaf94027a3e09b808f424e3b02c427f1813db",
+      "matlab/active/util_thermodynamics/eval_q.m": "2cf06b7958e5cbd69ee53e967e90124a14f646cef878d662d879e48863fbfb46",
+      "matlab/active/util_thermodynamics/eval_qs.m": "79e9bdd57cec8a7b47136b7ea9e59d998c37cd85a472e24bba33c341510f7dcd",
+      "matlab/active/util_thermodynamics/eval_qsat.m": "a4adf98fe96720aedc55a4a37747b2a613fa2bf36cce8bf63af10a12ad193cae",
+      "matlab/active/util_thermodynamics/eval_qsi.m": "03bb4474d8239134858e40633baceaa4a7893e2bd8d4ae282709712e4c992f50",
+      "matlab/active/util_thermodynamics/eval_theta.m": "c69e40c66320d5d1b0d62365db0897cbdc87a9c523c0aecd211945780811d71b",
+      "matlab/active/util_thermodynamics/eval_theta_e.m": "631d04f3cac84824255fb4404068081bab52bb163efe37800559c223988a9843",
+      "matlab/active/util_thermodynamics/eval_theta_es.m": "2e1ad11546d8b5162017a76755eaaecd64d74f489b20b925dd3c84c1ccb0dc6e",
+      "matlab/active/util_thermodynamics/inv_T_from_theta_e.m": "a8ec61cc98ca480ac3d95d10d1ddb892dbbdb1cfeb186083264d1a7b7cf28011",
+      "matlab/active/util_thermodynamics/lv.m": "c389332e53409f9a3f01adc2641fd140e0e59f4c4ad88ad49914724b7021a2d1"
+    },
+    "commands": [
+      [
+        "gfortran",
+        "-O2",
+        "-ffree-form",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-ffree-line-length-none",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/fortran/active/src/ace_input.F"
+      ],
+      [
+        "gfortran",
+        "-O2",
+        "-ffree-form",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-ffree-line-length-none",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "ace_module.F"
+      ],
+      [
+        "gfortran",
+        "-O2",
+        "-ffree-form",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-ffree-line-length-none",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "/scratch/peter50504/ACE/tests/alignment/fortran_case.f90",
+        "ace_module.o",
+        "ace_input.o",
+        "-L/home/peter50504/miniconda3/lib",
+        "-lnetcdff",
+        "-lnetcdf",
+        "-Wl,-rpath,/home/peter50504/miniconda3/lib",
+        "-o",
+        "fortran_case.exe"
+      ],
+      [
+        "gfortran",
+        "-O2",
+        "-ffree-form",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-ffree-line-length-none",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "/scratch/peter50504/ACE/tests/alignment/fortran_thermo.f90",
+        "ace_module.o",
+        "ace_input.o",
+        "-L/home/peter50504/miniconda3/lib",
+        "-lnetcdff",
+        "-lnetcdf",
+        "-Wl,-rpath,/home/peter50504/miniconda3/lib",
+        "-o",
+        "fortran_thermo.exe"
+      ],
+      [
+        "gfortran",
+        "-O2",
+        "-ffree-form",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-ffree-line-length-none",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "/scratch/peter50504/ACE/tests/alignment/fortran_diagnostics.f90",
+        "ace_module.o",
+        "ace_input.o",
+        "-L/home/peter50504/miniconda3/lib",
+        "-lnetcdff",
+        "-lnetcdf",
+        "-Wl,-rpath,/home/peter50504/miniconda3/lib",
+        "-o",
+        "fortran_diagnostics.exe"
+      ]
+    ],
+    "scope": "test-only access and existing single tendency mask; no numerical correction",
+    "input_file_sha256": "85f8f5ebf0b4a0bca4a96b9b3f6f9b43a1d9bdb4470658b018dcd71d5219b1d9"
+  },
+  "sources_unchanged_since_preparation": {
+    "matlab/active/ace.m": true,
+    "fortran/active/src/ace_module.F": true,
+    "fortran/active/src/ace_input.F": true,
+    "tests/alignment/matlab_case.txt": true,
+    "tests/alignment/fortran_case.f90": true,
+    "tests/alignment/fortran_thermo.f90": true,
+    "tests/alignment/fortran_diagnostics.f90": true,
+    "tests/alignment/prepare.py": true,
+    "tests/alignment/matlab_thermo.txt": true,
+    "matlab/active/util_weno/reconstruction_up3.m": true,
+    "matlab/active/util_weno/reconstruction_weno.m": true,
+    "matlab/active/util_weno/reconstruction_weno_vec.m": true,
+    "matlab/active/util_plume/entrain_plume_calc.m": true,
+    "matlab/active/util_thermodynamics/IMPORT_CONSTANTS.m": true,
+    "matlab/active/util_thermodynamics/ci.m": true,
+    "matlab/active/util_thermodynamics/eval_Tv.m": true,
+    "matlab/active/util_thermodynamics/eval_dTqs.m": true,
+    "matlab/active/util_thermodynamics/eval_dTqsi.m": true,
+    "matlab/active/util_thermodynamics/eval_es.m": true,
+    "matlab/active/util_thermodynamics/eval_esi.m": true,
+    "matlab/active/util_thermodynamics/eval_q.m": true,
+    "matlab/active/util_thermodynamics/eval_qs.m": true,
+    "matlab/active/util_thermodynamics/eval_qsat.m": true,
+    "matlab/active/util_thermodynamics/eval_qsi.m": true,
+    "matlab/active/util_thermodynamics/eval_theta.m": true,
+    "matlab/active/util_thermodynamics/eval_theta_e.m": true,
+    "matlab/active/util_thermodynamics/eval_theta_es.m": true,
+    "matlab/active/util_thermodynamics/inv_T_from_theta_e.m": true,
+    "matlab/active/util_thermodynamics/lv.m": true
+  },
+  "branch": "feature/shared-netcdf-input",
+  "build_commands": [
+    [
+      "gfortran",
+      "-O2",
+      "-ffree-form",
+      "-fdefault-real-8",
+      "-fdefault-double-8",
+      "-ffree-line-length-none",
+      "-I/home/peter50504/miniconda3/include",
+      "-I/home/peter50504/miniconda3/include",
+      "-c",
+      "/scratch/peter50504/ACE/fortran/active/src/ace_input.F"
+    ],
+    [
+      "gfortran",
+      "-O2",
+      "-ffree-form",
+      "-fdefault-real-8",
+      "-fdefault-double-8",
+      "-ffree-line-length-none",
+      "-I/home/peter50504/miniconda3/include",
+      "-I/home/peter50504/miniconda3/include",
+      "-c",
+      "/scratch/peter50504/ACE/fortran/active/src/ace_module.F"
+    ],
+    [
+      "gfortran",
+      "-O2",
+      "-ffree-form",
+      "-fdefault-real-8",
+      "-fdefault-double-8",
+      "-ffree-line-length-none",
+      "-I/home/peter50504/miniconda3/include",
+      "-I/home/peter50504/miniconda3/include",
+      "-c",
+      "/scratch/peter50504/ACE/fortran/active/src/test.F"
+    ],
+    [
+      "gfortran",
+      "-O2",
+      "-ffree-form",
+      "-fdefault-real-8",
+      "-fdefault-double-8",
+      "-ffree-line-length-none",
+      "test.o",
+      "ace_module.o",
+      "ace_input.o",
+      "-L/home/peter50504/miniconda3/lib",
+      "-lnetcdff",
+      "-lnetcdf",
+      "-Wl,-rpath,/home/peter50504/miniconda3/lib",
+      "-o",
+      "ace_model.exe"
+    ]
+  ],
+  "compiler_version": "GNU Fortran (conda-forge gcc 11.2.0-16) 11.2.0",
+  "scope": "Matched 4-second/120-second trajectories; no acceptance tolerance or production source change",
+  "runs": {
+    "single_ice_precip": {
+      "mode": "single_ice_precip",
+      "pulse_ace": 1,
+      "dt_seconds": 4,
+      "duration_seconds": 120,
+      "precision": "binary64 in both comparison outputs",
+      "tolerance_status": "No cross-implementation tolerance approved; metrics only",
+      "initial_state": {
+        "exact_equal": true,
+        "max_abs": 0.0,
+        "rms": 0.0,
+        "relative_l2": 0.0,
+        "max_rel_nonzero_reference": 0.0,
+        "zero_reference_max_abs": 0.0,
+        "worst_index_one_based": [
+          1,
+          1,
+          1
+        ],
+        "matlab_at_worst": 357.0878098025499,
+        "fortran_at_worst": 357.0878098025499
+      },
+      "raw_tendency": {
+        "theta_e": {
+          "exact_equal": false,
+          "max_abs": 6.704435184107238e-17,
+          "rms": 1.3676678274004409e-18,
+          "relative_l2": 7.350633074348898e-14,
+          "max_rel_nonzero_reference": 1.0,
+          "zero_reference_max_abs": 0.0,
+          "worst_index_one_based": [
+            17,
+            1
+          ],
+          "matlab_at_worst": 8.408137815857598e-05,
+          "fortran_at_worst": 8.408137815864303e-05
+        },
+        "qt": {
+          "exact_equal": false,
+          "max_abs": 3.943997160652836e-21,
+          "rms": 1.0492360637252119e-22,
+          "relative_l2": 1.2106490590847162e-14,
+          "max_rel_nonzero_reference": 9.823908278061965e-14,
+          "zero_reference_max_abs": 0.0,
+          "worst_index_one_based": [
+            10,
+            1
+          ],
+          "matlab_at_worst": 1.94731571361039e-07,
+          "fortran_at_worst": 1.9473157136104295e-07
+        },
+        "MF": {
+          "exact_equal": false,
+          "max_abs": 9.269711734316566e-15,
+          "rms": 5.808809968504476e-16,
+          "relative_l2": 3.535254249555721e-11,
+          "max_rel_nonzero_reference": 3.66486803743076e-11,
+          "zero_reference_max_abs": 0.0,
+          "worst_index_one_based": [
+            165,
+            1
+          ],
+          "matlab_at_worst": -0.000262356007525521,
+          "fortran_at_worst": -0.0002623560075162513
+        }
+      },
+      "diagnostics": {
+        "initial_temperature": {
+          "exact_equal": false,
+          "max_abs": 1.1368683772161603e-13,
+          "rms": 1.2845729330674164e-14,
+          "relative_l2": 5.856607270106423e-17,
+          "max_rel_nonzero_reference": 3.8258419964355683e-16,
+          "zero_reference_max_abs": 0,
+          "worst_index_one_based": [
+            8,
+            1
+          ],
+          "matlab_at_worst": 297.15507809139774,
+          "fortran_at_worst": 297.1550780913976
+        },
+        "initial_vapor": {
+          "exact_equal": false,
+          "max_abs": 5.204170427930421e-18,
+          "rms": 6.501151084448339e-20,
+          "relative_l2": 1.4901674916692578e-17,
+          "max_rel_nonzero_reference": 3.4653834750682338e-15,
+          "zero_reference_max_abs": 0,
+          "worst_index_one_based": [
+            168,
+            1
+          ],
+          "matlab_at_worst": 0.0015017588862450354,
+          "fortran_at_worst": 0.0015017588862450406
+        },
+        "initial_liquid": {
+          "exact_equal": true,
+          "max_abs": 0.0,
+          "rms": 0.0,
+          "relative_l2": null,
+          "max_rel_nonzero_reference": null,
+          "zero_reference_max_abs": 0.0,
+          "worst_index_one_based": [
+            1,
+            1
+          ],
+          "matlab_at_worst": 0.0,
+          "fortran_at_worst": 0.0
+        },
+        "initial_ice": {
+          "exact_equal": false,
+          "max_abs": 5.204170427930421e-18,
+          "rms": 6.501151084448339e-20,
+          "relative_l2": 2.3247502839269966e-15,
+          "max_rel_nonzero_reference": 1.020425574444806e-14,
+          "zero_reference_max_abs": 0.0,
+          "worst_index_one_based": [
+            168,
+            1
+          ],
+          "matlab_at_worst": 0.0005099999998296701,
+          "fortran_at_worst": 0.0005099999998296649
+        },
+        "initial_buoyancy": {
+          "exact_equal": false,
+          "max_abs": 6.193402566856892e-10,
+          "rms": 1.417057087637426e-10,
+          "relative_l2": 1.4282840497725788e-06,
+          "max_rel_nonzero_reference": 1.0,
+          "zero_reference_max_abs": 0.0,
+          "worst_index_one_based": [
+            108,
+            1
+          ],
+          "matlab_at_worst": 6.193402566856892e-10,
+          "fortran_at_worst": 0.0
+        },
+        "upwind": {
+          "exact_equal": false,
+          "max_abs": 0.0007821723252011543,
+          "rms": 9.771049066564024e-06,
+          "relative_l2": 0.00823623334543238,
+          "max_rel_nonzero_reference": 1.0,
+          "zero_reference_max_abs": 0.0,
+          "worst_index_one_based": [
+            801,
+            1
+          ],
+          "matlab_at_worst": -0.0007821723252011543,
+          "fortran_at_worst": 0.0
+        },
+        "upwind_below_top_mask": {
+          "exact_equal": true,
+          "max_abs": 0.0,
+          "rms": 0.0,
+          "relative_l2": 0.0,
+          "max_rel_nonzero_reference": 0.0,
+          "zero_reference_max_abs": 0.0,
+          "worst_index_one_based": [
+            1,
+            1
+          ],
+          "matlab_at_worst": 0.002346516975603463,
+          "fortran_at_worst": 0.002346516975603463
+        },
+        "upwind_top_11": {
+          "exact_equal": false,
+          "max_abs": 0.0007821723252011543,
+          "rms": 8.33798500232098e-05,
+          "relative_l2": 1.0,
+          "max_rel_nonzero_reference": 1.0,
+          "zero_reference_max_abs": 0.0,
+          "worst_index_one_based": [
+            11,
+            1
+          ],
+          "matlab_at_worst": -0.0007821723252011543,
+          "fortran_at_worst": 0.0
+        },
+        "weno_defined_interior": {
+          "exact_equal": false,
+          "max_abs": 4.547473508864641e-13,
+          "rms": 5.270425224240887e-14,
+          "relative_l2": 1.201585034584598e-16,
+          "max_rel_nonzero_reference": 4.245373136808431e-16,
+          "zero_reference_max_abs": 0,
+          "worst_index_one_based": [
+            748,
+            1,
+            1
+          ],
+          "matlab_at_worst": 1071.159910406208,
+          "fortran_at_worst": 1071.1599104062084
+        },
+        "weno_boundary_note": "Exclude levels 1 and 801 unassigned by Fortran; tendency top mask is levels 791:801.",
+        "reference_tv": {
+          "exact_equal": false,
+          "max_abs": 1.8405330592941027e-08,
+          "rms": 3.9177652615982504e-09,
+          "relative_l2": 1.7832964156214177e-11,
+          "max_rel_nonzero_reference": 6.31551301092309e-11,
+          "zero_reference_max_abs": 0,
+          "worst_index_one_based": [
+            1
+          ],
+          "matlab_at_worst": 304.53393538796576,
+          "fortran_at_worst": 304.5339353695604
+        },
+        "areas_m2": {
+          "exact_equal": false,
+          "max_abs": 4.76837158203125e-07,
+          "rms": 1.801332912544102e-07,
+          "relative_l2": 2.4556055562038205e-16,
+          "max_rel_nonzero_reference": 2.772034183568413e-16,
+          "zero_reference_max_abs": 0,
+          "worst_index_one_based": [
+            8
+          ],
+          "matlab_at_worst": 1720170555.7227187,
+          "fortran_at_worst": 1720170555.7227192
+        },
+        "perimeters_m": {
+          "exact_equal": false,
+          "max_abs": 1.4551915228366852e-11,
+          "rms": 5.752149554916067e-12,
+          "relative_l2": 4.394113529352184e-17,
+          "max_rel_nonzero_reference": 1.852807392039049e-16,
+          "zero_reference_max_abs": 0,
+          "worst_index_one_based": [
+            4
+          ],
+          "matlab_at_worst": 78539.81633974484,
+          "fortran_at_worst": 78539.81633974482
+        }
+      },
+      "snapshots": {
+        "0": {
+          "theta_e": {
+            "all_aces": {
+              "exact_equal": true,
+              "max_abs": 0.0,
+              "rms": 0.0,
+              "relative_l2": 0.0,
+              "max_rel_nonzero_reference": 0.0,
+              "zero_reference_max_abs": 0,
+              "worst_index_one_based": [
+                1,
+                1
+              ],
+              "matlab_at_worst": 357.0878098025499,
+              "fortran_at_worst": 357.0878098025499
+            },
+            "by_ace": [
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 357.0878098025499,
+                "fortran_at_worst": 357.0878098025499
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 357.0878098025499,
+                "fortran_at_worst": 357.0878098025499
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 357.0878098025499,
+                "fortran_at_worst": 357.0878098025499
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 357.0878098025499,
+                "fortran_at_worst": 357.0878098025499
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 357.0878098025499,
+                "fortran_at_worst": 357.0878098025499
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 357.0878098025499,
+                "fortran_at_worst": 357.0878098025499
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 357.0878098025499,
+                "fortran_at_worst": 357.0878098025499
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 357.0878098025499,
+                "fortran_at_worst": 357.0878098025499
+              }
+            ]
+          },
+          "qt": {
+            "all_aces": {
+              "exact_equal": true,
+              "max_abs": 0.0,
+              "rms": 0.0,
+              "relative_l2": 0.0,
+              "max_rel_nonzero_reference": 0.0,
+              "zero_reference_max_abs": 0,
+              "worst_index_one_based": [
+                1,
+                1
+              ],
+              "matlab_at_worst": 0.021408736537780727,
+              "fortran_at_worst": 0.021408736537780727
+            },
+            "by_ace": [
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.021408736537780727,
+                "fortran_at_worst": 0.021408736537780727
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.021408736537780727,
+                "fortran_at_worst": 0.021408736537780727
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.021408736537780727,
+                "fortran_at_worst": 0.021408736537780727
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.021408736537780727,
+                "fortran_at_worst": 0.021408736537780727
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.021408736537780727,
+                "fortran_at_worst": 0.021408736537780727
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.021408736537780727,
+                "fortran_at_worst": 0.021408736537780727
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.021408736537780727,
+                "fortran_at_worst": 0.021408736537780727
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.021408736537780727,
+                "fortran_at_worst": 0.021408736537780727
+              }
+            ]
+          },
+          "MF": {
+            "all_aces": {
+              "exact_equal": true,
+              "max_abs": 0.0,
+              "rms": 0.0,
+              "relative_l2": 0.0,
+              "max_rel_nonzero_reference": 0.0,
+              "zero_reference_max_abs": 0.0,
+              "worst_index_one_based": [
+                1,
+                1
+              ],
+              "matlab_at_worst": 0.0,
+              "fortran_at_worst": 0.0
+            },
+            "by_ace": [
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              }
+            ]
+          }
+        },
+        "4": {
+          "theta_e": {
+            "all_aces": {
+              "exact_equal": false,
+              "max_abs": 2.6147972675971687e-12,
+              "rms": 7.548122565443772e-14,
+              "relative_l2": 1.2138298147753906e-16,
+              "max_rel_nonzero_reference": 7.661983311035214e-15,
+              "zero_reference_max_abs": 0,
+              "worst_index_one_based": [
+                160,
+                1
+              ],
+              "matlab_at_worst": 341.2689849938974,
+              "fortran_at_worst": 341.2689849939
+            },
+            "by_ace": [
+              {
+                "exact_equal": false,
+                "max_abs": 2.6147972675971687e-12,
+                "rms": 1.744821916549461e-13,
+                "relative_l2": 2.805813874100477e-16,
+                "max_rel_nonzero_reference": 7.661983311035214e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  160
+                ],
+                "matlab_at_worst": 341.2689849938974,
+                "fortran_at_worst": 341.2689849939
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 4.547473508864641e-13,
+                "rms": 4.6499290633077435e-14,
+                "relative_l2": 7.477678198471156e-17,
+                "max_rel_nonzero_reference": 4.3366638553201594e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  740
+                ],
+                "matlab_at_worst": 1048.6110200323374,
+                "fortran_at_worst": 1048.6110200323378
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 4.547473508864641e-13,
+                "rms": 4.6499290633077435e-14,
+                "relative_l2": 7.477678198471156e-17,
+                "max_rel_nonzero_reference": 4.3366638553201594e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  740
+                ],
+                "matlab_at_worst": 1048.6110200323374,
+                "fortran_at_worst": 1048.6110200323378
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 4.547473508864641e-13,
+                "rms": 4.6499290633077435e-14,
+                "relative_l2": 7.477678198471156e-17,
+                "max_rel_nonzero_reference": 4.3366638553201594e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  740
+                ],
+                "matlab_at_worst": 1048.6110200323374,
+                "fortran_at_worst": 1048.6110200323378
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 4.547473508864641e-13,
+                "rms": 4.6499290633077435e-14,
+                "relative_l2": 7.477678198471156e-17,
+                "max_rel_nonzero_reference": 4.3366638553201594e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  740
+                ],
+                "matlab_at_worst": 1048.6110200323374,
+                "fortran_at_worst": 1048.6110200323378
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 4.547473508864641e-13,
+                "rms": 4.6499290633077435e-14,
+                "relative_l2": 7.477678198471156e-17,
+                "max_rel_nonzero_reference": 4.3366638553201594e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  740
+                ],
+                "matlab_at_worst": 1048.6110200323374,
+                "fortran_at_worst": 1048.6110200323378
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 4.547473508864641e-13,
+                "rms": 4.6499290633077435e-14,
+                "relative_l2": 7.477678198471156e-17,
+                "max_rel_nonzero_reference": 4.3366638553201594e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  740
+                ],
+                "matlab_at_worst": 1048.6110200323374,
+                "fortran_at_worst": 1048.6110200323378
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 4.547473508864641e-13,
+                "rms": 4.6499290633077435e-14,
+                "relative_l2": 7.477678198471156e-17,
+                "max_rel_nonzero_reference": 4.3366638553201594e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  740
+                ],
+                "matlab_at_worst": 1048.6110200323374,
+                "fortran_at_worst": 1048.6110200323378
+              }
+            ]
+          },
+          "qt": {
+            "all_aces": {
+              "exact_equal": false,
+              "max_abs": 2.3852447794681098e-18,
+              "rms": 4.400605046666827e-20,
+              "relative_l2": 1.0085172511028603e-17,
+              "max_rel_nonzero_reference": 1.619224662407231e-15,
+              "zero_reference_max_abs": 0,
+              "worst_index_one_based": [
+                170,
+                1
+              ],
+              "matlab_at_worst": 0.0019351378510625258,
+              "fortran_at_worst": 0.0019351378510625281
+            },
+            "by_ace": [
+              {
+                "exact_equal": false,
+                "max_abs": 2.3852447794681098e-18,
+                "rms": 1.244674786108631e-19,
+                "relative_l2": 2.846190425964562e-17,
+                "max_rel_nonzero_reference": 1.619224662407231e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  170
+                ],
+                "matlab_at_worst": 0.0019351378510625258,
+                "fortran_at_worst": 0.0019351378510625281
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 8.470329472543003e-22,
+                "rms": 1.2339810948743366e-22,
+                "relative_l2": 2.8288983881319616e-20,
+                "max_rel_nonzero_reference": 3.2768875448379435e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  725
+                ],
+                "matlab_at_worst": 2.5848703553731194e-06,
+                "fortran_at_worst": 2.5848703553731203e-06
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 8.470329472543003e-22,
+                "rms": 1.2339810948743366e-22,
+                "relative_l2": 2.8288983881319616e-20,
+                "max_rel_nonzero_reference": 3.2768875448379435e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  725
+                ],
+                "matlab_at_worst": 2.5848703553731194e-06,
+                "fortran_at_worst": 2.5848703553731203e-06
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 8.470329472543003e-22,
+                "rms": 1.2339810948743366e-22,
+                "relative_l2": 2.8288983881319616e-20,
+                "max_rel_nonzero_reference": 3.2768875448379435e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  725
+                ],
+                "matlab_at_worst": 2.5848703553731194e-06,
+                "fortran_at_worst": 2.5848703553731203e-06
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 8.470329472543003e-22,
+                "rms": 1.2339810948743366e-22,
+                "relative_l2": 2.8288983881319616e-20,
+                "max_rel_nonzero_reference": 3.2768875448379435e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  725
+                ],
+                "matlab_at_worst": 2.5848703553731194e-06,
+                "fortran_at_worst": 2.5848703553731203e-06
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 8.470329472543003e-22,
+                "rms": 1.2339810948743366e-22,
+                "relative_l2": 2.8288983881319616e-20,
+                "max_rel_nonzero_reference": 3.2768875448379435e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  725
+                ],
+                "matlab_at_worst": 2.5848703553731194e-06,
+                "fortran_at_worst": 2.5848703553731203e-06
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 8.470329472543003e-22,
+                "rms": 1.2339810948743366e-22,
+                "relative_l2": 2.8288983881319616e-20,
+                "max_rel_nonzero_reference": 3.2768875448379435e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  725
+                ],
+                "matlab_at_worst": 2.5848703553731194e-06,
+                "fortran_at_worst": 2.5848703553731203e-06
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 8.470329472543003e-22,
+                "rms": 1.2339810948743366e-22,
+                "relative_l2": 2.8288983881319616e-20,
+                "max_rel_nonzero_reference": 3.2768875448379435e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  725
+                ],
+                "matlab_at_worst": 2.5848703553731194e-06,
+                "fortran_at_worst": 2.5848703553731203e-06
+              }
+            ]
+          },
+          "MF": {
+            "all_aces": {
+              "exact_equal": false,
+              "max_abs": 3.7068221755975905e-14,
+              "rms": 2.3227577952116746e-15,
+              "relative_l2": 1.9574723816410897e-12,
+              "max_rel_nonzero_reference": 3.664926524540815e-11,
+              "zero_reference_max_abs": 0.0,
+              "worst_index_one_based": [
+                165,
+                1
+              ],
+              "matlab_at_worst": -0.001049112948449813,
+              "fortran_at_worst": -0.0010491129484127449
+            },
+            "by_ace": [
+              {
+                "exact_equal": false,
+                "max_abs": 3.7068221755975905e-14,
+                "rms": 6.569751152192357e-15,
+                "relative_l2": 1.957472381641091e-12,
+                "max_rel_nonzero_reference": 3.664926524540815e-11,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  165
+                ],
+                "matlab_at_worst": -0.001049112948449813,
+                "fortran_at_worst": -0.0010491129484127449
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              }
+            ]
+          }
+        },
+        "60": {
+          "theta_e": {
+            "all_aces": {
+              "exact_equal": false,
+              "max_abs": 1.801936377887614e-11,
+              "rms": 3.350268146749727e-13,
+              "relative_l2": 5.387637930666956e-16,
+              "max_rel_nonzero_reference": 5.265825930950306e-14,
+              "zero_reference_max_abs": 0,
+              "worst_index_one_based": [
+                170,
+                1
+              ],
+              "matlab_at_worst": 342.19444423648554,
+              "fortran_at_worst": 342.1944442364675
+            },
+            "by_ace": [
+              {
+                "exact_equal": false,
+                "max_abs": 1.801936377887614e-11,
+                "rms": 9.300790668245163e-13,
+                "relative_l2": 1.4956412427814973e-15,
+                "max_rel_nonzero_reference": 5.265825930950306e-14,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  170
+                ],
+                "matlab_at_worst": 342.19444423648554,
+                "fortran_at_worst": 342.1944442364675
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.3073986337985843e-12,
+                "rms": 6.855306793687532e-14,
+                "relative_l2": 1.102420648940464e-16,
+                "max_rel_nonzero_reference": 2.5572888349453284e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  453
+                ],
+                "matlab_at_worst": 511.24402372269964,
+                "fortran_at_worst": 511.24402372269833
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.3073986337985843e-12,
+                "rms": 6.855306793687532e-14,
+                "relative_l2": 1.102420648940464e-16,
+                "max_rel_nonzero_reference": 2.5572888349453284e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  453
+                ],
+                "matlab_at_worst": 511.24402372269964,
+                "fortran_at_worst": 511.24402372269833
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.3073986337985843e-12,
+                "rms": 6.855306793687532e-14,
+                "relative_l2": 1.102420648940464e-16,
+                "max_rel_nonzero_reference": 2.5572888349453284e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  453
+                ],
+                "matlab_at_worst": 511.24402372269964,
+                "fortran_at_worst": 511.24402372269833
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.3073986337985843e-12,
+                "rms": 6.855306793687532e-14,
+                "relative_l2": 1.102420648940464e-16,
+                "max_rel_nonzero_reference": 2.5572888349453284e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  453
+                ],
+                "matlab_at_worst": 511.24402372269964,
+                "fortran_at_worst": 511.24402372269833
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.3073986337985843e-12,
+                "rms": 6.855306793687532e-14,
+                "relative_l2": 1.102420648940464e-16,
+                "max_rel_nonzero_reference": 2.5572888349453284e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  453
+                ],
+                "matlab_at_worst": 511.24402372269964,
+                "fortran_at_worst": 511.24402372269833
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.3073986337985843e-12,
+                "rms": 6.855306793687532e-14,
+                "relative_l2": 1.102420648940464e-16,
+                "max_rel_nonzero_reference": 2.5572888349453284e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  453
+                ],
+                "matlab_at_worst": 511.24402372269964,
+                "fortran_at_worst": 511.24402372269833
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.3073986337985843e-12,
+                "rms": 6.855306793687532e-14,
+                "relative_l2": 1.102420648940464e-16,
+                "max_rel_nonzero_reference": 2.5572888349453284e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  453
+                ],
+                "matlab_at_worst": 511.24402372269964,
+                "fortran_at_worst": 511.24402372269833
+              }
+            ]
+          },
+          "qt": {
+            "all_aces": {
+              "exact_equal": false,
+              "max_abs": 5.789639601072594e-16,
+              "rms": 1.0077125777988262e-17,
+              "relative_l2": 2.309413104669491e-15,
+              "max_rel_nonzero_reference": 4.279517482726402e-13,
+              "zero_reference_max_abs": 0,
+              "worst_index_one_based": [
+                150,
+                1
+              ],
+              "matlab_at_worst": 0.0013528720526184462,
+              "fortran_at_worst": 0.0013528720526178673
+            },
+            "by_ace": [
+              {
+                "exact_equal": false,
+                "max_abs": 5.789639601072594e-16,
+                "rms": 2.850241587399246e-17,
+                "relative_l2": 6.516914335142517e-15,
+                "max_rel_nonzero_reference": 4.279517482726402e-13,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  150
+                ],
+                "matlab_at_worst": 0.0013528720526184462,
+                "fortran_at_worst": 0.0013528720526178673
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 6.3527471044072525e-21,
+                "rms": 3.6038611211045634e-22,
+                "relative_l2": 8.26184206459205e-20,
+                "max_rel_nonzero_reference": 2.457665658628457e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  340
+                ],
+                "matlab_at_worst": 2.58487035537312e-06,
+                "fortran_at_worst": 2.5848703553731135e-06
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 6.3527471044072525e-21,
+                "rms": 3.6038611211045634e-22,
+                "relative_l2": 8.26184206459205e-20,
+                "max_rel_nonzero_reference": 2.457665658628457e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  340
+                ],
+                "matlab_at_worst": 2.58487035537312e-06,
+                "fortran_at_worst": 2.5848703553731135e-06
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 6.3527471044072525e-21,
+                "rms": 3.6038611211045634e-22,
+                "relative_l2": 8.26184206459205e-20,
+                "max_rel_nonzero_reference": 2.457665658628457e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  340
+                ],
+                "matlab_at_worst": 2.58487035537312e-06,
+                "fortran_at_worst": 2.5848703553731135e-06
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 6.3527471044072525e-21,
+                "rms": 3.6038611211045634e-22,
+                "relative_l2": 8.26184206459205e-20,
+                "max_rel_nonzero_reference": 2.457665658628457e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  340
+                ],
+                "matlab_at_worst": 2.58487035537312e-06,
+                "fortran_at_worst": 2.5848703553731135e-06
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 6.3527471044072525e-21,
+                "rms": 3.6038611211045634e-22,
+                "relative_l2": 8.26184206459205e-20,
+                "max_rel_nonzero_reference": 2.457665658628457e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  340
+                ],
+                "matlab_at_worst": 2.58487035537312e-06,
+                "fortran_at_worst": 2.5848703553731135e-06
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 6.3527471044072525e-21,
+                "rms": 3.6038611211045634e-22,
+                "relative_l2": 8.26184206459205e-20,
+                "max_rel_nonzero_reference": 2.457665658628457e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  340
+                ],
+                "matlab_at_worst": 2.58487035537312e-06,
+                "fortran_at_worst": 2.5848703553731135e-06
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 6.3527471044072525e-21,
+                "rms": 3.6038611211045634e-22,
+                "relative_l2": 8.26184206459205e-20,
+                "max_rel_nonzero_reference": 2.457665658628457e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  340
+                ],
+                "matlab_at_worst": 2.58487035537312e-06,
+                "fortran_at_worst": 2.5848703553731135e-06
+              }
+            ]
+          },
+          "MF": {
+            "all_aces": {
+              "exact_equal": false,
+              "max_abs": 5.806639891137166e-13,
+              "rms": 3.523444727316916e-14,
+              "relative_l2": 2.252345085071325e-11,
+              "max_rel_nonzero_reference": 5.178925574053299e-11,
+              "zero_reference_max_abs": 0.0,
+              "worst_index_one_based": [
+                161,
+                1
+              ],
+              "matlab_at_worst": -0.015654121984996036,
+              "fortran_at_worst": -0.015654121984415372
+            },
+            "by_ace": [
+              {
+                "exact_equal": false,
+                "max_abs": 5.806639891137166e-13,
+                "rms": 9.965806639287108e-14,
+                "relative_l2": 2.2523450850713253e-11,
+                "max_rel_nonzero_reference": 5.178925574053299e-11,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  161
+                ],
+                "matlab_at_worst": -0.015654121984996036,
+                "fortran_at_worst": -0.015654121984415372
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              }
+            ]
+          }
+        },
+        "120": {
+          "theta_e": {
+            "all_aces": {
+              "exact_equal": false,
+              "max_abs": 1.978150976356119e-11,
+              "rms": 5.003221132302251e-13,
+              "relative_l2": 8.045786338032524e-16,
+              "max_rel_nonzero_reference": 5.786811090328867e-14,
+              "zero_reference_max_abs": 0,
+              "worst_index_one_based": [
+                166,
+                1
+              ],
+              "matlab_at_worst": 341.8378352910255,
+              "fortran_at_worst": 341.8378352910453
+            },
+            "by_ace": [
+              {
+                "exact_equal": false,
+                "max_abs": 1.978150976356119e-11,
+                "rms": 1.4034532674914262e-12,
+                "relative_l2": 2.256863156792954e-15,
+                "max_rel_nonzero_reference": 5.786811090328867e-14,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  166
+                ],
+                "matlab_at_worst": 341.8378352910255,
+                "fortran_at_worst": 341.8378352910453
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.3073986337985843e-12,
+                "rms": 6.855306793687532e-14,
+                "relative_l2": 1.102420648940464e-16,
+                "max_rel_nonzero_reference": 2.5572888349453284e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  453
+                ],
+                "matlab_at_worst": 511.24402372269964,
+                "fortran_at_worst": 511.24402372269833
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.3073986337985843e-12,
+                "rms": 6.855306793687532e-14,
+                "relative_l2": 1.102420648940464e-16,
+                "max_rel_nonzero_reference": 2.5572888349453284e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  453
+                ],
+                "matlab_at_worst": 511.24402372269964,
+                "fortran_at_worst": 511.24402372269833
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.3073986337985843e-12,
+                "rms": 6.855306793687532e-14,
+                "relative_l2": 1.102420648940464e-16,
+                "max_rel_nonzero_reference": 2.5572888349453284e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  453
+                ],
+                "matlab_at_worst": 511.24402372269964,
+                "fortran_at_worst": 511.24402372269833
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.3073986337985843e-12,
+                "rms": 6.855306793687532e-14,
+                "relative_l2": 1.102420648940464e-16,
+                "max_rel_nonzero_reference": 2.5572888349453284e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  453
+                ],
+                "matlab_at_worst": 511.24402372269964,
+                "fortran_at_worst": 511.24402372269833
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.3073986337985843e-12,
+                "rms": 6.855306793687532e-14,
+                "relative_l2": 1.102420648940464e-16,
+                "max_rel_nonzero_reference": 2.5572888349453284e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  453
+                ],
+                "matlab_at_worst": 511.24402372269964,
+                "fortran_at_worst": 511.24402372269833
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.3073986337985843e-12,
+                "rms": 6.855306793687532e-14,
+                "relative_l2": 1.102420648940464e-16,
+                "max_rel_nonzero_reference": 2.5572888349453284e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  453
+                ],
+                "matlab_at_worst": 511.24402372269964,
+                "fortran_at_worst": 511.24402372269833
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.3073986337985843e-12,
+                "rms": 6.855306793687532e-14,
+                "relative_l2": 1.102420648940464e-16,
+                "max_rel_nonzero_reference": 2.5572888349453284e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  453
+                ],
+                "matlab_at_worst": 511.24402372269964,
+                "fortran_at_worst": 511.24402372269833
+              }
+            ]
+          },
+          "qt": {
+            "all_aces": {
+              "exact_equal": false,
+              "max_abs": 2.235408039230613e-15,
+              "rms": 3.6259435058228874e-17,
+              "relative_l2": 8.309602094133975e-15,
+              "max_rel_nonzero_reference": 1.601704505814445e-12,
+              "zero_reference_max_abs": 0,
+              "worst_index_one_based": [
+                150,
+                1
+              ],
+              "matlab_at_worst": 0.00139564322327603,
+              "fortran_at_worst": 0.0013956432232737946
+            },
+            "by_ace": [
+              {
+                "exact_equal": false,
+                "max_abs": 2.235408039230613e-15,
+                "rms": 1.0255716963214759e-16,
+                "relative_l2": 2.3446637470267337e-14,
+                "max_rel_nonzero_reference": 1.601704505814445e-12,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  150
+                ],
+                "matlab_at_worst": 0.00139564322327603,
+                "fortran_at_worst": 0.0013956432232737946
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.2705494208814505e-20,
+                "rms": 6.522751754620816e-22,
+                "relative_l2": 1.4953391102568598e-19,
+                "max_rel_nonzero_reference": 4.915331317256914e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  340
+                ],
+                "matlab_at_worst": 2.58487035537312e-06,
+                "fortran_at_worst": 2.584870355373107e-06
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.2705494208814505e-20,
+                "rms": 6.522751754620816e-22,
+                "relative_l2": 1.4953391102568598e-19,
+                "max_rel_nonzero_reference": 4.915331317256914e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  340
+                ],
+                "matlab_at_worst": 2.58487035537312e-06,
+                "fortran_at_worst": 2.584870355373107e-06
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.2705494208814505e-20,
+                "rms": 6.522751754620816e-22,
+                "relative_l2": 1.4953391102568598e-19,
+                "max_rel_nonzero_reference": 4.915331317256914e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  340
+                ],
+                "matlab_at_worst": 2.58487035537312e-06,
+                "fortran_at_worst": 2.584870355373107e-06
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.2705494208814505e-20,
+                "rms": 6.522751754620816e-22,
+                "relative_l2": 1.4953391102568598e-19,
+                "max_rel_nonzero_reference": 4.915331317256914e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  340
+                ],
+                "matlab_at_worst": 2.58487035537312e-06,
+                "fortran_at_worst": 2.584870355373107e-06
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.2705494208814505e-20,
+                "rms": 6.522751754620816e-22,
+                "relative_l2": 1.4953391102568598e-19,
+                "max_rel_nonzero_reference": 4.915331317256914e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  340
+                ],
+                "matlab_at_worst": 2.58487035537312e-06,
+                "fortran_at_worst": 2.584870355373107e-06
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.2705494208814505e-20,
+                "rms": 6.522751754620816e-22,
+                "relative_l2": 1.4953391102568598e-19,
+                "max_rel_nonzero_reference": 4.915331317256914e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  340
+                ],
+                "matlab_at_worst": 2.58487035537312e-06,
+                "fortran_at_worst": 2.584870355373107e-06
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.2705494208814505e-20,
+                "rms": 6.522751754620816e-22,
+                "relative_l2": 1.4953391102568598e-19,
+                "max_rel_nonzero_reference": 4.915331317256914e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  340
+                ],
+                "matlab_at_worst": 2.58487035537312e-06,
+                "fortran_at_worst": 2.584870355373107e-06
+              }
+            ]
+          },
+          "MF": {
+            "all_aces": {
+              "exact_equal": false,
+              "max_abs": 1.3377771113098902e-12,
+              "rms": 7.411792809256237e-14,
+              "relative_l2": 3.093787269070813e-11,
+              "max_rel_nonzero_reference": 1.1902299783904115e-10,
+              "zero_reference_max_abs": 0.0,
+              "worst_index_one_based": [
+                160,
+                1
+              ],
+              "matlab_at_worst": -0.03157849512289378,
+              "fortran_at_worst": -0.031578495121556
+            },
+            "by_ace": [
+              {
+                "exact_equal": false,
+                "max_abs": 1.3377771113098902e-12,
+                "rms": 2.0963715824699108e-13,
+                "relative_l2": 3.093787269070813e-11,
+                "max_rel_nonzero_reference": 1.1902299783904115e-10,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  160
+                ],
+                "matlab_at_worst": -0.03157849512289378,
+                "fortran_at_worst": -0.031578495121556
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              }
+            ]
+          }
+        }
+      },
+      "budgets": {
+        "matlab": {
+          "column_water_kg_initial": 238195989753.35464,
+          "column_water_kg_final": 238195980905.195,
+          "change_kg": -8848.159637451172,
+          "interpretation": "Diagnostic over all 801 stored levels, including extra top level; sinks/sponge/open boundaries and frozen single columns prevent a conservation pass claim."
+        },
+        "fortran": {
+          "column_water_kg_initial": 238195989753.3558,
+          "column_water_kg_final": 238195980905.19647,
+          "change_kg": -8848.15933227539,
+          "interpretation": "Diagnostic over all 801 stored levels, including extra top level; sinks/sponge/open boundaries and frozen single columns prevent a conservation pass claim."
+        }
+      },
+      "inactive_aces": {
+        "matlab_max_state_change": 1.7053025658242404e-12,
+        "fortran_max_state_change": 1.7053025658242404e-12,
+        "initial_mask_matlab_exact_zero": true,
+        "initial_mask_fortran_exact_zero": true
+      },
+      "snapshot_diagnostics": {
+        "0": {
+          "T": {
+            "exact_equal": false,
+            "max_abs": 1.1368683772161603e-13,
+            "rms": 1.2845729330674164e-14,
+            "relative_l2": 5.856607270106423e-17,
+            "max_rel_nonzero_reference": 3.8258419964355683e-16,
+            "zero_reference_max_abs": 0,
+            "worst_index_one_based": [
+              8,
+              1
+            ],
+            "matlab_at_worst": 297.15507809139774,
+            "fortran_at_worst": 297.1550780913976
+          },
+          "q": {
+            "exact_equal": false,
+            "max_abs": 5.204170427930421e-18,
+            "rms": 6.501151084448339e-20,
+            "relative_l2": 1.4901674916692578e-17,
+            "max_rel_nonzero_reference": 3.4653834750682338e-15,
+            "zero_reference_max_abs": 0,
+            "worst_index_one_based": [
+              168,
+              1
+            ],
+            "matlab_at_worst": 0.0015017588862450354,
+            "fortran_at_worst": 0.0015017588862450406
+          },
+          "ql": {
+            "exact_equal": true,
+            "max_abs": 0.0,
+            "rms": 0.0,
+            "relative_l2": null,
+            "max_rel_nonzero_reference": null,
+            "zero_reference_max_abs": 0.0,
+            "worst_index_one_based": [
+              1,
+              1
+            ],
+            "matlab_at_worst": 0.0,
+            "fortran_at_worst": 0.0
+          },
+          "qi": {
+            "exact_equal": false,
+            "max_abs": 5.204170427930421e-18,
+            "rms": 6.501151084448339e-20,
+            "relative_l2": 2.3247502839269966e-15,
+            "max_rel_nonzero_reference": 1.020425574444806e-14,
+            "zero_reference_max_abs": 0.0,
+            "worst_index_one_based": [
+              168,
+              1
+            ],
+            "matlab_at_worst": 0.0005099999998296701,
+            "fortran_at_worst": 0.0005099999998296649
+          },
+          "buoyancy": {
+            "exact_equal": false,
+            "max_abs": 6.193402566856892e-10,
+            "rms": 1.417057087637426e-10,
+            "relative_l2": 1.4282840497725788e-06,
+            "max_rel_nonzero_reference": 1.0,
+            "zero_reference_max_abs": 0.0,
+            "worst_index_one_based": [
+              108,
+              1
+            ],
+            "matlab_at_worst": 6.193402566856892e-10,
+            "fortran_at_worst": 0.0
+          }
+        },
+        "4": {
+          "T": {
+            "exact_equal": false,
+            "max_abs": 1.3358203432289883e-12,
+            "rms": 3.410324214711657e-14,
+            "relative_l2": 1.554830347380647e-16,
+            "max_rel_nonzero_reference": 5.2626863562324676e-15,
+            "zero_reference_max_abs": 0,
+            "worst_index_one_based": [
+              160,
+              1
+            ],
+            "matlab_at_worst": 253.82860630617094,
+            "fortran_at_worst": 253.82860630617228
+          },
+          "q": {
+            "exact_equal": false,
+            "max_abs": 2.3635607360183997e-16,
+            "rms": 5.047688807729431e-18,
+            "relative_l2": 1.1570092559920645e-15,
+            "max_rel_nonzero_reference": 1.293298604740267e-13,
+            "zero_reference_max_abs": 0,
+            "worst_index_one_based": [
+              160,
+              1
+            ],
+            "matlab_at_worst": 0.0018275444876808423,
+            "fortran_at_worst": 0.0018275444876810786
+          },
+          "ql": {
+            "exact_equal": true,
+            "max_abs": 0.0,
+            "rms": 0.0,
+            "relative_l2": null,
+            "max_rel_nonzero_reference": null,
+            "zero_reference_max_abs": 0.0,
+            "worst_index_one_based": [
+              1,
+              1
+            ],
+            "matlab_at_worst": 0.0,
+            "fortran_at_worst": 0.0
+          },
+          "qi": {
+            "exact_equal": false,
+            "max_abs": 2.3592239273284576e-16,
+            "rms": 5.046011055735835e-18,
+            "relative_l2": 1.806875826870422e-13,
+            "max_rel_nonzero_reference": 4.724619274068844e-13,
+            "zero_reference_max_abs": 0.0,
+            "worst_index_one_based": [
+              160,
+              1
+            ],
+            "matlab_at_worst": 0.0004993468871189472,
+            "fortran_at_worst": 0.0004993468871187113
+          },
+          "buoyancy": {
+            "exact_equal": false,
+            "max_abs": 6.193402591035302e-10,
+            "rms": 1.4170564459406322e-10,
+            "relative_l2": 1.4202424573957975e-06,
+            "max_rel_nonzero_reference": 3.0,
+            "zero_reference_max_abs": 2.8618565708447116e-15,
+            "worst_index_one_based": [
+              108,
+              1
+            ],
+            "matlab_at_worst": 3.890349880012689e-08,
+            "fortran_at_worst": 3.828415854102336e-08
+          }
+        },
+        "60": {
+          "T": {
+            "exact_equal": false,
+            "max_abs": 9.350742402602918e-12,
+            "rms": 1.7079321781276677e-13,
+            "relative_l2": 7.786781538914721e-16,
+            "max_rel_nonzero_reference": 3.73217631491152e-14,
+            "zero_reference_max_abs": 0,
+            "worst_index_one_based": [
+              170,
+              1
+            ],
+            "matlab_at_worst": 250.5439618498999,
+            "fortran_at_worst": 250.54396184989054
+          },
+          "q": {
+            "exact_equal": false,
+            "max_abs": 1.3062467774105357e-15,
+            "rms": 2.6856409346186538e-17,
+            "relative_l2": 6.155799488705572e-15,
+            "max_rel_nonzero_reference": 9.179453795066374e-13,
+            "zero_reference_max_abs": 0,
+            "worst_index_one_based": [
+              170,
+              1
+            ],
+            "matlab_at_worst": 0.0014230114411737619,
+            "fortran_at_worst": 0.0014230114411724556
+          },
+          "ql": {
+            "exact_equal": true,
+            "max_abs": 0.0,
+            "rms": 0.0,
+            "relative_l2": null,
+            "max_rel_nonzero_reference": null,
+            "zero_reference_max_abs": 0.0,
+            "worst_index_one_based": [
+              1,
+              1
+            ],
+            "matlab_at_worst": 0.0,
+            "fortran_at_worst": 0.0
+          },
+          "qi": {
+            "exact_equal": false,
+            "max_abs": 1.8329521928039938e-15,
+            "rms": 3.038520103367172e-17,
+            "relative_l2": 1.1114621690985104e-12,
+            "max_rel_nonzero_reference": 3.77870115139068e-12,
+            "zero_reference_max_abs": 0.0,
+            "worst_index_one_based": [
+              170,
+              1
+            ],
+            "matlab_at_worst": 0.00048507466438022233,
+            "fortran_at_worst": 0.0004850746643820553
+          },
+          "buoyancy": {
+            "exact_equal": false,
+            "max_abs": 6.193408119817739e-10,
+            "rms": 1.417057976331314e-10,
+            "relative_l2": 1.2991440048430722e-06,
+            "max_rel_nonzero_reference": 16.999999999999957,
+            "zero_reference_max_abs": 2.57567091376024e-14,
+            "worst_index_one_based": [
+              108,
+              1
+            ],
+            "matlab_at_worst": 8.793181880881516e-06,
+            "fortran_at_worst": 8.792562540069534e-06
+          }
+        },
+        "120": {
+          "T": {
+            "exact_equal": false,
+            "max_abs": 1.043076736095827e-11,
+            "rms": 2.550264210510458e-13,
+            "relative_l2": 1.16271300067164e-15,
+            "max_rel_nonzero_reference": 4.14112916426279e-14,
+            "zero_reference_max_abs": 0,
+            "worst_index_one_based": [
+              166,
+              1
+            ],
+            "matlab_at_worst": 251.88220282945875,
+            "fortran_at_worst": 251.88220282946918
+          },
+          "q": {
+            "exact_equal": false,
+            "max_abs": 2.235408039230613e-15,
+            "rms": 4.859000210104667e-17,
+            "relative_l2": 1.1137186872223427e-14,
+            "max_rel_nonzero_reference": 1.601704505814445e-12,
+            "zero_reference_max_abs": 0,
+            "worst_index_one_based": [
+              150,
+              1
+            ],
+            "matlab_at_worst": 0.00139564322327603,
+            "fortran_at_worst": 0.0013956432232737946
+          },
+          "ql": {
+            "exact_equal": true,
+            "max_abs": 0.0,
+            "rms": 0.0,
+            "relative_l2": null,
+            "max_rel_nonzero_reference": null,
+            "zero_reference_max_abs": 0.0,
+            "worst_index_one_based": [
+              1,
+              1
+            ],
+            "matlab_at_worst": 0.0,
+            "fortran_at_worst": 0.0
+          },
+          "qi": {
+            "exact_equal": false,
+            "max_abs": 2.9542340795885025e-15,
+            "rms": 4.9920196274304547e-17,
+            "relative_l2": 1.877310666398766e-12,
+            "max_rel_nonzero_reference": 6.8222210165705624e-12,
+            "zero_reference_max_abs": 0.0,
+            "worst_index_one_based": [
+              170,
+              1
+            ],
+            "matlab_at_worst": 0.0004330311305384175,
+            "fortran_at_worst": 0.0004330311305413717
+          },
+          "buoyancy": {
+            "exact_equal": false,
+            "max_abs": 6.193444508946076e-10,
+            "rms": 1.4170548599330556e-10,
+            "relative_l2": 1.1326774531046668e-06,
+            "max_rel_nonzero_reference": 4.000000000000001,
+            "zero_reference_max_abs": 2.57567091376024e-14,
+            "worst_index_one_based": [
+              108,
+              1
+            ],
+            "matlab_at_worst": 3.36646343707632e-05,
+            "fortran_at_worst": 3.366401502631231e-05
+          }
+        }
+      },
+      "sampled_condensate": {
+        "matlab_max_ql_plus_qi": 0.0005099999998600332,
+        "fortran_max_ql_plus_qi": 0.0005099999998600332,
+        "note": "Four diagnostic snapshots only; no precipitation equivalence claim."
+      },
+      "matlab_version": "23.2.0.2668659 (R2023b) Update 9",
+      "all_31_samples": {
+        "theta_e": {
+          "exact_equal": false,
+          "max_abs": 2.546585164964199e-11,
+          "rms": 3.663800625021437e-13,
+          "relative_l2": 5.891836192427452e-16,
+          "max_rel_nonzero_reference": 7.44968841035775e-14,
+          "zero_reference_max_abs": 0,
+          "worst_index_one_based": [
+            166,
+            1,
+            28
+          ],
+          "matlab_at_worst": 341.83780913890683,
+          "fortran_at_worst": 341.8378091389323
+        },
+        "qt": {
+          "exact_equal": false,
+          "max_abs": 2.235408039230613e-15,
+          "rms": 1.681647265160425e-17,
+          "relative_l2": 3.853895867498098e-15,
+          "max_rel_nonzero_reference": 1.601704505814445e-12,
+          "zero_reference_max_abs": 0,
+          "worst_index_one_based": [
+            150,
+            1,
+            31
+          ],
+          "matlab_at_worst": 0.00139564322327603,
+          "fortran_at_worst": 0.0013956432232737946
+        },
+        "MF": {
+          "exact_equal": false,
+          "max_abs": 1.3377771113098902e-12,
+          "rms": 4.1251526315958916e-14,
+          "relative_l2": 2.442880103903152e-11,
+          "max_rel_nonzero_reference": 1.1902299783904115e-10,
+          "zero_reference_max_abs": 0.0,
+          "worst_index_one_based": [
+            160,
+            1,
+            31
+          ],
+          "matlab_at_worst": -0.03157849512289378,
+          "fortran_at_worst": -0.031578495121556
+        }
+      },
+      "minimum_qt": {
+        "matlab": 2.58486959910142e-06,
+        "fortran": 2.58486959910142e-06
+      },
+      "ice_precipitation_accumulation": {
+        "source": "actual MATLAB state slot 5: cumulative precipitation loss",
+        "units": "kg/kg",
+        "levels": [
+          151,
+          170
+        ],
+        "pulse_ace": 1,
+        "initial_exact_zero": true,
+        "monotonic_everywhere": true,
+        "active_update_count": 30,
+        "total_update_count": 30,
+        "final_selected_min": 3.7827717357510295e-06,
+        "final_selected_max": 6.8759968335593015e-06,
+        "final_all_aces_max": 6.8759968335593015e-06
+      },
+      "ice_snapshot_ranges": {
+        "matlab": {
+          "temperature_min_K": 250.49287212075097,
+          "temperature_max_K": 256.5914634555812,
+          "qi_min_kgkg": 0.0004330311305384175,
+          "qi_max_kgkg": 0.0005099999998600332,
+          "ql_exact_zero": true,
+          "sample_times_seconds": [
+            0,
+            4,
+            60,
+            120
+          ]
+        },
+        "fortran": {
+          "temperature_min_K": 250.4928721207418,
+          "temperature_max_K": 256.5914634555812,
+          "qi_min_kgkg": 0.0004330311305413717,
+          "qi_max_kgkg": 0.0005099999998600332,
+          "ql_exact_zero": true,
+          "sample_times_seconds": [
+            0,
+            4,
+            60,
+            120
+          ]
+        }
+      }
+    },
+    "multi_ice_precip": {
+      "mode": "multi_ice_precip",
+      "pulse_ace": 8,
+      "dt_seconds": 4,
+      "duration_seconds": 120,
+      "precision": "binary64 in both comparison outputs",
+      "tolerance_status": "No cross-implementation tolerance approved; metrics only",
+      "initial_state": {
+        "exact_equal": true,
+        "max_abs": 0.0,
+        "rms": 0.0,
+        "relative_l2": 0.0,
+        "max_rel_nonzero_reference": 0.0,
+        "zero_reference_max_abs": 0.0,
+        "worst_index_one_based": [
+          1,
+          1,
+          1
+        ],
+        "matlab_at_worst": 357.0878098025499,
+        "fortran_at_worst": 357.0878098025499
+      },
+      "raw_tendency": {
+        "theta_e": {
+          "exact_equal": false,
+          "max_abs": 6.380529785077194e-17,
+          "rms": 1.3549862322469236e-18,
+          "relative_l2": 7.57647431550295e-14,
+          "max_rel_nonzero_reference": 2.760991438179903e-12,
+          "zero_reference_max_abs": 0.0,
+          "worst_index_one_based": [
+            17,
+            8
+          ],
+          "matlab_at_worst": 8.408137815857922e-05,
+          "fortran_at_worst": 8.408137815864303e-05
+        },
+        "qt": {
+          "exact_equal": false,
+          "max_abs": 3.943997160652836e-21,
+          "rms": 1.061260366263349e-22,
+          "relative_l2": 1.376933397259191e-14,
+          "max_rel_nonzero_reference": 9.823908278061965e-14,
+          "zero_reference_max_abs": 4.235164736271502e-22,
+          "worst_index_one_based": [
+            10,
+            8
+          ],
+          "matlab_at_worst": 1.94731571361039e-07,
+          "fortran_at_worst": 1.9473157136104295e-07
+        },
+        "MF": {
+          "exact_equal": false,
+          "max_abs": 3.0422306384128572e-15,
+          "rms": 2.966486535626717e-16,
+          "relative_l2": 3.5306901975972834e-11,
+          "max_rel_nonzero_reference": 5.7840116694677484e-11,
+          "zero_reference_max_abs": 0.0,
+          "worst_index_one_based": [
+            165,
+            7
+          ],
+          "matlab_at_worst": 8.610655619873776e-05,
+          "fortran_at_worst": 8.610655619569553e-05
+        }
+      },
+      "diagnostics": {
+        "initial_temperature": {
+          "exact_equal": false,
+          "max_abs": 1.1368683772161603e-13,
+          "rms": 1.2845729330674164e-14,
+          "relative_l2": 5.856607270106423e-17,
+          "max_rel_nonzero_reference": 3.8258419964355683e-16,
+          "zero_reference_max_abs": 0,
+          "worst_index_one_based": [
+            8,
+            1
+          ],
+          "matlab_at_worst": 297.15507809139774,
+          "fortran_at_worst": 297.1550780913976
+        },
+        "initial_vapor": {
+          "exact_equal": false,
+          "max_abs": 5.204170427930421e-18,
+          "rms": 6.501151084448339e-20,
+          "relative_l2": 1.4901674916692578e-17,
+          "max_rel_nonzero_reference": 3.4653834750682338e-15,
+          "zero_reference_max_abs": 0,
+          "worst_index_one_based": [
+            168,
+            8
+          ],
+          "matlab_at_worst": 0.0015017588862450354,
+          "fortran_at_worst": 0.0015017588862450406
+        },
+        "initial_liquid": {
+          "exact_equal": true,
+          "max_abs": 0.0,
+          "rms": 0.0,
+          "relative_l2": null,
+          "max_rel_nonzero_reference": null,
+          "zero_reference_max_abs": 0.0,
+          "worst_index_one_based": [
+            1,
+            1
+          ],
+          "matlab_at_worst": 0.0,
+          "fortran_at_worst": 0.0
+        },
+        "initial_ice": {
+          "exact_equal": false,
+          "max_abs": 5.204170427930421e-18,
+          "rms": 6.501151084448339e-20,
+          "relative_l2": 2.3247502839269966e-15,
+          "max_rel_nonzero_reference": 1.020425574444806e-14,
+          "zero_reference_max_abs": 0.0,
+          "worst_index_one_based": [
+            168,
+            8
+          ],
+          "matlab_at_worst": 0.0005099999998296701,
+          "fortran_at_worst": 0.0005099999998296649
+        },
+        "initial_buoyancy": {
+          "exact_equal": false,
+          "max_abs": 6.193402566856892e-10,
+          "rms": 1.417057087637426e-10,
+          "relative_l2": 1.4282840497725788e-06,
+          "max_rel_nonzero_reference": 1.0,
+          "zero_reference_max_abs": 0.0,
+          "worst_index_one_based": [
+            108,
+            1
+          ],
+          "matlab_at_worst": 6.193402566856892e-10,
+          "fortran_at_worst": 0.0
+        },
+        "upwind": {
+          "exact_equal": false,
+          "max_abs": 0.0007821723252011543,
+          "rms": 9.771049066564024e-06,
+          "relative_l2": 0.00823623334543238,
+          "max_rel_nonzero_reference": 1.0,
+          "zero_reference_max_abs": 0.0,
+          "worst_index_one_based": [
+            801,
+            8
+          ],
+          "matlab_at_worst": -0.0007821723252011543,
+          "fortran_at_worst": 0.0
+        },
+        "upwind_below_top_mask": {
+          "exact_equal": true,
+          "max_abs": 0.0,
+          "rms": 0.0,
+          "relative_l2": 0.0,
+          "max_rel_nonzero_reference": 0.0,
+          "zero_reference_max_abs": 0.0,
+          "worst_index_one_based": [
+            1,
+            1
+          ],
+          "matlab_at_worst": 0.0,
+          "fortran_at_worst": 0.0
+        },
+        "upwind_top_11": {
+          "exact_equal": false,
+          "max_abs": 0.0007821723252011543,
+          "rms": 8.33798500232098e-05,
+          "relative_l2": 1.0,
+          "max_rel_nonzero_reference": 1.0,
+          "zero_reference_max_abs": 0.0,
+          "worst_index_one_based": [
+            11,
+            8
+          ],
+          "matlab_at_worst": -0.0007821723252011543,
+          "fortran_at_worst": 0.0
+        },
+        "weno_defined_interior": {
+          "exact_equal": false,
+          "max_abs": 4.547473508864641e-13,
+          "rms": 5.270425224240887e-14,
+          "relative_l2": 1.201585034584598e-16,
+          "max_rel_nonzero_reference": 4.245373136808431e-16,
+          "zero_reference_max_abs": 0,
+          "worst_index_one_based": [
+            748,
+            1,
+            1
+          ],
+          "matlab_at_worst": 1071.159910406208,
+          "fortran_at_worst": 1071.1599104062084
+        },
+        "weno_boundary_note": "Exclude levels 1 and 801 unassigned by Fortran; tendency top mask is levels 791:801.",
+        "reference_tv": {
+          "exact_equal": false,
+          "max_abs": 1.8405330592941027e-08,
+          "rms": 3.9177652615982504e-09,
+          "relative_l2": 1.7832964156214177e-11,
+          "max_rel_nonzero_reference": 6.31551301092309e-11,
+          "zero_reference_max_abs": 0,
+          "worst_index_one_based": [
+            1
+          ],
+          "matlab_at_worst": 304.53393538796576,
+          "fortran_at_worst": 304.5339353695604
+        },
+        "areas_m2": {
+          "exact_equal": false,
+          "max_abs": 4.76837158203125e-07,
+          "rms": 1.801332912544102e-07,
+          "relative_l2": 2.4556055562038205e-16,
+          "max_rel_nonzero_reference": 2.772034183568413e-16,
+          "zero_reference_max_abs": 0,
+          "worst_index_one_based": [
+            8
+          ],
+          "matlab_at_worst": 1720170555.7227187,
+          "fortran_at_worst": 1720170555.7227192
+        },
+        "perimeters_m": {
+          "exact_equal": false,
+          "max_abs": 1.4551915228366852e-11,
+          "rms": 5.752149554916067e-12,
+          "relative_l2": 4.394113529352184e-17,
+          "max_rel_nonzero_reference": 1.852807392039049e-16,
+          "zero_reference_max_abs": 0,
+          "worst_index_one_based": [
+            4
+          ],
+          "matlab_at_worst": 78539.81633974484,
+          "fortran_at_worst": 78539.81633974482
+        }
+      },
+      "snapshots": {
+        "0": {
+          "theta_e": {
+            "all_aces": {
+              "exact_equal": true,
+              "max_abs": 0.0,
+              "rms": 0.0,
+              "relative_l2": 0.0,
+              "max_rel_nonzero_reference": 0.0,
+              "zero_reference_max_abs": 0,
+              "worst_index_one_based": [
+                1,
+                1
+              ],
+              "matlab_at_worst": 357.0878098025499,
+              "fortran_at_worst": 357.0878098025499
+            },
+            "by_ace": [
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 357.0878098025499,
+                "fortran_at_worst": 357.0878098025499
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 357.0878098025499,
+                "fortran_at_worst": 357.0878098025499
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 357.0878098025499,
+                "fortran_at_worst": 357.0878098025499
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 357.0878098025499,
+                "fortran_at_worst": 357.0878098025499
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 357.0878098025499,
+                "fortran_at_worst": 357.0878098025499
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 357.0878098025499,
+                "fortran_at_worst": 357.0878098025499
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 357.0878098025499,
+                "fortran_at_worst": 357.0878098025499
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 357.0878098025499,
+                "fortran_at_worst": 357.0878098025499
+              }
+            ]
+          },
+          "qt": {
+            "all_aces": {
+              "exact_equal": true,
+              "max_abs": 0.0,
+              "rms": 0.0,
+              "relative_l2": 0.0,
+              "max_rel_nonzero_reference": 0.0,
+              "zero_reference_max_abs": 0,
+              "worst_index_one_based": [
+                1,
+                1
+              ],
+              "matlab_at_worst": 0.021408736537780727,
+              "fortran_at_worst": 0.021408736537780727
+            },
+            "by_ace": [
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.021408736537780727,
+                "fortran_at_worst": 0.021408736537780727
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.021408736537780727,
+                "fortran_at_worst": 0.021408736537780727
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.021408736537780727,
+                "fortran_at_worst": 0.021408736537780727
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.021408736537780727,
+                "fortran_at_worst": 0.021408736537780727
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.021408736537780727,
+                "fortran_at_worst": 0.021408736537780727
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.021408736537780727,
+                "fortran_at_worst": 0.021408736537780727
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.021408736537780727,
+                "fortran_at_worst": 0.021408736537780727
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.021408736537780727,
+                "fortran_at_worst": 0.021408736537780727
+              }
+            ]
+          },
+          "MF": {
+            "all_aces": {
+              "exact_equal": true,
+              "max_abs": 0.0,
+              "rms": 0.0,
+              "relative_l2": 0.0,
+              "max_rel_nonzero_reference": 0.0,
+              "zero_reference_max_abs": 0.0,
+              "worst_index_one_based": [
+                1,
+                1
+              ],
+              "matlab_at_worst": 0.0,
+              "fortran_at_worst": 0.0
+            },
+            "by_ace": [
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": null,
+                "max_rel_nonzero_reference": null,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              },
+              {
+                "exact_equal": true,
+                "max_abs": 0.0,
+                "rms": 0.0,
+                "relative_l2": 0.0,
+                "max_rel_nonzero_reference": 0.0,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  1
+                ],
+                "matlab_at_worst": 0.0,
+                "fortran_at_worst": 0.0
+              }
+            ]
+          }
+        },
+        "4": {
+          "theta_e": {
+            "all_aces": {
+              "exact_equal": false,
+              "max_abs": 2.6147972675971687e-12,
+              "rms": 7.332267121495161e-14,
+              "relative_l2": 1.1791176518578902e-16,
+              "max_rel_nonzero_reference": 7.661978336597857e-15,
+              "zero_reference_max_abs": 0,
+              "worst_index_one_based": [
+                160,
+                8
+              ],
+              "matlab_at_worst": 341.2692065582393,
+              "fortran_at_worst": 341.26920655824193
+            },
+            "by_ace": [
+              {
+                "exact_equal": false,
+                "max_abs": 2.2737367544323206e-13,
+                "rms": 4.270051865530306e-14,
+                "relative_l2": 6.866787449860196e-17,
+                "max_rel_nonzero_reference": 2.813066545274914e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  636
+                ],
+                "matlab_at_worst": 808.2769169650461,
+                "fortran_at_worst": 808.2769169650459
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 2.2737367544323206e-13,
+                "rms": 4.3123539074192466e-14,
+                "relative_l2": 6.934814520522746e-17,
+                "max_rel_nonzero_reference": 2.8201166031373355e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  635
+                ],
+                "matlab_at_worst": 806.256291638021,
+                "fortran_at_worst": 806.2562916380213
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 2.2737367544323206e-13,
+                "rms": 3.757491050929232e-14,
+                "relative_l2": 6.042524347777453e-17,
+                "max_rel_nonzero_reference": 3.6678227899402554e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  530
+                ],
+                "matlab_at_worst": 619.914560940213,
+                "fortran_at_worst": 619.9145609402128
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 4.547473508864641e-13,
+                "rms": 4.381949912656013e-14,
+                "relative_l2": 7.046733744342561e-17,
+                "max_rel_nonzero_reference": 4.272021307581901e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  746
+                ],
+                "matlab_at_worst": 1064.4781899364295,
+                "fortran_at_worst": 1064.47818993643
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 2.2737367544323206e-13,
+                "rms": 4.021944923300921e-14,
+                "relative_l2": 6.46779982546686e-17,
+                "max_rel_nonzero_reference": 2.8201165650808306e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  635
+                ],
+                "matlab_at_worst": 806.2563025181728,
+                "fortran_at_worst": 806.256302518173
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 2.2737367544323206e-13,
+                "rms": 4.198601448116605e-14,
+                "relative_l2": 6.751885974355712e-17,
+                "max_rel_nonzero_reference": 2.463575188381698e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  689
+                ],
+                "matlab_at_worst": 922.941895646351,
+                "fortran_at_worst": 922.9418956463508
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 4.547473508864641e-13,
+                "rms": 4.919710618286393e-14,
+                "relative_l2": 7.911521286584921e-17,
+                "max_rel_nonzero_reference": 4.022943794919739e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  770
+                ],
+                "matlab_at_worst": 1130.384549395716,
+                "fortran_at_worst": 1130.3845493957165
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 2.6147972675971687e-12,
+                "rms": 1.7376401189020888e-13,
+                "relative_l2": 2.794264915511385e-16,
+                "max_rel_nonzero_reference": 7.661978336597857e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  160
+                ],
+                "matlab_at_worst": 341.2692065582393,
+                "fortran_at_worst": 341.26920655824193
+              }
+            ]
+          },
+          "qt": {
+            "all_aces": {
+              "exact_equal": false,
+              "max_abs": 3.469446951953614e-18,
+              "rms": 4.8564455175283717e-20,
+              "relative_l2": 1.112985262249056e-17,
+              "max_rel_nonzero_reference": 3.361196932210765e-16,
+              "zero_reference_max_abs": 0,
+              "worst_index_one_based": [
+                15,
+                5
+              ],
+              "matlab_at_worst": 0.017077405330130777,
+              "fortran_at_worst": 0.017077405330130774
+            },
+            "by_ace": [
+              {
+                "exact_equal": false,
+                "max_abs": 2.168404344971009e-19,
+                "rms": 7.671085346734339e-21,
+                "relative_l2": 1.7585942773272077e-18,
+                "max_rel_nonzero_reference": 3.2768875448379435e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  146
+                ],
+                "matlab_at_worst": 0.0012717387886201708,
+                "fortran_at_worst": 0.001271738788620171
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.0842021724855044e-19,
+                "rms": 4.284812719547075e-21,
+                "relative_l2": 9.822921772392922e-19,
+                "max_rel_nonzero_reference": 3.2768875448379435e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  189
+                ],
+                "matlab_at_worst": 0.0005205295161292141,
+                "fortran_at_worst": 0.000520529516129214
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 2.710505431213761e-20,
+                "rms": 9.660907078629626e-22,
+                "relative_l2": 2.2147603797085734e-19,
+                "max_rel_nonzero_reference": 3.2768875448379435e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  206
+                ],
+                "matlab_at_worst": 0.000222487648937294,
+                "fortran_at_worst": 0.00022248764893729398
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.0842021724855044e-19,
+                "rms": 3.96063042481354e-21,
+                "relative_l2": 9.079734712685154e-19,
+                "max_rel_nonzero_reference": 3.2768875448379435e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  171
+                ],
+                "matlab_at_worst": 0.0009549626818960901,
+                "fortran_at_worst": 0.00095496268189609
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 3.469446951953614e-18,
+                "rms": 1.2288609741548092e-19,
+                "relative_l2": 2.817160507647999e-17,
+                "max_rel_nonzero_reference": 3.2768875448379435e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  15
+                ],
+                "matlab_at_worst": 0.017077405330130777,
+                "fortran_at_worst": 0.017077405330130774
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 8.673617379884035e-19,
+                "rms": 4.4315022515118294e-20,
+                "relative_l2": 1.0159207053969605e-17,
+                "max_rel_nonzero_reference": 3.2768875448379435e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  68
+                ],
+                "matlab_at_worst": 0.007283843464373939,
+                "fortran_at_worst": 0.0072838434643739385
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 4.336808689942018e-19,
+                "rms": 2.499643194220433e-20,
+                "relative_l2": 5.730424526876449e-18,
+                "max_rel_nonzero_reference": 3.2768875448379435e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  107
+                ],
+                "matlab_at_worst": 0.0032936575100834782,
+                "fortran_at_worst": 0.003293657510083478
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 6.505213034913027e-19,
+                "rms": 3.293310778467649e-20,
+                "relative_l2": 7.530789120633556e-18,
+                "max_rel_nonzero_reference": 3.361196932210765e-16,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  170
+                ],
+                "matlab_at_worst": 0.0019353858658422444,
+                "fortran_at_worst": 0.001935385865842245
+              }
+            ]
+          },
+          "MF": {
+            "all_aces": {
+              "exact_equal": false,
+              "max_abs": 1.2165453106699475e-14,
+              "rms": 1.1832041566246498e-15,
+              "relative_l2": 9.982030328997651e-13,
+              "max_rel_nonzero_reference": 5.453661863574782e-11,
+              "zero_reference_max_abs": 0.0,
+              "worst_index_one_based": [
+                165,
+                7
+              ],
+              "matlab_at_worst": 0.00034433598834665455,
+              "fortran_at_worst": 0.0003443359883344891
+            },
+            "by_ace": [
+              {
+                "exact_equal": false,
+                "max_abs": 6.57880325737048e-16,
+                "rms": 4.3135572695046564e-16,
+                "relative_l2": 3.521830403992941e-11,
+                "max_rel_nonzero_reference": 3.525587804388219e-11,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  277
+                ],
+                "matlab_at_worst": 1.8677517046191605e-05,
+                "fortran_at_worst": 1.8677517045533725e-05
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 6.776873441756426e-16,
+                "rms": 4.4155054431341846e-16,
+                "relative_l2": 3.521899861016943e-11,
+                "max_rel_nonzero_reference": 3.525982254721829e-11,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  272
+                ],
+                "matlab_at_worst": 1.9239190104106983e-05,
+                "fortran_at_worst": 1.9239190103429296e-05
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 7.20313430213268e-16,
+                "rms": 4.629454232156443e-16,
+                "relative_l2": 3.5220602864107416e-11,
+                "max_rel_nonzero_reference": 3.526864600526186e-11,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  261
+                ],
+                "matlab_at_worst": 2.0447751279914435e-05,
+                "fortran_at_worst": 2.044775127919412e-05
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 8.566958991165774e-16,
+                "rms": 5.273466164397602e-16,
+                "relative_l2": 3.522588222266231e-11,
+                "max_rel_nonzero_reference": 3.529573438429859e-11,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  233
+                ],
+                "matlab_at_worst": 2.431411002610718e-05,
+                "fortran_at_worst": 2.4314110025250485e-05
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.2425702285677465e-15,
+                "rms": 6.902201012126766e-16,
+                "relative_l2": 3.5240542701732994e-11,
+                "max_rel_nonzero_reference": 3.5366260068470446e-11,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  197
+                ],
+                "matlab_at_worst": 3.5247320138236473e-05,
+                "fortran_at_worst": 3.52473201369939e-05
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 2.3243126173744244e-15,
+                "rms": 1.0660039599966097e-15,
+                "relative_l2": 3.527324838702269e-11,
+                "max_rel_nonzero_reference": 3.656038497090834e-11,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  169
+                ],
+                "matlab_at_worst": 6.585943027584158e-05,
+                "fortran_at_worst": 6.585943027351726e-05
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.2165453106699475e-14,
+                "rms": 2.414277976231329e-15,
+                "relative_l2": 3.533642406866074e-11,
+                "max_rel_nonzero_reference": 5.453661863574782e-11,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  165
+                ],
+                "matlab_at_worst": 0.00034433598834665455,
+                "fortran_at_worst": 0.0003443359883344891
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 6.931168963428269e-15,
+                "rms": 1.6984765725689123e-15,
+                "relative_l2": 5.067603669784945e-13,
+                "max_rel_nonzero_reference": 3.618471065238895e-11,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  165
+                ],
+                "matlab_at_worst": -0.00019622662175156115,
+                "fortran_at_worst": -0.00019622662174462998
+              }
+            ]
+          }
+        },
+        "60": {
+          "theta_e": {
+            "all_aces": {
+              "exact_equal": false,
+              "max_abs": 1.0459189070388675e-11,
+              "rms": 2.9058412816108214e-13,
+              "relative_l2": 4.672948455309047e-16,
+              "max_rel_nonzero_reference": 3.057171354345057e-14,
+              "zero_reference_max_abs": 0,
+              "worst_index_one_based": [
+                169,
+                8
+              ],
+              "matlab_at_worst": 342.1198179004056,
+              "fortran_at_worst": 342.11981790039516
+            },
+            "by_ace": [
+              {
+                "exact_equal": false,
+                "max_abs": 7.958078640513122e-13,
+                "rms": 1.0008115126032236e-13,
+                "relative_l2": 1.6094340274277523e-16,
+                "max_rel_nonzero_reference": 1.283742778445182e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  530
+                ],
+                "matlab_at_worst": 619.9122420888418,
+                "fortran_at_worst": 619.912242088841
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.1368683772161603e-12,
+                "rms": 1.054012838089037e-13,
+                "relative_l2": 1.6949886151102885e-16,
+                "max_rel_nonzero_reference": 1.833918193877726e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  530
+                ],
+                "matlab_at_worst": 619.9122627232955,
+                "fortran_at_worst": 619.9122627232944
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.1368683772161603e-12,
+                "rms": 9.937328336939156e-14,
+                "relative_l2": 1.5980505755874946e-16,
+                "max_rel_nonzero_reference": 1.833918058862211e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  530
+                ],
+                "matlab_at_worst": 619.9123083620703,
+                "fortran_at_worst": 619.9123083620692
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.1368683772161603e-12,
+                "rms": 1.0050347890286388e-13,
+                "relative_l2": 1.6162255163043023e-16,
+                "max_rel_nonzero_reference": 1.8339176171774057e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  530
+                ],
+                "matlab_at_worst": 619.9124576631319,
+                "fortran_at_worst": 619.9124576631308
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.1368683772161603e-12,
+                "rms": 1.0217533463378489e-13,
+                "relative_l2": 1.643110920176889e-16,
+                "max_rel_nonzero_reference": 1.833916474801307e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  530
+                ],
+                "matlab_at_worst": 619.9128438165825,
+                "fortran_at_worst": 619.9128438165814
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.1368683772161603e-12,
+                "rms": 8.988855673653424e-14,
+                "relative_l2": 1.4455233285420715e-16,
+                "max_rel_nonzero_reference": 1.833914363265894e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  530
+                ],
+                "matlab_at_worst": 619.9135575728784,
+                "fortran_at_worst": 619.9135575728773
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.1368683772161603e-12,
+                "rms": 8.336937994462999e-14,
+                "relative_l2": 1.3406859186760449e-16,
+                "max_rel_nonzero_reference": 1.8339114129147085e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  530
+                ],
+                "matlab_at_worst": 619.9145548744309,
+                "fortran_at_worst": 619.9145548744298
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.0459189070388675e-11,
+                "rms": 7.803468542742298e-13,
+                "relative_l2": 1.2548591798780666e-15,
+                "max_rel_nonzero_reference": 3.057171354345057e-14,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  169
+                ],
+                "matlab_at_worst": 342.1198179004056,
+                "fortran_at_worst": 342.11981790039516
+              }
+            ]
+          },
+          "qt": {
+            "all_aces": {
+              "exact_equal": false,
+              "max_abs": 1.1015494072452725e-16,
+              "rms": 2.3331068934437446e-18,
+              "relative_l2": 5.346852674248222e-16,
+              "max_rel_nonzero_reference": 8.013121918694308e-14,
+              "zero_reference_max_abs": 0,
+              "worst_index_one_based": [
+                170,
+                8
+              ],
+              "matlab_at_worst": 0.0019240894690460086,
+              "fortran_at_worst": 0.0019240894690461187
+            },
+            "by_ace": [
+              {
+                "exact_equal": false,
+                "max_abs": 1.734723475976807e-18,
+                "rms": 2.2368360104210447e-19,
+                "relative_l2": 5.1279375941063704e-17,
+                "max_rel_nonzero_reference": 2.457665658628457e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  46
+                ],
+                "matlab_at_worst": 0.012050816708421687,
+                "fortran_at_worst": 0.012050816708421685
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 3.469446951953614e-18,
+                "rms": 4.0682360117845173e-19,
+                "relative_l2": 9.326414474475994e-17,
+                "max_rel_nonzero_reference": 2.457665658628457e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  23
+                ],
+                "matlab_at_worst": 0.016100471089475533,
+                "fortran_at_worst": 0.01610047108947553
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 3.469446951953614e-18,
+                "rms": 3.0427017666104414e-19,
+                "relative_l2": 6.975380937520411e-17,
+                "max_rel_nonzero_reference": 2.457665658628457e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  47
+                ],
+                "matlab_at_worst": 0.011664354472583745,
+                "fortran_at_worst": 0.011664354472583741
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 3.469446951953614e-18,
+                "rms": 4.583655428297867e-19,
+                "relative_l2": 1.0508008507863979e-16,
+                "max_rel_nonzero_reference": 2.457665658628457e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  26
+                ],
+                "matlab_at_worst": 0.015780330650326153,
+                "fortran_at_worst": 0.01578033065032615
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 5.204170427930421e-18,
+                "rms": 6.0746306232303455e-19,
+                "relative_l2": 1.3926054617622304e-16,
+                "max_rel_nonzero_reference": 2.457665658628457e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  49
+                ],
+                "matlab_at_worst": 0.010801689553266948,
+                "fortran_at_worst": 0.010801689553266942
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 5.204170427930421e-18,
+                "rms": 8.424421513524864e-19,
+                "relative_l2": 1.931291725345852e-16,
+                "max_rel_nonzero_reference": 3.776345132393931e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  47
+                ],
+                "matlab_at_worst": 0.011664417427070431,
+                "fortran_at_worst": 0.011664417427070426
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.5395670849294163e-17,
+                "rms": 2.0022445705442345e-18,
+                "relative_l2": 4.590118320733772e-16,
+                "max_rel_nonzero_reference": 1.1515326998684147e-14,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  154
+                ],
+                "matlab_at_worst": 0.0013369720938930716,
+                "fortran_at_worst": 0.0013369720938930562
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.1015494072452725e-16,
+                "rms": 6.1596411934488245e-18,
+                "relative_l2": 1.4083475005610794e-15,
+                "max_rel_nonzero_reference": 8.013121918694308e-14,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  170
+                ],
+                "matlab_at_worst": 0.0019240894690460086,
+                "fortran_at_worst": 0.0019240894690461187
+              }
+            ]
+          },
+          "MF": {
+            "all_aces": {
+              "exact_equal": false,
+              "max_abs": 1.701520868646611e-13,
+              "rms": 1.571094971436849e-14,
+              "relative_l2": 1.2282152969970921e-11,
+              "max_rel_nonzero_reference": 2.0656003982444135e-08,
+              "zero_reference_max_abs": 0.0,
+              "worst_index_one_based": [
+                165,
+                7
+              ],
+              "matlab_at_worst": 0.005045683500602691,
+              "fortran_at_worst": 0.005045683500432539
+            },
+            "by_ace": [
+              {
+                "exact_equal": false,
+                "max_abs": 9.764216345187204e-15,
+                "rms": 5.5832626794847865e-15,
+                "relative_l2": 3.191302122188201e-11,
+                "max_rel_nonzero_reference": 9.773718037670964e-11,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  320
+                ],
+                "matlab_at_worst": 0.00027506889890842133,
+                "fortran_at_worst": 0.0002750688988986571
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.0294336997423992e-14,
+                "rms": 5.978264837087662e-15,
+                "relative_l2": 3.329189737563159e-11,
+                "max_rel_nonzero_reference": 7.53125854104274e-11,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  182
+                ],
+                "matlab_at_worst": 0.0002667236630427029,
+                "fortran_at_worst": 0.00026672366303240856
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.0829444979654212e-14,
+                "rms": 6.4161766595514386e-15,
+                "relative_l2": 3.3897691524389145e-11,
+                "max_rel_nonzero_reference": 1.129439383433109e-10,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  245
+                ],
+                "matlab_at_worst": 0.00031291220575015095,
+                "fortran_at_worst": 0.0003129122057393215
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.246946339586441e-14,
+                "rms": 7.090283401625199e-15,
+                "relative_l2": 3.243478874956199e-11,
+                "max_rel_nonzero_reference": 3.82951247810363e-11,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  216
+                ],
+                "matlab_at_worst": 0.00037411865090692417,
+                "fortran_at_worst": 0.0003741186508944547
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.8055110358183857e-14,
+                "rms": 9.44329817693896e-15,
+                "relative_l2": 3.223397396654956e-11,
+                "max_rel_nonzero_reference": 3.372380870674443e-11,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  182
+                ],
+                "matlab_at_worst": 0.0005501999088486022,
+                "fortran_at_worst": 0.0005501999088305471
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 3.62231945827407e-14,
+                "rms": 1.472550702441012e-14,
+                "relative_l2": 3.175366175622273e-11,
+                "max_rel_nonzero_reference": 4.507055832853369e-11,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  161
+                ],
+                "matlab_at_worst": 0.0010978097573706405,
+                "fortran_at_worst": 0.0010978097573344173
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.701520868646611e-13,
+                "rms": 3.1526387140911503e-14,
+                "relative_l2": 3.180211241719304e-11,
+                "max_rel_nonzero_reference": 2.0656003982444135e-08,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  165
+                ],
+                "matlab_at_worst": 0.005045683500602691,
+                "fortran_at_worst": 0.005045683500432539
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 9.860775390668763e-14,
+                "rms": 2.272421812568566e-14,
+                "relative_l2": 6.654842526786456e-12,
+                "max_rel_nonzero_reference": 3.4097523523483586e-11,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  165
+                ],
+                "matlab_at_worst": -0.002941891090341439,
+                "fortran_at_worst": -0.0029418910902428313
+              }
+            ]
+          }
+        },
+        "120": {
+          "theta_e": {
+            "all_aces": {
+              "exact_equal": false,
+              "max_abs": 1.2221335055073723e-11,
+              "rms": 4.345382734766595e-13,
+              "relative_l2": 6.987911489856707e-16,
+              "max_rel_nonzero_reference": 3.582272735951099e-14,
+              "zero_reference_max_abs": 0,
+              "worst_index_one_based": [
+                159,
+                8
+              ],
+              "matlab_at_worst": 341.1614903695751,
+              "fortran_at_worst": 341.16149036958734
+            },
+            "by_ace": [
+              {
+                "exact_equal": false,
+                "max_abs": 1.3642420526593924e-12,
+                "rms": 1.2893334203598438e-13,
+                "relative_l2": 2.0734167796910464e-16,
+                "max_rel_nonzero_reference": 2.2007075128829224e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  530
+                ],
+                "matlab_at_worst": 619.9106626724049,
+                "fortran_at_worst": 619.9106626724035
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.5916157281026244e-12,
+                "rms": 1.2913654679884947e-13,
+                "relative_l2": 2.076684546991063e-16,
+                "max_rel_nonzero_reference": 2.5674917745811858e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  530
+                ],
+                "matlab_at_worst": 619.9107408483331,
+                "fortran_at_worst": 619.9107408483316
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.4779288903810084e-12,
+                "rms": 1.2643752002848112e-13,
+                "relative_l2": 2.0332806005326995e-16,
+                "max_rel_nonzero_reference": 2.3840988905772403e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  530
+                ],
+                "matlab_at_worst": 619.9109006015983,
+                "fortran_at_worst": 619.9109006015968
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.8189894035458565e-12,
+                "rms": 1.2865145172466998e-13,
+                "relative_l2": 2.0688833004908786e-16,
+                "max_rel_nonzero_reference": 2.9342734908517114e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  530
+                ],
+                "matlab_at_worst": 619.9113372413935,
+                "fortran_at_worst": 619.9113372413917
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.7053025658242404e-12,
+                "rms": 1.2377741625733414e-13,
+                "relative_l2": 1.990501903532542e-16,
+                "max_rel_nonzero_reference": 2.7508774977868025e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  530
+                ],
+                "matlab_at_worst": 619.912216082406,
+                "fortran_at_worst": 619.9122160824043
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.4779288903810084e-12,
+                "rms": 1.1343818631814334e-13,
+                "relative_l2": 1.8242326363993477e-16,
+                "max_rel_nonzero_reference": 2.384089178674997e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  530
+                ],
+                "matlab_at_worst": 619.9134258905514,
+                "fortran_at_worst": 619.9134258905499
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.3642420526593924e-12,
+                "rms": 9.707342478600087e-14,
+                "relative_l2": 1.561064592302721e-16,
+                "max_rel_nonzero_reference": 2.20069317749438e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  530
+                ],
+                "matlab_at_worst": 619.9147007910767,
+                "fortran_at_worst": 619.9147007910753
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.2221335055073723e-11,
+                "rms": 1.1862285072147428e-12,
+                "relative_l2": 1.907546838166364e-15,
+                "max_rel_nonzero_reference": 3.582272735951099e-14,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  159
+                ],
+                "matlab_at_worst": 341.1614903695751,
+                "fortran_at_worst": 341.16149036958734
+              }
+            ]
+          },
+          "qt": {
+            "all_aces": {
+              "exact_equal": false,
+              "max_abs": 3.2569433261464553e-16,
+              "rms": 6.760568976226532e-18,
+              "relative_l2": 1.5493096622149045e-15,
+              "max_rel_nonzero_reference": 2.4103961188670266e-13,
+              "zero_reference_max_abs": 0,
+              "worst_index_one_based": [
+                150,
+                8
+              ],
+              "matlab_at_worst": 0.0013512066753896602,
+              "fortran_at_worst": 0.0013512066753893345
+            },
+            "by_ace": [
+              {
+                "exact_equal": false,
+                "max_abs": 1.0408340855860843e-17,
+                "rms": 1.0146392393426358e-18,
+                "relative_l2": 2.3260519696236874e-16,
+                "max_rel_nonzero_reference": 4.915331317256914e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  53
+                ],
+                "matlab_at_worst": 0.009096723636826136,
+                "fortran_at_worst": 0.009096723636826126
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 6.071532165918825e-18,
+                "rms": 8.862686654106193e-19,
+                "relative_l2": 2.0317632359870434e-16,
+                "max_rel_nonzero_reference": 4.915331317256914e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  91
+                ],
+                "matlab_at_worst": 0.0047321344670663784,
+                "fortran_at_worst": 0.004732134467066372
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.0408340855860843e-17,
+                "rms": 9.85546931935312e-19,
+                "relative_l2": 2.2593571687852785e-16,
+                "max_rel_nonzero_reference": 4.915331317256914e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  53
+                ],
+                "matlab_at_worst": 0.009096742036761165,
+                "fortran_at_worst": 0.009096742036761155
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 8.673617379884035e-18,
+                "rms": 1.197539688157457e-18,
+                "relative_l2": 2.745346199838492e-16,
+                "max_rel_nonzero_reference": 5.6817138433106274e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  51
+                ],
+                "matlab_at_worst": 0.009989821966031976,
+                "fortran_at_worst": 0.009989821966031967
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.3877787807814457e-17,
+                "rms": 1.771132503103639e-18,
+                "relative_l2": 4.0602924254628923e-16,
+                "max_rel_nonzero_reference": 6.3916500193163e-15,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  71
+                ],
+                "matlab_at_worst": 0.0062276811736650724,
+                "fortran_at_worst": 0.0062276811736650586
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.5612511283791264e-17,
+                "rms": 2.5580962028465163e-18,
+                "relative_l2": 5.864373117197935e-16,
+                "max_rel_nonzero_reference": 1.0505411456018996e-14,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  70
+                ],
+                "matlab_at_worst": 0.006634102596646356,
+                "fortran_at_worst": 0.00663410259664634
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 5.616167253474913e-17,
+                "rms": 6.161660592042975e-18,
+                "relative_l2": 1.4125386091839586e-15,
+                "max_rel_nonzero_reference": 4.193292198177799e-14,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  154
+                ],
+                "matlab_at_worst": 0.0013393217042960723,
+                "fortran_at_worst": 0.0013393217042960161
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 3.2569433261464553e-16,
+                "rms": 1.7713699395873468e-17,
+                "relative_l2": 4.049564096067925e-15,
+                "max_rel_nonzero_reference": 2.4103961188670266e-13,
+                "zero_reference_max_abs": 0,
+                "worst_index_one_based": [
+                  150
+                ],
+                "matlab_at_worst": 0.0013512066753896602,
+                "fortran_at_worst": 0.0013512066753893345
+              }
+            ]
+          },
+          "MF": {
+            "all_aces": {
+              "exact_equal": false,
+              "max_abs": 2.0886070650760757e-13,
+              "rms": 1.8920009439085036e-14,
+              "relative_l2": 1.2746838084473763e-11,
+              "max_rel_nonzero_reference": 8.039527766008163e-07,
+              "zero_reference_max_abs": 0.0,
+              "worst_index_one_based": [
+                163,
+                7
+              ],
+              "matlab_at_worst": 0.009227967626860597,
+              "fortran_at_worst": 0.009227967626651736
+            },
+            "by_ace": [
+              {
+                "exact_equal": false,
+                "max_abs": 1.4393976462134805e-14,
+                "rms": 7.92794097786751e-15,
+                "relative_l2": 2.3905755408997153e-11,
+                "max_rel_nonzero_reference": 4.720735912023656e-08,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  223
+                ],
+                "matlab_at_worst": 0.0005642184557676428,
+                "fortran_at_worst": 0.0005642184557532488
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.7924463996399354e-14,
+                "rms": 8.543426966236314e-15,
+                "relative_l2": 2.5108856627399195e-11,
+                "max_rel_nonzero_reference": 8.311901310869479e-08,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  182
+                ],
+                "matlab_at_worst": 0.0005557954561531567,
+                "fortran_at_worst": 0.0005557954561352322
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.793530601812421e-14,
+                "rms": 9.92182412387071e-15,
+                "relative_l2": 2.7673939811819467e-11,
+                "max_rel_nonzero_reference": 1.5531592474293961e-07,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  153
+                ],
+                "matlab_at_worst": 0.0005620209955913175,
+                "fortran_at_worst": 0.0005620209955733822
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.9924383323766115e-14,
+                "rms": 1.0286609699586723e-14,
+                "relative_l2": 2.478609424256873e-11,
+                "max_rel_nonzero_reference": 1.7969921987117159e-07,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  185
+                ],
+                "matlab_at_worst": 0.0007503223826447276,
+                "fortran_at_worst": 0.0007503223826248033
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 2.9537136625457094e-14,
+                "rms": 1.3529091251084587e-14,
+                "relative_l2": 2.4033714538705505e-11,
+                "max_rel_nonzero_reference": 8.039527766008163e-07,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  144
+                ],
+                "matlab_at_worst": 0.0010906231841691899,
+                "fortran_at_worst": 0.0010906231841396527
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 6.986208486714496e-14,
+                "rms": 2.163013683670186e-14,
+                "relative_l2": 2.3868485236840368e-11,
+                "max_rel_nonzero_reference": 4.22704221373474e-08,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  161
+                ],
+                "matlab_at_worst": 0.0024444720139107728,
+                "fortran_at_worst": 0.0024444720138409107
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 2.0886070650760757e-13,
+                "rms": 3.344811870749506e-14,
+                "relative_l2": 1.8842568605165313e-11,
+                "max_rel_nonzero_reference": 6.474025449948294e-09,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  163
+                ],
+                "matlab_at_worst": 0.009227967626860597,
+                "fortran_at_worst": 0.009227967626651736
+              },
+              {
+                "exact_equal": false,
+                "max_abs": 1.3326666159496625e-13,
+                "rms": 2.745831307896781e-14,
+                "relative_l2": 7.672079415460436e-12,
+                "max_rel_nonzero_reference": 1.8456963206705794e-08,
+                "zero_reference_max_abs": 0.0,
+                "worst_index_one_based": [
+                  162
+                ],
+                "matlab_at_worst": -0.005531611698065574,
+                "fortran_at_worst": -0.005531611697932307
+              }
+            ]
+          }
+        }
+      },
+      "budgets": {
+        "matlab": {
+          "column_water_kg_initial": 239135460728.6738,
+          "column_water_kg_final": 239147571379.18143,
+          "change_kg": 12110650.507629395,
+          "interpretation": "Diagnostic over all 801 stored levels, including extra top level; sinks/sponge/open boundaries and frozen single columns prevent a conservation pass claim."
+        },
+        "fortran": {
+          "column_water_kg_initial": 239135460728.67496,
+          "column_water_kg_final": 239147571379.1815,
+          "change_kg": 12110650.506530762,
+          "interpretation": "Diagnostic over all 801 stored levels, including extra top level; sinks/sponge/open boundaries and frozen single columns prevent a conservation pass claim."
+        }
+      },
+      "snapshot_diagnostics": {
+        "0": {
+          "T": {
+            "exact_equal": false,
+            "max_abs": 1.1368683772161603e-13,
+            "rms": 1.2845729330674164e-14,
+            "relative_l2": 5.856607270106423e-17,
+            "max_rel_nonzero_reference": 3.8258419964355683e-16,
+            "zero_reference_max_abs": 0,
+            "worst_index_one_based": [
+              8,
+              1
+            ],
+            "matlab_at_worst": 297.15507809139774,
+            "fortran_at_worst": 297.1550780913976
+          },
+          "q": {
+            "exact_equal": false,
+            "max_abs": 5.204170427930421e-18,
+            "rms": 6.501151084448339e-20,
+            "relative_l2": 1.4901674916692578e-17,
+            "max_rel_nonzero_reference": 3.4653834750682338e-15,
+            "zero_reference_max_abs": 0,
+            "worst_index_one_based": [
+              168,
+              8
+            ],
+            "matlab_at_worst": 0.0015017588862450354,
+            "fortran_at_worst": 0.0015017588862450406
+          },
+          "ql": {
+            "exact_equal": true,
+            "max_abs": 0.0,
+            "rms": 0.0,
+            "relative_l2": null,
+            "max_rel_nonzero_reference": null,
+            "zero_reference_max_abs": 0.0,
+            "worst_index_one_based": [
+              1,
+              1
+            ],
+            "matlab_at_worst": 0.0,
+            "fortran_at_worst": 0.0
+          },
+          "qi": {
+            "exact_equal": false,
+            "max_abs": 5.204170427930421e-18,
+            "rms": 6.501151084448339e-20,
+            "relative_l2": 2.3247502839269966e-15,
+            "max_rel_nonzero_reference": 1.020425574444806e-14,
+            "zero_reference_max_abs": 0.0,
+            "worst_index_one_based": [
+              168,
+              8
+            ],
+            "matlab_at_worst": 0.0005099999998296701,
+            "fortran_at_worst": 0.0005099999998296649
+          },
+          "buoyancy": {
+            "exact_equal": false,
+            "max_abs": 6.193402566856892e-10,
+            "rms": 1.417057087637426e-10,
+            "relative_l2": 1.4282840497725788e-06,
+            "max_rel_nonzero_reference": 1.0,
+            "zero_reference_max_abs": 0.0,
+            "worst_index_one_based": [
+              108,
+              1
+            ],
+            "matlab_at_worst": 6.193402566856892e-10,
+            "fortran_at_worst": 0.0
+          }
+        },
+        "4": {
+          "T": {
+            "exact_equal": false,
+            "max_abs": 1.3358203432289883e-12,
+            "rms": 3.418077898569674e-14,
+            "relative_l2": 1.5583654065757706e-16,
+            "max_rel_nonzero_reference": 5.28263857465631e-15,
+            "zero_reference_max_abs": 0,
+            "worst_index_one_based": [
+              163,
+              8
+            ],
+            "matlab_at_worst": 252.86991043408588,
+            "fortran_at_worst": 252.86991043408722
+          },
+          "q": {
+            "exact_equal": false,
+            "max_abs": 2.233456475320139e-16,
+            "rms": 4.9957586623921575e-18,
+            "relative_l2": 1.1451060145479043e-15,
+            "max_rel_nonzero_reference": 1.291316634440273e-13,
+            "zero_reference_max_abs": 0,
+            "worst_index_one_based": [
+              160,
+              8
+            ],
+            "matlab_at_worst": 0.0018275774627871935,
+            "fortran_at_worst": 0.0018275774627874168
+          },
+          "ql": {
+            "exact_equal": true,
+            "max_abs": 0.0,
+            "rms": 0.0,
+            "relative_l2": null,
+            "max_rel_nonzero_reference": null,
+            "zero_reference_max_abs": 0.0,
+            "worst_index_one_based": [
+              1,
+              1
+            ],
+            "matlab_at_worst": 0.0,
+            "fortran_at_worst": 0.0
+          },
+          "qi": {
+            "exact_equal": false,
+            "max_abs": 2.233456475320139e-16,
+            "rms": 4.995647456541864e-18,
+            "relative_l2": 1.7881963395806584e-13,
+            "max_rel_nonzero_reference": 4.471229587779087e-13,
+            "zero_reference_max_abs": 0.0,
+            "worst_index_one_based": [
+              160,
+              8
+            ],
+            "matlab_at_worst": 0.0004995172874648836,
+            "fortran_at_worst": 0.0004995172874646603
+          },
+          "buoyancy": {
+            "exact_equal": false,
+            "max_abs": 6.193402578524162e-10,
+            "rms": 1.4170562019870584e-10,
+            "relative_l2": 1.4240796845994726e-06,
+            "max_rel_nonzero_reference": 24.874300143736708,
+            "zero_reference_max_abs": 0.0,
+            "worst_index_one_based": [
+              108,
+              8
+            ],
+            "matlab_at_worst": 1.909332369719382e-08,
+            "fortran_at_worst": 1.8473983439341403e-08
+          }
+        },
+        "60": {
+          "T": {
+            "exact_equal": false,
+            "max_abs": 5.5422333389287814e-12,
+            "rms": 1.4308804460730884e-13,
+            "relative_l2": 6.523655976044077e-16,
+            "max_rel_nonzero_reference": 2.2089737567509988e-14,
+            "zero_reference_max_abs": 0,
+            "worst_index_one_based": [
+              169,
+              8
+            ],
+            "matlab_at_worst": 250.8962961642607,
+            "fortran_at_worst": 250.89629616425515
+          },
+          "q": {
+            "exact_equal": false,
+            "max_abs": 7.971054372113429e-16,
+            "rms": 2.3475731227444417e-17,
+            "relative_l2": 5.380899747434933e-15,
+            "max_rel_nonzero_reference": 5.448673826641739e-13,
+            "zero_reference_max_abs": 0,
+            "worst_index_one_based": [
+              169,
+              8
+            ],
+            "matlab_at_worst": 0.0014629347664634103,
+            "fortran_at_worst": 0.0014629347664626131
+          },
+          "ql": {
+            "exact_equal": true,
+            "max_abs": 0.0,
+            "rms": 0.0,
+            "relative_l2": null,
+            "max_rel_nonzero_reference": null,
+            "zero_reference_max_abs": 0.0,
+            "worst_index_one_based": [
+              1,
+              1
+            ],
+            "matlab_at_worst": 0.0,
+            "fortran_at_worst": 0.0
+          },
+          "qi": {
+            "exact_equal": false,
+            "max_abs": 7.771561172376096e-16,
+            "rms": 2.257327037481901e-17,
+            "relative_l2": 8.194350722286507e-13,
+            "max_rel_nonzero_reference": 1.549190908994625e-12,
+            "zero_reference_max_abs": 0.0,
+            "worst_index_one_based": [
+              169,
+              8
+            ],
+            "matlab_at_worst": 0.0005016529032835333,
+            "fortran_at_worst": 0.0005016529032843104
+          },
+          "buoyancy": {
+            "exact_equal": false,
+            "max_abs": 6.193421025830058e-10,
+            "rms": 1.4170568131487496e-10,
+            "relative_l2": 1.341236302937299e-06,
+            "max_rel_nonzero_reference": 2.0000000000000004,
+            "zero_reference_max_abs": 0.0,
+            "worst_index_one_based": [
+              108,
+              6
+            ],
+            "matlab_at_worst": -3.5185211167660462e-06,
+            "fortran_at_worst": -3.5191404588686292e-06
+          }
+        },
+        "120": {
+          "T": {
+            "exact_equal": false,
+            "max_abs": 6.423306331271306e-12,
+            "rms": 2.1559372352454046e-13,
+            "relative_l2": 9.829340699223034e-16,
+            "max_rel_nonzero_reference": 2.5601879731904803e-14,
+            "zero_reference_max_abs": 0,
+            "worst_index_one_based": [
+              169,
+              8
+            ],
+            "matlab_at_worst": 250.89198131286614,
+            "fortran_at_worst": 250.8919813128597
+          },
+          "q": {
+            "exact_equal": false,
+            "max_abs": 1.0859368959614812e-15,
+            "rms": 3.6469427974703314e-17,
+            "relative_l2": 8.359011193143841e-15,
+            "max_rel_nonzero_reference": 6.269459273703145e-13,
+            "zero_reference_max_abs": 0,
+            "worst_index_one_based": [
+              159,
+              8
+            ],
+            "matlab_at_worst": 0.0018690525615619564,
+            "fortran_at_worst": 0.0018690525615630423
+          },
+          "ql": {
+            "exact_equal": true,
+            "max_abs": 0.0,
+            "rms": 0.0,
+            "relative_l2": null,
+            "max_rel_nonzero_reference": null,
+            "zero_reference_max_abs": 0.0,
+            "worst_index_one_based": [
+              1,
+              1
+            ],
+            "matlab_at_worst": 0.0,
+            "fortran_at_worst": 0.0
+          },
+          "qi": {
+            "exact_equal": false,
+            "max_abs": 1.0694570229397016e-15,
+            "rms": 3.5119897502718973e-17,
+            "relative_l2": 1.2941819551403255e-12,
+            "max_rel_nonzero_reference": 2.2000899931648492e-12,
+            "zero_reference_max_abs": 0.0,
+            "worst_index_one_based": [
+              159,
+              8
+            ],
+            "matlab_at_worst": 0.00048609694433511693,
+            "fortran_at_worst": 0.00048609694433404747
+          },
+          "buoyancy": {
+            "exact_equal": false,
+            "max_abs": 6.193412640280113e-10,
+            "rms": 1.4170559616950155e-10,
+            "relative_l2": 1.1727179361460933e-06,
+            "max_rel_nonzero_reference": 2.7590836526758187,
+            "zero_reference_max_abs": 0.0,
+            "worst_index_one_based": [
+              108,
+              8
+            ],
+            "matlab_at_worst": 1.5950935848009223e-05,
+            "fortran_at_worst": 1.5950316506745195e-05
+          }
+        }
+      },
+      "sampled_condensate": {
+        "matlab_max_ql_plus_qi": 0.0005099999998600332,
+        "fortran_max_ql_plus_qi": 0.0005099999998600332,
+        "note": "Four diagnostic snapshots only; no precipitation equivalence claim."
+      },
+      "matlab_version": "23.2.0.2668659 (R2023b) Update 9",
+      "all_31_samples": {
+        "theta_e": {
+          "exact_equal": false,
+          "max_abs": 1.688249540165998e-11,
+          "rms": 2.9304572776497767e-13,
+          "relative_l2": 4.712533996577106e-16,
+          "max_rel_nonzero_reference": 4.9346838744702725e-14,
+          "zero_reference_max_abs": 0,
+          "worst_index_one_based": [
+            169,
+            8,
+            24
+          ],
+          "matlab_at_worst": 342.1190866754819,
+          "fortran_at_worst": 342.11908667546504
+        },
+        "qt": {
+          "exact_equal": false,
+          "max_abs": 3.2569433261464553e-16,
+          "rms": 3.4628777457023196e-18,
+          "relative_l2": 7.935980630036319e-16,
+          "max_rel_nonzero_reference": 2.4103961188670266e-13,
+          "zero_reference_max_abs": 0,
+          "worst_index_one_based": [
+            150,
+            8,
+            31
+          ],
+          "matlab_at_worst": 0.0013512066753896602,
+          "fortran_at_worst": 0.0013512066753893345
+        },
+        "MF": {
+          "exact_equal": false,
+          "max_abs": 2.100333795773679e-13,
+          "rms": 1.4672545857552964e-14,
+          "relative_l2": 1.1263548304900434e-11,
+          "max_rel_nonzero_reference": 8.039527766008163e-07,
+          "zero_reference_max_abs": 0.0,
+          "worst_index_one_based": [
+            164,
+            7,
+            30
+          ],
+          "matlab_at_worst": 0.009084599711487245,
+          "fortran_at_worst": 0.009084599711277211
+        }
+      },
+      "minimum_qt": {
+        "matlab": 2.5848562012228123e-06,
+        "fortran": 2.5848562012228127e-06
+      },
+      "ice_precipitation_accumulation": {
+        "source": "actual MATLAB state slot 5: cumulative precipitation loss",
+        "units": "kg/kg",
+        "levels": [
+          151,
+          170
+        ],
+        "pulse_ace": 8,
+        "initial_exact_zero": true,
+        "monotonic_everywhere": true,
+        "active_update_count": 30,
+        "total_update_count": 30,
+        "final_selected_min": 4.194798459602757e-06,
+        "final_selected_max": 7.443945773322451e-06,
+        "final_all_aces_max": 7.443945773322451e-06
+      },
+      "ice_snapshot_ranges": {
+        "matlab": {
+          "temperature_min_K": 250.5459242878536,
+          "temperature_max_K": 256.5914634555812,
+          "qi_min_kgkg": 0.0004767529120206001,
+          "qi_max_kgkg": 0.0005099999998600332,
+          "ql_exact_zero": true,
+          "sample_times_seconds": [
+            0,
+            4,
+            60,
+            120
+          ]
+        },
+        "fortran": {
+          "temperature_min_K": 250.54592428785185,
+          "temperature_max_K": 256.5914634555812,
+          "qi_min_kgkg": 0.0004767529120210997,
+          "qi_max_kgkg": 0.0005099999998600332,
+          "ql_exact_zero": true,
+          "sample_times_seconds": [
+            0,
+            4,
+            60,
+            120
+          ]
+        }
+      }
+    }
+  },
+  "validation_tools_sha256": {
+    "tests/alignment/compare.py": "4e7063b591ab1d7977df7eeb6a875426f912e0c93c60ce2da0995bae3dde1f32",
+    "tests/alignment/compare_ice_forward.py": "655d70b1116319b00ee0cd332eb6a5ac6c8e13046b7c437642e57d78842ed858",
+    "tests/alignment/fortran_case.f90": "d0f148140fd737c5f26d0dcde8773cc3ffa945564a746942d4beb3bd8bd0da47",
+    "tests/alignment/fortran_diagnostics.f90": "73bb53c20f633407814872523fb8fd0bdb5e2e410296bf935d7133993a628355",
+    "tests/alignment/fortran_thermo.f90": "6c2f0a0c957f7034fe0de3fb869d1da70d96ff4b16ed6dddd01d028739879fda",
+    "tests/alignment/matlab_case.txt": "6acfb7dfb9de82653180d1a97a652694cdd3acb03fffe5407bb7ba2415362c38",
+    "tests/alignment/matlab_ice_evidence.m": "0f1d037f84037c8bc9b6f709e5c2db79f5dfd6b24bf8bdfc81a1efa5b96c32e5",
+    "tests/alignment/matlab_thermo.txt": "5df3506f2d2eaa4c9881260ebc4d6cc3119bd1f89bd19d4ace1f04e78e991eed",
+    "tests/alignment/prepare.py": "d3e0f8f26bcbd52cd57db3a0a934d1c9be946b1364ab23380100975c40a2067d",
+    "tests/alignment/report.py": "c1753611c0b610c257e37fe359291a195c4728c01aa6f76102b40ba9bac08167",
+    "tests/alignment/run.py": "af9085f9aeefaf48f901d8be8b27afd91cd2aab3a944da240f69d4f72551727a"
+  },
+  "thermo": {
+    "scope": "Ten identical manufactured inputs; active inverse, forward theta_e and isolated precipitation sinks. Operator order is exercised by the trajectories.",
+    "all_finite": true,
+    "cases": {
+      "warm_unsaturated": {
+        "input": {
+          "T": 300.0,
+          "p": 95000.0,
+          "q": 0.01,
+          "ql": 0.0,
+          "qi": 0.0,
+          "theta_e": 331.7395060987652,
+          "qt": 0.01
+        },
+        "matlab": {
+          "T": 299.9999999977461,
+          "q": 0.01,
+          "ql": 0.0,
+          "qi": 0.0,
+          "theta_e_formula": 331.7395060987652,
+          "precip_dtheta_e": 0.0,
+          "precip_dqt": 0.0
+        },
+        "fortran": {
+          "T": 299.9999999977461,
+          "q": 0.01,
+          "ql": 0.0,
+          "qi": 0.0,
+          "theta_e_formula": 331.7395060987652,
+          "precip_dtheta_e": 0.0,
+          "precip_dqt": 0.0
+        },
+        "difference_matlab_minus_fortran": {
+          "T": 0.0,
+          "q": 0.0,
+          "ql": 0.0,
+          "qi": 0.0,
+          "theta_e_formula": 0.0,
+          "precip_dtheta_e": 0.0,
+          "precip_dqt": 0.0
+        },
+        "temperature_error_from_constructed_state": {
+          "matlab": -2.2538984012498986e-09,
+          "fortran": -2.2538984012498986e-09
+        }
+      },
+      "ice_unsaturated": {
+        "input": {
+          "T": 250.0,
+          "p": 30000.0,
+          "q": 0.0001,
+          "ql": 0.0,
+          "qi": 0.0,
+          "theta_e": 352.88263479936563,
+          "qt": 0.0001
+        },
+        "matlab": {
+          "T": 250.00000000006764,
+          "q": 0.0001,
+          "ql": 0.0,
+          "qi": 0.0,
+          "theta_e_formula": 352.88263479936563,
+          "precip_dtheta_e": 0.0,
+          "precip_dqt": 0.0
+        },
+        "fortran": {
+          "T": 250.00000000006764,
+          "q": 0.0001,
+          "ql": 0.0,
+          "qi": 0.0,
+          "theta_e_formula": 352.88263479936563,
+          "precip_dtheta_e": 0.0,
+          "precip_dqt": 0.0
+        },
+        "difference_matlab_minus_fortran": {
+          "T": 0.0,
+          "q": 0.0,
+          "ql": 0.0,
+          "qi": 0.0,
+          "theta_e_formula": 0.0,
+          "precip_dtheta_e": 0.0,
+          "precip_dqt": 0.0
+        },
+        "temperature_error_from_constructed_state": {
+          "matlab": 6.764366844436154e-11,
+          "fortran": 6.764366844436154e-11
+        }
+      },
+      "ice_near_freezing_unsaturated": {
+        "input": {
+          "T": 269.0,
+          "p": 70000.0,
+          "q": 0.002,
+          "ql": 0.0,
+          "qi": 0.0,
+          "theta_e": 303.57143125827184,
+          "qt": 0.002
+        },
+        "matlab": {
+          "T": 269.00000000677363,
+          "q": 0.002,
+          "ql": 0.0,
+          "qi": 0.0,
+          "theta_e_formula": 303.57143125827184,
+          "precip_dtheta_e": 0.0,
+          "precip_dqt": 0.0
+        },
+        "fortran": {
+          "T": 269.0000000067737,
+          "q": 0.002,
+          "ql": 0.0,
+          "qi": 0.0,
+          "theta_e_formula": 303.57143125827184,
+          "precip_dtheta_e": 0.0,
+          "precip_dqt": 0.0
+        },
+        "difference_matlab_minus_fortran": {
+          "T": -5.684341886080802e-14,
+          "q": 0.0,
+          "ql": 0.0,
+          "qi": 0.0,
+          "theta_e_formula": 0.0,
+          "precip_dtheta_e": 0.0,
+          "precip_dqt": 0.0
+        },
+        "temperature_error_from_constructed_state": {
+          "matlab": 6.7736323217104655e-09,
+          "fortran": 6.773689165129326e-09
+        }
+      },
+      "liquid_below_onset": {
+        "input": {
+          "T": 285.0,
+          "p": 90000.0,
+          "q": 0.009642724798272927,
+          "ql": 0.00049,
+          "qi": 0.0,
+          "theta_e": 319.3259747438006,
+          "qt": 0.010132724798272926
+        },
+        "matlab": {
+          "T": 285.00000000000034,
+          "q": 0.00964272479827317,
+          "ql": 0.0004899999999997563,
+          "qi": 0.0,
+          "theta_e_formula": 319.3259747438006,
+          "precip_dtheta_e": 5.2192433999435095e-06,
+          "precip_dqt": -4.275127103332936e-08
+        },
+        "fortran": {
+          "T": 285.00000000000034,
+          "q": 0.00964272479827317,
+          "ql": 0.0004899999999997563,
+          "qi": 0.0,
+          "theta_e_formula": 319.3259747438006,
+          "precip_dtheta_e": 5.21924315693067e-06,
+          "precip_dqt": -4.275127103332936e-08
+        },
+        "difference_matlab_minus_fortran": {
+          "T": 0.0,
+          "q": 0.0,
+          "ql": 0.0,
+          "qi": 0.0,
+          "theta_e_formula": 0.0,
+          "precip_dtheta_e": 2.4301283946574163e-13,
+          "precip_dqt": 0.0
+        },
+        "temperature_error_from_constructed_state": {
+          "matlab": 3.410605131648481e-13,
+          "fortran": 3.410605131648481e-13
+        }
+      },
+      "liquid_at_onset": {
+        "input": {
+          "T": 285.0,
+          "p": 90000.0,
+          "q": 0.00964262832375243,
+          "ql": 0.0005,
+          "qi": 0.0,
+          "theta_e": 319.32450813840273,
+          "qt": 0.01014262832375243
+        },
+        "matlab": {
+          "T": 285.0000000000003,
+          "q": 0.009642628323752603,
+          "ql": 0.000499999999999827,
+          "qi": 0.0,
+          "theta_e_formula": 319.32450813840273,
+          "precip_dtheta_e": 7.0513370050841544e-06,
+          "precip_dqt": -5.776226504666211e-08
+        },
+        "fortran": {
+          "T": 285.0000000000003,
+          "q": 0.009642628323752603,
+          "ql": 0.000499999999999827,
+          "qi": 0.0,
+          "theta_e_formula": 319.32450813840273,
+          "precip_dtheta_e": 7.0513370050841544e-06,
+          "precip_dqt": -5.776226504666211e-08
+        },
+        "difference_matlab_minus_fortran": {
+          "T": 0.0,
+          "q": 0.0,
+          "ql": 0.0,
+          "qi": 0.0,
+          "theta_e_formula": 0.0,
+          "precip_dtheta_e": 0.0,
+          "precip_dqt": 0.0
+        },
+        "temperature_error_from_constructed_state": {
+          "matlab": 2.8421709430404007e-13,
+          "fortran": 2.8421709430404007e-13
+        }
+      },
+      "liquid_above_onset": {
+        "input": {
+          "T": 285.0,
+          "p": 90000.0,
+          "q": 0.009642531849231932,
+          "ql": 0.00051,
+          "qi": 0.0,
+          "theta_e": 319.3230416288526,
+          "qt": 0.010152531849231932
+        },
+        "matlab": {
+          "T": 285.00000000000045,
+          "q": 0.00964253184923221,
+          "ql": 0.0005099999999997225,
+          "qi": 0.0,
+          "theta_e_formula": 319.3230416288526,
+          "precip_dtheta_e": 9.287372805158349e-06,
+          "precip_dqt": -7.608460436666278e-08
+        },
+        "fortran": {
+          "T": 285.00000000000045,
+          "q": 0.00964253184923221,
+          "ql": 0.0005099999999997225,
+          "qi": 0.0,
+          "theta_e_formula": 319.3230416288526,
+          "precip_dtheta_e": 9.28737280515835e-06,
+          "precip_dqt": -7.608460436666279e-08
+        },
+        "difference_matlab_minus_fortran": {
+          "T": 0.0,
+          "q": 0.0,
+          "ql": 0.0,
+          "qi": 0.0,
+          "theta_e_formula": 0.0,
+          "precip_dtheta_e": -1.6940658945086007e-21,
+          "precip_dqt": 1.3234889800848443e-23
+        },
+        "temperature_error_from_constructed_state": {
+          "matlab": 4.547473508864641e-13,
+          "fortran": 4.547473508864641e-13
+        }
+      },
+      "liquid_heavy": {
+        "input": {
+          "T": 285.0,
+          "p": 90000.0,
+          "q": 0.009628157145677763,
+          "ql": 0.002,
+          "qi": 0.0,
+          "theta_e": 319.10559755140474,
+          "qt": 0.011628157145677763
+        },
+        "matlab": {
+          "T": 285.00000000839896,
+          "q": 0.00962815715110065,
+          "ql": 0.001999999994577114,
+          "qi": 0.0,
+          "theta_e_formula": 319.10559755140474,
+          "precip_dtheta_e": 0.0006038488606918692,
+          "precip_dqt": -5e-06
+        },
+        "fortran": {
+          "T": 285.00000000839896,
+          "q": 0.00962815715110065,
+          "ql": 0.001999999994577114,
+          "qi": 0.0,
+          "theta_e_formula": 319.10559755140474,
+          "precip_dtheta_e": 0.0006038488606918692,
+          "precip_dqt": -5e-06
+        },
+        "difference_matlab_minus_fortran": {
+          "T": 0.0,
+          "q": 0.0,
+          "ql": 0.0,
+          "qi": 0.0,
+          "theta_e_formula": 0.0,
+          "precip_dtheta_e": 0.0,
+          "precip_dqt": 0.0
+        },
+        "temperature_error_from_constructed_state": {
+          "matlab": 8.398956197197549e-09,
+          "fortran": 8.398956197197549e-09
+        }
+      },
+      "saturated_ice": {
+        "input": {
+          "T": 250.0,
+          "p": 30000.0,
+          "q": 0.0015731931663750403,
+          "ql": 0.0,
+          "qi": 0.001,
+          "theta_e": 356.7319899034988,
+          "qt": 0.00257319316637504
+        },
+        "matlab": {
+          "T": 249.99999999999994,
+          "q": 0.001573193166375029,
+          "ql": 0.0,
+          "qi": 0.001000000000000011,
+          "theta_e_formula": 356.7319899034988,
+          "precip_dtheta_e": 0.0014750259539752185,
+          "precip_dqt": -1.6666666668384295e-06
+        },
+        "fortran": {
+          "T": 249.99999999999994,
+          "q": 0.0015731931663750293,
+          "ql": 0.0,
+          "qi": 0.0010000000000000109,
+          "theta_e_formula": 356.7319899034988,
+          "precip_dtheta_e": 0.0014750259445013155,
+          "precip_dqt": -1.6666666668384295e-06
+        },
+        "difference_matlab_minus_fortran": {
+          "T": 0.0,
+          "q": -2.168404344971009e-19,
+          "ql": 0.0,
+          "qi": 2.168404344971009e-19,
+          "theta_e_formula": 0.0,
+          "precip_dtheta_e": 9.473902998907713e-12,
+          "precip_dqt": 0.0
+        },
+        "temperature_error_from_constructed_state": {
+          "matlab": -5.684341886080802e-14,
+          "fortran": -5.684341886080802e-14
+        }
+      },
+      "mixed_phase": {
+        "input": {
+          "T": 273.1636783445389,
+          "p": 70000.0,
+          "q": 0.00544711830799149,
+          "ql": 0.0003,
+          "qi": 0.0003,
+          "theta_e": 317.378750164365,
+          "qt": 0.00604711830799149
+        },
+        "matlab": {
+          "T": 273.1636783445389,
+          "q": 0.005447118307991479,
+          "ql": 0.0003000000000002928,
+          "qi": 0.0002999999999997183,
+          "theta_e_formula": 317.378750164365,
+          "precip_dtheta_e": 0.00012374100873867915,
+          "precip_dqt": -3.3484582732648394e-07
+        },
+        "fortran": {
+          "T": 273.1636783445389,
+          "q": 0.005447118307991479,
+          "ql": 0.0003000000000002928,
+          "qi": 0.0002999999999997183,
+          "theta_e_formula": 317.37875016436493,
+          "precip_dtheta_e": 0.00012374100683530098,
+          "precip_dqt": -3.3484582732648394e-07
+        },
+        "difference_matlab_minus_fortran": {
+          "T": 0.0,
+          "q": 0.0,
+          "ql": 0.0,
+          "qi": 0.0,
+          "theta_e_formula": 5.684341886080802e-14,
+          "precip_dtheta_e": 1.9033781712210485e-12,
+          "precip_dqt": 0.0
+        },
+        "temperature_error_from_constructed_state": {
+          "matlab": 0.0,
+          "fortran": 0.0
+        }
+      },
+      "cold_unsaturated": {
+        "input": {
+          "T": 200.0,
+          "p": 10000.0,
+          "q": 2e-06,
+          "ql": 0.0,
+          "qi": 0.0,
+          "theta_e": 385.88095087351587,
+          "qt": 2e-06
+        },
+        "matlab": {
+          "T": 199.99999999999997,
+          "q": 2e-06,
+          "ql": 0.0,
+          "qi": 0.0,
+          "theta_e_formula": 385.88095087351587,
+          "precip_dtheta_e": 0.0,
+          "precip_dqt": 0.0
+        },
+        "fortran": {
+          "T": 199.99999999999997,
+          "q": 2e-06,
+          "ql": 0.0,
+          "qi": 0.0,
+          "theta_e_formula": 385.88095087351587,
+          "precip_dtheta_e": 0.0,
+          "precip_dqt": 0.0
+        },
+        "difference_matlab_minus_fortran": {
+          "T": 0.0,
+          "q": 0.0,
+          "ql": 0.0,
+          "qi": 0.0,
+          "theta_e_formula": 0.0,
+          "precip_dtheta_e": 0.0,
+          "precip_dqt": 0.0
+        },
+        "temperature_error_from_constructed_state": {
+          "matlab": -2.842170943040401e-14,
+          "fortran": -2.842170943040401e-14
+        }
+      }
+    }
+  },
+  "limitations": [
+    "No long production simulation, release equivalence or approved tolerance",
+    "Mixed-phase sink is a standalone probe, not a mixed-phase trajectory",
+    "Existing MATLAB/Fortran reference-Tv, boundary and geometry differences retained",
+    "The 1200-case pure-ice endpoint counterexample remains unresolved",
+    "GNU binary64 build only; Intel compiler behavior not tested",
+    "Water budgets are diagnostics, not a closed conservation test",
+    "WENO levels 1 and 801 are unassigned by Fortran and excluded from operator metrics",
+    "Plotting/plume/radiation diagnostics skipped through existing test access"
+  ],
+  "artifacts": {
+    "ace_input.mod": {
+      "bytes": 1873,
+      "sha256": "beed698ef7788d33227b1df742d36ae3f070159e3cc1f5018dff06cfe8081d51"
+    },
+    "ace_input.o": {
+      "bytes": 17288,
+      "sha256": "1c23078e1f34933a98e3d438fc8cda9945b933919540e4d2b84fe120b8a41a59"
+    },
+    "ace_module.F": {
+      "bytes": 30694,
+      "sha256": "9cfef6e1139bd74c8ea44155badc3147433a9e22270178ef063db526682869ca"
+    },
+    "ace_module.mod": {
+      "bytes": 3225,
+      "sha256": "dea0b7742f220dffc9109d85fc0f2361d15a2e8a297175d774f28f55839aa60b"
+    },
+    "ace_module.o": {
+      "bytes": 70576,
+      "sha256": "8b93a4755280ede7ea08fea65bcbd918abea75b50b40da3c3f4d67d428e4c949"
+    },
+    "base_init.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "configuration.json": {
+      "bytes": 5867,
+      "sha256": "ac80bf9afedca4bcdb6c75c134ffc62c15a480dc985bff3a3964f6c3093a4ada"
+    },
+    "fortran_access.diff": {
+      "bytes": 1177,
+      "sha256": "59d678d34c921258df84f73e5577bfa0cf41b279194c1db012c0d9e5bfa8afa8"
+    },
+    "fortran_base_init.bin": {
+      "bytes": 586480,
+      "sha256": "51eb71b06cc9f3cc313210e66daa849394207b71a181f1fbe71056f1ef3d320d"
+    },
+    "fortran_case.exe": {
+      "bytes": 79456,
+      "sha256": "e40e38015e6b18c60b5f8f21c26fc95d3bf2c9c8a8c7ca18818009510c81e72d"
+    },
+    "fortran_diagnostics.exe": {
+      "bytes": 75328,
+      "sha256": "00a6127a57fe8cfe51e2a2f83e5598c9e4f0a55ea887946de65aeb4007bbc3fe"
+    },
+    "fortran_multi_ice_precip.bin": {
+      "bytes": 5337992,
+      "sha256": "6741fb123015aeda8cf4926814a1bb6fe3d14e3a1a589cb4b67ba69ebef44fc6"
+    },
+    "fortran_multi_ice_precip.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "fortran_multi_ice_precip_diagnostics.bin": {
+      "bytes": 1025280,
+      "sha256": "20cf029aa7b38dd5a056c213eff86badb7e8e82e61ca0469382ea8a8ba064914"
+    },
+    "fortran_multi_ice_precip_diagnostics.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "fortran_probes.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "fortran_single_ice_precip.bin": {
+      "bytes": 5337992,
+      "sha256": "c02faa9c677a65c2862ff4726a103d9ab9a9d3d993b112636df4868274c0f55e"
+    },
+    "fortran_single_ice_precip.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "fortran_single_ice_precip_diagnostics.bin": {
+      "bytes": 1025280,
+      "sha256": "930fa0c22e808a29659dd2eff4e70d4723fe11f1dc7df2fc1797600e437638eb"
+    },
+    "fortran_single_ice_precip_diagnostics.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "fortran_thermo.exe": {
+      "bytes": 75280,
+      "sha256": "bbc926d78b10fc3b319475afa54277112a759279cb459e75b35b09ab33191c8e"
+    },
+    "initial_multi_ice_precip.bin": {
+      "bytes": 153792,
+      "sha256": "87549cbed4cccba4ac2490337487bb72a2e6ddc6cae02c62564c5fe9dfc0d47a"
+    },
+    "initial_single_ice_precip.bin": {
+      "bytes": 153792,
+      "sha256": "1ce4a2f7bfbb851a4ae0092d6851dccbf966663bd862539b7d81a574290f90e9"
+    },
+    "matlab_multi_ice_precip.log": {
+      "bytes": 252,
+      "sha256": "48a2b20976fbaa4fbe7975d9e9d061440d580a97894d08199ab26488623a305c"
+    },
+    "matlab_multi_ice_precip.nc": {
+      "bytes": 5573649,
+      "sha256": "997311fbcd5453326e1c54abb469d9f98946522981b397ff731dbb2837b1f93e"
+    },
+    "matlab_multi_ice_precip_diagnostics.nc": {
+      "bytes": 1032297,
+      "sha256": "edf16578e0c6cb7bf6e49216bd6a60d17c7c0f6f543be8500e79e00b6d38566b"
+    },
+    "matlab_multi_ice_precip_history.mat": {
+      "bytes": 3831967,
+      "sha256": "afede9aa85381a2b0ec95fac615a6c49371840bc1e6ca495f6f72b5423e91d70"
+    },
+    "matlab_multi_ice_precip_init.mat": {
+      "bytes": 19652250,
+      "sha256": "5bfcff24db0481b3c7729728d058be914dcda2281e04add0d07b3450e2b91dd5"
+    },
+    "matlab_probes.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "matlab_single_ice_precip.log": {
+      "bytes": 252,
+      "sha256": "48a2b20976fbaa4fbe7975d9e9d061440d580a97894d08199ab26488623a305c"
+    },
+    "matlab_single_ice_precip.nc": {
+      "bytes": 5573650,
+      "sha256": "994aa4fcc86439f2e325aa5f716751085e2053cc960a8abe106c1d5f199cb702"
+    },
+    "matlab_single_ice_precip_diagnostics.nc": {
+      "bytes": 1032297,
+      "sha256": "e17a8f489139efbabb4200e6da821777056e9bc234dda83bd7e75f3460b8e59e"
+    },
+    "matlab_single_ice_precip_history.mat": {
+      "bytes": 2510808,
+      "sha256": "a298c5832844c7739b251c00665c2381f3370f825884b458b5f1906923f5cbc5"
+    },
+    "matlab_single_ice_precip_init.mat": {
+      "bytes": 19652250,
+      "sha256": "44a36167fd76ad77b807f00a65ba2da9e7dfe9e10ccea6870a12f6c38af18387"
+    },
+    "multi_ice_precip_comparison.json": {
+      "bytes": 66735,
+      "sha256": "e485146547410a825baafb5ab340025bff2a91cdeca172e72a1618a91f50e7b5"
+    },
+    "multi_ice_precip_comparison.log": {
+      "bytes": 925,
+      "sha256": "a80aae54ac4345627da59548791fa9ee2d89dc778b6c24754626e410fd496cac"
+    },
+    "multi_ice_precip_ice_evidence.json": {
+      "bytes": 350,
+      "sha256": "c1e7c8360ba02c4837e002f8aab62a2990aee55a4e5d9cad8a721efea63232b9"
+    },
+    "multi_ice_precip_initial_comparison.log": {
+      "bytes": 925,
+      "sha256": "a80aae54ac4345627da59548791fa9ee2d89dc778b6c24754626e410fd496cac"
+    },
+    "prepare.log": {
+      "bytes": 61,
+      "sha256": "f7090ec0e60c6274195fcea0d134c638a7886af78baa5201b5459023801f02ff"
+    },
+    "review.json": {
+      "bytes": 181909,
+      "sha256": "0802306f90651caab05647e67a1be0101934ea0ef65f31cfdf6c0bdc583f839b"
+    },
+    "run_alignment_case.m": {
+      "bytes": 29516,
+      "sha256": "e29db501e4df66f6046185490b6a55812307872289a2de0d30343661cfc9d192"
+    },
+    "run_thermo.m": {
+      "bytes": 27314,
+      "sha256": "6021306760ba2b4ba07aa0bc36f144d57bfbe1e6af966f80a4f3a1fe2454cf1a"
+    },
+    "single_ice_precip_comparison.json": {
+      "bytes": 64734,
+      "sha256": "da2f58433287660bab77c3e2e3beb196a9829d05ba6bf476a4007dfcdf6db6cf"
+    },
+    "single_ice_precip_comparison.log": {
+      "bytes": 923,
+      "sha256": "989318acfa59450ace596660aff86f7f6eec6431363590a7e0c5fc0eb68f256e"
+    },
+    "single_ice_precip_ice_evidence.json": {
+      "bytes": 352,
+      "sha256": "a37a0ea8f86e688437642b7ebee47718c54d061b951ee9cd70bd926ea7a006da"
+    },
+    "single_ice_precip_initial_comparison.log": {
+      "bytes": 923,
+      "sha256": "989318acfa59450ace596660aff86f7f6eec6431363590a7e0c5fc0eb68f256e"
+    },
+    "thermo_comparison.json": {
+      "bytes": 11584,
+      "sha256": "f981d9891099ee1a588890f4601e290d7974f9fdbbd6dee8134f2e992ccbe84d"
+    },
+    "thermo_comparison.log": {
+      "bytes": 66,
+      "sha256": "481914a5c11bc7489f628e05aea567be3a1a4f94ed1e0555993cb367080d3cb5"
+    },
+    "thermo_fortran.bin": {
+      "bytes": 560,
+      "sha256": "f0995f23c3e918537a4981760aaefe1dd63417ca24c5ca866b175fc9a82314ac"
+    },
+    "thermo_input.bin": {
+      "bytes": 560,
+      "sha256": "60e1e5a8b03a5c2ea41f176475dc61feb7cefdeeb84b3d53f9a9e40741767bb8"
+    },
+    "thermo_labels.json": {
+      "bytes": 195,
+      "sha256": "c799bea2cac30b2a76b35c606585a84ab6f187f4502ccef1cd9ac9f92f3fea80"
+    },
+    "thermo_matlab.bin": {
+      "bytes": 560,
+      "sha256": "f2452cafb9e2f2c7bdc8e17b462ff4335b75c2dfcb5e4c42e1a50beff708a689"
+    }
+  }
+}

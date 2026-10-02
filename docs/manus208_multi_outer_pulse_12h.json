@@ -1,0 +1,1110 @@
+{
+  "case": "manus",
+  "profile_index": 208,
+  "duration_seconds": 43200,
+  "dt_seconds": 4,
+  "output_step_seconds": 60,
+  "precipitation": "enabled",
+  "ace_mode": "multi",
+  "single_policy": "all eight ACE tendencies active; 8 ACE geometry/PMB retained; original damping retained",
+  "pulse": "ACE 8: 0.03*sin(pi*z/1000) kg m-2 s-1 at 0-1000 m",
+  "mf_diffusion": "disabled as in active defaults",
+  "bubble": {
+    "enabled": false,
+    "levels_one_based": [],
+    "delta_T_K": 0,
+    "saturation": "original eval_qsat; no initial condensate",
+    "coordinate_policy": "original MATLAB T_zm and p_mf; applied to prognostic theta_e/qt slots",
+    "fortran_initialization": "common MATLAB-exported state"
+  },
+  "finite_outputs": true,
+  "input_file": "/scratch/peter50504/ACE/data/input/manus208.nc",
+  "input_sha256": "85f8f5ebf0b4a0bca4a96b9b3f6f9b43a1d9bdb4470658b018dcd71d5219b1d9",
+  "baseline_commit": "c43e357ee2a411d44a78bd5c88ecaa70efb45908",
+  "production_sources_sha256": {
+    "matlab/active/ace.m": "14ecab89df0e05b9b86299fd78fe3f493f03e2bab9a9eb05a5d6fb2b40c71324",
+    "fortran/active/src/ace_module.F": "e343be3bfeb9baaa516962af66aaf7d5c674d7aefd76393cfc0ca6a998f69b31",
+    "fortran/active/src/ace_input.F": "e349ea2a0326c37756f4b7f58e4905f01a7134fed5feb748993d5e819ee6a2da",
+    "tests/alignment/matlab_case.txt": "7a765b87234d7b274a48981da3026004fe05ddfdccee36c631c6dfef02921807",
+    "tests/alignment/fortran_case.f90": "c964e5a94568af2c74ca723abce400088a9b54c772d4500c0db388b475dc41c0",
+    "tests/alignment/fortran_thermo.f90": "6c2f0a0c957f7034fe0de3fb869d1da70d96ff4b16ed6dddd01d028739879fda",
+    "tests/alignment/fortran_diagnostics.f90": "73bb53c20f633407814872523fb8fd0bdb5e2e410296bf935d7133993a628355",
+    "tests/alignment/prepare.py": "d3e0f8f26bcbd52cd57db3a0a934d1c9be946b1364ab23380100975c40a2067d",
+    "tests/alignment/matlab_thermo.txt": "fbe907731261cb70db34c794d37270243d6ae4b2abb6ebf4e0c9d70dd6650bac",
+    "matlab/active/util_weno/reconstruction_up3.m": "748ac867a4a5ef7089db896e1fcd5a20c8b1dfcaa461c3aac34a410f20c66c20",
+    "matlab/active/util_weno/reconstruction_weno.m": "fd5478923021e54188d5996365fd942e047298f2b223a68d6bd97c7f13a961c1",
+    "matlab/active/util_weno/reconstruction_weno_vec.m": "f5f5fc42c9a97068543ae54d53bff7d50c721f1d30f2765b831b9fbc76811c02",
+    "matlab/active/util_plume/entrain_plume_calc.m": "0a066663dcd5fc6289b1659af79f0877ffab5754e4909f0998966a6e96b646a0",
+    "matlab/active/util_thermodynamics/IMPORT_CONSTANTS.m": "9fde477680e8eea17fc2f5f2aca61ef95d556fbc4c4f7f676cc53f6d3d82ba89",
+    "matlab/active/util_thermodynamics/ci.m": "dba544e76ce1e74136daff7fd988670f68000c8835732344d5ac6c20697389ce",
+    "matlab/active/util_thermodynamics/eval_Tv.m": "4b0b113e2ff4a09e89c8809a6830b52e6356e97be282b464cd9f74b0b07b7eb3",
+    "matlab/active/util_thermodynamics/eval_dTqs.m": "f8fb651a0ee10b7b387b2704b2c91051efdf04300362bbb9db32e7f50efb3ad1",
+    "matlab/active/util_thermodynamics/eval_dTqsi.m": "9b91370ac36d0dc2a439b8ee56134775fd1ffba1cc02465094b4764bfc891bc5",
+    "matlab/active/util_thermodynamics/eval_es.m": "a6d89db08505d726edae0b520d69360da23aed5dd4079697797302cdaab6ec2c",
+    "matlab/active/util_thermodynamics/eval_esi.m": "13e7d32f678a1b8e9a0f97e326dbaf94027a3e09b808f424e3b02c427f1813db",
+    "matlab/active/util_thermodynamics/eval_q.m": "2cf06b7958e5cbd69ee53e967e90124a14f646cef878d662d879e48863fbfb46",
+    "matlab/active/util_thermodynamics/eval_qs.m": "79e9bdd57cec8a7b47136b7ea9e59d998c37cd85a472e24bba33c341510f7dcd",
+    "matlab/active/util_thermodynamics/eval_qsat.m": "a4adf98fe96720aedc55a4a37747b2a613fa2bf36cce8bf63af10a12ad193cae",
+    "matlab/active/util_thermodynamics/eval_qsi.m": "03bb4474d8239134858e40633baceaa4a7893e2bd8d4ae282709712e4c992f50",
+    "matlab/active/util_thermodynamics/eval_theta.m": "c69e40c66320d5d1b0d62365db0897cbdc87a9c523c0aecd211945780811d71b",
+    "matlab/active/util_thermodynamics/eval_theta_e.m": "631d04f3cac84824255fb4404068081bab52bb163efe37800559c223988a9843",
+    "matlab/active/util_thermodynamics/eval_theta_es.m": "2e1ad11546d8b5162017a76755eaaecd64d74f489b20b925dd3c84c1ccb0dc6e",
+    "matlab/active/util_thermodynamics/inv_T_from_theta_e.m": "a8ec61cc98ca480ac3d95d10d1ddb892dbbdb1cfeb186083264d1a7b7cf28011",
+    "matlab/active/util_thermodynamics/lv.m": "c389332e53409f9a3f01adc2641fd140e0e59f4c4ad88ad49914724b7021a2d1"
+  },
+  "commands": [
+    {
+      "argv": [
+        "/home/peter50504/miniconda3/bin/python3",
+        "/scratch/peter50504/ACE/tests/alignment/prepare.py",
+        "/scratch/peter50504/ACE/migration_work/manus208_multi_outer_pulse_12h"
+      ],
+      "cwd": "/scratch/peter50504/ACE/migration_work/manus208_multi_outer_pulse_12h"
+    },
+    {
+      "argv": [
+        "gfortran",
+        "-O2",
+        "-ffree-form",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-ffree-line-length-none",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "ace_module.F"
+      ],
+      "cwd": "/scratch/peter50504/ACE/migration_work/manus208_multi_outer_pulse_12h"
+    },
+    {
+      "argv": [
+        "gfortran",
+        "-O2",
+        "-ffree-form",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-ffree-line-length-none",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "/scratch/peter50504/ACE/fortran/active/src/test.F",
+        "ace_module.o",
+        "ace_input.o",
+        "-L/home/peter50504/miniconda3/lib",
+        "-lnetcdff",
+        "-lnetcdf",
+        "-Wl,-rpath,/home/peter50504/miniconda3/lib",
+        "-o",
+        "base_model.exe"
+      ],
+      "cwd": "/scratch/peter50504/ACE/migration_work/manus208_multi_outer_pulse_12h"
+    },
+    {
+      "argv": [
+        "gfortran",
+        "-O2",
+        "-ffree-form",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-ffree-line-length-none",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "/scratch/peter50504/ACE/tests/alignment/fortran_sounding_case.f90",
+        "ace_module.o",
+        "ace_input.o",
+        "-L/home/peter50504/miniconda3/lib",
+        "-lnetcdff",
+        "-lnetcdf",
+        "-Wl,-rpath,/home/peter50504/miniconda3/lib",
+        "-o",
+        "case.exe"
+      ],
+      "cwd": "/scratch/peter50504/ACE/migration_work/manus208_multi_outer_pulse_12h"
+    },
+    {
+      "argv": [
+        "/scratch/peter50504/ACE/migration_work/manus208_multi_outer_pulse_12h/base_model.exe",
+        "--input",
+        "/scratch/peter50504/ACE/data/input/manus208.nc",
+        "--validate-input",
+        "/scratch/peter50504/ACE/migration_work/manus208_multi_outer_pulse_12h/fortran_init.bin"
+      ],
+      "cwd": "/scratch/peter50504/ACE/migration_work/manus208_multi_outer_pulse_12h"
+    },
+    {
+      "argv": [
+        "matlab",
+        "-batch",
+        "addpath('/scratch/peter50504/ACE/migration_work/manus208_multi_outer_pulse_12h'); run_sounding_case('/scratch/peter50504/ACE','/scratch/peter50504/ACE/migration_work/manus208_multi_outer_pulse_12h','/scratch/peter50504/ACE/data/input/manus208.nc',43200,60,true,'multi');"
+      ],
+      "cwd": "/scratch/peter50504/ACE/migration_work/manus208_multi_outer_pulse_12h"
+    },
+    {
+      "argv": [
+        "matlab",
+        "-batch",
+        "addpath('/scratch/peter50504/ACE/migration_work/manus208_multi_outer_pulse_12h'); run_sounding_case('/scratch/peter50504/ACE','/scratch/peter50504/ACE/migration_work/manus208_multi_outer_pulse_12h','/scratch/peter50504/ACE/data/input/manus208.nc',43200,60,false,'multi');"
+      ],
+      "cwd": "/scratch/peter50504/ACE/migration_work/manus208_multi_outer_pulse_12h"
+    },
+    {
+      "argv": [
+        "/scratch/peter50504/ACE/migration_work/manus208_multi_outer_pulse_12h/case.exe",
+        "/scratch/peter50504/ACE/migration_work/manus208_multi_outer_pulse_12h/fortran_init.bin",
+        "/scratch/peter50504/ACE/data/input/manus208.nc",
+        "/scratch/peter50504/ACE/migration_work/manus208_multi_outer_pulse_12h/fortran.bin",
+        "43200",
+        "60",
+        "/scratch/peter50504/ACE/migration_work/manus208_multi_outer_pulse_12h/initial_override.bin",
+        "multi"
+      ],
+      "cwd": "/scratch/peter50504/ACE/migration_work/manus208_multi_outer_pulse_12h"
+    }
+  ],
+  "matlab_version": "23.2.0.2668659 (R2023b) Update 9",
+  "gfortran_version": "GNU Fortran (conda-forge gcc 11.2.0-16) 11.2.0",
+  "comparison_status": "Descriptive errors only; no byte equality or acceptance tolerance required",
+  "mf": {
+    "exact_equal": false,
+    "max_abs": 7.5772856638067765e-06,
+    "rms": 2.2980832357134402e-07,
+    "relative_l2": 1.0364967216610912e-07,
+    "max_rel_nonzero_reference": 0.2347057731770553,
+    "zero_reference_max_abs": 0.0,
+    "worst_index_one_based": [
+      719,
+      108
+    ],
+    "matlab_at_worst": 7.80493550363785,
+    "fortran_at_worst": 7.804943080923514
+  },
+  "prognostic": {
+    "theta_e": {
+      "exact_equal": false,
+      "max_abs": 7.406045278912643e-05,
+      "rms": 2.6333149735602557e-07,
+      "relative_l2": 4.2341654597161905e-10,
+      "max_rel_nonzero_reference": 2.1804438466674887e-07,
+      "zero_reference_max_abs": 0,
+      "worst_index_one_based": [
+        696,
+        108,
+        1
+      ],
+      "matlab_at_worst": 339.65769355774853,
+      "fortran_at_worst": 339.6577676182013
+    },
+    "qt": {
+      "exact_equal": false,
+      "max_abs": 3.811383459274148e-08,
+      "rms": 1.067788117774763e-10,
+      "relative_l2": 2.44274280808107e-08,
+      "max_rel_nonzero_reference": 1.0791219143496581e-05,
+      "zero_reference_max_abs": 0,
+      "worst_index_one_based": [
+        696,
+        108,
+        1
+      ],
+      "matlab_at_worst": 0.006072652927153219,
+      "fortran_at_worst": 0.006072691040987812
+    },
+    "MF": {
+      "exact_equal": false,
+      "max_abs": 7.5772856638067765e-06,
+      "rms": 9.376967834379152e-08,
+      "relative_l2": 1.1744449805383452e-07,
+      "max_rel_nonzero_reference": 0.36327291110507415,
+      "zero_reference_max_abs": 0.0,
+      "worst_index_one_based": [
+        719,
+        108,
+        1
+      ],
+      "matlab_at_worst": 7.80493550363785,
+      "fortran_at_worst": 7.804943080923514
+    }
+  },
+  "initial_state": {
+    "theta_e": {
+      "exact_equal": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "relative_l2": 0.0,
+      "max_rel_nonzero_reference": 0.0,
+      "zero_reference_max_abs": 0,
+      "worst_index_one_based": [
+        1,
+        1
+      ],
+      "matlab_at_worst": 357.0878098025499,
+      "fortran_at_worst": 357.0878098025499
+    },
+    "qt": {
+      "exact_equal": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "relative_l2": 0.0,
+      "max_rel_nonzero_reference": 0.0,
+      "zero_reference_max_abs": 0,
+      "worst_index_one_based": [
+        1,
+        1
+      ],
+      "matlab_at_worst": 0.021408736537780727,
+      "fortran_at_worst": 0.021408736537780727
+    },
+    "MF": {
+      "exact_equal": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "relative_l2": 0.0,
+      "max_rel_nonzero_reference": 0.0,
+      "zero_reference_max_abs": 0.0,
+      "worst_index_one_based": [
+        1,
+        1
+      ],
+      "matlab_at_worst": 0.0,
+      "fortran_at_worst": 0.0
+    }
+  },
+  "ranges": {
+    "matlab": {
+      "mf_min": -2.977051939545174,
+      "mf_max": 17.96202095394021,
+      "qt_min": 1.4044089127945137e-06,
+      "qt_max": 0.021408736537780727
+    },
+    "fortran": {
+      "mf_min": -2.97705248485148,
+      "mf_max": 17.962020945708904,
+      "qt_min": 1.4044090126292471e-06,
+      "qt_max": 0.021408736537780727
+    }
+  },
+  "multi_ace": {
+    "mf_by_ace": [
+      {
+        "exact_equal": false,
+        "max_abs": 7.5772856638067765e-06,
+        "rms": 2.2980832357134402e-07,
+        "relative_l2": 1.0364967216610912e-07,
+        "max_rel_nonzero_reference": 0.2347057731770553,
+        "zero_reference_max_abs": 0.0,
+        "worst_index_one_based": [
+          719,
+          108
+        ],
+        "matlab_at_worst": 7.80493550363785,
+        "fortran_at_worst": 7.804943080923514
+      },
+      {
+        "exact_equal": false,
+        "max_abs": 2.24628151668238e-06,
+        "rms": 1.1197589753860466e-07,
+        "relative_l2": 2.9905780975013913e-07,
+        "max_rel_nonzero_reference": 0.36327291110507415,
+        "zero_reference_max_abs": 0.0,
+        "worst_index_one_based": [
+          718,
+          108
+        ],
+        "matlab_at_worst": -0.9714063904457922,
+        "fortran_at_worst": -0.9714086367273089
+      },
+      {
+        "exact_equal": false,
+        "max_abs": 1.734206845127595e-06,
+        "rms": 6.35167654200071e-08,
+        "relative_l2": 3.7564008230732544e-07,
+        "max_rel_nonzero_reference": 0.34960111590276216,
+        "zero_reference_max_abs": 0.0,
+        "worst_index_one_based": [
+          677,
+          201
+        ],
+        "matlab_at_worst": -0.16721512392179883,
+        "fortran_at_worst": -0.1672133897149537
+      },
+      {
+        "exact_equal": false,
+        "max_abs": 3.361774098820103e-07,
+        "rms": 2.2822716680411734e-08,
+        "relative_l2": 3.369622732492973e-07,
+        "max_rel_nonzero_reference": 0.07595879320260913,
+        "zero_reference_max_abs": 0.0,
+        "worst_index_one_based": [
+          680,
+          214
+        ],
+        "matlab_at_worst": 0.2012345581922005,
+        "fortran_at_worst": 0.2012348943696104
+      },
+      {
+        "exact_equal": false,
+        "max_abs": 2.3383915093849739e-07,
+        "rms": 1.4110572247351923e-08,
+        "relative_l2": 2.8509604035077743e-07,
+        "max_rel_nonzero_reference": 0.04470888721999241,
+        "zero_reference_max_abs": 0.0,
+        "worst_index_one_based": [
+          721,
+          95
+        ],
+        "matlab_at_worst": 0.040647098082576036,
+        "fortran_at_worst": 0.0406468642434251
+      },
+      {
+        "exact_equal": false,
+        "max_abs": 1.4554329082205886e-07,
+        "rms": 1.1311654992245453e-08,
+        "relative_l2": 2.7480744676144944e-07,
+        "max_rel_nonzero_reference": 0.050270297108706265,
+        "zero_reference_max_abs": 0.0,
+        "worst_index_one_based": [
+          655,
+          55
+        ],
+        "matlab_at_worst": -0.08476713303858245,
+        "fortran_at_worst": -0.08476727858187327
+      },
+      {
+        "exact_equal": false,
+        "max_abs": 1.8550323030441795e-07,
+        "rms": 8.725399083873343e-09,
+        "relative_l2": 1.3236135908347116e-07,
+        "max_rel_nonzero_reference": 0.03110068145010937,
+        "zero_reference_max_abs": 0.0,
+        "worst_index_one_based": [
+          655,
+          29
+        ],
+        "matlab_at_worst": -0.07823370638323354,
+        "fortran_at_worst": -0.07823389188646385
+      },
+      {
+        "exact_equal": false,
+        "max_abs": 8.707562434984162e-08,
+        "rms": 5.753532676418134e-09,
+        "relative_l2": 1.2629177155229764e-07,
+        "max_rel_nonzero_reference": 0.10000708473656314,
+        "zero_reference_max_abs": 0.0,
+        "worst_index_one_based": [
+          655,
+          29
+        ],
+        "matlab_at_worst": 0.13546492454767212,
+        "fortran_at_worst": 0.13546501162329647
+      }
+    ],
+    "peak_abs_mf_by_ace": {
+      "matlab": [
+        17.96202095394021,
+        6.141301887707147,
+        3.4348768608628744,
+        0.8992760056255305,
+        0.7980290400998498,
+        0.677067889387269,
+        1.3852260572483681,
+        0.8038966093196451
+      ],
+      "fortran": [
+        17.962020945708904,
+        6.14130171603873,
+        3.4348768685091553,
+        0.8992760060949955,
+        0.7980290388104915,
+        0.677067889407298,
+        1.3852260572346813,
+        0.8038966093541889
+      ]
+    },
+    "hourly_peak_abs_mf_by_ace": {
+      "0": {
+        "matlab": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.03
+        ],
+        "fortran": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.03
+        ]
+      },
+      "3600": {
+        "matlab": [
+          0.024963765280445603,
+          0.025089267428874462,
+          0.026801913129749236,
+          0.03065615240811083,
+          0.09606631569210054,
+          0.20853417503203478,
+          0.8992232383086283,
+          0.40671884645967826
+        ],
+        "fortran": [
+          0.024963765280516095,
+          0.025089267428821973,
+          0.026801913129828273,
+          0.0306561524081005,
+          0.09606631569273483,
+          0.20853417503264035,
+          0.8992232383091474,
+          0.4067188464597969
+        ]
+      },
+      "7200": {
+        "matlab": [
+          0.3275755098484864,
+          0.4421201984182593,
+          0.37283829440184474,
+          0.45241435969680216,
+          0.3874325236953273,
+          0.3347820013236407,
+          0.8983902773337158,
+          0.5041481456396162
+        ],
+        "fortran": [
+          0.32757551001003526,
+          0.4421201983875413,
+          0.3728382944106391,
+          0.4524143596927617,
+          0.3874325236999313,
+          0.3347820013239418,
+          0.8983902773520095,
+          0.5041481456577209
+        ]
+      },
+      "10800": {
+        "matlab": [
+          1.6354822094498587,
+          0.9991367771631168,
+          0.7406077852167998,
+          0.3909861924027533,
+          0.3326176795988205,
+          0.3583687715143358,
+          0.9528089176304732,
+          0.6790794642769955
+        ],
+        "fortran": [
+          1.6354822095105452,
+          0.9991367772145293,
+          0.7406077850978029,
+          0.3909861924390726,
+          0.332617679605679,
+          0.3583687715255976,
+          0.9528089176204242,
+          0.679079464275333
+        ]
+      },
+      "14400": {
+        "matlab": [
+          1.1499371591929046,
+          0.7162060198550632,
+          0.6023868589574938,
+          0.3587226529181892,
+          0.3577767464625114,
+          0.12803736814808075,
+          0.5476798167999843,
+          0.2904645740552855
+        ],
+        "fortran": [
+          1.1499371590744656,
+          0.7162060199153595,
+          0.6023868590324748,
+          0.3587226529150686,
+          0.35777674641238427,
+          0.1280373681732043,
+          0.5476798166458771,
+          0.2904645739975878
+        ]
+      },
+      "18000": {
+        "matlab": [
+          1.6388404864579464,
+          0.3510456249595563,
+          0.2720623968571467,
+          0.1524483978898874,
+          0.16151980277423153,
+          0.10114829294425398,
+          0.09177679795647539,
+          0.04038979422006648
+        ],
+        "fortran": [
+          1.63884048686398,
+          0.3510456250290652,
+          0.27206239672493077,
+          0.15244839787457287,
+          0.16151980272420616,
+          0.10114829284981834,
+          0.09177679795464727,
+          0.04038979423785704
+        ]
+      },
+      "21600": {
+        "matlab": [
+          0.5290159515657168,
+          0.3678129794000662,
+          0.21425210666953126,
+          0.21127690820715436,
+          0.05553032689939265,
+          0.05291146905784171,
+          0.05300769934939513,
+          0.03530147071527462
+        ],
+        "fortran": [
+          0.5290159521405229,
+          0.36781297903636856,
+          0.21425210622725877,
+          0.21127690805872146,
+          0.05553032693475623,
+          0.05291146900925125,
+          0.05300769936135683,
+          0.03530147072453776
+        ]
+      },
+      "25200": {
+        "matlab": [
+          0.6593756995863781,
+          0.15776695649755254,
+          0.13803162635064975,
+          0.050941988218148236,
+          0.04364655904784034,
+          0.05106097450600679,
+          0.05615106270282479,
+          0.03960109435110734
+        ],
+        "fortran": [
+          0.6593756985883504,
+          0.15776695638879645,
+          0.13803162642697422,
+          0.0509419882638489,
+          0.043646559004127054,
+          0.05106097448850083,
+          0.056151062683358996,
+          0.03960109435284024
+        ]
+      },
+      "28800": {
+        "matlab": [
+          0.3356588655945624,
+          0.18398463815182964,
+          0.09370185205707535,
+          0.07842844760342528,
+          0.04430521405213026,
+          0.04456070748134206,
+          0.04712725993742211,
+          0.029966744012429207
+        ],
+        "fortran": [
+          0.3356588682406182,
+          0.1839846381139152,
+          0.09370185211399404,
+          0.07842844744223315,
+          0.04430521403923473,
+          0.04456070749094522,
+          0.04712725990464073,
+          0.029966743990922966
+        ]
+      },
+      "32400": {
+        "matlab": [
+          8.794866550513538,
+          1.5375410992163665,
+          0.3207810157753649,
+          0.08752581215591898,
+          0.08543637786744684,
+          0.05153242032923819,
+          0.04406801528570451,
+          0.051071172669072205
+        ],
+        "fortran": [
+          8.794866593006617,
+          1.5375411121660147,
+          0.3207810208641504,
+          0.0875258127251616,
+          0.08543637822793987,
+          0.05153242081264698,
+          0.044068015139914755,
+          0.05107117274616421
+        ]
+      },
+      "36000": {
+        "matlab": [
+          15.527260434711382,
+          5.617821074639131,
+          2.157007245005189,
+          0.6932477497519727,
+          0.23113458970907946,
+          0.3042992114871348,
+          0.4620415285365318,
+          0.18286037025857263
+        ],
+        "fortran": [
+          15.527260306472536,
+          5.617821058295335,
+          2.157007444467856,
+          0.6932477314756839,
+          0.23113456794940856,
+          0.30429922349840216,
+          0.4620415249178721,
+          0.1828603667657209
+        ]
+      },
+      "39600": {
+        "matlab": [
+          2.0579804264693786,
+          0.49416475834916196,
+          0.9018245608362977,
+          0.3501479875623398,
+          0.30726858251740324,
+          0.2092441911710753,
+          0.14840786352909688,
+          0.17712089242919019
+        ],
+        "fortran": [
+          2.0579804369575427,
+          0.4941647659418858,
+          0.9018242861405398,
+          0.35014796790908453,
+          0.30726848718722144,
+          0.20924418326328373,
+          0.14840787124145097,
+          0.17712091894926918
+        ]
+      },
+      "43200": {
+        "matlab": [
+          13.098348712264729,
+          2.8010337199663664,
+          0.8833931499014235,
+          0.15794488349626937,
+          0.1933265911182649,
+          0.3043229262906561,
+          0.38497298401112917,
+          0.10909982384666185
+        ],
+        "fortran": [
+          13.098349956444014,
+          2.8010340169893913,
+          0.8833928834359281,
+          0.15794491557070617,
+          0.1933266607014332,
+          0.3043229261891341,
+          0.3849729881841427,
+          0.1090998280185191
+        ]
+      }
+    }
+  },
+  "precipitation_validation": {
+    "matlab_accumulation_finite_monotonic": true,
+    "matlab_final_qt_removal_max_kg_per_kg": 0.08449528519722954,
+    "matlab_final_qt_removal_sum_kg_per_kg": 25.36839439342841,
+    "fortran_sink_finite_nonnegative": true,
+    "fortran_updates_with_positive_loss": 10586,
+    "fortran_qt_removal_sum_kg_per_kg": 25.368394839148966,
+    "scope": "Native sink diagnostics; unweighted sums are not a physical domain-water budget; native precipitation masks retained"
+  },
+  "experiment_sources_sha256": {
+    "tests/alignment/run_sounding_case.py": "0a9e943dbbe0543ca222013261d58b90a61cb67b2e991f9f9a252883bc1fceb2",
+    "tests/alignment/matlab_sounding_case.txt": "e4e48123c9f061e9378d5eef666b4f7449a28941f997e1c1bf17ccd626a06808",
+    "tests/alignment/fortran_sounding_case.f90": "9d0816acb4c4cf70ba215754eb84c82aaf63f1e52b8e9082455c7f7fa74ec36f"
+  },
+  "original_runner_sha256": "0a9e943dbbe0543ca222013261d58b90a61cb67b2e991f9f9a252883bc1fceb2",
+  "execution_record": "Original runner preserved as runner_executed.py; see generated sources, patches and model logs",
+  "analysis_only": false,
+  "artifacts_sha256": {
+    "matlab_native_precip.diff": "e09a04edf5c80b5dd9a6a1dd4237eb868daa894a0d6838974516cb42aad63858",
+    "case.exe": "ac52b0f9847c2d9d52129f1715d9293bfc53d41b48354b37e3b6d4dcb83e1386",
+    "fortran_thermo.exe": "4b7f4333ced8ee5db4403ece8681ccf16b0de1b6aaa906d662509201fb963cf3",
+    "mf.npz": "c1bc646907c129ed2ded3adf5a8860fbc53f28fb42fb7ddc0ea9985b73652abb",
+    "bubble_initial.bin": "ad9eb92741d62d525774eed6bdacc14fc7cee180a14e81f348c8234bc9c5859c",
+    "fortran_native_precip.diff": "09cba3a61a684db20b05fca116e5806c9806126e972f63dcd249b952c25e4095",
+    "run_alignment_case.m": "944926abcadcf246517a2866e56eda0abae8703f622429b425dbb4ab0799c267",
+    "run_thermo.m": "b7e86d11d326718a1c49047a3bc29e57ab62258878c59933b606371363e47c74",
+    "ace_module.F": "085fdc0becb4ef4bfa45da033e19f3e5754ad61bb586b629e51562378d5889aa",
+    "matlab.nc": "9bfd3889ea63ab3327e3a21c0e18cb94a3b6490ceb9ae7ef0f838b209e49f00a",
+    "fortran_init.bin": "192e9a34250d003a074848000a58ad8d184f0d25a057e880f2ad872f686f86a9",
+    "initialize_sounding.m": "14ecab89df0e05b9b86299fd78fe3f493f03e2bab9a9eb05a5d6fb2b40c71324",
+    "fortran.bin": "5d1547fe28b5c4a9b38038211bd88a1dfa7ba1123930c166156e15706236d833",
+    "fortran_diagnostics.exe": "b39c98873ecebd18174f5814ce5fd8c4b465f7a1151d581949b324e3f46fb330",
+    "runner_executed.py": "0a9e943dbbe0543ca222013261d58b90a61cb67b2e991f9f9a252883bc1fceb2",
+    "initial_override.bin": "48834bbb550ce2c07219f0d43440b76a217df502c665fcf8cd6ac03bb84324a8",
+    "fortran_access.diff": "6b7b9c4ce58dbf91b62fff63e2284f89724b983d45e4a2d93dfc03fa8b0f4d15",
+    "mf_all_aces.npz": "ca631bc0a9c36166660dbb82abf4faa70d6f4c1aaef213e57c03919f3128ddb0",
+    "fort.97": "5630c3c074d6f5c8a5ee35a3dc35842f1b3639c1c7aef997c0525556add145e3",
+    "fortran_case.exe": "ffea3e9d5351beca7d6c0cb55ba0f2fe10d9eda1b35040607cc6033e18d6efdc",
+    "bubble_initialization.diff": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "run_sounding_case.m": "7ec944c74a11c2a087ca69316a4748cc3aed65ff258bca71555faaffd2e80238",
+    "base_model.exe": "47b86b6de06fd39fef32fe3c4a14e387c7d0ad763138e2fd4f56f33271c40e03",
+    "precipitation.npz": "ff46001d32bf7d59ac90acdfdba5c93b74131ee53faad39b6b0a1e642e82c204"
+  },
+  "supplementary_diagnostics": {
+    "initial_validation": {
+      "case": "manus",
+      "profile_index": 208,
+      "ace_mode": "multi",
+      "pulse_ace": 8,
+      "thermal_bubble": false,
+      "theta_e_matches_input_all_aces": true,
+      "qt_matches_input_all_aces": true,
+      "inner_seven_initial_mf_exact_zero": true,
+      "outer_pulse_max_kg_m2_s": 0.03,
+      "outer_pulse_formula_max_abs_error": 0.0
+    },
+    "amplitude_markers": "Descriptive max |MF| markers, kg m-2 s-1; not onset criteria or acceptance tolerances",
+    "response": {
+      "matlab": [
+        {
+          "ace": 1,
+          "mf_min": -2.977051939545174,
+          "mf_max": 17.96202095394021,
+          "peak_abs_mf": 17.96202095394021,
+          "peak_time_seconds": 33540,
+          "peak_height_m": 7350.0,
+          "terminal_max_abs_mf": 13.098348712264729,
+          "first_saved_time_at_or_above_mf": {
+            "0.03": 3840,
+            "1.0": 9900,
+            "10.0": 32640
+          }
+        },
+        {
+          "ace": 2,
+          "mf_min": -2.636660285644158,
+          "mf_max": 6.141301887707147,
+          "peak_abs_mf": 6.141301887707147,
+          "peak_time_seconds": 35820,
+          "peak_height_m": 5450.0,
+          "terminal_max_abs_mf": 2.8010337199663664,
+          "first_saved_time_at_or_above_mf": {
+            "0.03": 3780,
+            "1.0": 9840,
+            "10.0": null
+          }
+        },
+        {
+          "ace": 3,
+          "mf_min": -3.4348768608628744,
+          "mf_max": 1.9483099234662153,
+          "peak_abs_mf": 3.4348768608628744,
+          "peak_time_seconds": 35700,
+          "peak_height_m": 4650.0,
+          "terminal_max_abs_mf": 0.8833931499014235,
+          "first_saved_time_at_or_above_mf": {
+            "0.03": 3720,
+            "1.0": 11580,
+            "10.0": null
+          }
+        },
+        {
+          "ace": 4,
+          "mf_min": -0.8992760056255305,
+          "mf_max": 0.7304488649387693,
+          "peak_abs_mf": 0.8992760056255305,
+          "peak_time_seconds": 33960,
+          "peak_height_m": 10400.0,
+          "terminal_max_abs_mf": 0.15794488349626937,
+          "first_saved_time_at_or_above_mf": {
+            "0.03": 3600,
+            "1.0": null,
+            "10.0": null
+          }
+        },
+        {
+          "ace": 5,
+          "mf_min": -0.7980290400998498,
+          "mf_max": 0.6398088259796042,
+          "peak_abs_mf": 0.7980290400998498,
+          "peak_time_seconds": 34440,
+          "peak_height_m": 2250.0,
+          "terminal_max_abs_mf": 0.1933265911182649,
+          "first_saved_time_at_or_above_mf": {
+            "0.03": 3240,
+            "1.0": null,
+            "10.0": null
+          }
+        },
+        {
+          "ace": 6,
+          "mf_min": -0.677067889387269,
+          "mf_max": 0.6023351514171893,
+          "peak_abs_mf": 0.677067889387269,
+          "peak_time_seconds": 34680,
+          "peak_height_m": 2250.0,
+          "terminal_max_abs_mf": 0.3043229262906561,
+          "first_saved_time_at_or_above_mf": {
+            "0.03": 2520,
+            "1.0": null,
+            "10.0": null
+          }
+        },
+        {
+          "ace": 7,
+          "mf_min": -1.3852260572483681,
+          "mf_max": 0.4775026410546456,
+          "peak_abs_mf": 1.3852260572483681,
+          "peak_time_seconds": 4500,
+          "peak_height_m": 450.0,
+          "terminal_max_abs_mf": 0.38497298401112917,
+          "first_saved_time_at_or_above_mf": {
+            "0.03": 1560,
+            "1.0": 3780,
+            "10.0": null
+          }
+        },
+        {
+          "ace": 8,
+          "mf_min": -0.40916067219705043,
+          "mf_max": 0.8038966093196451,
+          "peak_abs_mf": 0.8038966093196451,
+          "peak_time_seconds": 9660,
+          "peak_height_m": 2200.0,
+          "terminal_max_abs_mf": 0.10909982384666185,
+          "first_saved_time_at_or_above_mf": {
+            "0.03": 0,
+            "1.0": null,
+            "10.0": null
+          }
+        }
+      ],
+      "fortran": [
+        {
+          "ace": 1,
+          "mf_min": -2.97705248485148,
+          "mf_max": 17.962020945708904,
+          "peak_abs_mf": 17.962020945708904,
+          "peak_time_seconds": 33540,
+          "peak_height_m": 7350.0,
+          "terminal_max_abs_mf": 13.098349956444014,
+          "first_saved_time_at_or_above_mf": {
+            "0.03": 3840,
+            "1.0": 9900,
+            "10.0": 32640
+          }
+        },
+        {
+          "ace": 2,
+          "mf_min": -2.6366603432198414,
+          "mf_max": 6.14130171603873,
+          "peak_abs_mf": 6.14130171603873,
+          "peak_time_seconds": 35820,
+          "peak_height_m": 5450.0,
+          "terminal_max_abs_mf": 2.8010340169893913,
+          "first_saved_time_at_or_above_mf": {
+            "0.03": 3780,
+            "1.0": 9840,
+            "10.0": null
+          }
+        },
+        {
+          "ace": 3,
+          "mf_min": -3.4348768685091553,
+          "mf_max": 1.948309913460017,
+          "peak_abs_mf": 3.4348768685091553,
+          "peak_time_seconds": 35700,
+          "peak_height_m": 4650.0,
+          "terminal_max_abs_mf": 0.8833928834359281,
+          "first_saved_time_at_or_above_mf": {
+            "0.03": 3720,
+            "1.0": 11580,
+            "10.0": null
+          }
+        },
+        {
+          "ace": 4,
+          "mf_min": -0.8992760060949955,
+          "mf_max": 0.7304488608577658,
+          "peak_abs_mf": 0.8992760060949955,
+          "peak_time_seconds": 33960,
+          "peak_height_m": 10400.0,
+          "terminal_max_abs_mf": 0.15794491557070617,
+          "first_saved_time_at_or_above_mf": {
+            "0.03": 3600,
+            "1.0": null,
+            "10.0": null
+          }
+        },
+        {
+          "ace": 5,
+          "mf_min": -0.7980290388104915,
+          "mf_max": 0.6398088259825835,
+          "peak_abs_mf": 0.7980290388104915,
+          "peak_time_seconds": 34440,
+          "peak_height_m": 2250.0,
+          "terminal_max_abs_mf": 0.1933266607014332,
+          "first_saved_time_at_or_above_mf": {
+            "0.03": 3240,
+            "1.0": null,
+            "10.0": null
+          }
+        },
+        {
+          "ace": 6,
+          "mf_min": -0.677067889407298,
+          "mf_max": 0.6023351514315548,
+          "peak_abs_mf": 0.677067889407298,
+          "peak_time_seconds": 34680,
+          "peak_height_m": 2250.0,
+          "terminal_max_abs_mf": 0.3043229261891341,
+          "first_saved_time_at_or_above_mf": {
+            "0.03": 2520,
+            "1.0": null,
+            "10.0": null
+          }
+        },
+        {
+          "ace": 7,
+          "mf_min": -1.3852260572346813,
+          "mf_max": 0.477502641066813,
+          "peak_abs_mf": 1.3852260572346813,
+          "peak_time_seconds": 4500,
+          "peak_height_m": 450.0,
+          "terminal_max_abs_mf": 0.3849729881841427,
+          "first_saved_time_at_or_above_mf": {
+            "0.03": 1560,
+            "1.0": 3780,
+            "10.0": null
+          }
+        },
+        {
+          "ace": 8,
+          "mf_min": -0.40916067086324864,
+          "mf_max": 0.8038966093541889,
+          "peak_abs_mf": 0.8038966093541889,
+          "peak_time_seconds": 9660,
+          "peak_height_m": 2200.0,
+          "terminal_max_abs_mf": 0.1090998280185191,
+          "first_saved_time_at_or_above_mf": {
+            "0.03": 0,
+            "1.0": null,
+            "10.0": null
+          }
+        }
+      ]
+    },
+    "hourly_max_abs_errors": {
+      "0": {
+        "theta_e": 0.0,
+        "qt": 0.0,
+        "MF": 0.0
+      },
+      "1": {
+        "theta_e": 6.389200279954821e-11,
+        "qt": 2.4338170367954604e-14,
+        "MF": 6.512822399440399e-12
+      },
+      "2": {
+        "theta_e": 2.8293641207710607e-08,
+        "qt": 1.1252745263368169e-11,
+        "MF": 3.0098257219890456e-10
+      },
+      "3": {
+        "theta_e": 4.6234731598815415e-09,
+        "qt": 1.5397683128526296e-12,
+        "MF": 1.5979129130982983e-10
+      },
+      "4": {
+        "theta_e": 9.719087756820954e-09,
+        "qt": 4.2540224814979766e-12,
+        "MF": 2.3818491623472937e-10
+      },
+      "5": {
+        "theta_e": 1.3923056485509733e-08,
+        "qt": 7.441644522820923e-12,
+        "MF": 6.074002412148616e-10
+      },
+      "6": {
+        "theta_e": 1.825509343689191e-08,
+        "qt": 1.0923505155968627e-11,
+        "MF": 9.180460714547367e-10
+      },
+      "7": {
+        "theta_e": 4.140645160077838e-09,
+        "qt": 2.1302699187986107e-12,
+        "MF": 9.98027660514822e-10
+      },
+      "8": {
+        "theta_e": 1.8011917291005375e-08,
+        "qt": 9.318996962992543e-12,
+        "MF": 4.370982298329551e-09
+      },
+      "9": {
+        "theta_e": 1.7605484572413843e-06,
+        "qt": 6.866951521300457e-10,
+        "MF": 1.5194204383561782e-07
+      },
+      "10": {
+        "theta_e": 8.50113627848259e-06,
+        "qt": 3.421250945739862e-09,
+        "MF": 7.106631887410231e-07
+      },
+      "11": {
+        "theta_e": 5.8910956113322754e-06,
+        "qt": 2.1221080318337138e-09,
+        "MF": 2.0176406343441755e-06
+      },
+      "12": {
+        "theta_e": 6.944652369611504e-05,
+        "qt": 3.023079967693493e-08,
+        "MF": 5.923925254336382e-06
+      }
+    },
+    "full_output_hashes_verified": true,
+    "mf_worst_nonzero_relative": {
+      "relative_error": 0.36327291110507415,
+      "matlab": -1.5726890356423681e-06,
+      "fortran": -1.0013737114015333e-06,
+      "time_seconds": 38280,
+      "height_m": 6150.0,
+      "ace": 2
+    }
+  },
+  "experiment_contract": {
+    "case_id": "manus_multi_outer_pulse_12h",
+    "input_file": "data/input/manus208.nc",
+    "input_sha256": "85f8f5ebf0b4a0bca4a96b9b3f6f9b43a1d9bdb4470658b018dcd71d5219b1d9",
+    "source_commit": "c43e357ee2a411d44a78bd5c88ecaa70efb45908",
+    "profile_index": 208,
+    "duration_seconds": 43200,
+    "dt_seconds": 4,
+    "output_step_seconds": 60,
+    "ace_mode": "multi",
+    "active_aces_one_based": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "pulse": {
+      "ace_one_based": 8,
+      "amplitude_kg_m2_s": 0.03,
+      "base_m": 0,
+      "top_m": 1000,
+      "shape": "sin(pi*z/1000)"
+    },
+    "thermal_bubble": false,
+    "native_precipitation": true,
+    "external_forcing": 0,
+    "mf_diffusion": false,
+    "damping": "existing model damping",
+    "initial_state": "common MATLAB-exported state; full eight-ACE geometry and PMB",
+    "comparison": "descriptive numerical errors; no acceptance tolerance"
+  }
+}

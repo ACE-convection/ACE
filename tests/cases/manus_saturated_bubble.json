@@ -1,0 +1,67 @@
+{
+  "schema": "ACE-reference-case-1",
+  "case_id": "manus_saturated_bubble",
+  "status": "canonical initial comparison case for v0.18, v0.20 and v0.24",
+  "input": {
+    "path": "data/input/manus208.nc",
+    "sha256": "85f8f5ebf0b4a0bca4a96b9b3f6f9b43a1d9bdb4470658b018dcd71d5219b1d9",
+    "case_name": "manus",
+    "profile_index": 208,
+    "arm": 1
+  },
+  "integration": {
+    "duration_seconds": 10800,
+    "dt_seconds": 4,
+    "output_step_seconds": 60,
+    "method": "SSPRK93",
+    "precipitation": false,
+    "mf_diffusion": false,
+    "damping": "existing model damping"
+  },
+  "single_ace": {
+    "active_ace_one_based": 1,
+    "policy": "tendency mask; eight-ACE geometry and full PMB retained"
+  },
+  "bubble": {
+    "levels_one_based": [
+      11,
+      51
+    ],
+    "delta_temperature_K": 1,
+    "saturated": true,
+    "initial_condensate_kg_per_kg": 0,
+    "coordinate_policy": "original MATLAB T_zm and p_mf; 500\u20132500 m",
+    "initial_state_policy": "MATLAB exports theta_e/qt/MF for both implementations"
+  },
+  "initial_mf": {
+    "amplitude_kg_m2_s": 0.03,
+    "base_m": 0,
+    "top_m": 1000,
+    "shape": "sin(pi*z/1000)"
+  },
+  "grid": {
+    "dz_m": 50,
+    "top_m": 40000,
+    "mf_levels": 801
+  },
+  "comparison": {
+    "byte_equality_required": false,
+    "numerical_tolerance": "not prescribed; report error metrics and scientific findings",
+    "plot_panels": [
+      "MATLAB",
+      "Fortran",
+      "Fortran-MATLAB"
+    ],
+    "plot_height_km": 20
+  },
+  "reference": {
+    "source_commit": "afa0b2417bcf6ac6c6287a6148b1404b2ee797ca",
+    "path": "tests/reference/manus_saturated_bubble",
+    "files_sha256": {
+      "mf.npz": "7ec88cd3c96b74cd04116cd2f4c0065feafd70cfada4acd9b0b32777c94f72bd",
+      "results.json": "0f1cd7b7298c071f390cb0178e7935d0326fb30064cc9b8e66490b3f5d0b747d",
+      "bubble_validation.json": "4680bae632874ef4dc3fd179ec1811b4bf4dc77e25057aa0ceff672ef2ecfa71",
+      "initial_state.bin": "2fbb0c2361f238756f8828b3de12fe4bdd13dad98669d1654955714950677bbb"
+    }
+  }
+}

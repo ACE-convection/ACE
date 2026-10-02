@@ -1,0 +1,16 @@
+function s = prepare_profile(driver, sounding, profile, arm)
+global RD g dz z zm p
+IMPORT_CONSTANTS;
+dz=50; z=(25:50:40025)'; zm=(0:50:40000)'; p=(1000:-5:100)'*100;
+[plev,pr,ta,hus,prw,date,hh]=LOAD_SOUNDINGS(sounding,arm);
+assert(profile <= size(ta,2), 'Profile is outside the filtered collection');
+date=date(profile); hh=hh(profile); pr=pr(profile); prw=prw(profile);
+ta=ta(:,profile); hus=hus(:,profile);
+[T_p,q_p,rho_p,z_p]=INTERP_P_GRID(plev,ta,hus);
+[T_env,q_env,Tv_env,theta_e_env,rho_env,p_z,T_zm,q_zm,Tv_zm,theta_e_zm,rho_zm,p_zm,theta_zm,theta_es_zm,rh_zm]=INTERP_Z_GRID(T_p,q_p,z_p);
+names={'p','z','zm','plev','pr','prw','date','hh','ta','hus','T_p','q_p','rho_p','z_p','T_env','q_env','Tv_env','theta_e_env','rho_env','p_z','T_zm','q_zm','Tv_zm','theta_e_zm','rho_zm','p_zm','theta_zm','theta_es_zm','rh_zm'};
+s=struct;
+for i=1:numel(names)
+    s.(names{i})=eval(names{i});
+end
+end
