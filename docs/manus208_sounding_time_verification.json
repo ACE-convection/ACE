@@ -1,0 +1,28 @@
+{
+  "shared_input": "data/input/manus208.nc",
+  "shared_input_sha256": "85f8f5ebf0b4a0bca4a96b9b3f6f9b43a1d9bdb4470658b018dcd71d5219b1d9",
+  "source_sounding": "/scratch/peter50504/ACE_MATLAB_old/soundings/manus_3hr_ARMBEsonde_profiles.nc",
+  "source_sha256": "b909a2a61b040c5efe5b2f22375bd04c1a93ab4018e427be797a9adc05e23032",
+  "source_time_variable": "time_bnds",
+  "source_time_units": "seconds since 1970-1-1 0:00:00 0:00",
+  "source_time_calendar": "gregorian",
+  "source_time_seconds": 902696400.0,
+  "source_raw_index_one_based": 7616,
+  "filtered_profile_index_one_based": 208,
+  "filter": "37 non-NaN ta and hus values and non-NaN pr, matching active LOAD_SOUNDINGS",
+  "shared_date_matlab_datenum": 729976.875,
+  "shared_hh_utc": 21.0,
+  "time_utc": "1998-08-09T21:00:00+00:00",
+  "time_local": "1998-08-10T07:00:00+10:00",
+  "timezone": "Pacific/Port_Moresby",
+  "source_variables_exact_match": {
+    "ta": true,
+    "hus": true,
+    "plev": true,
+    "pr": true
+  },
+  "source_pr_mm_h": 0.05648358538746834,
+  "same_paper_sounding_time": true,
+  "new_shared_file_needed": false,
+  "paper": "https://d197for5662m48.cloudfront.net/documents/publicationstatus/210779/preprint_pdf/c66ffdcb39f91173a1ab140bf38eb2e4.pdf"
+}

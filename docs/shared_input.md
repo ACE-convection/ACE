@@ -6,6 +6,33 @@ converted case. Historical snapshots remain unchanged. This reader migration
 does not establish cross-implementation dynamics equivalence or promote the
 candidate sources to a release.
 
+## Manus sounding time verified against the paper
+
+The existing `data/input/manus208.nc` is the **0700 local time, 10 August
+1998 Manus sounding**. Its `date=729976.875` (MATLAB datenum) and `hh=21`
+encode **1998-08-09 21:00 UTC**, which is **1998-08-10 07:00 UTC+10**
+in `Pacific/Port_Moresby`. `hh` is the UTC hour, not the Manus local hour;
+the converter preserves the source time without a timezone shift.
+
+Verification on 2026-10-02 read the original sounding NetCDF's
+`time_bnds=902696400` seconds since 1970-01-01 00:00:00 +00:00
+(Gregorian calendar). Raw record 7616 is record 208 after the active
+`LOAD_SOUNDINGS` filter requiring all 37 temperature/humidity values and
+surface precipitation to be non-NaN. The source SHA-256 matches the
+shared-file provenance, and the selected `ta`, `hus`, pressure and
+precipitation values match exactly. The repository snapshot currently holds
+a Git LFS pointer; the verification used the matching real source file at
+`/scratch/peter50504/ACE_MATLAB_old/soundings/manus_3hr_ARMBEsonde_profiles.nc`.
+See [machine-readable evidence](manus208_sounding_time_verification.json).
+
+Section 4 and the Fig. 3 caption of the
+[paper preprint](https://d197for5662m48.cloudfront.net/documents/publicationstatus/210779/preprint_pdf/c66ffdcb39f91173a1ab140bf38eb2e4.pdf)
+specify the same Manus date/local time for the single- and multi-ACE
+examples. The archived profile's precipitation is 0.056483585 mm h-1,
+consistent with the paper's rounded 0.06 mm h-1. No new case file or
+change to the existing NetCDF is needed. This identifies the environmental
+sounding; it does not assert that every simulation parameter matches the paper.
+
 ## Schema: ACE-case-input-1
 
 NetCDF-4 stores all numeric variables as double, without quantization or
