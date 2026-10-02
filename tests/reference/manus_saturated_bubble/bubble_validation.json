@@ -1,0 +1,20 @@
+{
+  "case": "manus",
+  "profile_index": 208,
+  "enabled_levels_one_based": [
+    11,
+    51
+  ],
+  "layer_count": 41,
+  "height_m": [
+    500.0,
+    2500.0
+  ],
+  "delta_T_K": 1,
+  "saturation_q_matches_original_eval_qsat": true,
+  "outside_bubble_theta_e_and_qt_unchanged": true,
+  "other_aces_thermodynamics_unchanged": true,
+  "initial_condensate_kg_per_kg": 0,
+  "coordinate_policy": "original MATLAB T_zm+1 and p_mf",
+  "initial_override_sha256": "2fbb0c2361f238756f8828b3de12fe4bdd13dad98669d1654955714950677bbb"
+}

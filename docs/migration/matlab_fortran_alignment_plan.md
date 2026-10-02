@@ -6,6 +6,12 @@ normalization remain open. Historical import is largely complete; its facts
 and verification record belong in the [import record](matlab_import_plan.md).
 Start at the [documentation index](README.md) for document roles.
 
+The developer-designated [initial runtime reference case](../../tests/README.md)
+is Manus 208, single ACE, a saturated +1 K bubble at levels 11–51,
+precipitation off, and three hours at dt=4 s. Initial v0.20 and v0.24
+comparisons must reuse that case contract and document any version adapter.
+Use descriptive errors and scientific review; byte equality is not required.
+
 ## Repository philosophy and development sequence
 
 `matlab/active/`, `matlab/history/`, `fortran/active/`, and `fortran/history/`

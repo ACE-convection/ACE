@@ -19,6 +19,12 @@ Developers continuing v0.18 testing on another machine should start with the
 [v0.18 developer handoff](docs/v018_developer_handoff.md) for the current
 progress, input blockers, environment checks, and validation order.
 
+The [canonical initial runtime test](tests/README.md) for v0.18 and later
+v0.20/v0.24 comparisons is Manus 208: a single ACE, a saturated +1 K bubble
+at levels 11–51, precipitation disabled, and three hours of integration.
+Its pinned input, MF reference and reproducible test entry are preserved;
+comparison uses error metrics and scientific review rather than byte equality.
+
 Historical MATLAB `data/` files use Git LFS. Install Git LFS and run
 `git lfs pull` after cloning to obtain the MAT and NetCDF contents; see the
 [migration and provenance record](docs/migration/matlab_data_lfs_migration.md).

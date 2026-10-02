@@ -1,0 +1,45 @@
+function run_sounding_case(root, reports, input_file, duration, output_step, initialize_only)
+% Joined to active numerical routines by run_sounding_case.py.
+if nargin<6, initialize_only=false; end
+cd(fullfile(root,'matlab/active'));
+setenv('ACE_INPUT_MODE','shared');
+setenv('ACE_INPUT_FILE',input_file);
+setenv('ACE_VALIDATE_INPUT',fullfile(reports,'matlab_init.mat'));
+initialize_sounding;
+setenv('ACE_VALIDATE_INPUT','');
+global one_ace_only
+one_ace_only=1;
+state=reshape(X0,[Nzm,5,Ni]);
+state(:,3,:)=0;
+state(:,3,1)=MF;
+if initialize_only
+  fid=fopen(fullfile(reports,'initial_override.bin'),'w','ieee-le');
+  assert(fid>=0,'Cannot create common initial state');
+  fwrite(fid,permute(state(:,1:3,:),[3,1,2]),'double'); fclose(fid);
+  fid=fopen(fullfile(reports,'bubble_initial.bin'),'w','ieee-le');
+  assert(fid>=0,'Cannot create bubble initialization evidence');
+  % Temperature/pressure and saturation are the original zm/p_mf convention.
+  fwrite(fid,[T_zm(:,pidx),p_mf,eval_qsat(T_zm(:,pidx)+dTbl,p_mf),zm],'double'); fclose(fid);
+  return;
+end
+times=0:output_step:duration;
+history=timeint(times,state(:),dt)';
+history=reshape(history,[Nzm,5,Ni,numel(times)]);
+assert(all(isfinite(history),'all'),'Nonfinite trajectory');
+assert(all(history(:,4:5,:,:)==0,'all'),'Precipitation accumulation is nonzero');
+file=fullfile(reports,'matlab.nc');
+nccreate(file,'state','Datatype','double','Dimensions',...
+    {'level',Nzm,'variable',3,'ace',Ni,'time',numel(times)},'Format','netcdf4');
+ncwrite(file,'state',history(:,1:3,:,:));
+nccreate(file,'time','Datatype','double','Dimensions',{'time',numel(times)});
+ncwrite(file,'time',times(:));
+nccreate(file,'zm','Datatype','double','Dimensions',{'level',Nzm});
+ncwrite(file,'zm',zm);
+ncwriteatt(file,'/','matlab_version',version);
+ncwriteatt(file,'/','profile_index',case_profile_index);
+ncwriteatt(file,'/','precipitation','disabled in temporary timeint');
+ncwriteatt(file,'/','pulse_ace',1);
+ncwriteatt(file,'/','dt_seconds',dt);
+ncwriteatt(file,'/','bubble_levels',BL);
+ncwriteatt(file,'/','bubble_delta_T_K',dTbl);
+end
