@@ -1,21 +1,23 @@
 # MATLAB utility identity and staging record
 
-Static inventory, updated 2026-09-28. Compare the preserved utility trees in
+Static inventory dated 2026-09-28; status clarified 2026-10-02. Compare the preserved utility trees in
 `matlab/history/original_git/` (R), `ACE_V019.3/` (S19), `ACE_V020/` (S20), and
 `ACE_V024.87/` (S24). "Same" below means byte-identical files at the same
 relative path; it does not establish equivalent drivers or model results.
-The S20 copies are preserved staging for a later milestone. The current
-milestone is [unified v0.18 alignment](matlab_fortran_alignment_plan.md), using
-`matlab/active/ace.m` and `util_*` copied from `a0f30cd`. The later S20/S24
-copies described below occupy separate `numerics/`, `thermodynamics/` and
-`time_integration/` staging subdirectories and must not be mixed into that
-candidate. This historical-only inventory records temporary staging, not
+The S20 copies were staging for a later milestone. The v0.18 candidate
+was staged from `a0f30cd`; its reviewed release
+is now directly under `matlab/`. The later S20/S24 copies described below
+formerly occupied separate `numerics/`, `thermodynamics/` and
+`time_integration/` staging subdirectories. All 29 were retired from the
+current tree during [normalization](v018_normalization.md), with exact
+historical counterparts and recovery recorded in its manifest.
+This historical-only inventory records temporary staging, not
 permanent activation or a future directory plan. "Keep in history" means
 preserve evidence through Git after normalization.
 Driver-level calls and input paths are mapped in
 [`matlab_driver_dependencies.md`](matlab_driver_dependencies.md).
 
-| Utility group | R / S19 / S20 / S24 identity | Current disposition |
+| Utility group | R / S19 / S20 / S24 identity | Recorded staging disposition |
 | --- | --- | --- |
 | 12 active files: `reconstruction_up3`, `ci`, `eval_B`, `eval_dTes`, `eval_es`, `eval_esi`, `eval_rho`, `eval_theta`, `eval_theta_e`, `eval_theta_l`, `eval_theta_v`, `lv` | Same in all four trees | Byte-identical copies in `matlab/active/`. This is the complete callable S24 thermodynamics subset with four-tree identity. |
 | 15 other active files: `reconstruction_weno_vec`, `IMPORT_CONSTANTS_NOGLOBAL`, `eval_Tv`, `eval_dTqs`, `eval_dTqsi`, `eval_esscl`, `eval_q`, `eval_q2`, `eval_qs`, `eval_qs2`, `eval_qsat`, `eval_qsat2`, `eval_qsi`, `eval_qsi2`, `eval_theta_es` | Same in S20 and S24; different or absent in R/S19 | Byte-identical copies in `matlab/active/`. The two saturation derivatives are called by both S20 and S24 inversions. |

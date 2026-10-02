@@ -2,16 +2,16 @@
 
 Role: historical-only storage/provenance record. The completed rewrite below
 must not be rerun for repository normalization. Preserve the commit map,
-manifest and current historical refs. Future shared runtime data architecture
-is defined by the [roadmap](matlab_fortran_alignment_plan.md); LFS storage
+manifest and current historical refs. Current shared runtime data architecture
+is documented in [shared input](../shared_input.md); LFS storage itself
 does not establish a common runtime input interface. Manifest paths refer to
 the migration tree and remain historical evidence after source normalization.
 
 Status: verified Git LFS migration, 2026-09-29. The 17 files in the
 MATLAB historical `data/` directories retain their paths and contents in a
 Git LFS checkout. Normal Git history stores LFS pointers for their content.
-The [manifest](matlab_data_lfs_manifest.tsv) records every current file's path,
-byte count, and SHA-256; the [commit map](matlab_data_lfs_commit_map.csv) maps
+The [manifest](matlab_data_lfs_manifest.tsv) records historical paths,
+byte counts and SHA-256 values for all migrated files; the [commit map](matlab_data_lfs_commit_map.csv) maps
 the 64 rewritten commit IDs from the repository state before this migration.
 
 The affected paths are the original MATLAB Git history's `data/` directory,
@@ -20,7 +20,9 @@ The affected paths are the original MATLAB Git history's `data/` directory,
 path, not a current working-tree directory. The migration included that path
 so a checkout of the rewritten MATLAB history does not expose the old binary
 blobs. It excluded the historical Fortran `v0.18` tag and its ancestors;
-that tag still points to `ffdd734`.
+the migration record identifies its target as `ffdd734`. That historical
+marker is absent from the local tag list inspected on 2026-10-02; this does
+not establish its current remote state.
 
 The pre-migration local `main` was `378457f`. Immediately after the scoped LFS
 rewrite it was `6ab39c7`. The only root-tree changes at that point were the
@@ -41,9 +43,11 @@ this migration.
 
 Git LFS is required to materialize the data after cloning. Run `git lfs pull`
 in a checkout; a client without Git LFS may see pointer text instead of MAT or
-NetCDF bytes. The `matlab/active/` driver still needs its historical input
-paths configured separately, and no MATLAB–Fortran numerical agreement is
-implied by this storage migration.
+NetCDF bytes. Current v0.18 runtime data and reader configuration are
+documented in [shared input](../shared_input.md). Historical `matlab/history/` data paths
+were retired from the current tree during [normalization](v018_normalization.md)
+and are recoverable at `c9ae729`. This storage migration itself implies no
+MATLAB–Fortran numerical agreement.
 
 Rewriting branch and tag refs removes old data blobs from their current Git
 histories. Previously pushed objects may remain accessible through old SHA

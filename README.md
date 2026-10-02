@@ -21,8 +21,8 @@ scope and retained limitations. Current sources are directly under
 
 Developers running the accepted cases should start with the
 [test instructions](tests/README.md) and [shared-input instructions](docs/shared_input.md).
-The [earlier handoff](docs/v018_developer_handoff.md) remains a historical
-record of migration blockers and staging paths.
+The [migration index](docs/migration/README.md) identifies current guidance
+and the historical evidence needed for later versions.
 
 The [canonical initial runtime test](tests/README.md) for v0.18 and later
 v0.20/v0.24 comparisons is Manus 208: a single ACE, a saturated +1 K bubble
@@ -38,7 +38,7 @@ Historical MATLAB `data/` files use Git LFS. Install Git LFS and run
 
 ACE has historically been developed through a series of MATLAB and Fortran code snapshots. Earlier MATLAB versions were not maintained using a systematic Git-based versioning workflow.
 
-This repository is therefore currently being reorganized to:
+The completed migration established a framework to:
 
 - reconstruct and document the historical development of ACE;
 - establish a consistent source-code structure;
@@ -59,7 +59,8 @@ Git commits, branches and tags preserve historical versions after migration-only
 source copies leave the current tree. Existing historical tags keep their
 provenance meanings. Shared `ACE/data/` and common netCDF runtime inputs are
 the long-term direction; large inputs should not be ordinary Git blobs.
-Historical input contracts remain in effect pending separate interface review.
+The [shared NetCDF interface](docs/shared_input.md) is implemented and tested;
+historical binary contracts remain provenance and legacy-read references.
 Refactoring and repository restructuring remain separate from scientific changes.
 
 ## P3 microphysics
