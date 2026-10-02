@@ -61,8 +61,13 @@ their provenance checks.
 
 ## Validation
 
-Normalized source paths must compile, default shared-input initialization
-must agree with explicit input selection, and the accepted Manus cases must
-reproduce the pre-normalization per-implementation histories. Final results
-are recorded in the [release record](../releases/v0.18.0.md) and its
-normalization validation evidence. No new physical tolerance is introduced.
+The normalized GNU build passed, and default shared-input initialization
+agrees exactly with explicit input selection within both implementations.
+The three-hour singleACE cases with and without precipitation and the
+twelve-hour multiACE case exactly reproduce their pre-normalization saved
+numerical values, including all ACEs and native precipitation diagnostics.
+All 384 manifest entries were checked against the recovery commit and the
+current tree. Commands, hashes and full comparison results are recorded in
+the [release record](../releases/v0.18.0.md) and its linked normalization
+validation evidence. No new cross-implementation physical tolerance is
+introduced.

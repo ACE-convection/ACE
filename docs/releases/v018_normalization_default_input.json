@@ -1,0 +1,36 @@
+{
+  "status": "passed",
+  "source_commit": "9665658aa808174c3af6e3a770cee8c456bec823",
+  "matlab_default_vs_explicit_input": {
+    "Ai": true,
+    "Bi": true,
+    "PMB": true,
+    "Tv_mf": true,
+    "Tv_zc": true,
+    "X0": true,
+    "Z": true,
+    "case_profile_index": true,
+    "p_mf": true,
+    "p_zc": true,
+    "qt_mf": true,
+    "qt_zc": true,
+    "rho_mf": true,
+    "rho_zc": true,
+    "theta_e_mf": true,
+    "theta_e_zc": true,
+    "z": true,
+    "zm": true
+  },
+  "fortran_default_vs_explicit_input_byte_equal": true,
+  "fortran_initialization_sha256": "192e9a34250d003a074848000a58ad8d184f0d25a057e880f2ad872f686f86a9",
+  "build": "make FC=gfortran FCFLAGS=\"-O2 -ffree-form -fdefault-real-8 -fdefault-double-8 -ffree-line-length-none\" FINCLUDE=\"$(nf-config --fflags)\" LDLIBS=\"$(nf-config --flibs) -Wl,-rpath,$(nf-config --prefix)/lib\"",
+  "initialization_commands": {
+    "matlab": "cd matlab; setenv('ACE_INPUT_FILE',''); setenv('ACE_VALIDATE_INPUT','/tmp/v018_normalized_matlab_init.mat'); ace; repeat with explicit ACE_INPUT_FILE=/scratch/peter50504/ACE/data/input/manus208.nc and compare every saved field using isequal",
+    "fortran": [
+      "./ace_model.exe --validate-input /tmp/v018_normalized_fortran_init.bin",
+      "./ace_model.exe --input ../data/input/manus208.nc --validate-input /tmp/v018_explicit_fortran_init.bin"
+    ]
+  },
+  "input": "data/input/manus208.nc",
+  "input_sha256": "85f8f5ebf0b4a0bca4a96b9b3f6f9b43a1d9bdb4470658b018dcd71d5219b1d9"
+}

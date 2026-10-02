@@ -136,3 +136,20 @@ color scales vary between ACE rows.
 See the [completed 12-hour report](../docs/manus208_multi_outer_pulse_12h.md).
 This trial does not set a numerical acceptance tolerance or automatically
 replace the frozen single-ACE reference cases.
+
+## Source normalization verification
+
+For source-path-only changes, compare a completed run with its preserved
+pre-change run using:
+
+```bash
+python3 tests/alignment/verify_source_normalization.py <previous-run> <current-run> \
+  --output <comparison.json>
+```
+
+This checks identical case settings and exact equality of every saved MATLAB
+variable, all three Fortran prognostic fields across all ACEs, and native
+Fortran precipitation diagnostics when enabled. Exact equality here verifies
+that directory changes preserve each implementation's results; it does not
+set a cross-implementation or later-version scientific tolerance. Source,
+input, command and artifact provenance are saved in the comparison record.
