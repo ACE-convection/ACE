@@ -96,3 +96,43 @@ The single-ACE mask applies to dynamics in Fortran. No precipitation formula,
 mask, constant or phase selection is changed for this test. Passing the
 execution checks does not settle these differences or establish a closed
 water budget or scientific equivalence. Later-version adapters remain future work.
+
+## MultiACE outer-pulse experiment (12 hours)
+
+The developer-selected multiACE test perturbs the outermost ACE 8 using
+the existing initial MF pulse, `0.03*sin(pi*z/1000)` kg m-2 s-1 at 0–1000 m.
+All eight ACEs evolve with the full geometry/PMB. Use Manus 208, no thermal
+bubble, native precipitation, no sustained external forcing, original
+damping, MF diffusion disabled, dt=4 s and output every 60 s. The exploratory
+duration is 43200 s to capture the later inner-ACE response.
+
+```bash
+python3 tests/alignment/run_sounding_case.py migration_work/manus_multi_repeat \
+  --input data/input/manus208.nc --mode multi --precipitation --duration 43200
+python3 tests/alignment/plot_multi_mf.py migration_work/manus_multi_repeat
+python3 tests/alignment/plot_multi_mf.py migration_work/manus_multi_repeat --layout comparison
+```
+
+Use a fresh directory. The runner exports one common initial state from
+MATLAB for both implementations. It checks finite outputs, nonnegative
+saved total water, matching initial states, an outer-only initial MF pulse,
+and active precipitation. Default mode remains `single`; adding `--mode multi`
+enables all ACE tendencies and moves the pulse to ACE 8.
+
+`mf_all_aces.npz` preserves both full 0–40 km MF histories with shape
+(time, level, ACE). `results.json` reports all-field errors, per-ACE MF errors,
+and hourly max |MF|. The plotter writes MATLAB, Fortran, difference, and
+per-ACE response figures; time-height plots default to 0–20 km and share
+the same MF scale. Native physics/masks remain unchanged. The existing
+`mf.npz` output still contains ACE 1, for compatibility with single-ACE tools.
+For preserved outputs, append `--analyze-existing` to the integration command.
+
+`--layout comparison` writes a combined eight-row, three-column time-height
+figure: ACEs 1–8 from top to bottom, MATLAB/Fortran/Fortran-minus-MATLAB
+from left to right. Each panel's height is one fifth of its width. Each row
+uses a shared MATLAB/Fortran color scale and an independent difference scale;
+color scales vary between ACE rows.
+
+See the [completed 12-hour report](../docs/manus208_multi_outer_pulse_12h.md).
+This trial does not set a numerical acceptance tolerance or automatically
+replace the frozen single-ACE reference cases.

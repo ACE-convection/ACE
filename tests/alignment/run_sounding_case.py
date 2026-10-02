@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run a single active ACE with optional native precipitation in temporary sources."""
+"""Run single or multiple ACEs with optional native precipitation in temporary sources."""
 import argparse
 from concurrent.futures import ThreadPoolExecutor
 import difflib
@@ -27,6 +27,8 @@ def main():
     parser.add_argument('--duration', type=int, default=10800)
     parser.add_argument('--output-step', type=int, default=60)
     parser.add_argument('--matlab', default='matlab')
+    parser.add_argument('--mode', choices=['single', 'multi'], default='single',
+                        help='Single ACE 1 or all eight ACEs with an outer ACE 8 MF pulse')
     parser.add_argument('--precipitation', action='store_true',
                         help='Retain each implementation\'s native precipitation scheme')
     parser.add_argument('--saturated-bubble', action='store_true',
@@ -34,6 +36,8 @@ def main():
     parser.add_argument('--analyze-existing', action='store_true',
                         help='Analyze preserved integration outputs without rerunning models')
     args = parser.parse_args()
+    if args.mode == 'multi' and args.saturated_bubble:
+        parser.error('The outer-ACE multi case has no thermal bubble')
     if args.duration <= 0 or args.output_step <= 0 or args.duration % args.output_step or args.output_step % 4:
         parser.error('Duration must be a positive output-step multiple; output-step must be a positive 4-second multiple')
     root = Path(__file__).resolve().parents[2]
@@ -63,7 +67,9 @@ def main():
         manifest['input_file_sha256'] = digest(input_file)
         manifest['input_file'] = str(input_file)
         manifest['precipitation'] = 'enabled' if args.precipitation else 'disabled'
-        manifest['scope'] = ('single ACE 1; precipitation '+manifest['precipitation']+
+        manifest['ace_mode'] = args.mode
+        manifest['scope'] = (('single ACE 1' if args.mode == 'single' else 'all eight ACEs; outer ACE 8 pulse')+
+                             '; precipitation '+manifest['precipitation']+
                              '; actual active numerical routines')
         (work/'configuration.json').write_text(json.dumps(manifest, indent=2)+'\n')
     if not args.analyze_existing:
@@ -121,13 +127,14 @@ def main():
         run([work/'base_model.exe', '--input', input_file, '--validate-input', work/'fortran_init.bin'], 'base_init')
         quote = lambda p: str(p).replace("'", "''")
         statement = (f"addpath('{quote(work)}'); run_sounding_case('{quote(root)}',"
-                     f"'{quote(work)}','{quote(input_file)}',{args.duration},{args.output_step});")
+                     f"'{quote(work)}','{quote(input_file)}',{args.duration},{args.output_step},false,'{args.mode}');")
         fortran_command = [work/'case.exe', work/'fortran_init.bin', input_file,
                            work/'fortran.bin', args.duration, args.output_step]
-        if args.saturated_bubble:
-            initializer = statement.replace(f'{args.output_step});', f'{args.output_step},true);')
+        if args.saturated_bubble or args.mode == 'multi':
+            initializer = statement.replace(f",false,'{args.mode}');", f",true,'{args.mode}');")
             run([args.matlab, '-batch', initializer], 'bubble_initialization')
             fortran_command.append(work/'initial_override.bin')
+            fortran_command.append(args.mode)
         with ThreadPoolExecutor(max_workers=2) as pool:
             jobs = [pool.submit(run, [args.matlab, '-batch', statement], 'matlab'),
                     pool.submit(run, fortran_command, 'fortran')]
@@ -138,6 +145,7 @@ def main():
         commands = json.loads((work/'commands.json').read_text())
     precipitation = 'enabled' if args.precipitation else 'disabled'
     assert manifest.get('precipitation', 'disabled') == precipitation, 'Preserved run precipitation setting mismatch'
+    assert manifest.get('ace_mode', 'single') == args.mode, 'Preserved run ACE mode mismatch'
     times = np.arange(0, args.duration+1, args.output_step)
     f = np.fromfile(work/'fortran.bin', dtype='<f8').reshape((8, 801, 3, len(times)), order='F').transpose(3, 2, 1, 0)
     with netCDF4.Dataset(work/'matlab.nc') as ds:
@@ -147,23 +155,31 @@ def main():
         assert np.array_equal(ds['time'][:], times)
         assert np.array_equal(ds['zm'][:], heights)
         assert int(ds.profile_index) == profile
+        assert int(ds.pulse_ace) == (1 if args.mode == 'single' else 8)
+        assert getattr(ds, 'ace_mode', 'single') == args.mode
         assert ds.precipitation == ('enabled native scheme' if args.precipitation else 'disabled in temporary timeint')
         if args.precipitation:
             accumulation = np.asarray(ds['precipitation_accumulation'][:])
     assert f.shape == m.shape and np.isfinite(f).all() and np.isfinite(m).all()
     np.savez_compressed(work/'mf.npz', time_seconds=times, height_m=heights,
                         matlab=m[:, 2, :, 0], fortran=f[:, 2, :, 0])
+    if args.mode == 'multi':
+        np.savez_compressed(work/'mf_all_aces.npz', time_seconds=times, height_m=heights,
+                            matlab=m[:, 2], fortran=f[:, 2])
     report = {'case': case, 'profile_index': profile, 'duration_seconds': args.duration,
               'dt_seconds': 4, 'output_step_seconds': args.output_step, 'precipitation': precipitation,
-              'single_policy': 'ACE 1 tendency active; 8 ACE geometry/PMB retained; original damping retained',
-              'pulse': 'ACE 1: 0.03*sin(pi*z/1000) kg m-2 s-1 at 0-1000 m',
+              'ace_mode': args.mode,
+              'single_policy': ('ACE 1 tendency active' if args.mode == 'single' else 'all eight ACE tendencies active')+
+                               '; 8 ACE geometry/PMB retained; original damping retained',
+              'pulse': ('ACE 1' if args.mode == 'single' else 'ACE 8')+
+                       ': 0.03*sin(pi*z/1000) kg m-2 s-1 at 0-1000 m',
               'mf_diffusion': 'disabled as in active defaults',
               'bubble': {'enabled': args.saturated_bubble,
                          'levels_one_based': [11, 51] if args.saturated_bubble else [],
                          'delta_T_K': 1 if args.saturated_bubble else 0,
                          'saturation': 'original eval_qsat; no initial condensate',
                          'coordinate_policy': 'original MATLAB T_zm and p_mf; applied to prognostic theta_e/qt slots',
-                         'fortran_initialization': 'common MATLAB-exported state' if args.saturated_bubble else 'native'},
+                         'fortran_initialization': 'common MATLAB-exported state' if args.saturated_bubble or args.mode == 'multi' else 'native'},
               'finite_outputs': True, 'input_file': str(input_file), 'input_sha256': digest(input_file),
               'baseline_commit': manifest['baseline_commit'], 'production_sources_sha256': manifest['sources_sha256'],
               'commands': commands, 'matlab_version': matlab_version,
@@ -176,6 +192,19 @@ def main():
               'ranges': {name: {'mf_min': float(a[:, 2, :, 0].min()), 'mf_max': float(a[:, 2, :, 0].max()),
                                 'qt_min': float(a[:, 1].min()), 'qt_max': float(a[:, 1].max())}
                          for name, a in [('matlab', m), ('fortran', f)]}}
+    if args.mode == 'multi':
+        assert all(v['exact_equal'] for v in report['initial_state'].values()), 'Common multi-ACE seed mismatch'
+        assert np.all(m[0, 2, :, :7] == 0), 'Initial MF must be confined to outer ACE 8'
+        assert abs(m[0, 2, :, 7]).max() > 0
+        assert all(value['qt_min'] >= 0 for value in report['ranges'].values())
+        report['multi_ace'] = {
+            'mf_by_ace': [metrics(m[:, 2, :, i], f[:, 2, :, i]) for i in range(8)],
+            'peak_abs_mf_by_ace': {name: [float(abs(a[:, 2, :, i]).max()) for i in range(8)]
+                                   for name, a in [('matlab', m), ('fortran', f)]},
+            'hourly_peak_abs_mf_by_ace': {
+                str(int(t)): {name: abs(a[n, 2]).max(axis=0).tolist()
+                              for name, a in [('matlab', m), ('fortran', f)]}
+                for n, t in enumerate(times) if t % 3600 == 0}}
     if args.precipitation:
         water = accumulation[:, :, 1, :]
         sinks = np.loadtxt(work/'fort.97')

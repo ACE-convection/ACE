@@ -1,6 +1,8 @@
-function run_sounding_case(root, reports, input_file, duration, output_step, initialize_only)
+function run_sounding_case(root, reports, input_file, duration, output_step, initialize_only, mode)
 % Joined to active numerical routines by run_sounding_case.py.
 if nargin<6, initialize_only=false; end
+if nargin<7, mode='single'; end
+assert(ismember(mode,{'single','multi'}),'Unknown ACE mode');
 cd(fullfile(root,'matlab/active'));
 setenv('ACE_INPUT_MODE','shared');
 setenv('ACE_INPUT_FILE',input_file);
@@ -8,10 +10,11 @@ setenv('ACE_VALIDATE_INPUT',fullfile(reports,'matlab_init.mat'));
 initialize_sounding;
 setenv('ACE_VALIDATE_INPUT','');
 global one_ace_only
-one_ace_only=1;
+one_ace_only=strcmp(mode,'single');
 state=reshape(X0,[Nzm,5,Ni]);
 state(:,3,:)=0;
-state(:,3,1)=MF;
+if one_ace_only, pulse_ace=1; else, pulse_ace=Ni; end
+state(:,3,pulse_ace)=MF;
 if initialize_only
   fid=fopen(fullfile(reports,'initial_override.bin'),'w','ieee-le');
   assert(fid>=0,'Cannot create common initial state');
@@ -38,7 +41,8 @@ ncwrite(file,'zm',zm);
 ncwriteatt(file,'/','matlab_version',version);
 ncwriteatt(file,'/','profile_index',case_profile_index);
 ncwriteatt(file,'/','precipitation','disabled in temporary timeint');
-ncwriteatt(file,'/','pulse_ace',1);
+ncwriteatt(file,'/','pulse_ace',pulse_ace);
+ncwriteatt(file,'/','ace_mode',mode);
 ncwriteatt(file,'/','dt_seconds',dt);
 ncwriteatt(file,'/','bubble_levels',BL);
 ncwriteatt(file,'/','bubble_delta_T_K',dTbl);
