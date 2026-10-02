@@ -1,5 +1,12 @@
 # ACE v0.18 developer handoff
 
+> 2026-10-02 update: the developer accepted the Manus singleACE/multiACE
+> milestone and authorized normalization before release. Start with the
+> [release record](releases/v0.18.0.md), [tests](../tests/README.md), and
+> [normalization map](migration/v018_normalization.md). Current sources are
+> directly under `matlab/` and `fortran/`. The remaining staging instructions
+> below are historical evidence; they do not describe the normalized checkout.
+
 > Shared-input development update: `feature/shared-netcdf-input` adds the
 > shared case NetCDF interface to the active drivers. See
 > [schema, operating instructions and validation](shared_input.md).

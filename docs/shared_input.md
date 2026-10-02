@@ -103,7 +103,7 @@ them through LFS requires a separate deliberate staging step and Git LFS.
 
 ## MATLAB run
 
-From `matlab/active/`, run `ace`. It reads the shared file by default and uses
+From `matlab/`, run `ace`. It reads the shared file by default and uses
 its single-profile ancillary data for the existing plume diagnostics. `arm`
 and original profile index come from the file; internally `pidx=1` because
 there is one profile. `case_profile_index` retains the original index.
@@ -128,7 +128,7 @@ Statistics Toolbox. It does not test the normal diagnostics or time integrator.
 
 The historical default compiler and flags remain Intel-specific. The new
 `ace_input.F` module uses netCDF-Fortran; make dependencies build it first.
-From `fortran/active/`:
+From `fortran/`:
 
 ```bash
 make

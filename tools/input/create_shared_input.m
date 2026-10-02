@@ -4,8 +4,8 @@ function create_shared_input(binary_dir, basis_file, sounding_file, output_file,
 root=fileparts(fileparts(fileparts(mfilename('fullpath'))));
 required={'source_commit','initial_sha256','pmb_sha256','basis_sha256','sounding_sha256'};
 assert(all(isfield(provenance,required)), 'Missing provenance attributes');
-addpath(fullfile(root,'matlab/active/util_thermodynamics'));
-driver=fullfile(root,'matlab/active/ace.m');
+addpath(fullfile(root,'matlab/util_thermodynamics'));
+driver=fullfile(root,'matlab/ace.m');
 source=fileread(driver);
 first=strfind(source,'function [T_env, q_env, Tv_env, theta_e_env');
 last=strfind(source,'function [theta_e_plu, qt_plu, T_plu');

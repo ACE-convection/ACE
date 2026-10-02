@@ -1,6 +1,6 @@
 function replay_mixed(root,work)
 previous=pwd;
-cd(fullfile(root,'matlab/active'));
+cd(fullfile(root,'matlab'));
 setenv('ACE_INPUT_MODE','shared');
 setenv('ACE_VALIDATE_INPUT',fullfile(work,'matlab_replay_init.mat'));
 ace;

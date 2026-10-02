@@ -32,6 +32,6 @@ manifest={'root':str(ROOT),'build_commands':commands,
  'phase_logging_build_commands':[commands[1],cmd],'case_count':25,
  'scope':'25 explicit mixed-phase/interior/endpoint/near-T0 states. No sweep.',
  'source_sha256':{p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in
- ['fortran/active/src/ace_module.F','matlab/active/util_thermodynamics/inv_T_from_theta_e.m']}}
+ ['fortran/src/ace_module.F','matlab/util_thermodynamics/inv_T_from_theta_e.m']}}
 (work/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 print(f'Prepared 25 cases. In {work}, run MATLAB -batch validate_mixed.')

@@ -19,7 +19,7 @@ theta_e/qt/MF input to both implementations.
 Initial v0.20/v0.24 comparisons must use this same sounding, bubble,
 physics switches, timing, geometry and output coordinates. Record the tested
 revision, tool versions and any version-specific adapter. The current runner
-operates on `matlab/active/` and `fortran/active/`; adapters for later
+operates on `matlab/` and `fortran/`; adapters for later
 snapshots remain future work. Do not silently change the case to match
 different defaults or treat this initial test as full scientific validation.
 

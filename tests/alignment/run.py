@@ -26,7 +26,7 @@ work=args.work.resolve()
 if work.exists() and any(work.iterdir()):
     raise SystemExit('Use a fresh work directory; previous results are preserved')
 work.mkdir(parents=True,exist_ok=True)
-model=(args.model or root/'fortran/active/ace_model.exe').resolve()
+model=(args.model or root/'fortran/ace_model.exe').resolve()
 input_file=root/'data/input/manus208.nc'
 
 

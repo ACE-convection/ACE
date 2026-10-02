@@ -2,7 +2,7 @@ function review_liquid_newton(output_file)
 % Diagnose one liquid boundary; hypothetical derivative changes are test-only.
 if nargin==0, output_file='liquid_newton_review.json'; end
 root=fileparts(fileparts(fileparts(mfilename('fullpath'))));
-addpath(fullfile(root,'matlab','active','util_thermodynamics'));
+addpath(fullfile(root,'matlab','util_thermodynamics'));
 Tref=280; p=90000;
 qt=eval_qs(Tref,p);
 te=eval_theta_e(Tref,qt,0,0,p);

@@ -33,7 +33,7 @@ def main():
         raise SystemExit('Use a fresh workspace; existing evidence is preserved')
     config = json.loads((baseline/'configuration.json').read_text())
     production = {name: value for name, value in config['sources_sha256'].items()
-                  if name.startswith(('matlab/active/', 'fortran/active/'))}
+                  if name.startswith(('matlab/', 'fortran/'))}
     for name, value in production.items():
         assert digest(root/name) == value, f'Stale production fixture: {name}'
     input_file = root/'data/input/manus208.nc'
@@ -73,7 +73,7 @@ def main():
     (work/'ace_module.F').write_text(module)
     (work/'replay_access.patch').write_text(''.join(difflib.unified_diff(
         original.splitlines(True),module.splitlines(True),fromfile='prepared/ace_module.F',tofile='replay/ace_module.F')))
-    local = (root/'matlab/active/ace.m').read_text()
+    local = (root/'matlab/ace.m').read_text()
     local = local[local.index('function X = timeint('):]
     (work/'replay_mixed.m').write_text((root/'tests/alignment/matlab_mixed_replay.txt').read_text()+'\n'+local)
     flags = ['-O2','-ffree-form','-fdefault-real-8','-fdefault-double-8','-ffree-line-length-none']

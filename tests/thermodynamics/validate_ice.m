@@ -1,6 +1,6 @@
 % Exactly 25 fixed cases and an independent ice-derivative check.
 manifest=jsondecode(fileread('manifest.json'));
-addpath(fullfile(manifest.root,'matlab','active','util_thermodynamics'));
+addpath(fullfile(manifest.root,'matlab','util_thermodynamics'));
 addpath(pwd);
 inputs=zeros(25,3); constructed=NaN(25,4); labels=cell(25,1);
 deltas=[-1e-4,-1e-8,0,1e-8,1e-4];

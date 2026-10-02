@@ -6,7 +6,7 @@ previous=pwd;
 variables={'ACE_INPUT_MODE','ACE_INPUT_FILE','ACE_LEGACY_DATA','ACE_VALIDATE_INPUT'};
 values=cellfun(@getenv,variables,'UniformOutput',false);
 cleanup=onCleanup(@() restore(previous,variables,values));
-cd(fullfile(root,'matlab/active'));
+cd(fullfile(root,'matlab'));
 setenv('ACE_INPUT_FILE',fullfile(root,'data/input/manus208.nc'));
 setenv('ACE_INPUT_MODE','shared');
 setenv('ACE_VALIDATE_INPUT',fullfile(reports,'matlab_shared_init.mat'));

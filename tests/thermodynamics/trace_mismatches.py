@@ -95,7 +95,7 @@ end program
     path.write_text(after)
     (work / 'matlab_trace.diff').write_text(''.join(difflib.unified_diff(original_matlab.splitlines(True), after.splitlines(True))))
     rows = ';\n'.join(' '.join(f'{x:.17g}' for x in row) for row in cases)
-    script = f"addpath('{ROOT}/matlab/active/util_thermodynamics');\naddpath('{work}');\ncases=[{rows}];\nresults=zeros(5,9);\n"
+    script = f"addpath('{ROOT}/matlab/util_thermodynamics');\naddpath('{work}');\ncases=[{rows}];\nresults=zeros(5,9);\n"
     script += r'''for i=1:5
 fprintf('CASE %d\n',i);
 [T,q,ql,qi,b,n1,n2,s,f]=reference_inversion(cases(i,1),cases(i,2),cases(i,3));

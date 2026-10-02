@@ -21,7 +21,7 @@ HERE = Path(__file__).resolve().parent
 
 
 def instrument(work, limit):
-    source = (ROOT / 'matlab/active/util_thermodynamics/inv_T_from_theta_e.m').read_text()
+    source = (ROOT / 'matlab/util_thermodynamics/inv_T_from_theta_e.m').read_text()
     modified = source.replace('function [T, q, ql, qi] = inv_T_from_theta_e(',
         'function [T,q,ql,qi,branch,n1,n2,status,initial_failure] = reference_inversion(', 1)
     modified = modified.replace('T0 = 273.1636783445389;',
@@ -68,7 +68,7 @@ end
 ''')
     (work / 'matlab_instrumentation.diff').write_text(''.join(difflib.unified_diff(
         source.splitlines(True), modified.splitlines(True), fromfile='active MATLAB', tofile='test MATLAB')))
-    source = (ROOT / 'fortran/active/src/ace_module.F').read_text()
+    source = (ROOT / 'fortran/src/ace_module.F').read_text()
     start = source.index('subroutine inv_theta_e(')
     stop = source.index('endsubroutine inv_theta_e', start)
     routine = source[start:stop]
@@ -126,7 +126,7 @@ endif
     include = subprocess.check_output(['nf-config', '--fflags'], text=True).split()
     libs = subprocess.check_output(['nf-config', '--flibs'], text=True).split()
     commands = [
-        ['gfortran', *flags, *include, '-c', str(ROOT / 'fortran/active/src/ace_input.F')],
+        ['gfortran', *flags, *include, '-c', str(ROOT / 'fortran/src/ace_input.F')],
         ['gfortran', *flags, *include, '-c', 'ace_module.F'],
         ['gfortran', *flags, str(HERE / 'inversion_probe.f90'), 'ace_module.o', 'ace_input.o', *libs, '-o', 'inversion_probe'],
     ]
@@ -157,8 +157,8 @@ def main():
     if work.exists() and any(work.iterdir()) and not args.resume:
         parser.error('Use a fresh work directory or --resume; prior results are preserved')
     work.mkdir(parents=True, exist_ok=True)
-    files = ['fortran/active/src/ace_module.F', 'fortran/active/src/ace_input.F']
-    files += [str(p.relative_to(ROOT)) for p in sorted((ROOT / 'matlab/active/util_thermodynamics').glob('*.m'))]
+    files = ['fortran/src/ace_module.F', 'fortran/src/ace_input.F']
+    files += [str(p.relative_to(ROOT)) for p in sorted((ROOT / 'matlab/util_thermodynamics').glob('*.m'))]
     hashes = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in files}
     config = {'schema_version': 2, 'root': str(ROOT), 'work': str(work), 'mode': args.mode,
               'max_iterations': args.max_iterations, 'chunk_size': args.chunk_size,

@@ -1,5 +1,5 @@
 function matlab_forward_probe(root,work)
-addpath(fullfile(root,'matlab/active/util_thermodynamics'));
+addpath(fullfile(root,'matlab/util_thermodynamics'));
 fid=fopen(fullfile(work,'input.bin'),'r','ieee-le');
 input=reshape(fread(fid,1200*5,'double'),[1200,5]); fclose(fid);
 T=input(:,1); q=input(:,2); ql=input(:,3); qi=input(:,4); p=input(:,5);

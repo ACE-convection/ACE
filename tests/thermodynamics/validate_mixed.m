@@ -1,6 +1,6 @@
 % Twenty-five explicit interior, endpoint, low-condensate and near-T0 states.
 manifest=jsondecode(fileread('manifest.json'));
-addpath(fullfile(manifest.root,'matlab','active','util_thermodynamics'));addpath(pwd);
+addpath(fullfile(manifest.root,'matlab','util_thermodynamics'));addpath(pwd);
 T0=273.1636783445389;
 % Columns: p(hPa), T-T0(K), condensate(kg/kg), ice fraction.
 states=[

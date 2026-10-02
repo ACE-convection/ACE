@@ -33,7 +33,7 @@ def main():
     config = json.loads((baseline/'configuration.json').read_text())
     # Refuse stale production fixtures. Test tools may evolve independently.
     production = {name: value for name, value in config['sources_sha256'].items()
-                  if name.startswith(('matlab/active/', 'fortran/active/'))}
+                  if name.startswith(('matlab/', 'fortran/'))}
     for name, value in production.items():
         assert digest(root/name) == value, f'Stale fixture source: {name}'
     input_file = root/'data/input/manus208.nc'
@@ -96,7 +96,7 @@ call set_reference_tv(Tv0)
         (directory/'fortran_case.f90').write_text(program)
         (directory/'driver.patch').write_text(''.join(difflib.unified_diff(
             driver.splitlines(True),program.splitlines(True),fromfile='test/fortran_case.f90',tofile=label+'/fortran_case.f90')))
-        run(['gfortran',*flags,*include,'-c',root/'fortran/active/src/ace_input.F'],directory,'input_build')
+        run(['gfortran',*flags,*include,'-c',root/'fortran/src/ace_input.F'],directory,'input_build')
         run(['gfortran',*flags,*include,'-c','ace_module.F'],directory,'module_build')
         run(['gfortran',*flags,*include,'fortran_case.f90','ace_module.o','ace_input.o',*libs,rpath,'-o','case.exe'],directory,'driver_build')
         for mode in ['single','multi']:

@@ -1,5 +1,5 @@
 function run_thermo(root,reports)
-addpath(fullfile(root,'matlab/active/util_thermodynamics'));
+addpath(fullfile(root,'matlab/util_thermodynamics'));
 global p_zc qc_ramp dqc tau_pr
 qc_ramp=0.5e-3; dqc=20; tau_pr=300;
 labels={'warm_unsaturated','ice_unsaturated','ice_near_freezing_unsaturated',...

@@ -1,6 +1,6 @@
 % Preview ONLY: temporary inverse copies carry the proposed endpoint rule.
 manifest=jsondecode(fileread('manifest.json'));
-addpath(fullfile(manifest.root,'matlab','active','util_thermodynamics'));addpath(pwd);
+addpath(fullfile(manifest.root,'matlab','util_thermodynamics'));addpath(pwd);
 fid=fopen('input.bin','r','ieee-le');assert(fid>=0);
 n=fread(fid,1,'int32');inputs=fread(fid,[n,3],'double');fclose(fid);
 matlab=zeros(n,13);

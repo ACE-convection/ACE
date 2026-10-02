@@ -6,7 +6,7 @@ settings.experiment=experiment; settings.label=mode;
 assert(ismember(experiment,{'dry','precip','ice_precip','mixed_precip'}),'Unknown experiment');
 if ~strcmp(experiment,'dry'), settings.label=[mode '_' experiment]; end
 previous=pwd;
-cd(fullfile(settings.root,'matlab/active'));
+cd(fullfile(settings.root,'matlab'));
 setenv('ACE_INPUT_MODE','shared');
 setenv('ACE_VALIDATE_INPUT',fullfile(settings.reports,['matlab_' settings.label '_init.mat']));
 ace;

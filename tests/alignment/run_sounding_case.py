@@ -86,7 +86,7 @@ def main():
         mode = 'native_precip' if args.precipitation else 'no_precip'
         (work/('fortran_'+mode+'.diff')).write_text(''.join(difflib.unified_diff(
             original.splitlines(True), changed.splitlines(True), fromfile='prepared/ace_module.F', tofile=mode+'/ace_module.F')))
-        source = (root/'matlab/active/ace.m').read_text()
+        source = (root/'matlab/ace.m').read_text()
         initialization = source
         if args.saturated_bubble:
             for before, after in [('BL = [];', 'BL = 11:51;'), ('dTbl = 0;', 'dTbl = 1;')]:
@@ -120,7 +120,7 @@ def main():
         libs = subprocess.check_output(['nf-config', '--flibs'], text=True).split()
         rpath = '-Wl,-rpath,'+subprocess.check_output(['nf-config', '--prefix'], text=True).strip()+'/lib'
         run(['gfortran', *flags, *include, '-c', 'ace_module.F'], 'module_build')
-        for source_name, executable in [('fortran/active/src/test.F', 'base_model.exe'),
+        for source_name, executable in [('fortran/src/test.F', 'base_model.exe'),
                                        ('tests/alignment/fortran_sounding_case.f90', 'case.exe')]:
             run(['gfortran', *flags, *include, root/source_name, 'ace_module.o', 'ace_input.o',
                  *libs, rpath, '-o', executable], executable+'_build')

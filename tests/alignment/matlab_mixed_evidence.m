@@ -1,6 +1,6 @@
 function matlab_mixed_evidence(root,work)
 % Diagnose saved cloud-level trajectories; do not repeat time integration.
-addpath(fullfile(root,'matlab/active/util_thermodynamics'));
+addpath(fullfile(root,'matlab/util_thermodynamics'));
 p=ncread(fullfile(root,'data/input/manus208.nc'),'p_zc');
 levels=91:110; T0=273.1636783445389;
 for label={'single_mixed_precip','multi_mixed_precip'}

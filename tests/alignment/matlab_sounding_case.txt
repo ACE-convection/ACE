@@ -3,7 +3,7 @@ function run_sounding_case(root, reports, input_file, duration, output_step, ini
 if nargin<6, initialize_only=false; end
 if nargin<7, mode='single'; end
 assert(ismember(mode,{'single','multi'}),'Unknown ACE mode');
-cd(fullfile(root,'matlab/active'));
+cd(fullfile(root,'matlab'));
 setenv('ACE_INPUT_MODE','shared');
 setenv('ACE_INPUT_FILE',input_file);
 setenv('ACE_VALIDATE_INPUT',fullfile(reports,'matlab_init.mat'));

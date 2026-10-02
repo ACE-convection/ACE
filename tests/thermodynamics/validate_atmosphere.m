@@ -1,6 +1,6 @@
 % Reproducible stratified atmospheric validation; no source mutation or sweep.
 manifest=jsondecode(fileread('manifest.json'));
-addpath(fullfile(manifest.root,'matlab','active','util_thermodynamics'));addpath(pwd);
+addpath(fullfile(manifest.root,'matlab','util_thermodynamics'));addpath(pwd);
 rng(manifest.seed,'twister');T0=273.1636783445389;
 % Paired p(hPa)/T(K) envelopes: surface to upper troposphere/tropopause.
 levels=[900 1050 255 310;700 900 245 295;500 700 235 285; ...

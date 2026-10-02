@@ -54,8 +54,8 @@ def main():
     commands=instrument(work,1000)
     patches=[]
     for relative,language,temporary in [
-        ('matlab/active/util_thermodynamics/inv_T_from_theta_e.m','matlab','reference_inversion.m'),
-        ('fortran/active/src/ace_module.F','fortran','ace_module.F')]:
+        ('matlab/util_thermodynamics/inv_T_from_theta_e.m','matlab','reference_inversion.m'),
+        ('fortran/src/ace_module.F','fortran','ace_module.F')]:
         source=(ROOT/relative).read_text()
         proposed=proposal(source,language)
         patches.extend(difflib.unified_diff(source.splitlines(True),proposed.splitlines(True),fromfile='a/'+relative,tofile='b/'+relative))
@@ -79,7 +79,7 @@ def main():
     with (work/'fortran.log').open('w') as log:
         subprocess.run([str(work/'inversion_probe'),'input.bin','fortran.bin'],cwd=work,stdout=log,check=True)
     manifest={'root':str(ROOT),'source_sha256':{p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in
-        ['fortran/active/src/ace_module.F','matlab/active/util_thermodynamics/inv_T_from_theta_e.m']},
+        ['fortran/src/ace_module.F','matlab/util_thermodynamics/inv_T_from_theta_e.m']},
         'replay_cases':1200,'neighbor_cases':18,'neighbors':metadata,'production_modified':False,
         'formula':'8*epsilon*max(abs(G0),abs(GT0),abs(HT0))',
         'proposal_status':'Unapproved scientific decision; applied only in temporary copies.'}

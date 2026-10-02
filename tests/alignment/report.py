@@ -44,7 +44,7 @@ def main():
             ['git', 'branch', '--show-current'], cwd=root, text=True).strip(),
         'build_commands': json.loads((args.build / 'build_commands.json').read_text()),
         'production_driver_sha256': hashlib.sha256(
-            (root / 'fortran/active/src/test.F').read_bytes()).hexdigest(),
+            (root / 'fortran/src/test.F').read_bytes()).hexdigest(),
         'compiler_version': subprocess.check_output(
             ['gfortran', '--version'], text=True).splitlines()[0],
         'scope': 'Current active sources: matched 4-second/120-second trajectories; no acceptance tolerance',

@@ -1,5 +1,20 @@
 # Unified ACE alignment and release roadmap
 
+## Current milestone decision (2026-10-02)
+
+The developer accepted the current v0.18 Manus singleACE and twelve-hour
+multiACE evidence as sufficient and authorized normalization before merge
+and tag. The [v0.18.0 release record](../releases/v0.18.0.md) now owns the
+accepted scope, retained limitations and local release procedure. The
+[normalization map](v018_normalization.md) promotes the tested sources to
+`matlab/` and `fortran/`, preserving pre-normalization recovery commit
+`c9ae729`. Broader budget/phase/compiler gates below are retained as the
+original planning baseline, not additional blockers for this accepted milestone.
+
+The remaining sections preserve historical staging descriptions and the
+joint development direction toward v0.20/v0.24. Current operating paths are
+in the source-root READMEs and [test instructions](../../tests/README.md).
+
 Status: canonical forward roadmap, architecture clarified 2026-09-30.
 v0.18 source candidates are staged; numerical validation and repository
 normalization remain open. Historical import is largely complete; its facts

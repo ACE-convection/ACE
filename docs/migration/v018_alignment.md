@@ -1,5 +1,15 @@
 # Unified ACE v0.18 alignment audit
 
+## Developer acceptance update (2026-10-02)
+
+The developer accepts the current tested singleACE and twelve-hour multiACE
+physical evolution as sufficient for v0.18, with documented discrepancies
+and untested budgets retained. See the [release record](../releases/v0.18.0.md).
+This bounded acceptance supersedes the broader release gates at the end of
+this historical audit for this milestone. It does not reclassify known
+counterexamples as resolved. Source-root normalization and revalidation are
+performed separately before local main/tag publication.
+
 ## Controlled alignment update
 
 Step 1 (`1b3443c`) aligns the Fortran precipitation onset formula. Step 2

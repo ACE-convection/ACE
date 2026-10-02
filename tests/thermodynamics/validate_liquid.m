@@ -1,6 +1,6 @@
 % Exactly five original liquid-boundary cases plus twenty explicit states.
 manifest=jsondecode(fileread('manifest.json'));
-addpath(fullfile(manifest.root,'matlab','active','util_thermodynamics'));
+addpath(fullfile(manifest.root,'matlab','util_thermodynamics'));
 addpath(pwd);
 T0=280; p0=90000; qt0=eval_qs(T0,p0);
 te0=eval_theta_e(T0,qt0,0,0,p0);

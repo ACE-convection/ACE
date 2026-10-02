@@ -3,7 +3,7 @@ function sweep_inversion(configuration)
 % Production physics is untouched by test-only counters/iteration caps.
 cfg=jsondecode(fileread(configuration));
 addpath(cfg.work);
-addpath(fullfile(cfg.root,'matlab/active/util_thermodynamics'));
+addpath(fullfile(cfg.root,'matlab/util_thermodynamics'));
 started=tic;
 if strcmp(cfg.mode,'focused')
   [focused,labels]=focused_inputs();
