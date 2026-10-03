@@ -24,3 +24,10 @@ for the developer-accepted singleACE and multiACE cases. See the
 [shared input schema](../docs/shared_input.md),
 [historical recovery map](../docs/migration/v018_normalization.md), and
 [v0.18.0 accepted scope](../docs/releases/v0.18.0.md).
+
+For a GNU default-real32 build, omit `-fdefault-real-8` and
+`-fdefault-double-8` from the flags above. Build in a fresh directory to
+avoid mixing objects and modules compiled with different default kinds.
+PMB and shared-input reads retain binary64 storage. The
+[precision test runner](../tests/precision/README.md) builds both kinds in
+isolated directories and tests the stable native precipitation evaluation.
