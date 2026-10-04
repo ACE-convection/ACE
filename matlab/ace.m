@@ -1,5 +1,17 @@
 %% Directory/file paths
 dir_ace = pwd;
+addpath(dir_ace);
+input_mode=getenv('ACE_INPUT_MODE');
+if isempty(input_mode), input_mode='shared'; end
+assert(ismember(input_mode,{'shared','legacy'}), 'ACE_INPUT_MODE must be shared or legacy');
+shared_input=strcmp(input_mode,'shared');
+input_file=getenv('ACE_INPUT_FILE');
+if isempty(input_file), input_file=fullfile(dir_ace,'../data/input/goamazon314_s20.nc'); end
+if shared_input
+  input=read_shared_input(input_file);
+  assert(strcmp(input.schema,'ACE-case-input-2') && strcmp(input.geometry,'slab'), ...
+    'S20 driver requires schema 2 slab geometry; v0.18 annular data are not interchangeable');
+end
 
 % Subroutines
 dir_util_weno = [dir_ace '/util_weno/'];
@@ -16,6 +28,11 @@ dir_basis = [dir_data  '/basis/'];
 
 % ARM best-estimate soundings (4 options from 3 sites)
 dir_armbe = [dir_data '/soundings/'];
+legacy_data=getenv('ACE_LEGACY_DATA');
+if ~isempty(legacy_data)
+  dir_basis=[fullfile(legacy_data,'basis') '/'];
+  dir_armbe=[fullfile(legacy_data,'soundings') '/'];
+end
 armfnlist = {'manus_3hr_ARMBEsonde_profiles.nc';
              'nauru_3hr_ARMBEsonde_profiles.nc';
              'maoarmbeatmM1.c1.20140101.003000.nc'};
@@ -30,11 +47,21 @@ output_filename = 'GoAmazon_idp=314_2D101ACEs_KHN26_dz=100m_1cloud-tripleCheck.m
 %% Loading pre-computed massflux basis
 pcbsfn = 'COMPOSITE_ACE_BASIS_2D_V020.mat';
 if conti==0
-  load([dir_basis pcbsfn]) % PMB(201,200,forcing-region,response-region)
+  if shared_input
+    PMB=input.PMB; PMDv=input.PMDv; PMD=input.PMD;
+    Z=input.basis_z;
+    D=(input.ace_width(:)/1000)'; % m -> km, row vector required by S20
+  else
+    load([dir_basis pcbsfn]) % PMB(edge,coarse,forcing,response)
+  end
 %   D = 5*ones(1,88);%DCASES; % Horizontal entity diameters in km
   Ni = length(D); % Number of ACEs
   Ai = D'; % ACE area in km^2 (index i or ida)
   Bi = ones(Ni,1); % ACE outer perimeter in km (index i or ida)
+  if shared_input
+    Ai=input.ace_area(:)/1e6; % m^2 -> km^2
+    Bi=input.ace_perimeter(:)/1000; % m -> km
+  end
 end
 
 %% Test Turning off nonlocal response
@@ -77,6 +104,13 @@ theta_e_diag = 1;
 arm = 3;%1;% %1=Manus/2=Nauru/3,4=GOAmazon
 armfn = armfnlist{arm};
 pidx = 314;%208;% % Profile index for environment
+if shared_input
+  arm=input.arm; armfn=armfnlist{arm};
+  case_profile_index=input.profile_index;
+  pidx=1; % shared file contains one selected sounding
+else
+  case_profile_index=pidx;
+end
 
 % Verital grids setup
 dz = 100; % m; 5hPa~50m(surface)/250m(aloft)
@@ -85,6 +119,11 @@ ztop = 40e3; % m
 z = [dz/2:dz:ztop+dz/2]'; % z-grid for plume computation
 zm = [0:dz:ztop]'; % z-grid for mass-flux for entrainment rate
 p = [1000:-5:100]'*1e2; % 5-hPa grid
+if shared_input
+  dz=input.dz; z=input.z; zm=input.zm; p=input.p;
+  ztop=zm(end);
+  coarse_z=(numel(zm)-1)/(size(PMB,2));
+end
 
 % For precip sinks
 qc_ramp = 0.5e-3; % kg/kg; ramping for precip when qc>qc_ramp
@@ -168,6 +207,18 @@ IMPORT_CONSTANTS_NOGLOBAL
 Nzm = length(zm);
 
 %% Pre-processing sounding data
+if shared_input
+  % Profiles are already prepared by the S20 converter; do not interpolate twice.
+  plev=input.plev; pr=input.pr; ta=input.ta; hus=input.hus;
+  prw=input.prw; date=input.date; hh=input.hh;
+  T_p=input.T_p; q_p=input.q_p; rho_p=input.rho_p; z_p=input.z_p;
+  T_env=input.T_env; q_env=input.qt_zc; Tv_env=input.Tv_zc;
+  theta_e_env=input.theta_e_zc; rho_env=input.rho_zc; p_z=input.p_zc;
+  T_zm=input.T_zm; q_zm=input.qt_mf; Tv_zm=input.Tv_mf;
+  theta_e_zm=input.theta_e_mf; rho_zm=input.rho_mf; p_zm=input.p_mf;
+  theta_zm=input.theta_zm; theta_es_zm=input.theta_es_zm; rh_zm=input.rh_zm;
+else
+%% Pre-processing sounding data
 [plev, pr, ta, hus, prw, date, hh] = LOAD_SOUNDINGS([dir_armbe armfn], arm);
 
 %% KKNW25 RH-reduced (using GoAmazon idp=314 case)
@@ -191,6 +242,8 @@ q_p = TWEAK_THETA_E(T_p, q_p, p);
 [T_env, q_env, Tv_env, theta_e_env, rho_env, p_z,...
  T_zm, q_zm, Tv_zm, theta_e_zm, rho_zm, p_zm,...
  theta_zm, theta_es_zm, rh_zm] = INTERP_Z_GRID(T_p, q_p, z_p, p, zm, z, dz);
+
+end
 
 %% Setup for time-integration
 day = date(pidx); % Can run multiple pidx cases (by adding a for-loop here)

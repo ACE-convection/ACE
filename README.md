@@ -14,10 +14,14 @@ ACE currently has two implementations with different roles:
 The two implementations share the same core model formulation, but they are not necessarily identical in all physical parameterizations. A major goal of this repository is to maintain consistency between the shared components of the MATLAB and Fortran implementations and to provide systematic tests for their numerical agreement.
 
 This development branch contains the imported MATLAB S20 and historical
-Fortran v0.20/P3 sources. Source integration is complete; basis confirmation,
-input adapters and validation are deferred. See the
+Fortran v0.20/P3 sources. Source integration and shared NetCDF adapters are
+implemented; input-only readback and Fortran builds are verified. Basis
+confirmation and model validation are deferred. See the
 [v0.20 integration record](docs/migration/v020_source_integration.md) for
 source identities, input contracts and known code findings.
+The [shared input schema](docs/shared_input.md) now includes PMB, PMDv and
+PMD with explicit geometry and dynamic dimensions. The default S20 case
+file still requires the final basis before conversion.
 
 The published `v0.18.0` remains the tested release. The developer accepted
 the MATLAB/Fortran v0.18 alignment on

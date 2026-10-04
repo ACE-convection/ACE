@@ -86,7 +86,10 @@ The initial preparation changed documentation and the development branch
 only. The developer subsequently authorized source integration on this
 branch before testing. The [integration record](v020_source_integration.md)
 records active S20/Fortran v0.20 source promotion and imported P3 ancestry;
-input adapters, basis confirmation and validation remain deferred.
+The [shared-input adapter](v020_shared_input_adapter.md) now reconnects both
+drivers to NetCDF and extends input to three operators. Basis confirmation,
+input-file generation and model validation remain deferred. The adapter
+record includes successful reader readback checks and Fortran builds.
 MATLAB is the dynamics reference; P3 is Fortran-only physics rather than a
 required MATLAB implementation.
 

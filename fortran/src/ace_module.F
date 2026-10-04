@@ -2,7 +2,7 @@ module ace_module
 implicit none
 
 private
-public :: weno, weno_vec, inv_theta_e, pchip, theta_e, ace_driver, ace_initialization, eval_qs
+public :: weno, weno_vec, inv_theta_e, pchip, theta_e, ace_driver, ace_initialization, eval_qs, set_p3_lookup_directory
 
 ! defien operator for grid interface
 
@@ -17,11 +17,13 @@ real, parameter :: qc_ramp = 0.5e-3 ! kg/kg; ramping for precip when qc>qc_ramp
 real, parameter :: dqc = 20 ! kg/kg; transition for a smooth onset of precip ramp function
 real, parameter :: tau_pr = 5*60 ! sec; relaxation timescale for precip
 
-integer :: coarse_nz
+integer :: coarse_nz, coarse_ratio
 real, dimension(:), allocatable :: coarse_z, coarse_ze
 real, dimension(:,:), allocatable :: coarse_F
 real, dimension(:,:), allocatable :: dwdt
-real*8, dimension(:,:,:,:), allocatable :: PMB
+real*8, dimension(:,:,:,:), allocatable :: PMB, PMDv, PMD
+! Momentum operators are loaded for the shared input contract; current dynamics use PMB only.
+character(1024), save :: p3_lookup_directory="./input_data/"
 real, dimension(:,:), allocatable, save :: Ta, q, ql, qi
 
 contains
@@ -118,7 +120,8 @@ enddo
 endsubroutine ace_driver
 
 
-subroutine ace_initialization(ncols,nz,nz_presolve,z_presolve,ze_presolve,fname)
+subroutine ace_initialization(ncols,nz,nz_presolve,z_presolve,ze_presolve,fname,netcdf_input)
+use ace_input, only: read_case_basis, read_case_metadata
 implicit none
 
 ! input variables
@@ -126,11 +129,19 @@ integer, intent(in) :: ncols, nz, nz_presolve
 real, dimension(nz_presolve) :: z_presolve
 real, dimension(nz_presolve+1) :: ze_presolve
 character(*), intent(in) :: fname
+logical, intent(in), optional :: netcdf_input
 
 ! local variables
-integer :: i,j,k,n
+integer :: i,j,k,n,record_length,input_nz,input_cols,input_coarse
+logical :: shared
+character(64) :: geometry
 
 coarse_nz=nz_presolve
+if (coarse_nz<1) error stop 'Invalid coarse basis size'
+if (mod(nz-1,coarse_nz)/=0) error stop 'Fine grid does not partition into coarse layers'
+coarse_ratio=(nz-1)/coarse_nz
+shared=.false.
+if (present(netcdf_input)) shared=netcdf_input
 allocate(coarse_z(coarse_nz),coarse_ze(coarse_nz+1))
 allocate(coarse_F(ncols,coarse_nz))
 allocate(PMB(ncols,ncols,coarse_nz,coarse_nz+1))
@@ -138,17 +149,30 @@ allocate(dwdt(ncols,coarse_nz+1))
 allocate(Ta(ncols,nz),q(ncols,nz),ql(ncols,nz),qi(ncols,nz))
 
 
-open(10,file=trim(fname),access="direct",recl=(coarse_nz+1)*2)
-n=1
-do k=1,ncols
-do j=1,ncols
-  do i=1,coarse_nz
-    read(10,rec=n) PMB(k,j,i,:)
-    n=n+1
+if (shared) then
+  call read_case_metadata(fname,input_nz,input_cols,input_coarse,geometry)
+  if (input_nz/=nz .or. input_cols/=ncols .or. input_coarse/=coarse_nz) &
+    error stop 'Basis metadata disagrees with initialized model'
+  call read_case_basis(fname,'PMB',PMB)
+  if (trim(geometry)=='slab') then
+    allocate(PMDv(ncols,ncols,coarse_nz,coarse_nz+1),PMD(ncols,ncols,coarse_nz,coarse_nz+1))
+    call read_case_basis(fname,'PMDv',PMDv)
+    call read_case_basis(fname,'PMD',PMD)
+  endif
+else
+  inquire(iolength=record_length) PMB(1,1,1,:)
+  open(10,file=trim(fname),access="direct",recl=record_length)
+  n=1
+  do k=1,ncols
+    do j=1,ncols
+      do i=1,coarse_nz
+        read(10,rec=n) PMB(k,j,i,:)
+        n=n+1
+      enddo
+    enddo
   enddo
-enddo
-enddo
-close(10)
+  close(10)
+endif
 
 coarse_z = z_presolve
 coarse_ze = ze_presolve
@@ -162,7 +186,7 @@ implicit none
 ! input/output variables
 integer, intent(in) :: ncols, nz, n_weno, n_prog, rkstage
 real, intent(in) :: dt
-real, dimension(ncols), intent(in) :: A, B ! ACE area and ACE outer perimeter [km^2, km]
+real, dimension(ncols), intent(in) :: A, B ! ACE area/perimeter in SI [m^2, m]
 real, dimension(nz,8), intent(in) :: Ref ! reference varaibles: rhoc, rhoz, z, zm, dz, dzm, p, pi
 real, dimension(ncols+1,nz,n_prog), intent(in) :: X ! MF, theta_e, qt
 !real, dimension(ncols+1,nz,n_prog), intent(in) :: X ! MF, theta, qv, ql, qi
@@ -267,7 +291,7 @@ do i=1,ncols
   F(i,1:nz) = F(i,1:nz) + rho0B(1:nz)
 
   !call pchip(nz,Ref(1:nz,4),F(i,1:nz),coarse_nz,coarse_z,coarse_F(i,1:coarse_nz),.True.)
-  coarse_F(i,:) = sum(reshape(F(i,1:nz),(/4,nz/4/)),1)/4.
+  coarse_F(i,:) = sum(reshape(F(i,1:nz-1),(/coarse_ratio,coarse_nz/)),1)/real(coarse_ratio)
 enddo
 
 do i=1,ncols
@@ -352,6 +376,13 @@ enddo
 end subroutine precip_sinks
 
 
+subroutine set_p3_lookup_directory(directory)
+character(*), intent(in) :: directory
+if (len_trim(directory)==0 .or. len_trim(directory)>len(p3_lookup_directory)) &
+  error stop 'Invalid P3 lookup directory'
+p3_lookup_directory=directory
+end subroutine
+
 subroutine p3_wrapper_ace(ncols,nz,n_prog,dt,X_old,X,Ref)
 use microphy_p3
 implicit none
@@ -391,7 +422,7 @@ real, dimension(ncols,nz,n_diag_3d) :: diag_3d
 real, dimension(ncols) :: precip_liq,precip_sol
 
 if (first) then
-  call p3_init('./input_data/',ncat,trplMomI,liqfrac,trim(model),stat,abort_on_err,dowr)
+  call p3_init(trim(p3_lookup_directory),ncat,trplMomI,liqfrac,trim(model),stat,abort_on_err,dowr)
   if (stat/=0) stop "Failure of p3 initialization"
   first = .False.
 endif

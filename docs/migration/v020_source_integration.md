@@ -1,5 +1,10 @@
 # v0.20 source integration
 
+The source-only state below describes `d9e8401`. Subsequent developer-authorized
+[shared-input adapters](v020_shared_input_adapter.md) reconnect both drivers
+to NetCDF and extend the contract to three operators. Input-only verification
+is recorded there; model testing remains deferred.
+
 Authorized 2026-10-04 after source review. The developer selected integration
 on `migration/v020-preparation`, with basis confirmation and testing deferred.
 Published `main` and `v0.18.0` remain at `d7d25b1`.
