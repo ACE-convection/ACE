@@ -1,10 +1,12 @@
 # ACE migration records
 
-Updated 2026-10-02. The migration and v0.18 source-root normalization are
+Updated 2026-10-04. The migration and v0.18 source-root normalization are
 complete. Local `main` contains the accepted release, and annotated tag
-`v0.18.0` identifies `2b62c291b3ab4e3da7a822559d341e3183bc302b`.
-The release has not been pushed to GitHub. Later documentation changes do
-not move that tag.
+`v0.18.0` identifies `d7d25b10c1bbad99543ed579a11196673d531c17`.
+The final release includes the accepted single-precision precipitation work;
+`main` and the tag have been pushed, and the developer reports GitHub Release
+published. The original normalization release commit `2b62c29` remains in
+ancestry. v0.20 preparation is now tracked in the roadmap.
 
 ## Start here
 
@@ -47,11 +49,11 @@ is inferred from an import order, matching filename or snapshot label.
 ## Recover earlier records and source trees
 
 The complete documentation before this consolidation is preserved at
-`v0.18.0`. Historical source trees before normalization are preserved at
+`2b62c29`. Historical source trees before normalization are preserved at
 `c9ae729`; follow the normalization manifest for exact paths.
 
 ```bash
-git show v0.18.0:docs/migration/matlab_fortran_alignment_plan.md
+git show 2b62c29:docs/migration/matlab_fortran_alignment_plan.md
 git show c9ae729:matlab/history/snapshots/ACE_V020/ACE_V020_2D88ACEs.m
 ```
 
@@ -64,7 +66,7 @@ source change or release-tag replacement is part of documentation cleanup.
 The roadmap now states completed v0.18 work and later joint milestones.
 Import, alignment and input records retain summaries, verified anchors and
 links to their primary evidence; obsolete staging recipes and duplicated
-pre-release gates remain recoverable from `v0.18.0`. The
+pre-release gates remain recoverable from `2b62c29`. The
 [handoff](../v018_developer_handoff.md) uses current source roots and test
 entry points.
 
@@ -72,6 +74,6 @@ The redundant `matlab_s20_active_stage.md` page was removed: its copy counts
 and staging commit are retained in the utility inventory, and its dependency,
 input and no-runtime-proof findings in the driver dependency map. Recover
 its original text with
-`git show v0.18.0:docs/migration/matlab_s20_active_stage.md`.
+`git show 2b62c29:docs/migration/matlab_s20_active_stage.md`.
 File identities, lineage/variant evidence, scientific reports, data manifests,
 commit maps and the normalization manifest remain preserved.

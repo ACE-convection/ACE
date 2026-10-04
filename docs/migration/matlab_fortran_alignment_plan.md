@@ -1,6 +1,6 @@
 # Unified ACE development roadmap
 
-Updated 2026-10-02 after local release `v0.18.0` at `2b62c29`.
+Updated 2026-10-04 after final release `v0.18.0` at `d7d25b1`.
 This document owns the forward development sequence. Accepted results and
 limitations belong in the [release record](../releases/v0.18.0.md);
 historical evidence is indexed in [migration records](README.md).
@@ -15,12 +15,13 @@ historical evidence is indexed in [migration records](README.md).
 | Accept physical evolution for this milestone | Manus singleACE 3 h and outer-pulse multiACE 12 h, with native precipitation; developer acceptance recorded in the release |
 | Normalize current source roots | [Path map and manifest](v018_normalization.md), recovery commit `c9ae729` |
 | Verify behavior after normalization | GNU build/default input checks and three full reruns; all saved numerical values exactly reproduced within each implementation |
-| Merge and tag locally | `main` merge `2b62c29`, annotated `v0.18.0`; no GitHub push |
+| Accept tested single precision | Stable precipitation evaluation, singleACE/multiACE figures and matched real64 control; physical evolution accepted on 2026-10-04 |
+| Publish final v0.18 | `main` merge `d7d25b1`, annotated `v0.18.0`, both pushed; developer reports GitHub Release published |
 
 Broader phase, budget and compiler questions remain documented limitations,
 not unfinished release gates for this accepted v0.18 milestone. The original
 pre-release plan is recoverable at
-`v0.18.0:docs/migration/matlab_fortran_alignment_plan.md`.
+`2b62c29:docs/migration/matlab_fortran_alignment_plan.md`.
 
 ## Repository philosophy and development sequence
 
@@ -51,6 +52,38 @@ For v0.20 input/API blockers, start with the
 [standalone readiness](matlab_validation_readiness.md).
 For v0.24, use the [p87 input/reference checklist](matlab_p87_validation_gate.md).
 The old S24 layout proposal is historical evidence only.
+
+## v0.20 preparation started (2026-10-04)
+
+The developer authorized moving on after publishing v0.18. Development starts
+from `d7d25b1` on `migration/v020-preparation`. The accepted real32 trajectory
+differences and existing scientific limitations do not reopen v0.18 release
+gates.
+
+1. Inspect the packaged MATLAB S20 reference and its own utility collection,
+   recoverable at `c9ae729:matlab/history/snapshots/ACE_V020/`. Keep the
+   standalone v0.20 driver distinct; its utility pairing is a migration
+   convention, not proof of historical runtime compatibility.
+2. Identify the intended 2D basis, builder prerequisites and sounding data.
+   Review grid dimensions, operator orientation and input contracts before
+   generating or substituting inputs. The older readiness reports describe
+   missing data at their review dates; check current availability separately.
+3. Recover the intended historical Fortran P3 interface and identify its P3
+   source version, lookup data, build dependencies and attribution. The old
+   audit refers to commit `381402d`, which does not resolve as an object in
+   the current unified checkout; its source mapping remains to be recovered.
+4. Present a small source-migration proposal covering state variables,
+   thermodynamic formulation and shared dynamics. Review scientific changes
+   before replacing active source or public interfaces, as required by
+   `AGENTS.md`.
+5. Establish the MATLAB S20 dynamics reference and matched Fortran comparison,
+   then validate Fortran-only P3 coupling separately from shared dynamics.
+   Check precision and build compatibility for the selected P3 version.
+
+This preparation changes documentation and the development branch only.
+It does not import historical sources, select a new P3 version or change
+production algorithms. MATLAB is the dynamics reference; P3 is planned as
+Fortran-only physics rather than a required MATLAB implementation.
 
 ## Fixed initial runtime comparison
 
