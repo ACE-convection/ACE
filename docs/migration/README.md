@@ -81,3 +81,5 @@ its original text with
 `git show 2b62c29:docs/migration/matlab_s20_active_stage.md`.
 File identities, lineage/variant evidence, scientific reports, data manifests,
 commit maps and the normalization manifest remain preserved.
+
+- [v0.20 reference buoyancy and momentum alignment](v020_dynamics_alignment.md) — scientific changes, disabled momentum defaults and remaining dynamics differences.

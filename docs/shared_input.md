@@ -34,8 +34,9 @@ Python/ncdump see all operators in reversed order:
 `operator(response,forcing,coarse,edge)`; MATLAB keeps API order.
 Readers reject swapped dimension names even when lengths are equal. Schema
 2 requires all three full operators; absent momentum operators are not
-silently replaced with zero. Fortran stores PMDv/PMD; only PMB is applied
-at this input-adapter stage. Momentum dynamics remain follow-up work.
+silently replaced with zero. Fortran now includes PMDv/PMD calculation
+branches with the same disabled defaults as MATLAB; see the
+[dynamics alignment record](migration/v020_dynamics_alignment.md).
 
 `native` records unconverted momentum-operator source values; their physical
 units and application need scientific review before those momentum terms

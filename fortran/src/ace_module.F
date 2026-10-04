@@ -22,7 +22,10 @@ real, dimension(:), allocatable :: coarse_z, coarse_ze
 real, dimension(:,:), allocatable :: coarse_F
 real, dimension(:,:), allocatable :: dwdt
 real*8, dimension(:,:,:,:), allocatable :: PMB, PMDv, PMD
-! Momentum operators are loaded for the shared input contract; current dynamics use PMB only.
+! Slab defaults follow MATLAB S20; momentum coefficients retain their source units.
+logical, save :: slab_geometry=.false., zero_ref_buoyancy=.false., Wbar_eq_zero=.false.
+logical, save :: turn_off_DHv=.true., turn_off_DHh=.true.
+real, allocatable, save :: reference_tv(:)
 character(1024), save :: p3_lookup_directory="./input_data/"
 real, dimension(:,:), allocatable, save :: Ta, q, ql, qi
 
@@ -44,6 +47,7 @@ real, dimension(ncols,nz), intent(in) :: B_forcing
 real, dimension(ncols+1,nz,n_prog) :: yi
 real, dimension(ncols,nz,n_prog) :: K1,K2,tmp
 real :: dum1
+real :: mean_mf(nz)
 integer :: i,k
 
 yi = X
@@ -86,6 +90,16 @@ do while ( t < te)
   yi = X
   X(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt
   
+  ! Match S20's end-of-SSPRK area-mean MF removal before physics/damping.
+  if (Wbar_eq_zero) then
+    do k=1,nz
+      mean_mf(k)=sum(X(1:ncols,k,1)*(A/sum(A)))
+    enddo
+    do i=1,ncols
+      X(i,:,1)=X(i,:,1)-mean_mf
+    enddo
+  endif
+
   ! call physics here
   if (n_prog==3) then
     call precip_sinks(ncols,nz,n_prog,Ref(1:nz,7),K1(:,:,1:2)) ! simplified precipitation
@@ -120,8 +134,10 @@ enddo
 endsubroutine ace_driver
 
 
-subroutine ace_initialization(ncols,nz,nz_presolve,z_presolve,ze_presolve,fname,netcdf_input)
+subroutine ace_initialization(ncols,nz,nz_presolve,z_presolve,ze_presolve,fname,environment_tv,netcdf_input, &
+                              turn_off_DHv_input,turn_off_DHh_input,zero_ref_buoyancy_input,Wbar_eq_zero_input)
 use ace_input, only: read_case_basis, read_case_metadata
+use, intrinsic :: ieee_arithmetic, only: ieee_is_finite
 implicit none
 
 ! input variables
@@ -129,13 +145,23 @@ integer, intent(in) :: ncols, nz, nz_presolve
 real, dimension(nz_presolve) :: z_presolve
 real, dimension(nz_presolve+1) :: ze_presolve
 character(*), intent(in) :: fname
+real, intent(in) :: environment_tv(nz)
 logical, intent(in), optional :: netcdf_input
+logical, intent(in), optional :: turn_off_DHv_input,turn_off_DHh_input,zero_ref_buoyancy_input,Wbar_eq_zero_input
 
 ! local variables
 integer :: i,j,k,n,record_length,input_nz,input_cols,input_coarse
 logical :: shared
 character(64) :: geometry
 
+if (.not.all(ieee_is_finite(environment_tv)) .or. any(environment_tv<=0.)) &
+  error stop 'Invalid environmental density temperature'
+allocate(reference_tv(nz))
+reference_tv=environment_tv
+slab_geometry=.false.
+turn_off_DHv=.true.; turn_off_DHh=.true.
+if (present(turn_off_DHv_input)) turn_off_DHv=turn_off_DHv_input
+if (present(turn_off_DHh_input)) turn_off_DHh=turn_off_DHh_input
 coarse_nz=nz_presolve
 if (coarse_nz<1) error stop 'Invalid coarse basis size'
 if (mod(nz-1,coarse_nz)/=0) error stop 'Fine grid does not partition into coarse layers'
@@ -154,7 +180,8 @@ if (shared) then
   if (input_nz/=nz .or. input_cols/=ncols .or. input_coarse/=coarse_nz) &
     error stop 'Basis metadata disagrees with initialized model'
   call read_case_basis(fname,'PMB',PMB)
-  if (trim(geometry)=='slab') then
+  slab_geometry=trim(geometry)=='slab'
+  if (slab_geometry) then
     allocate(PMDv(ncols,ncols,coarse_nz,coarse_nz+1),PMD(ncols,ncols,coarse_nz,coarse_nz+1))
     call read_case_basis(fname,'PMDv',PMDv)
     call read_case_basis(fname,'PMD',PMD)
@@ -174,6 +201,12 @@ else
   close(10)
 endif
 
+Wbar_eq_zero=slab_geometry
+if (present(Wbar_eq_zero_input)) Wbar_eq_zero=Wbar_eq_zero_input
+zero_ref_buoyancy=slab_geometry
+if (present(zero_ref_buoyancy_input)) zero_ref_buoyancy=zero_ref_buoyancy_input
+if ((.not.turn_off_DHv .or. .not.turn_off_DHh) .and. .not.slab_geometry) &
+  error stop 'Momentum response requires schema 2 slab operators'
 coarse_z = z_presolve
 coarse_ze = ze_presolve
 
@@ -188,15 +221,17 @@ integer, intent(in) :: ncols, nz, n_weno, n_prog, rkstage
 real, intent(in) :: dt
 real, dimension(ncols), intent(in) :: A, B ! ACE area/perimeter in SI [m^2, m]
 real, dimension(nz,8), intent(in) :: Ref ! reference varaibles: rhoc, rhoz, z, zm, dz, dzm, p, pi
-real, dimension(ncols+1,nz,n_prog), intent(in) :: X ! MF, theta_e, qt
-!real, dimension(ncols+1,nz,n_prog), intent(in) :: X ! MF, theta, qv, ql, qi
+! n_prog=3: MF/theta_e/qt; n_prog=11: MF/theta/qv/qc/nc/qr/nr/qi/ni/qrim/brim.
+real, dimension(ncols+1,nz,n_prog), intent(in) :: X
 real, dimension(ncols,nz,n_prog), intent(out) :: dXdt 
 
 ! local variables
-integer :: i,n,k,ks,ke
+integer :: i,n,k,ks,ke,outer
 real :: dum1,dum2
 real, dimension(ncols,nz,2) :: eps_tur
-real, dimension(nz) :: rho0B, Tv, Tv0, T0, q0, ql0, qi0
+real, dimension(nz) :: Tv, mean_rho0B
+real, dimension(ncols,nz) :: rho0B, FH, dz2FH, DHh
+real, dimension(ncols,coarse_nz) :: coarse_DHv, coarse_DHh
 real, dimension(ncols,nz,3) :: dXdz
 real, dimension(ncols,nz,2:n_prog) :: Ci, rho0wC
 real, dimension(ncols+1,nz) :: mfc, Wc
@@ -207,14 +242,13 @@ real, dimension(ncols,nz) ::Wi, Admfdz, ioflow, F
 do k=1,nz
   eps_tur(:      ,k,1) = nju*B/A
   eps_tur(2:ncols,k,2) = nju*B(1:ncols-1)/A(2:ncols)
-  call inv_theta_e(X(ncols+1,k,2),X(ncols+1,k,3),Ref(k,7),T0(k),q0(k),ql0(k),qi0(k))
-  Tv0(k) = T0(k) * ( 1. + 0.607789855072462 * q0(k) - ql0(k) - qi0(k) )
 enddo
 
 ! fill with zeros
 dXdt = 0.
 mfc = 0.
 Wc = 0.
+FH = 0.; dz2FH = 0.; DHh = 0.
 
 ! Compute tracer values Ci(zi) at interface points from C(zc=zi+dz/2)
 do i=1,ncols
@@ -238,18 +272,26 @@ do i=1,ncols
   ! ioflow = -Bi*rho_0*u_n (minus h. mass flux * lateral boundary length)
   ioflow(i,:) = sum(Admfdz(1:i,:),1)
 enddo
+! MATLAB S20 uses the outermost ACE itself for outer momentum exchange.
+! Annular input keeps its existing zero-MF environment.
+if (slab_geometry) then
+  mfc(ncols+1,:)=mfc(ncols,:)
+  Wc(ncols+1,:)=Wc(ncols,:)
+endif
 
 do i=1,ncols
+  outer=i+1
+  if (slab_geometry) outer=min(outer,ncols)
   do n=2,n_prog
     dXdt(i,1:nz  ,n) = 0.
     dXdt(i,1:nz-1,n) = - ( rho0wC(i,2:nz,n) - rho0wC(i,1:nz-1,n) ) / Ref(1:nz-1,5) / Ref(1:nz-1,1)  ! vertical flux convergence
 
-    dXdt(i,1:nz-1,n) = dXdt(i,1:nz-1,n) - eps_tur(i,1:nz-1,1) * ( X(i,1:nz-1,n) - X(i+1,1:nz-1,n) )  ! interact outer
+    dXdt(i,1:nz-1,n) = dXdt(i,1:nz-1,n) - eps_tur(i,1:nz-1,1) * ( X(i,1:nz-1,n) - X(outer,1:nz-1,n) )  ! interact outer
     if (i>1) &
     dXdt(i,1:nz-1,n) = dXdt(i,1:nz-1,n) - eps_tur(i,1:nz-1,2) * ( X(i,1:nz-1,n) - X(i-1,1:nz-1,n) )  ! interact inner
 
     dXdt(i,1:nz-1,n) = dXdt(i,1:nz-1,n) + 0.5 * &
-                       ( ( ioflow(i  ,1:nz-1) + abs(ioflow(i  ,1:nz-1)) ) * X(i+1,1:nz-1,n) &
+                       ( ( ioflow(i  ,1:nz-1) + abs(ioflow(i  ,1:nz-1)) ) * X(outer,1:nz-1,n) &
                        + ( ioflow(i  ,1:nz-1) - abs(ioflow(i  ,1:nz-1)) ) * X(i  ,1:nz-1,n) ) &
                         / A(i) / Ref(1:nz-1,1)  ! inflow from outer
     if (i>1) &
@@ -272,6 +314,27 @@ do i=1,ncols
                      ( ( ioflow(i-1,1:nz-1) + abs(ioflow(i-1,1:nz-1)) ) * Wc(i  ,1:nz-1) &
                      + ( ioflow(i-1,1:nz-1) - abs(ioflow(i-1,1:nz-1)) ) * Wc(i-1,1:nz-1) ) / A(i)  ! inflow from inner
 
+  if (.not.turn_off_DHv) then
+    FH(i,1:nz-1) = -eps_tur(i,1,1)*(mfc(i,1:nz-1)-mfc(i+1,1:nz-1))
+    if (i>1) FH(i,1:nz-1)=FH(i,1:nz-1)-eps_tur(i,1,2)*(mfc(i,1:nz-1)-mfc(i-1,1:nz-1))
+    FH(i,1:nz-1)=FH(i,1:nz-1)+0.5*( &
+      (ioflow(i,1:nz-1)+abs(ioflow(i,1:nz-1)))*Wc(i+1,1:nz-1) &
+      +(ioflow(i,1:nz-1)-abs(ioflow(i,1:nz-1)))*Wc(i,1:nz-1))/A(i)
+    if (i>1) FH(i,1:nz-1)=FH(i,1:nz-1)-0.5*( &
+      (ioflow(i-1,1:nz-1)+abs(ioflow(i-1,1:nz-1)))*Wc(i,1:nz-1) &
+      +(ioflow(i-1,1:nz-1)-abs(ioflow(i-1,1:nz-1)))*Wc(i-1,1:nz-1))/A(i)
+    ! MATLAB lower ghost=-FH(1), upper ghost=0; uniform shared input dz.
+    dz2FH(i,1)=(-3.*FH(i,1)+FH(i,2))/Ref(1,5)**2
+    do k=2,nz-1
+      dz2FH(i,k)=(FH(i,k-1)-2.*FH(i,k)+FH(i,k+1))/Ref(k,5)**2
+    enddo
+  endif
+  if (.not.turn_off_DHh) then
+    DHh(i,1:nz-1)=ioflow(i,1:nz-1)**2
+    if (i>1) DHh(i,1:nz-1)=DHh(i,1:nz-1)-ioflow(i-1,1:nz-1)**2
+    DHh(i,1:nz-1)=DHh(i,1:nz-1)/Ref(1:nz-1,1)/A(i)
+  endif
+
   if (rkstage==1) then
     do k=1,nz
       if (n_prog==3) then
@@ -286,20 +349,36 @@ do i=1,ncols
   endif
 
   Tv(1:nz) = Ta(i,1:nz) * ( 1. + 0.607789855072462 * q(i,1:nz) - ql(i,1:nz) - qi(i,1:nz) )
-  rho0B(1:nz) = g * Ref(1:nz,1) * ( Tv(1:nz) - Tv0(1:nz) ) / Tv0(1:nz)
+  rho0B(i,:) = g * Ref(:,1) * (Tv-reference_tv) / reference_tv
+enddo
 
-  F(i,1:nz) = F(i,1:nz) + rho0B(1:nz)
+! MATLAB S20 removes the area-weighted mean buoyancy before nonlocal response.
+if (zero_ref_buoyancy) then
+  do k=1,nz
+    mean_rho0B(k)=sum(rho0B(:,k)*(A/sum(A)))
+  enddo
+  do i=1,ncols
+    rho0B(i,:)=rho0B(i,:)-mean_rho0B
+  enddo
+endif
 
-  !call pchip(nz,Ref(1:nz,4),F(i,1:nz),coarse_nz,coarse_z,coarse_F(i,1:coarse_nz),.True.)
-  coarse_F(i,:) = sum(reshape(F(i,1:nz-1),(/coarse_ratio,coarse_nz/)),1)/real(coarse_ratio)
+do i=1,ncols
+  F(i,:)=F(i,:)+rho0B(i,:)
+  coarse_F(i,:)=sum(reshape(F(i,1:nz-1),[coarse_ratio,coarse_nz]),1)/real(coarse_ratio)
+  if (.not.turn_off_DHv) &
+    coarse_DHv(i,:)=-sum(reshape(dz2FH(i,1:nz-1),[coarse_ratio,coarse_nz]),1)/real(coarse_ratio)
+  if (.not.turn_off_DHh) &
+    coarse_DHh(i,:)=sum(reshape(DHh(i,1:nz-1),[coarse_ratio,coarse_nz]),1)/real(coarse_ratio)
 enddo
 
 do i=1,ncols
   do k=1,coarse_nz+1
-    dwdt(i,k) = sum( sum( PMB(i,:,:,k) * coarse_F(:,:) , 2 ), 1 )  
+    dwdt(i,k) = sum( sum( PMB(i,:,:,k) * coarse_F(:,:) , 2 ), 1 )
+    if (.not.turn_off_DHv) dwdt(i,k)=dwdt(i,k)+sum(sum(PMDv(i,:,:,k)*coarse_DHv,2),1)
+    if (.not.turn_off_DHh) dwdt(i,k)=dwdt(i,k)+sum(sum(PMD(i,:,:,k)*coarse_DHh,2),1)
   enddo
 
-  call pchip(coarse_nz+1,coarse_ze,dwdt(i,1:coarse_nz+1),nz,Ref(1:nz,4),dXdt(i,1:nz,1),.True.)
+  call pchip(coarse_nz+1,coarse_ze,dwdt(i,:),nz,Ref(:,4),dXdt(i,:,1),.True.)
 enddo  
 
 ! single ACE
@@ -716,7 +795,6 @@ Ci = 2106 + 7.3*(T - T0)
 end function
 
 
-! interpolation scheme
 subroutine pchip(n,x,y,n_i,x_i,y_i,extrap)
 implicit none
 
@@ -812,7 +890,6 @@ do i=1,n_i
 enddo
 
 end subroutine pchip
-
 
 ! WENO vec scheme
 subroutine weno_vec(k,n,v,c,v_weno) 

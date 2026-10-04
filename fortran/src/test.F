@@ -5,6 +5,8 @@ use iso_fortran_env, only: real64
 implicit none
 
 integer, parameter :: n_weno=2, n_prog=11
+! P3 prognostics: MF, th, qv, qc, nc, qr, nr, qi, ni, qrim, brim.
+! Shared theta_e/qt profiles are input metadata, converted once before integration.
 real, parameter :: Rd=287.04, Cp=1005.7, g=9.80665, p0=1.e5
 integer :: i,k,n,t,ncols,nz,ncoarse,ndt,argument,parse_status,record_length,io_status
 integer :: intervals
@@ -109,14 +111,14 @@ z=real(input_profile(:,12),kind(z))
 coarse_z=real(input_coarse_z,kind(coarse_z)); coarse_ze=real(input_coarse_ze,kind(coarse_ze))
 forcing=0.
 X=0.
-! Retain the historical P3 environment initialization: invert theta_e, then store theta/qv.
+! Convert shared theta_e/qt input once; the P3 state stores th and qv.
 do k=1,nz
   Ref(k,1)=rho_e(k); Ref(k,2)=rho_zm(k)
   Ref(k,3)=z(k); Ref(k,4)=zm(k)
   Ref(k,5)=dz; Ref(k,6)=dz; Ref(k,7)=p_z(k)
   Ref(k,8)=(p_z(k)/p0)**(Rd/Cp)
   call inv_theta_e(the_e(k),q_e(k),Ref(k,7),Tr(1,k),q(1,k),ql(1,k),qi(1,k))
-  Tv0(k)=Tr(1,k)*(1.+0.607789855072462*q(1,k)-ql(1,k)-qi(1,k))
+  Tv0(k)=real(input_profile(k,9),kind(Tv0)) ! fixed input Tv_zc, as in v0.18/MATLAB
   X(:,k,2)=Tr(1,k)/Ref(k,8)
   X(:,k,3)=q(1,k)
 enddo
@@ -126,9 +128,9 @@ do k=1,nz
 enddo
 call set_p3_lookup_directory(trim(p3_directory))
 if (shared_input) then
-  call ace_initialization(ncols,nz,ncoarse,coarse_z,coarse_ze,trim(input_file),.true.)
+  call ace_initialization(ncols,nz,ncoarse,coarse_z,coarse_ze,trim(input_file),Tv0,netcdf_input=.true.)
 else
-  call ace_initialization(ncols,nz,ncoarse,coarse_z,coarse_ze,'./input_data/PMB.dat')
+  call ace_initialization(ncols,nz,ncoarse,coarse_z,coarse_ze,'./input_data/PMB.dat',Tv0)
 endif
 
 if (len_trim(validation_file)>0) then

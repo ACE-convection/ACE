@@ -25,9 +25,12 @@ GNU real32/real64 compile and link checks have passed; model testing is
 deferred. Both schema 1 (v0.18 annular) and
 schema 2 (S20 slab) can be read; model arrays use the file dimensions. Schema
 2 loads PMB, PMDv and PMD in explicit API order and stores them in the
-Fortran model layout. Current dynamics apply PMB only; loading the other
-operators does not establish MATLAB equivalence. Reference thermodynamics,
-mean-flow/boundary conventions and momentum forcing remain follow-up work.
+Fortran model layout. PMDv/PMD branches are implemented with disabled
+defaults matching MATLAB; activation requires coefficient-unit review.
+The fixed environmental Tv_zc reference, slab area-mean buoyancy removal,
+momentum/tracer outer boundaries and area-mean MF removal follow the documented
+[dynamics alignment](../docs/migration/v020_dynamics_alignment.md).
+Complete MATLAB equivalence has not been established.
 
 `--legacy-input` reads the original eight-ACE binary files under
 `./input_data/`. `--intervals` selects 60-second output intervals; historical

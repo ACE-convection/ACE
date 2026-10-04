@@ -40,9 +40,14 @@ this adapter. Historical Fortran P3 initialization still derives theta/qv
 through its existing theta_e inversion, while MATLAB uses S20 preprocessing
 and bubble settings.
 
-Fortran applies PMB only; the other operators are stored. Native coefficient
-units require review before activation. Known P3 dry/warm invalid operations
-and reference-state interpretation in ace_tendency remain pending. One diagnostic change accompanies driver
+At the initial adapter stage, Fortran applied PMB only. The subsequent
+[dynamics alignment](v020_dynamics_alignment.md) adds PMDv/PMD branches with
+the same disabled defaults as MATLAB. Native coefficient units require
+review before activation. Complete S20 dynamics alignment remains pending.
+
+Known P3 dry/warm invalid operations remain pending. Reference-state
+interpretation was subsequently corrected in the separately documented
+[dynamics alignment](v020_dynamics_alignment.md). One diagnostic change accompanies driver
 consolidation: the shared output routine refreshes vapor for normal and final
 output, avoiding stale-vapor final RH/buoyancy. It does not alter prognostics.
 The nine-field real32 output remains; the initialization dump now carries
@@ -103,7 +108,9 @@ Local scripts, fixtures and binary readbacks are retained in ignored
 
 ### Code differences identified at input-only confirmation
 
-The following differences require later scientific alignment.
+The following is the finding at that stage. The subsequent
+[dynamics alignment](v020_dynamics_alignment.md) addresses momentum branches
+and reference buoyancy; it records the remaining differences and checks.
 
 1. Fortran stores PMDv/PMD but does not include their contributions in
    `ace_tendency`; MATLAB `NONLOCAL_RESPONSE` contains those terms, subject
@@ -125,3 +132,9 @@ agreement. MATLAB reads ancillary sounding metadata that Fortran does not
 consume, so their validation coverage beyond shared consumed fields also
 remains different. Complete code alignment is still pending before model
 usability can be asserted.
+
+The later dynamics changes were compiled separately; the input readback
+evidence above is not a validation of their scientific behavior.
+
+The scientific checkpoint aligns Wbar_eq_zero and outer tracer self exchange.
+Interpolation consolidation and numerical checks are recorded separately.
