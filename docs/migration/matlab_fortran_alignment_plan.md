@@ -71,7 +71,9 @@ gates.
 3. Recover the intended historical Fortran P3 interface and identify its P3
    source version, lookup data, build dependencies and attribution. The old
    audit refers to commit `381402d`, which does not resolve as an object in
-   the current unified checkout; its source mapping remains to be recovered.
+   the current unified checkout. It has now been located in the separate
+   `ACE_FORTRAN` repository at historical v0.20 `88e4af5`; see the
+   [source and input inventory](v020_preparation.md).
 4. Present a small source-migration proposal covering state variables,
    thermodynamic formulation and shared dynamics. Review scientific changes
    before replacing active source or public interfaces, as required by

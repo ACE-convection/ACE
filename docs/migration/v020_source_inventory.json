@@ -1,0 +1,376 @@
+{
+  "review_date": "2026-10-04",
+  "release_baseline": "d7d25b10c1bbad99543ed579a11196673d531c17",
+  "fortran_source_repository": "/scratch/peter50504/ACE_FORTRAN",
+  "fortran_source_commit": "88e4af5892ec2b93f6bde65fbc11c506276e420f",
+  "fortran_historical_v020": "88e4af5892ec2b93f6bde65fbc11c506276e420f",
+  "fortran_worktree_status": [
+    " M makefile",
+    " M src/test.F"
+  ],
+  "fortran_files": {
+    "src/ace_module.F": {
+      "bytes": 32485,
+      "sha256": "7d38ab6bb77faa0f56e515ab23659cfab6a54ce8205b03244e5df5e175d0e58c",
+      "matches_preserved_inventory": true,
+      "head_sha256": "7d38ab6bb77faa0f56e515ab23659cfab6a54ce8205b03244e5df5e175d0e58c",
+      "matches_source_head": true
+    },
+    "src/microphy_p3.F": {
+      "bytes": 532413,
+      "sha256": "8ab448e72a43230543b6d0911a195141ba7dc1264cdd0f532b21b49d9a9d1b11",
+      "matches_preserved_inventory": true,
+      "head_sha256": "8ab448e72a43230543b6d0911a195141ba7dc1264cdd0f532b21b49d9a9d1b11",
+      "matches_source_head": true
+    },
+    "src/test.F": {
+      "bytes": 8409,
+      "sha256": "53f79b565f461945fb9a96b24d2dd77e62617458ba9603ff93a2ead0a210bd93",
+      "matches_preserved_inventory": true,
+      "head_sha256": "5cc1187ac77ce20bf8dee556ceae54fb6a21983960f04f012095cce90a4d5c36",
+      "matches_source_head": false
+    },
+    "makefile": {
+      "bytes": 822,
+      "sha256": "7ac5021621db7da1f11570467ef825f4d30156f1447bc0fbcdfa0929b4666dc7",
+      "matches_preserved_inventory": true,
+      "head_sha256": "c8fa89303987757992d2c86bed8c8a8ac9d3e97545b08730b40ed94a855cee5f",
+      "matches_source_head": false
+    },
+    "input_data/p3_lookupTable_1.dat-v6.4-2momI": {
+      "bytes": 7344038,
+      "sha256": "57d2e839b4bbc52fa15892ac47d04a76c0854577a5df34dae264e55bdad4baf3",
+      "matches_preserved_inventory": true,
+      "matches_source_head": null
+    },
+    "input_data/p3_lookupTable_1.dat-v6.4-3momI": {
+      "bytes": 81664038,
+      "sha256": "e047ae59272a161beaa4e816fa62f908d34b007e4ae0df7dfca70a647fbdb177",
+      "matches_preserved_inventory": true,
+      "matches_source_head": null
+    },
+    "input_data/p3_lookupTable_2.dat-v6.0": {
+      "bytes": 29320029,
+      "sha256": "9896a341ad4fd2a27d2fa55802b28044f56a92e5fe62a94619acd3bf69d8a394",
+      "matches_preserved_inventory": true,
+      "matches_source_head": null
+    }
+  },
+  "matlab_recovery_commit": "c9ae729",
+  "matlab_package_prefix": "matlab/history/snapshots/ACE_V020/",
+  "matlab_package_files": {
+    "ACE_V020_2D88ACEs.m": {
+      "bytes": 42917,
+      "sha256": "3a5b33e48b2a085aa1fa5524a923167cd97b3acb60a2f01b11935c058f87397a"
+    },
+    "util_basis/COLLECT_PRECOMPUTE_VERTICAL_MODES_2D.m": {
+      "bytes": 1897,
+      "sha256": "caca37f99f09200a648ff791a444c424811bf5ecdd8c58dde8eb208fab4274fc"
+    },
+    "util_basis/PRECOMPUTE_COMPOSITE_ACE_BASIS_2D.m": {
+      "bytes": 4669,
+      "sha256": "338aad46c71a9ec08ef8fabba9552f0bbb208ec30e4b6ae5baa9b76060c92b7c"
+    },
+    "util_basis/PRECOMPUTE_VERTICAL_MODES_2D.m": {
+      "bytes": 2167,
+      "sha256": "1de958b52e5e378f47d2b50bd04e5f8626836444ebcc65053b5fc4d8caa66d9a"
+    },
+    "util_basis/uneven_tests/COLLECT_PRECOMPUTE_VERTICAL_MODES_2D.m": {
+      "bytes": 1908,
+      "sha256": "40af7d61aa58d08ad13078b7007eda6224e0e4d9b4e206c88e34a526b4a62ead"
+    },
+    "util_basis/uneven_tests/PRECOMPUTE_COMPOSITE_ACE_BASIS_2D_4uneven.m": {
+      "bytes": 6392,
+      "sha256": "acd47fb0839b88924d681c6531d21f358b19a1cdf9a459fdd55607a2cc938961"
+    },
+    "util_basis/uneven_tests/PRECOMPUTE_COMPOSITE_ACE_BASIS_2D_truncate.m": {
+      "bytes": 4942,
+      "sha256": "4c98737aa0950e786b62a0c7401a486a3083e305749627eb3cfbb77aa3ad8609"
+    },
+    "util_basis/uneven_tests/PRECOMPUTE_VERTICAL_MODES_2D.m": {
+      "bytes": 2175,
+      "sha256": "a48f64b41c2c440714e611c7981921c6c6d7e50834e78f06bf2d0b3758b690e8"
+    },
+    "util_basis/uneven_tests/vertical_solutions_reconstruct_util.m": {
+      "bytes": 1262,
+      "sha256": "48e242ae4d6b298fe5bfae6355e5f13a552a8ffc6f4cff1091a1ee447f15409d"
+    },
+    "util_basis/vertical_solutions_reconstruct_util.m": {
+      "bytes": 1262,
+      "sha256": "48e242ae4d6b298fe5bfae6355e5f13a552a8ffc6f4cff1091a1ee447f15409d"
+    },
+    "util_plume/cin_cape_calc.m": {
+      "bytes": 1285,
+      "sha256": "d3dd0639db6bb06259a6ea94ee1c3e0df2afbd80cdb873ba3af687ec54e6d639"
+    },
+    "util_plume/entrain_plume_calc.m": {
+      "bytes": 2080,
+      "sha256": "ea1fe088e0a9383878477f507dfacde96f1af2233ff6dfde305089e7a2045c7d"
+    },
+    "util_thermodynamics/GPUTEST_SAMPLE.mat": {
+      "bytes": 12336,
+      "sha256": "81b5712c6f20721c0cf9192bd8eb79ff74f6a1c591efdb47050f58642848ce7c"
+    },
+    "util_thermodynamics/IMPORT_CONSTANTS.m": {
+      "bytes": 1162,
+      "sha256": "9fde477680e8eea17fc2f5f2aca61ef95d556fbc4c4f7f676cc53f6d3d82ba89"
+    },
+    "util_thermodynamics/IMPORT_CONSTANTS_NOGLOBAL.m": {
+      "bytes": 1197,
+      "sha256": "68056228f1419b0d3708c72682d0e6fee0bcdc1f5f3a1d09c1ea822113297499"
+    },
+    "util_thermodynamics/NOTE.m": {
+      "bytes": 841,
+      "sha256": "d8b2a2c3dab6cdcb343cb18974af1bce8d4f7a60c36d1e98bd1aeb736748b9fc"
+    },
+    "util_thermodynamics/ci.m": {
+      "bytes": 280,
+      "sha256": "dba544e76ce1e74136daff7fd988670f68000c8835732344d5ac6c20697389ce"
+    },
+    "util_thermodynamics/eval_B.m": {
+      "bytes": 71,
+      "sha256": "4260dae12c5e40d915ce2ac348b85d3358d9470dd9ad17bf3771a0e803647e6b"
+    },
+    "util_thermodynamics/eval_Tv.m": {
+      "bytes": 614,
+      "sha256": "d86992e3f9ef64bbf038424876b9c2c3b2a6ec1d2f23f673a553bca014213690"
+    },
+    "util_thermodynamics/eval_dTes.m": {
+      "bytes": 616,
+      "sha256": "dccd232253f4422bdb334a7089c5065459c0207def6cde54714fa1fa97bcf116"
+    },
+    "util_thermodynamics/eval_dTqs.m": {
+      "bytes": 1055,
+      "sha256": "35e4585653c828cb6bede2d25914c66d71b59c7894ad4e877180ffd57c57a74a"
+    },
+    "util_thermodynamics/eval_dTqsi.m": {
+      "bytes": 936,
+      "sha256": "5ce3913522b068b98badfdd279ab0fa1ad0ed9a7ce751e5fd4ef2b688a734de6"
+    },
+    "util_thermodynamics/eval_dTqsscl.m": {
+      "bytes": 1301,
+      "sha256": "4e025fb26f0deb388b8c7551fdd5ca5160d4aa7c2f13d0dd230c3177851cedde"
+    },
+    "util_thermodynamics/eval_es.m": {
+      "bytes": 1192,
+      "sha256": "a6d89db08505d726edae0b520d69360da23aed5dd4079697797302cdaab6ec2c"
+    },
+    "util_thermodynamics/eval_esi.m": {
+      "bytes": 444,
+      "sha256": "13e7d32f678a1b8e9a0f97e326dbaf94027a3e09b808f424e3b02c427f1813db"
+    },
+    "util_thermodynamics/eval_esscl.m": {
+      "bytes": 857,
+      "sha256": "7fa1acdff3547765addb2f6295b0d0cfaff96436356c4dfefdb2d0caeb981724"
+    },
+    "util_thermodynamics/eval_h.m": {
+      "bytes": 831,
+      "sha256": "6a6bc3c9990469ae0296dfac8f234dfcbccb3851aa3faa6bececb536f271497b"
+    },
+    "util_thermodynamics/eval_q.m": {
+      "bytes": 590,
+      "sha256": "19fc7e2235e52c12948b3b10654a90ea45b9391a7b1821a3a39d2683ca02be8c"
+    },
+    "util_thermodynamics/eval_q2.m": {
+      "bytes": 414,
+      "sha256": "f0986c79fc1b362ca92e188977b04d073a31b9bb3e27b96fc5b35968539f1f11"
+    },
+    "util_thermodynamics/eval_qs.m": {
+      "bytes": 610,
+      "sha256": "09f7e3c707ed1eaacb9baba896cc8ab9cb16e742fa7dc823273b8cc2c71fe402"
+    },
+    "util_thermodynamics/eval_qs2.m": {
+      "bytes": 463,
+      "sha256": "6c1f03213c04a6e98dd515d5ce98ebcba6a2cd8f62e99ebd750599af8978671d"
+    },
+    "util_thermodynamics/eval_qsat.m": {
+      "bytes": 940,
+      "sha256": "1aff97bbd0e4b66c33e817aa99741056ccf95ab30840c787a6a4a81b0a516310"
+    },
+    "util_thermodynamics/eval_qsat2.m": {
+      "bytes": 925,
+      "sha256": "16a75d060676e65e16d4fdee2067716db779a2f6d9dbd3ac6b278051091e4a3d"
+    },
+    "util_thermodynamics/eval_qsi.m": {
+      "bytes": 589,
+      "sha256": "5a92de14d0b02b6394a2f186aafc8cf75530d322db4582ce52045c4f9b30f270"
+    },
+    "util_thermodynamics/eval_qsi2.m": {
+      "bytes": 448,
+      "sha256": "3c7b3674ea2e00c004aa526c3a0c79cf6c2f039d2b989d98a15ef3f2cc12161e"
+    },
+    "util_thermodynamics/eval_qsscl.m": {
+      "bytes": 866,
+      "sha256": "1b47aa01ca8ec7e9ee2368d4f83d601767c7fe793766ee475cdc18cd7e60cf82"
+    },
+    "util_thermodynamics/eval_rho.m": {
+      "bytes": 513,
+      "sha256": "b22b7816d5199e9f025304b57719f7ab68367e5222ac351224ba7ee8a2f2c91a"
+    },
+    "util_thermodynamics/eval_theta.m": {
+      "bytes": 473,
+      "sha256": "c69e40c66320d5d1b0d62365db0897cbdc87a9c523c0aecd211945780811d71b"
+    },
+    "util_thermodynamics/eval_theta_e.m": {
+      "bytes": 1564,
+      "sha256": "631d04f3cac84824255fb4404068081bab52bb163efe37800559c223988a9843"
+    },
+    "util_thermodynamics/eval_theta_es.m": {
+      "bytes": 1363,
+      "sha256": "39ff2e6d87d2bc4ad2f0b33922e524b2998e64939bec58e908b76fce8ef32b79"
+    },
+    "util_thermodynamics/eval_theta_il.m": {
+      "bytes": 1419,
+      "sha256": "359b4d62245072deccbef8128ceb7d3ffa55c2ac728193e22797b2f3e73adbeb"
+    },
+    "util_thermodynamics/eval_theta_l.m": {
+      "bytes": 1211,
+      "sha256": "6628625f218e53e004623b44871ad6984a13b6308264d123193464143292c90d"
+    },
+    "util_thermodynamics/eval_theta_v.m": {
+      "bytes": 667,
+      "sha256": "f531d0ca252a777616935340b23079911faa5f79ef890e2de9371cf094413274"
+    },
+    "util_thermodynamics/gputest_invTq.m": {
+      "bytes": 1050,
+      "sha256": "c2918e5cb0aa97278730069c6f4edf4b2a09c1bb56eb0411882fa2a73d1c219f"
+    },
+    "util_thermodynamics/inv_T_from_h.m": {
+      "bytes": 5688,
+      "sha256": "73621892b81e2179d9cda710b56de9bb5d6a8883c36b71d432ce25d6b584faed"
+    },
+    "util_thermodynamics/inv_T_from_theta_e.m": {
+      "bytes": 5747,
+      "sha256": "e001fe0db37d6bff77b3e0b15ac8491fb84a2c3774c07622854d97062bcce440"
+    },
+    "util_thermodynamics/inv_T_from_theta_e_nogpu.m": {
+      "bytes": 5527,
+      "sha256": "0b57c816e4dee65cef71a3bd61535c28f926b506dfe1f11f8e05a7832f187eed"
+    },
+    "util_thermodynamics/inv_T_from_theta_il.m": {
+      "bytes": 5067,
+      "sha256": "1377036c47679caa1c76cbb779b80e289241dbe8ea10b4db922a56d3d1217658"
+    },
+    "util_thermodynamics/lv.m": {
+      "bytes": 293,
+      "sha256": "c389332e53409f9a3f01adc2641fd140e0e59f4c4ad88ad49914724b7021a2d1"
+    },
+    "util_timeint/ssprk93.m": {
+      "bytes": 1417,
+      "sha256": "b23650cbd13f1854deb9970282f0c6b4edbe4e0a660a6f2421b51d1da8042ae0"
+    },
+    "util_weno/reconstruction_up3.m": {
+      "bytes": 630,
+      "sha256": "748ac867a4a5ef7089db896e1fcd5a20c8b1dfcaa461c3aac34a410f20c66c20"
+    },
+    "util_weno/reconstruction_weno_vec.m": {
+      "bytes": 30729,
+      "sha256": "7db699727a68b1838a177e57c02b53901b90256cfc99c6172da338529e9ebdf4"
+    }
+  },
+  "prior_compile_summary": {
+    "32:microphy_p3.F": {
+      "command": [
+        "gfortran",
+        "-O0",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-Wall",
+        "-Wextra",
+        "-Wimplicit-interface",
+        "-fcheck=all",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-c",
+        "microphy_p3.F"
+      ],
+      "returncode": 0,
+      "log": "/scratch/peter50504/ACE/migration_work/p3_inventory/build32/microphy_p3.F.compile.log"
+    },
+    "32:ace_module.F": {
+      "command": [
+        "gfortran",
+        "-O0",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-Wall",
+        "-Wextra",
+        "-Wimplicit-interface",
+        "-fcheck=all",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-c",
+        "ace_module.F"
+      ],
+      "returncode": 0,
+      "log": "/scratch/peter50504/ACE/migration_work/p3_inventory/build32/ace_module.F.compile.log"
+    },
+    "64:microphy_p3.F": {
+      "command": [
+        "gfortran",
+        "-O0",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-Wall",
+        "-Wextra",
+        "-Wimplicit-interface",
+        "-fcheck=all",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-c",
+        "microphy_p3.F"
+      ],
+      "returncode": 0,
+      "log": "/scratch/peter50504/ACE/migration_work/p3_inventory/build64/microphy_p3.F.compile.log"
+    },
+    "64:ace_module.F": {
+      "command": [
+        "gfortran",
+        "-O0",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-Wall",
+        "-Wextra",
+        "-Wimplicit-interface",
+        "-fcheck=all",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-c",
+        "ace_module.F"
+      ],
+      "returncode": 0,
+      "log": "/scratch/peter50504/ACE/migration_work/p3_inventory/build64/ace_module.F.compile.log"
+    }
+  },
+  "prior_wrapper_summary": {
+    "32:dry": {
+      "returncode": -8,
+      "log": "migration_work/p3_inventory/build32/wrapper_dry.log"
+    },
+    "32:warm": {
+      "returncode": -8,
+      "log": "migration_work/p3_inventory/build32/wrapper_warm.log"
+    },
+    "32:ice": {
+      "returncode": 0,
+      "log": "migration_work/p3_inventory/build32/wrapper_ice.log"
+    },
+    "64:dry": {
+      "returncode": -8,
+      "log": "migration_work/p3_inventory/build64/wrapper_dry.log"
+    },
+    "64:warm": {
+      "returncode": -8,
+      "log": "migration_work/p3_inventory/build64/wrapper_warm.log"
+    },
+    "64:ice": {
+      "returncode": 0,
+      "log": "migration_work/p3_inventory/build64/wrapper_ice.log"
+    }
+  },
+  "validation_note": "Prior probe results are archived observations, not newly executed tests or full-model validation."
+}
