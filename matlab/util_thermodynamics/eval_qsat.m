@@ -1,4 +1,4 @@
-function qsat = eval_qsat(T, p, qt, T0)
+function qsat = eval_qsat(T, p, qt)%, T0)
 %{
   Calculate saturation specific humidity.
 
@@ -16,17 +16,17 @@ function qsat = eval_qsat(T, p, qt, T0)
   Returns:
     double: saturation specific humidity.
 %}
-  if nargin==2  %assuming condensate-free & freezing at triple point
-    T0 = 273.1636783445389; %for consistent water and ice saturation at triple point
-    qsat = eval_qs(T, p);
-    qsat(T<T0) = eval_qsi(T(T<T0), p(T<T0));
-  elseif nargin==3
-    T0 = 273.16;
+  % % if nargin==2  %assuming condensate-free & freezing at triple point
+  % %   T0 = 273.1636783445389; %for consistent water and ice saturation at triple point
+  % %   qsat = eval_qs(T, p);
+  % %   qsat(T<T0) = eval_qsi(T(T<T0), p(T<T0));
+  % % elseif nargin==3
+    T0 = 273.1636783445389;
     qsat = eval_qs(T, p, qt);
     qsat(T<T0) = eval_qsi(T(T<T0), p(T<T0), qt(T<T0));
-  else
-    qsat = eval_qs(T, p, qt);
-    qsat(T<T0) = eval_qsi(T(T<T0), p(T<T0), qt(T<T0));
-  end
+  % % else
+  % %   qsat = eval_qs(T, p, qt);
+  % %   qsat(T<T0) = eval_qsi(T(T<T0), p(T<T0), qt(T<T0));
+  % % end
   
   

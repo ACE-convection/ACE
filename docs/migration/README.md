@@ -16,6 +16,7 @@ ancestry. v0.20 preparation is now tracked in the roadmap.
 | Current development sequence and joint MATLAB/Fortran milestones | [Roadmap](matlab_fortran_alignment_plan.md) |
 | v0.20 source, basis inputs and historical P3 findings | [Preparation inventory](v020_preparation.md) |
 | Reviewable v0.20 code-only merge candidate and interface effects | [Source merge proposal](v020_source_merge_plan.md) |
+| Integrated v0.20 source state and deferred code/validation work | [Integration record](v020_source_integration.md) |
 | Run the fixed Manus reference cases | [Test instructions](../../tests/README.md) |
 | Shared NetCDF schema and current input usage | [Shared input](../shared_input.md) |
 | Source promotion, retired paths and recovery | [Normalization record](v018_normalization.md) and [per-file manifest](v018_normalization_manifest.json) |

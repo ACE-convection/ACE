@@ -24,7 +24,7 @@ function theta_es = eval_theta_es(T, p)
     T0 = 273.1636783445389; % Triple point = freezing point; for water-ice saturation consistency
     LV = lv(T);
     
-    q = eval_qsat(T,p);
+    q = eval_qsat2(T,p);
     qt = q;
     e = p.*q./( q+0.621971830985916*(1-qt) );
     es = eval_es(T).*(T>=T0)+eval_esi(T).*(T<T0);

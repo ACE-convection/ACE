@@ -16,8 +16,8 @@ function qsi = eval_qsi(T, p, qt)
 %   global EPS
   esi = eval_esi(T);
   
-  if nargin==2 %assuming condensate-free
-    qsi = eval_q(esi,p);
-  else %given qt (suitable for plume computations)
+  % if nargin==2 %assuming condensate-free
+  %   qsi = eval_q(esi,p);
+  % else %given qt (suitable for plume computations)
     qsi = eval_q(esi,p,qt);
-  end
+  % end

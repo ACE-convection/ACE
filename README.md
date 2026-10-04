@@ -13,7 +13,14 @@ ACE currently has two implementations with different roles:
 
 The two implementations share the same core model formulation, but they are not necessarily identical in all physical parameterizations. A major goal of this repository is to maintain consistency between the shared components of the MATLAB and Fortran implementations and to provide systematic tests for their numerical agreement.
 
-The developer accepted the current MATLAB/Fortran v0.18 alignment on
+This development branch contains the imported MATLAB S20 and historical
+Fortran v0.20/P3 sources. Source integration is complete; basis confirmation,
+input adapters and validation are deferred. See the
+[v0.20 integration record](docs/migration/v020_source_integration.md) for
+source identities, input contracts and known code findings.
+
+The published `v0.18.0` remains the tested release. The developer accepted
+the MATLAB/Fortran v0.18 alignment on
 2026-10-02 using the Manus singleACE and twelve-hour multiACE comparisons.
 The [v0.18.0 release record](docs/releases/v0.18.0.md) defines the accepted
 scope and retained limitations. Current sources are directly under
@@ -67,8 +74,9 @@ Refactoring and repository restructuring remain separate from scientific changes
 
 Integration of the **Predicted Particle Properties (P3) microphysics scheme**
 developed by Morrison, Milbrandt, and collaborators is planned for ACE v0.20.
-The current v0.18 Fortran implementation uses native simplified precipitation
-and does not include an integrated P3 scheme.
+The published v0.18 Fortran implementation uses native simplified precipitation.
+This development branch imports the historical v0.20 P3 5.3.1 module and
+ACE wrapper; its coupled execution has not yet been validated here.
 
 The current upstream P3 source code is maintained separately at the
 [P3-microphysics repository](https://github.com/P3-microphysics/P3-microphysics).

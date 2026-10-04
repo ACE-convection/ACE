@@ -1,20 +1,19 @@
 program test
 use netcdf
 use ace_module
-use ace_input, only: read_case_profile
 implicit none
 
 integer, parameter :: np=37, n_weno=2
-real,parameter :: pi=4.*atan(1.),Rd=287.04,Cp=1005.7,g=9.80665
+real,parameter :: pi=4.*atan(1.),Rd=287.04,Cp=1005.7,g=9.80665,p0=1.e5
 integer :: i,j,k,m,n,o,t
 integer :: ierr,ncid1,varid1
-integer :: nprof, ncols, ice
+integer :: nprof, ncols, ice, n_prog,ndt
 real :: dum1,dum2,dum3,dum4,dum5,dum6,dum7
 real :: dz,dp,ts,te,dt
 real :: start, finish
 real, dimension(:,:,:), allocatable :: X
 real*4, dimension(:,:,:), allocatable :: Xout
-real, dimension(:,:), allocatable :: forcing, Tr,q,ql,qi
+real, dimension(:,:), allocatable :: Ref, forcing, Tr,q,ql,qi
 real, dimension(:), allocatable :: Tv0
 real*4, dimension(:,:), allocatable :: T4,q4,ql4,qi4,rh4,b4 
 real, dimension(:), allocatable :: A,B
@@ -31,46 +30,7 @@ real, dimension(nzm) :: zm,T_zm,q_zm,Tv_zm,the_zm,rho_zm,p_zm,th_zm,thes_zm,rh_z
 real*8, dimension(nzm) :: tmp
 real, dimension(200) :: coarse_z
 real, dimension(201) :: coarse_ze
-character(300) :: path,fname,input_file,arg,validation_file,output_file
-logical :: shared_input
-integer :: argument, record_length, intervals, parse_status
-real*8 :: input_profile(801,12),diameters(7),input_lx,input_ly,input_dz
-real*8 :: input_coarse_z(200),input_coarse_ze(201)
-
-shared_input=.true.
-input_file='../data/input/manus208.nc'
-validation_file=''
-output_file='./data/output_multiACE_manus208.dat'
-intervals=60*48
-argument=1
-do while (argument<=command_argument_count())
-  call get_command_argument(argument,arg)
-  select case(trim(arg))
-  case('--legacy-input')
-    shared_input=.false.
-  case('--input')
-    argument=argument+1
-    call get_command_argument(argument,input_file)
-    if (len_trim(input_file)==0) error stop 'Missing --input path'
-  case('--output')
-    argument=argument+1
-    call get_command_argument(argument,output_file)
-    if (len_trim(output_file)==0) error stop 'Missing --output path'
-  case('--intervals')
-    argument=argument+1
-    call get_command_argument(argument,arg)
-    read(arg,*,iostat=parse_status) intervals
-    if (parse_status/=0) error stop 'Invalid --intervals value'
-    if (intervals<1) error stop 'Intervals must be positive'
-  case('--validate-input')
-    argument=argument+1
-    call get_command_argument(argument,validation_file)
-    if (len_trim(validation_file)==0) error stop 'Missing validation output path'
-  case default
-    error stop 'Unknown command argument'
-  end select
-  argument=argument+1
-enddo
+character(300) :: path,fname
 
 path="./data/soundings/"
 fname=trim(path)//"manus_3hr_ARMBEsonde_profiles.nc"
@@ -175,27 +135,24 @@ goto 838 ! directly read profile from binary file.
 
 838 continue
 
+
+!n_prog=3 ! MF, the, qt
+n_prog=11 ! for P3
+
 dz=50.
 ncols=8
 ts=0.
-dt=4.
-te=ts+dt*15.
+dt=2.
+ndt=int(60./dt)
+te=ts+dt*real(ndt)
 !te=4.
 
-allocate(X(ncols+1,nz,10),A(ncols+1),B(ncols+1),forcing(ncols,nz),Xout(ncols+1,nz,3) &
+allocate(X(ncols+1,nz,n_prog),A(ncols+1),B(ncols+1),forcing(ncols,nz), &
+         Xout(ncols+1,nz,n_prog),Ref(nz,8) &
         ,Tr(ncols,nz),q(ncols,nz),ql(ncols,nz),qi(ncols,nz))
 allocate(T4(ncols,nz),q4(ncols,nz),ql4(ncols,nz),qi4(ncols,nz),rh4(ncols,nz),b4(ncols,nz),Tv0(nz))
 
-if (shared_input) then
-  call read_case_profile(trim(input_file),input_profile,diameters,input_lx,input_ly,input_dz, &
-                         input_coarse_z,input_coarse_ze)
-  if (input_dz/=50.d0 .or. input_lx/=64000.d0 .or. input_ly/=64000.d0) &
-    error stop 'Shared case disagrees with v0.18 geometry/grid'
-  A(1:7)=diameters/1.d3
-  A(8:9)=0.
-else
 A=(/ 5., 10., 15., 25., 35., 45., 55., 0., 0./)
-endif
 A=A*1.e3
 B=pi*A
 B(ncols:ncols+1)=(64.e3+64.e3)*2.
@@ -208,16 +165,8 @@ enddo
 A(1)=0.25*pi*A(1)**2.
 
 
-if (shared_input) then
-  rho_zm=input_profile(:,5); zm=input_profile(:,6)
-  the_e=input_profile(:,7); q_e=input_profile(:,8); Tv_e=input_profile(:,9)
-  p_z=input_profile(:,10); rho_e=input_profile(:,11); z=input_profile(:,12)
-  if (any(z/=(/(25.d0+50.d0*(k-1),k=1,nz)/)) .or. &
-      any(zm/=(/(50.d0*(k-1),k=1,nz)/))) error stop 'Unexpected shared vertical grid'
-else
 fname="./input_data/ini_manus_208.dat"
-inquire(iolength=record_length) tmp
-open(20,file=trim(fname),access="direct",recl=record_length)
+open(20,file=trim(fname),access="direct",recl=nz*2)
 read(20,rec=5) tmp
 rho_zm = tmp
 read(20,rec=6) tmp
@@ -235,33 +184,45 @@ rho_e = tmp
 read(20,rec=12) tmp
 z = tmp
 close(20)
-endif
 
 
 do k=1,nz
-  X(:,k,1)=the_e(k)
-  X(:,k,2)=q_e(k)
-  X(:,k,3)=0.
-  X(:,k,4)=rho_e(k)
-  X(:,k,5)=rho_zm(k)
-  X(:,k,6)=z(k)
-  X(:,k,7)=zm(k)
-  X(:,k,8)=dz
-  X(:,k,9)=dz
-  X(:,k,10)=p_z(k)
-  call inv_theta_e(X(1,k,1),X(1,k,2),X(1,k,10),Tr(1,k),q(1,k),ql(1,k),qi(1,k))
-  Tv0(k)=Tv_e(k)
+  X(:,k,1)=0.
+  X(:,k,2)=the_e(k)
+  X(:,k,3)=q_e(k)
+  Ref(k,1)=rho_e(k)
+  Ref(k,2)=rho_zm(k)
+  Ref(k,3)=z(k)
+  Ref(k,4)=zm(k)
+  Ref(k,5)=dz
+  Ref(k,6)=dz
+  Ref(k,7)=p_z(k)
+  Ref(k,8)=(p_z(k)/p0)**(Rd/Cp)
+  call inv_theta_e(X(1,k,2),X(1,k,3),Ref(k,7),Tr(1,k),q(1,k),ql(1,k),qi(1,k))
+  Tv0(k)=Tr(1,k)*(1.+0.607789855072462*q(1,k)-ql(1,k)-qi(1,k))
+  
+  ! for P3
+  X(:,k,1)=0.
+  X(:,k,2)=Tr(1,k) / Ref(k,8)
+  X(:,k,3)=q(1,k)
+  X(:,k,4)=0.
+  X(:,k,5)=0.
+  X(:,k,6)=0.
+  X(:,k,7)=0.
+  X(:,k,8)=0.
+  X(:,k,9)=0.
+  X(:,k,10)=0.
+  X(:,k,11)=0.
 enddo
-
 
 ! initialize MF
 dum1=0.
 dum2=1000.
 do k=1,nz
   if (zm(k)<=dum2) then
-    X(ncols,k,3) = 0.03 & 
+    X(1,k,1) = 0.3 & !0.03 & 
          * sin(pi*(zm(k)-dum1)/(dum2-dum1))
-    !X(ncols,k,3) = -0.03 & 
+    !X(ncols,k,1) = -0.03 & 
     !     * sin(pi*(zm(k)-dum1)/(dum2-dum1))*A(1)/A(ncols)
   endif 
 enddo
@@ -275,74 +236,74 @@ do k=1,200
 enddo
 coarse_ze(201) = 40000.
 
-if (shared_input) then
-  fname=input_file
-  coarse_z=input_coarse_z
-  coarse_ze=input_coarse_ze
-endif
-call ace_initialization(ncols,nz,200,coarse_z,coarse_ze,trim(fname),Tv0,netcdf_input=shared_input)
-
-if (len_trim(validation_file)>0) then
-  open(30,file=trim(validation_file),access='stream',form='unformatted',status='replace')
-  write(30) X,A,B,Tv0,coarse_z,coarse_ze
-  close(30)
-  stop
-endif
+call ace_initialization(ncols,nz,200,coarse_z,coarse_ze,trim(fname))
 
 
 
 call cpu_time(start)
 
 !open(10,file="./data/output_singleACE_manus208.dat",access="direct",recl=ncols*nz*8)
-inquire(iolength=record_length) Xout(1:ncols,:,1:3),T4,q4,ql4,qi4,rh4,b4
-open(10,file=trim(output_file),access="direct",recl=record_length)
+!open(10,file="./data/output_multiACE_manus208.dat",access="direct",recl=ncols*nz*9)
+!open(10,file="./data/output_multiACE_manus208_swap.dat",access="direct",recl=ncols*nz*9)
+open(10,file="./data/output_multiACE_manus208_p3.dat",access="direct",recl=ncols*nz*9)
+!open(10,file="./data/output_singleACE_manus208_p3.dat",access="direct",recl=ncols*nz*9)
+
 n=1
 
-do t=1,intervals ! Each interval advances 15 steps / 60 seconds; default 48 hours
-  write(*,*) ts,te
+do t=1,60*24*100 ! 60 is mins, and 48 is hours
+  write(*,*) ts,te,t
 
   ! output diagnostic
-  Xout = X(:,:,1:3)
+  Xout = X
   do k=1,nz
   do i=1,ncols
-    call inv_theta_e(X(i,k,1),X(i,k,2),X(i,k,10),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
+  !  call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
+    Tr(i,k)=X(i,k,2)*Ref(k,8)
+    q(i,k) =X(i,k,3)
+    ql(i,k)=X(i,k,4)+X(i,k,6)
+    qi(i,k)=X(i,k,8)
     ice=0
     if (Tr(i,k)<273.15) ice=1
-    rh4(i,k)=q(i,k)/eval_qs(Tr(i,k),X(i,k,10),ql(i,k)+qi(i,k),ice)
+    rh4(i,k)=q(i,k)/eval_qs(Tr(i,k),Ref(k,7),ql(i,k)+qi(i,k),ice)
     dum1=Tr(i,k)*(1.+0.607789855072462*q(i,k)-ql(i,k)-qi(i,k))
     b4(i,k)=g*(dum1-Tv0(k))/Tv0(k)
   enddo
   enddo
-  T4=Tr;  q4=q; ql4=ql; qi4=qi;
-  write(10,rec=n) Xout(1:ncols,:,1:3),T4(1:ncols,:),q4(1:ncols,:),ql4(1:ncols,:),qi4(1:ncols,:),rh4(1:ncols,:),b4(1:ncols,:)
+  !T4=Tr; q4=q; ql4=ql; qi4=qi;
+  !write(10,rec=n) Xout(1:ncols,:,1:3),T4(1:ncols,:),q4(1:ncols,:),ql4(1:ncols,:),qi4(1:ncols,:),rh4(1:ncols,:),b4(1:ncols,:)
+  write(10,rec=n) Xout(1:ncols,:,1:3),Xout(1:ncols,:,4),Xout(1:ncols,:,6),Xout(1:ncols,:,8),Xout(1:ncols,:,10),rh4(1:ncols,:),b4(1:ncols,:)
   n=n+1
 
   ! call ace driver to integrate from ts to te with dt
-  call ace_driver(ncols,nz,n_weno,X,A,B,ts,te,dt,forcing)
+  call ace_driver(ncols,nz,n_weno,n_prog,X,Ref,A,B,ts,te,dt,forcing)
 
   ts=te
-  te=ts+dt*15.
+  te=ts+dt*real(ndt)
 enddo
 
 ! output diagnostic
-Xout = X(:,:,1:3)
+Xout = X
 do k=1,nz
 do i=1,ncols
-  call inv_theta_e(X(i,k,1),X(i,k,2),X(i,k,10),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
+  !call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
+  Tr(i,k)=X(i,k,2)*Ref(k,8)
+  ql(i,k)=X(i,k,4)+X(i,k,6)
+  qi(i,k)=X(i,k,8)
   ice=0
   if (Tr(i,k)<273.15) ice=1
-  rh4(i,k)=q(i,k)/eval_qs(Tr(i,k),X(i,k,10),ql(i,k)+qi(i,k),ice)
+  rh4(i,k)=q(i,k)/eval_qs(Tr(i,k),Ref(k,7),ql(i,k)+qi(i,k),ice)
   dum1=Tr(i,k)*(1.+0.607789855072462*q(i,k)-ql(i,k)-qi(i,k))
   b4(i,k)=g*(dum1-Tv0(k))/Tv0(k)
 enddo
 enddo
-T4=Tr;  q4=q; ql4=ql; qi4=qi;
-write(10,rec=n) Xout(1:ncols,:,1:3),T4(1:ncols,:),q4(1:ncols,:),ql4(1:ncols,:),qi4(1:ncols,:),rh4(1:ncols,:),b4(1:ncols,:)
+!T4=Tr; q4=q; ql4=ql; qi4=qi;
+!write(10,rec=n) Xout(1:ncols,:,1:3),T4(1:ncols,:),q4(1:ncols,:),ql4(1:ncols,:),qi4(1:ncols,:),rh4(1:ncols,:),b4(1:ncols,:)
+write(10,rec=n) Xout(1:ncols,:,1:3),Xout(1:ncols,:,4),Xout(1:ncols,:,6),Xout(1:ncols,:,8),Xout(1:ncols,:,10),rh4(1:ncols,:),b4(1:ncols,:)
 close(10)
 
 call cpu_time(finish)
 
-write(*,*) finish-start
+write(*,*) "time cost =",finish-start
 
 
 end program test

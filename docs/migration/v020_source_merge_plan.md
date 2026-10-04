@@ -69,3 +69,10 @@ released v0.18 state. Only review artifacts and documentation have been
 created. Branch destination and acceptance of the source/interface scope
 remain pending; this proposal is not evidence that active-source merge has
 already occurred.
+
+## Execution authorized
+
+The developer subsequently selected integration on the v0.20 development
+branch. The candidate is now promoted there; see the
+[integration record](v020_source_integration.md). The published main/tag
+remain unchanged, and tests and basis inspection remain deferred.

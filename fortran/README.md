@@ -1,33 +1,32 @@
-# Fortran v0.18 implementation
+# Historical Fortran v0.20 / P3 development source
 
-Current sources are in `src/`, with `makefile` at this root. The original
-Intel defaults remain in the makefile. The accepted comparisons used
-GNU Fortran 11.2.0, binary64 and netCDF-Fortran:
+`src/ace_module.F`, `src/test.F`, `src/microphy_p3.F` and `makefile` are
+imported from historical Fortran commit `88e4af5`. Its ancestry is joined to
+the development branch; numerical source bytes are preserved. The
+[source manifest](../docs/migration/v020_source_merge_manifest.json) and
+[integration record](../docs/migration/v020_source_integration.md) describe
+the import. The separate source repository's local driver/makefile changes
+are excluded.
 
-```bash
-make FC=gfortran \
-  FCFLAGS='-O2 -ffree-form -fdefault-real-8 -fdefault-double-8 -ffree-line-length-none' \
-  FINCLUDE="$(nf-config --fflags)" \
-  LDLIBS="$(nf-config --flibs) -Wl,-rpath,$(nf-config --prefix)/lib"
-./ace_model.exe --validate-input /tmp/manus_init.bin
-```
+The historical makefile uses Intel `ifort`, real64 defaults and site-specific
+netCDF paths. It builds the P3 module before ACE. No build or runtime test
+has been performed for this integrated branch.
 
-Run these commands from `fortran/`. The default shared input is
-`../data/input/manus208.nc`; `--input` accepts an explicit path.
-Use `--output` with a writable output path when running the production
-driver. Existing `--legacy-input`, `--intervals` and validation interfaces
-remain available. Compiler flags and numerical routines are unchanged
-by normalization.
+The imported driver enables P3 (`n_prog=11`) and still uses the eight-ACE
+geometry. It expects `./input_data/ini_manus_208.dat`, `./input_data/PMB.dat`
+and P3 lookup data relative to its run directory. P3 5.3.1 selects the
+`p3_lookupTable_1.dat-v6.4-2momI` table under the current wrapper settings.
+Data provision, compiler-specific binary record lengths, output directory
+and a portable input interface require subsequent work. Lookup files are
+present in the separate local source repository; this import does not copy
+them into Git.
 
-Use the repository-root commands in [tests/README.md](../tests/README.md)
-for the developer-accepted singleACE and multiACE cases. See the
-[shared input schema](../docs/shared_input.md),
-[historical recovery map](../docs/migration/v018_normalization.md), and
-[v0.18.0 accepted scope](../docs/releases/v0.18.0.md).
+`src/ace_input.F` is retained from v0.18 but is not used by the historical
+makefile/driver. The previous `--input`, `--output`, `--validate-input` and
+other shared-input command interfaces are not implemented by this driver.
+Known P3 zero-ice exceptions and diagnostic issues remain recorded in the
+[code review](../docs/migration/v020_code_review.md).
 
-For a GNU default-real32 build, omit `-fdefault-real-8` and
-`-fdefault-double-8` from the flags above. Build in a fresh directory to
-avoid mixing objects and modules compiled with different default kinds.
-PMB and shared-input reads retain binary64 storage. The
-[precision test runner](../tests/precision/README.md) builds both kinds in
-isolated directories and tests the stable native precipitation evaluation.
+For the accepted real32/real64 v0.18 implementation and its checks, use a
+separate checkout of `v0.18.0`. Historical v0.20 numerical routines do not
+automatically inherit the accepted v0.18 corrections.

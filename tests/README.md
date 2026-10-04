@@ -1,5 +1,12 @@
 # ACE reference tests
 
+On the v0.20 development branch, active sources have been replaced by the
+historical S20/P3 imports. The runners below were written for v0.18 and have
+not been adapted or run against these new sources. Use a separate checkout
+of `v0.18.0` to reproduce the accepted cases. The
+[integration record](../docs/migration/v020_source_integration.md) tracks
+deferred input adapters, basis confirmation and testing.
+
 For default-real32 Fortran precipitation checks and their real64 comparison,
 see [precision tests](precision/README.md). These retain the frozen v0.18
 reference cases and document the subsequent precipitation evaluation change.

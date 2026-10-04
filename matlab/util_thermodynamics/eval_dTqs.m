@@ -20,10 +20,8 @@ function dTqs = eval_dTqs(T,p,qt)
   % Rel. error increases exponentially with T
   % dTqs = EPS.*p./( p-es*(1-EPS) ).^2 .* d(es)/dT
   %      = EPS.*p.*(1-qt)./(p-es).^2 .* d(es)/dT
-  if nargin==2 %assuming condensate-free
-    dTqs = 0.621971830985916.*p./( p-es*(1-0.621971830985916) ).^2 .* (6743.769./T-4.8451).*es./T;
- 	else %given qt (suitable for plume computations)
+  % % if nargin==2 %assuming condensate-free
+  % %   dTqs = 0.621971830985916.*p./( p-es*(1-0.621971830985916) ).^2 .* (6743.769./T-4.8451).*es./T;
+ 	% % else %given qt (suitable for plume computations)
     dTqs = 0.621971830985916.*p.*(1-qt)./(p-es).^2 .* (6743.769./T-4.8451).*es./T;
-  end
-  
-  
+  % % end

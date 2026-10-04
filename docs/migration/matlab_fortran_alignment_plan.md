@@ -82,10 +82,13 @@ gates.
    then validate Fortran-only P3 coupling separately from shared dynamics.
    Check precision and build compatibility for the selected P3 version.
 
-This preparation changes documentation and the development branch only.
-It does not import historical sources, select a new P3 version or change
-production algorithms. MATLAB is the dynamics reference; P3 is planned as
-Fortran-only physics rather than a required MATLAB implementation.
+The initial preparation changed documentation and the development branch
+only. The developer subsequently authorized source integration on this
+branch before testing. The [integration record](v020_source_integration.md)
+records active S20/Fortran v0.20 source promotion and imported P3 ancestry;
+input adapters, basis confirmation and validation remain deferred.
+MATLAB is the dynamics reference; P3 is Fortran-only physics rather than a
+required MATLAB implementation.
 
 ## Fixed initial runtime comparison
 

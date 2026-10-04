@@ -1,106 +1,90 @@
 %% Directory/file paths
 dir_ace = pwd;
-addpath(dir_ace);
-input_mode = getenv('ACE_INPUT_MODE');
-if isempty(input_mode), input_mode = 'shared'; end
-assert(ismember(input_mode,{'shared','legacy'}), 'ACE_INPUT_MODE must be shared or legacy');
-shared_input = strcmp(input_mode,'shared');
-validating_input = ~isempty(getenv('ACE_VALIDATE_INPUT'));
-input_file = getenv('ACE_INPUT_FILE');
-if isempty(input_file), input_file = fullfile(dir_ace,'../data/input/manus208.nc'); end
-if shared_input, input = read_shared_input(input_file); end
 
 % Subroutines
 dir_util_weno = [dir_ace '/util_weno/'];
 dir_util_plume = [dir_ace '/util_plume/'];
+dir_util_timeint = [dir_ace '/util_timeint/'];
 dir_util_thermodynamics = [dir_ace '/util_thermodynamics/'];
-addpath(dir_util_weno,dir_util_plume,dir_util_thermodynamics)
+addpath(dir_util_weno,dir_util_plume,dir_util_timeint,dir_util_thermodynamics)
+
+% Data folder
+dir_data = [dir_ace '/data/'];
 
 % Pre-computed anelastic basis for massflux
-dir_basis = [dir_ace '/../data/basis/'];
+dir_basis = [dir_data  '/basis/'];
 
 % ARM best-estimate soundings (4 options from 3 sites)
-dir_armbe = [dir_ace '/../data/soundings/'];
-legacy_data = getenv('ACE_LEGACY_DATA');
-if ~isempty(legacy_data)
-  dir_basis = [fullfile(legacy_data,'basis') '/'];
-  dir_armbe = [fullfile(legacy_data,'soundings') '/'];
-end
+dir_armbe = [dir_data '/soundings/'];
 armfnlist = {'manus_3hr_ARMBEsonde_profiles.nc';
              'nauru_3hr_ARMBEsonde_profiles.nc';
              'maoarmbeatmM1.c1.20140101.003000.nc'};
-           
-%% Declare global for in-script functions
-global theta_e_mf qt_mf Tv_mf p_mf rho_mf rho_mfh MB Z zm z p g k dz Nzm coarse_z
-global eps_tur eps_sl eddiffu eddiwin qc_ramp dqc tau_pr EBF EBT qc_cap dt Ni Ai
-global one_ace_only RF Wbar_eq_zero turn_off_mf_diff theta_e_diag Tim
-global T Q QL QI
-global theta_e_zc qt_zc Tv_zc p_zc rho_zc rho_zi PMB damp
-
- 
-%% Loading pre-computed massflux basis
-pcbsfn = 'COMPOSITE_ACE_BASIS_8ACEs.mat';
-if shared_input
-  PMB=input.PMB; Z=input.basis_z;
-  DCASES=input.diameter/1000; Lx=input.Lx/1000; Ly=input.Ly/1000;
-else
-  load([dir_basis pcbsfn]) % PMB(201,200,forcing-region,response-region)
-end
-D = DCASES; % Horizontal entity diameters in km
-Ni = length(D) + 1; % Number of ACEs
-Ai =[(pi/4)*[D(1)^2; D(2:end).^2-D(1:end-1).^2]; Lx*Ly-(pi/4)*D(end)^2]; % ACE area in km^2 (index i or ida)
-Bi = [pi*D; 2*(Lx+Ly)]; % ACE outer perimeter in km (index i or ida)
 
 %% Restart or continue a run
 conti = 0; 
-save_output = 0;
-% output_filename = 'Manus_idp=208_8-ACEs_ebs23-debug.mat';
-output_filename = 'Manus_idp=208_8-ACEs-noDH_ebs23-debug-imDamp_ssprk93-test.mat';
-% output_filename = 'Manus_idp=208_Heaviside_7-ACEs_noDH_Next-DRY.mat';
+restart = 0; % conti with initial conditions reset
+ensemble = 0; % Check dTbl=0.5K for ensemble
+save_output = 1;
+output_filename = 'GoAmazon_idp=314_2D101ACEs_KHN26_dz=100m_1cloud-tripleCheck.mat';
+
+%% Loading pre-computed massflux basis
+pcbsfn = 'COMPOSITE_ACE_BASIS_2D_V020.mat';
+if conti==0
+  load([dir_basis pcbsfn]) % PMB(201,200,forcing-region,response-region)
+%   D = 5*ones(1,88);%DCASES; % Horizontal entity diameters in km
+  Ni = length(D); % Number of ACEs
+  Ai = D'; % ACE area in km^2 (index i or ida)
+  Bi = ones(Ni,1); % ACE outer perimeter in km (index i or ida)
+end
 
 %% Test Turning off nonlocal response
 one_ace_only = 0;
-Wbar_eq_zero = 0; %enforce domain mean w = 0
-reduce_mf_diff = 0;
-turn_off_mf_diff = 1;
+Wbar_eq_zero = 1; %enforce domain mean w = 0
+reduce_mf_diff = 1;
+activate_mf_diff = 0; %(0,1,2)=(no,explecit,implicit) mass flux diffusion;  %(42,41,42)s per min with (dz,ztop)=(100,40e3)m
+turn_off_DHv = 1;
+turn_off_DHh = 1;
 turn_off_v_nonlocal = 0;
 truncate_h_nonlocal = 0;
+zero_ref_buoyancy = 1;
 for i=1:Ni %response_region_index
   for j=1:Ni %forcing_region_index
     if truncate_h_nonlocal && abs(i-j)>=truncate_h_nonlocal
       PMB(:,:,j,i) = 0;
+      PMD(:,:,j,i) = 0;
+      PMDv(:,:,j,i) = 0;
     end
     if turn_off_v_nonlocal && i==j
       PMB(:,:,j,i) = [zeros(1,size(PMB,2));eye(size(PMB,2))];
+      PMD(:,:,j,i) = [zeros(1,size(PMD,2));eye(size(PMD,2))];
+      PMDv(:,:,j,i) = [zeros(1,size(PMDv,2));eye(size(PMDv,2))]; 
     end
-% % %     if (i==1&&j>1)||(j==1&&i>1)
-% % %       PMB(:,:,j,i) = 0;
-% % %     end
   end
+end
+if turn_off_DHv
+  PMDv = 0;
+end
+if turn_off_DHh
+  PMD = 0;
 end
 
 %% Set up parameters
-plotting = 1;
-savefigure = 0;
-theta_e_diag = 1; Tim = [];
+plotting = 0;
+savefigure = 1;
+theta_e_diag = 1; 
 
 % ARM sounding option
-arm = 1;%3; %1=Manus/2=Nauru/3,4=GOAmazon
+arm = 3;%1;% %1=Manus/2=Nauru/3,4=GOAmazon
 armfn = armfnlist{arm};
-pidx = 208;%314; % Profile index for environment
-if shared_input, arm=input.arm; pidx=input.profile_index; armfn=armfnlist{arm}; end
-case_profile_index=pidx;
+pidx = 314;%208;% % Profile index for environment
 
 % Verital grids setup
-dz = 50; % m; 5hPa~50m(surface)/250m(aloft)
+dz = 100; % m; 5hPa~50m(surface)/250m(aloft)
 coarse_z = 200/dz;
 ztop = 40e3; % m
 z = [dz/2:dz:ztop+dz/2]'; % z-grid for plume computation
 zm = [0:dz:ztop]'; % z-grid for mass-flux for entrainment rate
 p = [1000:-5:100]'*1e2; % 5-hPa grid
-if shared_input
-  assert(input.dz==dz && isequal(input.z,z) && isequal(input.zm,zm) && isequal(input.p,p), 'Input grid disagrees with driver');
-end
 
 % For precip sinks
 qc_ramp = 0.5e-3; % kg/kg; ramping for precip when qc>qc_ramp
@@ -108,19 +92,19 @@ dqc = 20; % kg/kg; transition for a smooth onset of precip ramp function
 tau_pr = 5*60; % sec; relaxation timescale for precip
 
 % For ODE solver
-dt = 4;  % Delta t for ode solver %22s works for SSPRK(10,4) & SSPRK93
+dt = 6;  % dt=12 for dz=200m and SSPRK93
 % Initiate for continuing runs
 if conti==1
-  Xminus1 = X(:,1:end-1);
+  Xminus1 = X(:,:,:,1:end-1); % X(z,var,ACE-i,time)
   tminus1 = tspan(1:end-1);
-  X0 = X(:,end);
+  X0 = X(:,:,:,end);
   t0 = tspan(end); % t0=starting time; T0=triple point temperature.
   disp('Continue Previous Run...')
 else
   disp('Start Anew!')
 end
 % DO NOT MODIFY THE IF SECTION
-tspan = [0:1:60*12]*60; % sec
+tspan = [0:1:60*8]*60; % sec
 Nt = length(tspan);
 % Update tspan for continuing runs
 if conti==1
@@ -128,15 +112,15 @@ if conti==1
 end
 
 % Initial mass flux = MF0*sin(pi*(z-zb)/(zt-zb)) for zb<z<zt (zeros elsewhere)
-MF0 = 0.03; % kg/m^2/s
-zt = 1e3; % km; top of initial MF
+MF0 = 0*5; % kg/m^2/s
+zt = 4e3; % km; top of initial MF
 zb = 0e3; % km; Base of inital MF
 
 % Initial thermal bubble in zm(BL); BL=[] for no bubble
-BL = []; % BL=bubble levels
-dTbl = 0; % T=T+dTbl in BL
+BL = [11:51];%[21:101];% % BL=bubble levels
+dTbl = 0.25;%-5;% % T=T+dTbl in BL
 dqsat = 1; %1=saturate zm(BL); 0=doing nothing
-dqcbl = 0;%10e-3; % kg/kg; qc=dqcbl; ignored if dqsat~=1
+dqcbl = 0;%5e-3; % kg/kg; qc=dqcbl; ignored if dqsat~=1
 dqbl = 0.8; % q=dqbl*q in BL; ignored if dqsat==1
 
 % External buoyancy forcing (mimicking large-scale forcing)
@@ -151,125 +135,85 @@ EBT = 0*60*60; % sec; EBF turned on for t<EBT
 RIP = -1.5; % K/day
 zr = [0 9e3 14e3]';
 vr = [1 1.5 0]';
-if validating_input
-  RF=zeros(size(zm)); % Not part of the input dump; integration is skipped.
-else
 gf = normpdf([-20:20]'*dz,0,300); % Gaussian filter for smoothing
 vrzm = conv(interp1(zr,vr,zm,'linear',0),gf,'same');
 RF = vrzm/max(vrzm)*RIP/3600/24; % ~dT/dt in K/s
-
-end
 
 % Turbulent entrainment rate
 nju = 0.09; % Morrison (2017)
 % eps_tur 1st/2nd column for outer/inner boundary of ACE-i
 eps_tur = permute((nju/1e3)*[Bi./Ai,[0;Bi(1:end-1)./Ai(2:end)]],[3,2,1]); %(nju/1e3)*(4/D); % Note: D in km (4/D=1/G)
+eps_tur(1,1,end) = 0;
 
 % Eddy diffusivity substituting additional dynamic-induced pressure perturbation terms
-D_edf = nan(Ni,1);
-for i=1:Ni
-  PMB_diag = PMB(:,:,i,i);
-  PMB_diag = sum(PMB_diag(:,30:50),2);
-  PMB_diag = PMB_diag(Z<5e3&Z>1e3); % Fitting using 1<Z<5 km
-  ZB = Z(Z<5e3&Z>1e3);
-  n_coeff = polyfit(ZB,log(PMB_diag),1);
-  D_edf(i) = pi/(n_coeff(1)*1e3);
-end
-eddiffu = D_edf*1e3/4/pi/dz; %D*1e3/4/pi/dz;
+D_edf = 5; % km
+eddiffu = D_edf*1e3/4/pi; % km-->m
 eddiwin = ceil(D_edf*1e3/2/dz); % Sliding window half-width for movmax
-% % % eddiffu = [D(1);D(2:end)-D(1:end-1);2*sqrt(Lx*Ly/pi)-D(end)]*1e3/4/pi/dz; %D*1e3/4/pi/dz;
-% % % eddiwin = ceil([D(1);D(2:end)-D(1:end-1);2*sqrt(Lx*Ly/pi)-D(end)]*1e3/2/dz); % Sliding window half-width for movmax
 if reduce_mf_diff==1
-  eddiffu = eddiffu/50;
-elseif turn_off_mf_diff==1
+  eddiffu = eddiffu/100;
+elseif activate_mf_diff==0
   eddiffu = eddiffu*0;
 end
 
 % Spounge layer with Newtonian damping at domain top ztop
 SLD = 6e3;%3e3; % e-folding depth in m %1e3 in KN23
 SLTau = 180; % SL relaxation timescale in s %60 in KN23
-% eps_sl = exp( (zm-zm(end))/SLD )/SLTau;
 eps_sl = exp( (z-z(end))/SLD )/SLTau;
 
 % WENO scheme (reconstruction uses 2k-1 points)
 k = 2; %reconstruction_wenoz for k>=3 (k=2 only for reconstruction_weno)
 
 % Other pre-defined constants
-IMPORT_CONSTANTS
+IMPORT_CONSTANTS_NOGLOBAL
 Nzm = length(zm);
 
 %% Pre-processing sounding data
-if shared_input
-  plev=input.plev; pr=input.pr; ta=input.ta; hus=input.hus; prw=input.prw;
-  date=input.date; hh=input.hh;
-  T_p=input.T_p; q_p=input.q_p; rho_p=input.rho_p; z_p=input.z_p;
-  T_env=input.T_env; q_env=input.qt_zc; Tv_env=input.Tv_zc;
-  theta_e_env=input.theta_e_zc; rho_env=input.rho_zc; p_z=input.p_zc;
-  T_zm=input.T_zm; q_zm=input.qt_mf; Tv_zm=input.Tv_mf;
-  theta_e_zm=input.theta_e_mf; rho_zm=input.rho_mf; p_zm=input.p_mf;
-  theta_zm=input.theta_zm; theta_es_zm=input.theta_es_zm; rh_zm=input.rh_zm;
-  pidx=1; % The shared file contains exactly one selected profile.
-else
 [plev, pr, ta, hus, prw, date, hh] = LOAD_SOUNDINGS([dir_armbe armfn], arm);
-% Input validation needs only the selected profile, not all 5211 profiles.
-if ~isempty(getenv('ACE_VALIDATE_INPUT'))
-  ta=ta(:,pidx); hus=hus(:,pidx); date=date(pidx); hh=hh(pidx);
-  pr=pr(pidx); prw=prw(pidx); pidx=1;
-end
+
+%% KKNW25 RH-reduced (using GoAmazon idp=314 case)
+% % % [zip,pip,tip,qip,tvip,rhoip] = init_profile('linear');% control
+% % % ta(2:end,pidx) = interp1(pip,tip,plev(2:end),'makima');
+% % % hus(2:end,pidx) = interp1(pip,qip,plev(2:end),'makima');
+%%
 
 % Interpolate sounding values to 5-hPa p-grid (_p)
-[T_p, q_p, rho_p, z_p] = INTERP_P_GRID(plev, ta, hus);
+[T_p, q_p, rho_p, z_p] = INTERP_P_GRID(plev, ta(:,pidx), hus(:,pidx), p);
+
+% Modify humidity to avoid theta_e supersaturation
+q_p = TWEAK_THETA_E(T_p, q_p, p);
+
+% Save sounding
+% % % theta_e_p = eval_theta_e(T_p,q_p,0,0,p);
+% % % theta_es_p = eval_theta_es(T_p,p);
+% % % save('GoAmazon_idp=314_sounding.mat','T_p','q_p','rho_p','z_p','p','theta_e_p','theta_es_p')
 
 % Interpolate sounding values to 50-m z-grid (_env) & zm-grid (_zm)
 [T_env, q_env, Tv_env, theta_e_env, rho_env, p_z,...
  T_zm, q_zm, Tv_zm, theta_e_zm, rho_zm, p_zm,...
- theta_zm, theta_es_zm, rh_zm] = INTERP_Z_GRID(T_p, q_p, z_p);
-
-end
-
-%% Traditional plume computations
-if ~validating_input
-qc_cap = 0.5e-3;% kg/kg; capping condensate for traditional plumes
-% Deep-inflow B
-[theta_e_dib, qt_dib, T_dib, q_dib, ql_dib, qi_dib, B_dib]...
-     = ENTRAIN_PLUME(T_p(:,pidx), q_p(:,pidx), rho_p(:,pidx), z_p(:,pidx), p);
-% No-mixing
-mixing = 0;
-[theta_e_nmx, qt_nmx, T_nmx, q_nmx, ql_nmx, qi_nmx, B_nmx]...
-     = ENTRAIN_PLUME(T_p(:,pidx), q_p(:,pidx), rho_p(:,pidx), z_p(:,pidx), p, mixing);
-% Constant mixing
-% mixing = 5e-2; %/5hPa
-mixing = 1e-3; %/m
-[theta_e_cne, qt_cne, T_cne, q_cne, ql_cne, qi_cne, B_cne]...
-     = ENTRAIN_PLUME(T_p(:,pidx), q_p(:,pidx), rho_p(:,pidx), z_p(:,pidx), p, mixing);
-
-end
+ theta_zm, theta_es_zm, rh_zm] = INTERP_Z_GRID(T_p, q_p, z_p, p, zm, z, dz);
 
 %% Setup for time-integration
 day = date(pidx); % Can run multiple pidx cases (by adding a for-loop here)
 
 % _mf(h) = properties of mass flux; will be used as constant reference during time-integration
-theta_e_mf = theta_e_zm(:,pidx); 
-qt_mf = q_zm(:,pidx);
-Tv_mf = Tv_zm(:,pidx);
-p_mf = p_zm(:,pidx);
-rho_mf = rho_zm(:,pidx); 
-rho_mfh = interp1(zm,rho_mf,zm+dz/2,'pchip');
+theta_e_mf = theta_e_zm; 
+qt_mf = q_zm;
+Tv_mf = Tv_zm;
+p_mf = p_zm;
+rho_mf = rho_zm; 
+rho_mfh = interp1(zm,rho_mf,zm+dz/2,'makima');
 
 % _zc = cell center
-theta_e_zc = theta_e_env(:,pidx);
-qt_zc = q_env(:,pidx);
-Tv_zc = Tv_env(:,pidx);
-p_zc = p_z(:,pidx);
-rho_zc = rho_env(:,pidx);
-rho_zi = rho_zm(:,pidx); 
+theta_e_zc = theta_e_env;
+qt_zc = q_env;
+T_zc = T_env;
+Tv_zc = Tv_env;
+p_zc = p_z;
+rho_zc = rho_env;
+rho_zi = rho_zm; 
 
 % For implicit damping
 damp = dt*(eps_sl./[rho_zc,rho_zc,rho_mf]);
-
-% Mass-flux basis MB(Z,Bi)=PMB*rho_0(Z)
-rho_Z = rho_mf(1:coarse_z:end);
-MB = PMB.*rho_Z; % MB(201,200,forcing-region,response-region)
 
 % Initiate MF(t=0)
 MF = MF0*sin( pi*(zm-zb)/(zt-zb) );
@@ -277,38 +221,101 @@ MF(zm>zt | zm<zb) = 0;
 
 % Initiate for ODE solver
 if conti == 0
+  X0 = [theta_e_zc,qt_zc,MF,zeros(Nzm,2),...
+        repmat([theta_e_zc,qt_zc,-MF/(length(D)-1),zeros(Nzm,2)],1,Ni-1,1)]; %<---variables defined on zm-grid
 % % %   X0 = [theta_e_zc,qt_zc,MF,zeros(Nzm,2),...
-% % %         repmat([theta_e_zc,qt_zc,zeros(Nzm,3)],1,Ni-2,1)...
-% % %         theta_e_zc,qt_zc,-MF*Ai(1)/Ai(end),zeros(Nzm,2)]; %<---variables defined on zm-grid
-  X0 = [repmat([theta_e_zc,qt_zc,zeros(Nzm,3)],1,Ni-1,1)...
-                theta_e_zc,qt_zc,MF,zeros(Nzm,2)]; %<---variables defined on zm-grid
+% % %         theta_e_zc,qt_zc,-*MF,zeros(Nzm,2),...
+% % %         theta_e_zc,qt_zc,-*MF,zeros(Nzm,2),...
+% % %         theta_e_zc,qt_zc,-*MF,zeros(Nzm,2),...
+% % %         repmat([theta_e_zc,qt_zc,zeros(Nzm,3)],1,Ni-4,1)]; %<---variables defined on zm-grid
+  X0 = reshape(X0,[Nzm,5,Ni]); %(Nzm,5*Ni)-->(Nzm,5,Ni)
   t0 = 0;
-  % Adding BL/thermal bubble for inner-most ACE
-  if ~isempty(BL)
-    if dqsat==1
-      X0(BL,2) = eval_qsat(T_zm(BL,pidx)+dTbl,p_mf(BL)) .* (1-dqcbl);
-    else
-      X0(BL,2) = q_zm(BL,pidx)*dqbl;
+  if ensemble==1
+    rng("default")
+    for idx=1:Ni
+      if rand(1)<0.1
+        bl = BL(1:round(rand(1)*length(BL)));
+        X0(bl,2,idx) = eval_qsat2(T_zc(bl)+dTbl,p_zc(bl)) .* (1-dqcbl);
+        X0(bl,1,idx) = eval_theta_e(T_zc(bl)+dTbl,X0(bl,2,idx),(dqsat==1)*dqcbl*((T_zc(bl)+dTbl)>=T0),(dqsat==1)*dqcbl*((T_zc(bl)+dTbl)<T0),p_zc(bl));
+      end
     end
-    X0(BL,1)=eval_theta_e(T_zm(BL,pidx)+dTbl,X0(BL,2),(dqsat==1)*dqcbl*((T_zm(BL,pidx)+dTbl)>=T0),(dqsat==1)*dqcbl*((T_zm(BL,pidx)+dTbl)<T0),p_mf(BL));
+%     contourf(squeeze(X0(:,1,:)),[330:355],'linestyle','none')
+%     colormap(spectral)
+%     grid on
+%     ylim([0 100])
+%     disp(rand(2)+rand(3))
+  % Adding BL/thermal bubble for inner-most ACE
+  elseif ~isempty(BL)
+    if dqsat==1
+      X0(BL,2,1) = eval_qsat2(T_zc(BL)+dTbl,p_zc(BL)) .* (1-dqcbl);
+    else
+      X0(BL,2,1) = qt_zc(BL)*dqbl;
+    end
+    X0(BL,1,1) = eval_theta_e(T_zc(BL)+dTbl,X0(BL,2,1),(dqsat==1)*dqcbl*((T_zc(BL)+dTbl)>=T0),(dqsat==1)*dqcbl*((T_zc(BL)+dTbl)<T0),p_zc(BL));
+    % 2nd cloud at the end
+    % X0(:,:,end) = X0(:,:,1);
+% %     for idx=2:10
+% %       X0(:,:,idx) = X0(:,:,1);
+% %     end
+    % 1 narrow cloud
+%     X0(:,:,44) = X0(:,:,1);
+%     X0(:,:,1) = X0(:,:,2);
+    % Wide initial bubble
+%     X0(:,:,2) = X0(:,:,1);
+%     X0(:,:,end-1) = X0(:,:,1);
+%     X0(:,:,end) = X0(:,:,1);
   end
 end
 
-% Optional initialization-only dump for reader regression checks.
-validation_output=getenv('ACE_VALIDATE_INPUT');
-if ~isempty(validation_output)
-  save(validation_output,'X0','PMB','Z','z','zm','Ai','Bi','theta_e_mf','qt_mf',...
-       'Tv_mf','p_mf','rho_mf','theta_e_zc','qt_zc','Tv_zc','p_zc','rho_zc','case_profile_index');
-  return;
+%% Restart
+if restart==1
+  X0(:,3,:) = 0; 
+  rc = 66; % Column index for restart bubble 
+  X0(BL,2,rc) = eval_qsat2(T(BL,end,rc)+dTbl,p_zc(BL)) .* (1-dqcbl);
+  X0(BL,1,rc)=eval_theta_e(T(BL,end,rc)+dTbl,X0(BL,2,rc),(dqsat==1)*dqcbl*((T(BL,end,rc)+dTbl)>=T0),(dqsat==1)*dqcbl*((T(BL,end,rc)+dTbl)<T0),p_zc(BL));
 end
 
-%% Time integration
+%% Define a struc to warp static ACE attributes
+ace.PMB = PMB;
+ace.PMDv = PMDv;
+ace.PMD = PMD;
+ace.damp = damp;
+ace.dt = dt;
+ace.p_zc = p_zc;
+ace.rho_zc = rho_zc;
+ace.Tv_zc = Tv_zc;
+ace.theta_e_diag = theta_e_diag;
+ace.Wbar_eq_zero = Wbar_eq_zero;
+ace.Ai = Ai;
+ace.dz = dz;
+ace.one_ace_only = one_ace_only;
+ace.qt_zc = qt_zc;
+ace.theta_e_zc = theta_e_zc;
+ace.activate_mf_diff = activate_mf_diff;
+ace.Z = Z;
+ace.zm = zm;
+ace.coarse_z = coarse_z;
+ace.Ni = Ni;
+ace.k = k;
+ace.rho_zi = rho_zi;
+ace.Nzm = Nzm;
+ace.Ni = Ni;
+ace.eps_tur = eps_tur;
+ace.turn_off_DHv = turn_off_DHv;
+ace.turn_off_DHh = turn_off_DHh;
+ace.zero_ref_buoyancy = zero_ref_buoyancy;
+ace.qc_ramp = qc_ramp;
+ace.dqc = dqc;
+ace.tau_pr = tau_pr;
+ace.eddiffu = eddiffu;
+ace.eddiwin = eddiwin;
+
+%% Time-integration
+%%            in GPU
 tic;
-% reshape(X,[Nzm,5,Ni]) = X(z,var,ACE-i) = [theta_e_mf, qt_mf, MF, dtheta_e_pr_accum, pr_accum]
-X = timeint(tspan,X0(:),dt); 
-X = X';
+X = timeint(@ssprk93,tspan,X0,dt,ace);
 if conti==1
-  X = [Xminus1 X];
+  X = cat(4,Xminus1,X);
   tspan = [tminus1 tspan];
   Nt = length(tspan);
 end
@@ -317,314 +324,220 @@ disp(['ODE solver time = ' num2str(Tcost) ' sec'])
 
 % Derived variables evaluated via post-processing (z,time,ACE-i)
 [theta_e, qt, mf, theta, RH, B,...
-   qsat, qv, qc, ql, qi, Tv, T, dtheta_e_pr_accum, pr_accum] = POST_PROCESS(X);
+   qsat, qv, qc, ql, qi, Tv, T, dtheta_e_pr_accum, pr_accum] = POST_PROCESS(X,ace);
 
-if save_output==1
-  save(output_filename)
+disp('... done!')
+
+if save_output
+  save(['OUTPUT\' output_filename],'-v7.3')
+  % save(['/home/yhkuo/Desktop/OUTPUT/' output_filename],'-v7.3')
 end
 
-%%
-figure('Units','normalized','Position',[0 0 1 1])
-cmp = colormap(turbo(Nt));
-for i=1:Ni
-  subplot(1,Ni,i)
-  hold all
-  for idt=1:Nt
-    plot(B(:,idt,i),z/1e3,'color',cmp(idt,:),'linewidth',2)
-  end
-  xlabel(['Buoy (m/s^2)'])
-  ylabel('Height (km)')
-  xlim([-0.2,0.2])
-  ylim([0 18])
-  grid on
-  box on
-  title(['ACE-' num2str(i)])
-  set(gca,'fontsize',20)
-end
-
-figure('Units','normalized','Position',[0 0 1 1])
-cmp = colormap(turbo(Nt));
-for i=1:Ni
-  subplot(1,Ni,i)
-  hold all
-  for idt=1:Nt
-    plot(mf(:,idt,i),zm/1e3,'color',cmp(idt,:),'linewidth',2)
-  end
-%   if i==1
-%     xlim([-4 12])
-%   elseif i==2
-%     xlim([-3 5])
-%   elseif i==3
-%     xlim([-0.8 0.5])
-%   else
-%     xlim([-0.15 0.1])
-%   end
-  xlabel(['MF (kg/m s^2)'])
-  ylabel('Height (km)')
-  ylim([0 18])
-  grid on
-  box on
-  title(['ACE-' num2str(i)])
-  set(gca,'fontsize',20)
-end
-
-figure('Units','normalized','Position',[0 0 1 1])
-cmp = colormap(turbo(Nt));
-for i=1:Ni
-  subplot(1,Ni,i)
-  hold all
-  for idt=1:Nt
-    plot(qc(:,idt,i)*1e3,z/1e3,'color',cmp(idt,:),'linewidth',2)
-  end
-  xlabel(['q_c (g/kg)'])
-  ylabel('Height (km)')
-  ylim([0 18])
-  grid on
-  box on
-  title(['ACE-' num2str(i)])
-  set(gca,'fontsize',20)
-end
-
-figure('Units','normalized','Position',[0 0 1 1])
-cmp = colormap(turbo(Nt));
-for i=1:Ni
-  subplot(1,Ni,i)
-  hold all
-  for idt=1:Nt
-    plot(qv(:,idt,i)*1e3,z/1e3,'color',cmp(idt,:),'linewidth',2)
-  end
-  xlabel(['q_v (g/kg)'])
-  ylabel('Height (km)')
-  ylim([0 18])
-  grid on
-  box on
-  title(['ACE-' num2str(i)])
-  set(gca,'fontsize',20)
-end
-
-figure('Units','normalized','Position',[0 0 1 1])
-cmp = colormap(turbo(Nt));
-for i=1:Ni
-  subplot(1,Ni,i)
-  hold all
-  for idt=1:Nt
-    plot(RH(:,idt,i)*1e2,z/1e3,'color',cmp(idt,:),'linewidth',2)
-  end
-  xlabel(['RH (%)'])
-  ylabel('Height (km)')
-  ylim([0 18])
-  grid on
-  box on
-  title(['ACE-' num2str(i)])
-  set(gca,'fontsize',20)
-end
-
-figure
-cmp = colormap(jet(Ni));
-hold all
-for idp=1:Ni
-  plot((tspan(1:end-1)/60+0.5)/60,...
-       squeeze(sum(pr_accum(:,2:end,idp)-pr_accum(:,1:end-1,idp)))*60,'color',cmp(idp,:))
-end
-sig=Ai(1:end)/sum(Ai(1:end));
-plot((tspan(1:end-1)/60+0.5)/60,...
-       sum(sig'.*squeeze(sum(pr_accum(:,2:end,:)-pr_accum(:,1:end-1,:)))*60,2),'k','linewidth',2)
-grid on
-box on
-set(gca,'fontsize',15)
-xlabel('Time (h)')
-ylabel('Precip (mm/h)')
-xlim([0 tspan(end)/3600])
-xticks([0:3:48])
-
-%% Subroutines
-%%   implemented
-%%     below:
-%% Operator-splitting Time-integration
-function X = timeint(tspan,X0,dt)
-global Nzm Ni turn_off_mf_diff
-  X = nan(length(X0),length(tspan));
+%% Operator-splitting Time-integration interacting with both CPU & GPU
+function X = timeint(odeint,tspan,X0,dt,ace)
+  X = nan([size(X0),length(tspan)]);
+  X(:,:,:,1) = X0;
   yn = X0;
-  X(:,1) = X0;
-  % For non-negative qt
-  Inonneg = (5*[1:Ni]-4)*Nzm+[1:Nzm]';
-  Inonneg = Inonneg(:);
   for idt=1:length(tspan)-1
     t = tspan(idt);
     Nt = ( tspan(idt+1)-tspan(idt) )/dt;
     for idn=1:Nt
       t = t+dt;
       disp(t)
-      % SSPRK93 (low-storage) for explicit terms
-      yn = SSPRK93(yn,dt,Inonneg);
-      % Post-dynamics precipitation, using the stage-1 thermodynamic cache
-      yn = ApplyPrecip(yn,dt);
-      % Non-negative qt, once after precipitation
-      yn(Inonneg) = yn(Inonneg).*(yn(Inonneg)>0);
-      % Implicitly solving massflux diffusion
-      if ~turn_off_mf_diff
-        for i=1:Ni
-          yn((5*i-3)*Nzm+(1:Nzm)) = ImDiffMF(yn((5*i-3)*Nzm+(1:Nzm)),dt,i);
-        end
+      % Microphysical & Radiative tendencies
+      [dTH, dQt, rho0B] = microrad(yn(:,1:2,:),ace.p_zc,ace.rho_zc,ace.Tv_zc,ace.theta_e_diag,ace);
+      % Built-in weak buoyancy gradient
+      if ace.zero_ref_buoyancy
+        rho0B = rho0B - sum(rho0B.*(ace.Ai/sum(ace.Ai))',2);
       end
+      % Time-integrate explicit terms (default: low-storage SSPRK93)
+      yn = odeint(@expFun,yn,dTH,dQt,rho0B,ace.dt,ace.Wbar_eq_zero,ace.Ai,ace);
       % Implicit Newtonian damping
-      yn = ImDamp(yn);
-%       disp(norm(yn(:)))
+      yn = ImDamp(yn,ace.theta_e_zc,ace.qt_zc,ace.Nzm,ace.damp);
+      % Implicitly solving massflux diffusion
+      if ace.activate_mf_diff==1
+        yn(:,3,:) = ExDiffMF(yn(:,3,:),ace.dt,ace.dz,ace.rho_zi,ace.eddiffu);
+      elseif ace.activate_mf_diff==2
+        yn(:,3,:) = ImDiffMF(yn(:,3,:),ace.dt,ace.dz,ace.rho_zi,ace.Ni,ace.Nzm,ace.eddiffu,ace.eddiwin);
+      end
     end%idn
-    X(:,idt+1) = yn;
+    X(:,:,:,idt+1) = yn;
   end%idt
-  X = X'; % Consistent with MATLAB ode23
 end
 
-function dXdt = expFun(X,rkstage)
-global theta_e_mf qt_mf rho_mf rho_mfh k dz Nzm eps_tur Ni Ai one_ace_only Wbar_eq_zero 
-global EBF EBT RF p_mf
-global T Q QL QI
-global theta_e_zc qt_zc Tv_zc p_zc rho_zc rho_zi
-  X = reshape(X,[Nzm,5,Ni]); % X(z,var,ACE-i)=[theta_e,qt,MF,dtheta_e_pr_accum,pr_accum]  
-  if rkstage==1 % Do inv_T_from_theta_e only once for every dt
-    % Ivert (T,q,ql,qi) for buoyancy, precipitation, and radiation
-    [T, Q, QL, QI] = INV_THETA_E(squeeze(X(:,1,:)), squeeze(X(:,2,:))); % (z,ACE-i)
+function [theta_e, qt, mf, theta, RH, B,... 
+          qsat, qv, qc, ql, qi, Tv, T, dtheta_e_pr_accum, pr_accum] = POST_PROCESS(X,ace)
+  [Nzm,Nvar,Ni,Nt] = size(X); % Nvar=5 for simplified thermodynamics
+  X = reshape(X,[Nvar*Nzm,Ni,Nt]); % X(var&z,ACE-i,time)
+  X = permute(X,[1,3,2]); % X(var&z,time,ACE-i)
+  theta_e = X(1:Nzm,:,:);
+  qt = X(Nzm+1:2*Nzm,:,:);
+  mf = X(2*Nzm+1:3*Nzm,:,:);
+  dtheta_e_pr_accum = X(3*Nzm+1:4*Nzm,:,:);
+  pr_accum = X(4*Nzm+1:end,:,:);
+  theta = zeros(Nzm,Nt,Ni);
+  qsat = zeros(Nzm,Nt,Ni);
+  q = zeros(Nzm,Nt,Ni);
+  ql = zeros(Nzm,Nt,Ni);
+  qi = zeros(Nzm,Nt,Ni);
+  T = zeros(Nzm,Nt,Ni);
+  for ida=1:Ni
+    for idt=1:Nt
+      for idz=1:Nzm
+        [T(idz,idt,ida), q(idz,idt,ida), ql(idz,idt,ida), qi(idz,idt,ida)]...
+            = inv_T_from_theta_e(theta_e(idz,idt,ida), qt(idz,idt,ida), ace.p_zc(idz));
+      end
+      theta(:,idt,ida) = eval_theta(T(:,idt,ida),ace.p_zc);
+      qsat(:,idt,ida) = eval_qsat(T(:,idt,ida),ace.p_zc,qt(:,idt,ida));
+    end
   end
-  % Precipitation sinks (moved to ApplyPrecip after the complete RK step)
-%  [dtheta_e, dqt] = PRECIP_SINKS(T, Q, QL, QI); % (z,ACE-i)
-% % %   % Radiative forcing
-% % %   dT = 1e-8;  
-% % %   dtheta_e = dtheta_e+ RF.* ( eval_theta_e(T+dT,Q,QL,QI,p_mf) - eval_theta_e(T,Q,QL,QI,p_mf) )/1e-8;
-  
+  Tv = eval_Tv(T,q,ql+qi);
+  RH = q./qsat;
+  B = eval_B(Tv,ace.Tv_zc);
+  qc = (qt-qsat).*(qt>qsat);
+  qv = qt-qc;
+end
+
+%% Subroutines 
+%%   used in GPU
+function dXdt = expFun(X,dTH,dQt,rho0B,ace)
+  % X(z,var,ACE-i)=[theta_e,qt,MF,dtheta_e_pr_accum,pr_accum]
   % Compute tracer values Ci(zi) at interface points from C(zc=zi+dz/2)
-  Ci = reconstruction_weno_vec(k,X(:,1:2,:),X(:,3,:)); % Ci(zi,var,ACE-i)
+  Ci = reconstruction_weno_vec(ace.k,X(:,1:2,:),X(:,3,:)); % Ci(zi,var,ACE-i)
   % Vertical velocity w(zi) (mass flux already at zi)
-  wi = X(:,3,:)./rho_zi; % (zi,1,ACE-i)
+  wi = X(:,3,:)./ace.rho_zi; % (zi,1,ACE-i)
   % Vertical mass flux & velocity at zc=zi+dz/2
-  mfc = squeeze(reconstruction_up3(X(:,3,:))); % (zc,1,ACE-i)-->(zc,ACE-i)
-  wc = mfc./rho_zc; % (zc,ACE-i)
+  mfc = squeeze(reconstruction_up3(X(:,3,:))); % (zi,1,ACE-i)-->(zc,1,ACE-i)-->(zc,ACE-i)
+  % mfc = squeeze(reconstruction_weno_vec(k,X(:,3,:),mfc_up3));
+  wc = mfc./ace.rho_zc; % (zc,ACE-i)
   % Admfdz = (ACE area)*dmfdz for dynamic inflow/outflow at zc=zi+dz/2
-  Admfdz = Ai'.* squeeze(( X(2:end,3,:)-X(1:end-1,3,:) )/dz); % (zc,1,ACE-i)-->(zc,ACE-i); size(Admfdz)=(Nzm-1,Ni)
+  Admfdz = ace.Ai'.* squeeze(( X(2:end,3,:)-X(1:end-1,3,:) )/ace.dz); % (zc,1,ACE-i)-->(zc,ACE-i); size(Admfdz)=(Nzm-1,Ni)
   % ioflow = -Bi*rho_0*u_n (minus h. mass flux * lateral boundary length)
-  ioflow = permute(cumsum(Admfdz,2),[1,3,2]); % ioflow(:,1,[i-1,i]) for ACE-i dynamic inflow/outflow
-  if Wbar_eq_zero==1
-    % Adjust mass flux tendency for outermost ACE for neutual domain mean
-    ioflow(:,end) = 0;
-  end
+  ioflow = permute(cumsum(Admfdz,2),[1,3,2]); % ioflow(:,1,[i-1,i])=-rho0*u for ACE-i dynamic inflow/outflow
   % Vertical tracer flux rho_0*w*C at zi
   rho0wC = X(:,3,:).*Ci; % (zi,var,ACE-i)
   % Set surface fluxes
   rho0wC(1,:,:) = 0; % First try: zeros surface flux
   % Compute flux-based tendencies at zc=zi+dz/2
-  dCdt = zeros(Nzm-1,2,Ni); % Add zeros(1,2,Ni) for model top at the end
-  dCdt(:,:,1) = -eps_tur(1,1,1)*( X(1:end-1,1:2,1)-X(1:end-1,1:2,2) )... % Turbulent entrainment
-                +( ioflow(:,1,1).*( (ioflow(:,1,1)>0).*X(1:end-1,1:2,2) + (ioflow(:,1,1)<0).*X(1:end-1,1:2,1) )/Ai(1)...
-                  -( rho0wC(2:end,:,1)-rho0wC(1:end-1,:,1) )/dz )./rho_zc(1:end-1); % Vertical mean flux convergence
-  dCdt(:,:,2:Ni-1) = -eps_tur(1,1,2:Ni-1).*( X(1:end-1,1:2,2:Ni-1)-X(1:end-1,1:2,3:Ni) )...  % Turbulent entrainment
-                     -eps_tur(1,2,2:Ni-1).*( X(1:end-1,1:2,2:Ni-1)-X(1:end-1,1:2,1:Ni-2) )... 
-                     +( ( ioflow(:,1,2:Ni-1).*( (ioflow(:,1,2:Ni-1)>0).*X(1:end-1,1:2,3:Ni) + (ioflow(:,1,2:Ni-1)<0).*X(1:end-1,1:2,2:Ni-1) )...
-                         -ioflow(:,1,1:Ni-2).*( (ioflow(:,1,1:Ni-2)>0).*X(1:end-1,1:2,2:Ni-1) + (ioflow(:,1,1:Ni-2)<0).*X(1:end-1,1:2,1:Ni-2) ) )./permute(Ai(2:Ni-1),[3,2,1])...
-                       -( rho0wC(2:end,:,2:Ni-1)-rho0wC(1:end-1,:,2:Ni-1) )/dz )./rho_zc(1:end-1); % Vertical mean flux convergence          
-  dCdt(:,:,Ni) = -eps_tur(1,1,Ni).*( X(1:end-1,1:2,Ni)-[theta_e_zc(1:end-1),qt_zc(1:end-1)] )... % Turbulent entrainment
-                 -eps_tur(1,2,Ni).*( X(1:end-1,1:2,Ni)-X(1:end-1,1:2,Ni-1) )...              
-                 +( ( ioflow(:,1,Ni).*( (ioflow(:,1,Ni)>0).*[theta_e_zc(1:end-1),qt_zc(1:end-1)] + (ioflow(:,1,Ni)<0).*X(1:end-1,1:2,Ni) )...
-                     -ioflow(:,1,Ni-1).*( (ioflow(:,1,Ni-1)>0).*X(1:end-1,1:2,Ni) + (ioflow(:,1,Ni-1)<0).*X(1:end-1,1:2,Ni-1) ) )/Ai(Ni)...
-                   -( rho0wC(2:end,:,Ni)-rho0wC(1:end-1,:,Ni) )/dz )./rho_zc(1:end-1); % Vertical mean flux convergence
+  dCdt = zeros(ace.Nzm,2,ace.Ni); % Add zeros(1,2,Ni) for model top
+  dCdt(1:end-1,:,1) = -ace.eps_tur(1,1,1)*( X(1:end-1,1:2,1)-X(1:end-1,1:2,2) )... % Turbulent entrainment
+                +( ioflow(:,1,1).*( (ioflow(:,1,1)>0).*X(1:end-1,1:2,2) + (ioflow(:,1,1)<0).*X(1:end-1,1:2,1) )/ace.Ai(1)...
+                  -( rho0wC(2:end,:,1)-rho0wC(1:end-1,:,1) )/ace.dz )./ace.rho_zc(1:end-1); % Vertical mean flux convergence
+  dCdt(1:end-1,:,2:end-1) = -ace.eps_tur(1,1,2:end-1).*( X(1:end-1,1:2,2:end-1)-X(1:end-1,1:2,3:end) )...  % Turbulent entrainment
+                     -ace.eps_tur(1,2,2:end-1).*( X(1:end-1,1:2,2:end-1)-X(1:end-1,1:2,1:end-2) )... 
+                     +( ( ioflow(:,1,2:end-1).*( (ioflow(:,1,2:end-1)>0).*X(1:end-1,1:2,3:end) + (ioflow(:,1,2:end-1)<0).*X(1:end-1,1:2,2:end-1) )...
+                         -ioflow(:,1,1:end-2).*( (ioflow(:,1,1:end-2)>0).*X(1:end-1,1:2,2:end-1) + (ioflow(:,1,1:end-2)<0).*X(1:end-1,1:2,1:end-2) ) )./permute(ace.Ai(2:end-1),[3,2,1])...
+                       -( rho0wC(2:end,:,2:end-1)-rho0wC(1:end-1,:,2:end-1) )/ace.dz )./ace.rho_zc(1:end-1); % Vertical mean flux convergence          
+  dCdt(1:end-1,:,end) = -ace.eps_tur(1,1,end).*( X(1:end-1,1:2,end)-[X(1:end-1,1:2,end)] )... % Turbulent entrainment
+                 -ace.eps_tur(1,2,end).*( X(1:end-1,1:2,end)-X(1:end-1,1:2,end-1) )... 
+                 +( ( ioflow(:,1,end).*( (ioflow(:,1,end)>0).*X(1:end-1,1:2,end) + (ioflow(:,1,end)<0).*X(1:end-1,1:2,end) )...
+                     -ioflow(:,1,end-1).*( (ioflow(:,1,end-1)>0).*X(1:end-1,1:2,end) + (ioflow(:,1,end-1)<0).*X(1:end-1,1:2,end-1) ) )/ace.Ai(end)...
+                   -( rho0wC(2:end,:,end)-rho0wC(1:end-1,:,end) )/ace.dz )./ace.rho_zc(1:end-1); % Vertical mean flux convergence
   % F(zc,ACE-i) = local non-PGF dynamic forcing for mass flux (excluding buoyancy and nonlocal effect) 
   ioflow = squeeze(ioflow); % (Nzm-1,1,Ni)-->(Nzm-1,Ni)
+  % FH(zc,ACE-i) with size(FH)=(Nzm-1,Ni); turbulent entrainment & horizontal in/outflow
+  FH = -squeeze(ace.eps_tur(1,1,:))'.*( mfc(1:end-1,:)-[mfc(1:end-1,2:end),mfc(1:end-1,end)] )...
+       -squeeze(ace.eps_tur(1,2,:))'.*( mfc(1:end-1,:)-[mfc(1:end-1,1),mfc(1:end-1,1:end-1)] )... % Turbulent entrainment
+       +( ioflow.*( (ioflow>0).*[wc(1:end-1,2:end),wc(1:end-1,end)] + (ioflow<0).*wc(1:end-1,:) )... % Horizontal inflow/outflow
+         -[zeros(ace.Nzm-1,1),ioflow(:,1:end-1)].*( ([zeros(ace.Nzm-1,1),ioflow(:,1:end-1)]>0).*wc(1:end-1,:)... 
+         + ([zeros(ace.Nzm-1,1),ioflow(:,1:end-1)]<0).*[zeros(ace.Nzm-1,1),wc(1:end-1,1:end-1)] ) )./ace.Ai';
   % F(zc,ACE-i) with size(F)=(Nzm-1,Ni); fill zeros(1,Ni) at domain top later
-  F = -squeeze(eps_tur(1,1,:))'.*( mfc(1:end-1,:)-[mfc(1:end-1,2:Ni),zeros(Nzm-1,1)] )...
-      -squeeze(eps_tur(1,2,:))'.*( mfc(1:end-1,:)-[zeros(Nzm-1,1),mfc(1:end-1,1:Ni-1)] )... % Turbulent entrainment
-      +( ioflow.*( (ioflow>0).*[wc(1:end-1,2:Ni),zeros(Nzm-1,1)] + (ioflow<0).*wc(1:end-1,:) )...
-        -[zeros(Nzm-1,1),ioflow(:,1:Ni-1)].*( ([zeros(Nzm-1,1),ioflow(:,1:Ni-1)]>0).*wc(1:end-1,:) + ([zeros(Nzm-1,1),ioflow(:,1:Ni-1)]<0).*[zeros(Nzm-1,1),wc(1:end-1,1:Ni-1)] ) )./Ai'...
-      -squeeze( X(2:end,3,:).*wi(2:end,1,:)-X(1:end-1,3,:).*wi(1:end-1,1,:) )/dz; % Vertical mean flux convergence  
+  F = FH - squeeze( X(2:end,3,:).*wi(2:end,1,:)-X(1:end-1,3,:).*wi(1:end-1,1,:) )/ace.dz; % Vertical mean flux convergence
+  % (d/dz)^2(FH) (zc,ACE-i)
+  dz2FH = ([-FH(1,:);FH(1:end-1,:)]-2*FH +[FH(2:end,:);zeros(1,ace.Ni)])/ace.dz^2;
+  % The other nonlocal acceleration term DHh arising from divergence of horiznotal momemtum flux in the horizontal
+  DHh = [ioflow(:,1).^2, ioflow(:,2:end).^2-ioflow(:,1:end-1).^2]./ace.rho_zc(1:end-1)./ace.Ai';
   % Recall X(z,var,ACE-i)=[theta_e,qt,MF,dtheta_e_pr_accum,pr_accum] 
-%  dXdt = [ [dCdt;zeros(1,2,Ni)]+permute(cat(3,dtheta_e,dqt),[1,3,2]),...
-%           permute(NONLOCAL_RESPONSE(T,Q,QL+QI,[F;zeros(1,Ni)]),[1,3,2]),... %+repmat(EBF*(t<EBT),[1,Ni]),[1,3,2]), ...
-%           -permute(cat(3,dtheta_e,dqt),[1,3,2]) ]; % dXdt(z,var,ACE-i)
-  dXdt = [ [dCdt;zeros(1,2,Ni)],...
-           permute(NONLOCAL_RESPONSE(T,Q,QL+QI,[F;zeros(1,Ni)]),[1,3,2]),...
-           zeros(Nzm,2,Ni) ]; % Dynamics only; precipitation accumulation is post-step
+  dXdt = [ dCdt+permute(cat(3,dTH,dQt),[1,3,2]),...
+           permute(NONLOCAL_RESPONSE(rho0B,[F;zeros(1,ace.Ni)],...
+                                     (ace.turn_off_DHv-1)*dz2FH,...
+                                     (1-ace.turn_off_DHh)*[DHh;zeros(1,ace.Ni)],...
+                                     ace.Z,ace.zm,ace.coarse_z,ace.Ni,ace.PMB,ace.PMDv,ace.PMD),...%,ace.Ai,ace.zero_ref_buoyancy),...
+                                     [1,3,2]),... %+repmat(EBF*(t<EBT),[1,Ni]),[1,3,2]), ...
+           -permute(cat(3,dTH,dQt),[1,3,2]) ]; % dXdt(z,var,ACE-i)
   dXdt(end-10:end,1:3,:) = 0; % At domain top
-  if one_ace_only==1
+  if ace.one_ace_only==1
     dXdt(:,:,2:end) = 0; % Shut down additional ACEs
-  end
-  if Wbar_eq_zero==1
-    % Adjust mass flux tendency for outermost ACE for neutual domain mean
-    dXdt(:,3,end) = -sum( dXdt(:,3,1:end-1).*permute(Ai(1:end-1),[3,2,1]),3 )/Ai(end);
   end 
-  dXdt = dXdt(:);
 end
 
-function X = ApplyPrecip(X,dt)
-global Nzm Ni one_ace_only T Q QL QI
-  % T, Q (vapor), QL and QI are cached by expFun at RK stage 1.
-  % Retain this pre-dynamics state; do not diagnose a new post-dynamics state.
-  [dtheta_e, dqt] = PRECIP_SINKS(T, Q, QL, QI);
-  sink = permute(cat(3,dtheta_e,dqt),[1,3,2]);
-  dXdt = [sink,zeros(Nzm,1,Ni),-sink];
-  % Preserve the original precipitation masks, including accumulation slots.
-  dXdt(end-10:end,1:3,:) = 0;
-  if one_ace_only==1
-    dXdt(:,:,2:end) = 0;
-  end
-  X = X + dt*dXdt(:);
+function MF = ExDiffMF(MF,dt,dz,rho_zi,eddiffu)
+  % MF(zi,1,ACE-i)
+  wi = MF./rho_zi; %(zi,1,ACE-i)
+  drho0wdz = (MF(2:end,:,:)-MF(1:end-1,:,:))/dz; %(zc,1,ACE-i); size(drho0wdz)=[Nzm-1,1,Ni]
+  % Fick's law flux = - diffusivity*gradient
+% % %   FLF = -abs(drho0wdz).*( eddiffu.*( max(wi)-min(wi) )./max(abs(drho0wdz)+eps) ).*drho0wdz; %(zc,1,ACE-i); size=[Nzm-1,1,Ni]
+  FLF = -eddiffu.*abs(wi(2:end,:,:)-wi(1:end-1,:,:)).*drho0wdz;
+  c = dt/dz;
+  MF(2:end-1,:,:) = MF(2:end-1,:,:) - c*( FLF(2:end,:,:)-FLF(1:end-1,:,:) );
+  % Double check w=0 at surface and model top
+  MF([1,end-10:end],:,:) = 0;
 end
 
-function X = ImDamp(X)
-global Nzm Ni theta_e_zc qt_zc damp
-  X = reshape(X,[Nzm,5,Ni]); % X(z,var,ACE-i)=[theta_e,qt,MF,dtheta_e_pr_accum,pr_accum]
-  % damp = dt*(eps_sl./[rho_zc,rho_zc,rho_mf])
-  X(:,1:3,:) = ( X(:,1:3,:) + damp.*[theta_e_zc,qt_zc,zeros(Nzm,1)] )./(1+damp);
-  X = X(:);
+function MF = ImDiffMF(MF,dt,dz,rho_zi,Ni,Nzm,eddiffu,eddiwin)
+  % MF(z,1,ACE-i)-->MF(z,ACE-i)
+  MF = squeeze(MF);
+  wi = MF./rho_zi;
+  drho0wdz = squeeze( (MF(2:end,:)-MF(1:end-1,:))/dz ); % (zc,ACE-i); size(drho0wdz)=[Nzm-1,Ni]
+  % Vertical momentum diffusion coefficients
+  mu_1 = abs(drho0wdz).*( eddiffu.*( max(wi)-min(wi) )./max(abs(drho0wdz)+eps) ); % (zc,ACE-i); size=[Nzm-1,Ni]
+  mu_2 = movmax(mu_1,[1 1]*eddiwin,1); % (zc,ACE-i); size=[Nzm-1,1]
+  c = dz/dt;
+  mu_D = conv2(mu_2,ones(2*eddiwin+1,1)/(2*c*eddiwin+1),'same'); % (zc,ACE-i); size=[Nzm-1,1]
+  for ida=1:Ni
+    Mat = sparse(1:Nzm-2,1:Nzm-2,(c+mu_D(1:end-1,ida)+mu_D(2:end,ida)),Nzm-2,Nzm-2)+...
+          sparse(1:Nzm-3,2:Nzm-2,-mu_D(2:end-1,ida),Nzm-2,Nzm-2)+...
+          sparse(2:Nzm-2,1:Nzm-3,-mu_D(2:end-1,ida),Nzm-2,Nzm-2);
+    MF(2:end-1,ida) = Mat\( c*MF(2:end-1,ida) );
+  end%ida
+  % Double check w=0 at surface and model top
+  MF([1,end-10:end],:) = 0;
+  MF = reshape(MF,[Nzm,1,Ni]);
+  % % % MF(z,1,ACE-i)
+  % % wi = squeeze(MF)./rho_zi; %(z,1,ACE-i)-->(z,ACE-i)
+  % % drho0wdz = squeeze( (MF(2:end,:,:)-MF(1:end-1,:,:))/dz ); %(z,1,ACE-i)-->(zc,ACE-i); size(drho0wdz)=[Nzm-1,Ni]
+  % % % Vertical momentum diffusion coefficients
+  % % mu_1 = abs(drho0wdz).*( eddiffu.*( max(wi)-min(wi) )./max(abs(drho0wdz)+eps) ); %(zc,ACE-i); size=[Nzm-1,Ni]
+  % % mu_2 = movmax(mu_1,[1 1]*eddiwin,1); %(zc,ACE-i); size=[Nzm-1,1]
+  % % c = dz/dt;
+  % % mu_D = conv2(mu_2,ones(2*eddiwin+1,1)/(2*c*eddiwin+1),'same'); %(zc,ACE-i); size=[Nzm-1,1]
+  % % for ida=1:Ni
+  % %   Mat = sparse(1:Nzm-2,1:Nzm-2,(c+mu_D(1:end-1,ida)+mu_D(2:end,ida)),Nzm-2,Nzm-2)+...
+  % %         sparse(1:Nzm-3,2:Nzm-2,-mu_D(2:end-1,ida),Nzm-2,Nzm-2)+...
+  % %         sparse(2:Nzm-2,1:Nzm-3,-mu_D(2:end-1,ida),Nzm-2,Nzm-2);
+  % %   MF(2:end-1,:,ida) = Mat\( c*MF(2:end-1,:,ida) ); %(z,1,ACE-i)
+  % % end%ida
+  % % % Double check w=0 at surface and model top
+  % % MF([1,end-10:end],:,:) = 0;
 end
 
-function MF = ImDiffMF(MF,dt,ida)
-global rho_mf k dz Nzm eddiffu eddiwin
-  % disp(t)
-  Xext = [-MF(k:-1:2);MF];
-  Nzext = Nzm+k-1; %=length(Xext)/3
-  dXextdz = zeros(Nzext,1);
-
-  % Compute MFh(zm+dz/2) from MF(zm) as the mean of up- and down-wind approximations
-  LMFh = zeros(Nzm,1); % MFh from more left stencil points
-  RMFh = zeros(Nzm,1); % MFh from more right stencil points
-  for idz=k+1:Nzext-k+1
-    LMFh(idz-k) = reconstruction_weno(k, Xext([idz-k:idz+k-2]) );
-    RMFh(idz-k) = reconstruction_weno(k, Xext(flip([idz-k+1:idz+k-1])) );
-  end
-  MFh = (LMFh + RMFh)/2;
-% % %   for idz=k+1:Nzext-k
-% % %     dXextdz(idz)...
-% % %         = ( reconstruction_weno(k, Xext( [idz-k+1:idz+k-1]*(MFh(idz-k+1)>=0)+flip([idz-k+2:idz+k])*(MFh(idz-k+1)<0) ) ) ...
-% % %            - reconstruction_weno(k, Xext( [idz-k:idz+k-2]*(MFh(idz-k)>=0)+flip([idz-k+1:idz+k-1])*(MFh(idz-k)<0) ) ) )/dz;
-% % %   end
-  dXextdz(k+1:Nzext-k)...
-       = ( LMFh(2:Nzm-k).*(MFh(2:Nzm-k)>=0)+RMFh(2:Nzm-k).*(MFh(2:Nzm-k)<0) ...
-          -LMFh(1:Nzm-k-1).*(MFh(1:Nzm-k-1)>=0)-RMFh(1:Nzm-k-1).*(MFh(1:Nzm-k-1)<0) )/dz;
-  % First zero at zm=0 (dXdz~=0 but dXdt=0 at the end of computation)
-  % zeros(k,1) for domain top<---to be improved!!!!!
-  dXdz = [0; dXextdz(k+1:Nzext-k); zeros(k,1)]; %length(dXdz)=Nzm  
-  % Eddy Diffusion for Momentum
-  ED = abs(dXdz)*( eddiffu(ida)*(max(MF./rho_mf)-min(MF./rho_mf))/max(abs(dXdz)+eps)/dz );
-  ED = movmax(ED,[1 1]*eddiwin(ida));
-  ED = conv(ED,ones(2*eddiwin(ida)+1,1)/(2*eddiwin(ida)+1),'same')*dt; %length(dXdz)=Nzm
-  Mat = sparse(1:Nzm-2,1:Nzm-2,1+2*ED(2:end-1),Nzm-2,Nzm-2) +...
-        sparse(1:Nzm-3,2:Nzm-2,-ED(2:end-2),Nzm-2,Nzm-2) +...
-        sparse(2:Nzm-2,1:Nzm-3,-ED(3:end-1),Nzm-2,Nzm-2);
-  MF(2:end-1) = Mat\MF(2:end-1);
-  MF([1,end-10:end]) = 0;
-end
-
-function dMFdt = NONLOCAL_RESPONSE(T, q, qc, F)
-global Tv_zc Z zm  g coarse_z Ni PMB rho_zc
-  Tv = eval_Tv(T, q, qc);
-  rho0B = g*rho_zc.*(Tv-Tv_zc)./Tv_zc;
+function dMFdt = NONLOCAL_RESPONSE(rho0B, F, dz2FH, DHh, Z, zm, coarse_z, Ni, PMB, PMDv, PMD)%, Ai, zero_ref_buoyancy)
+% %   if zero_ref_buoyancy
+% %     % Zero out reference buoyancy  
+% %     rho0B = rho0B - sum(rho0B.*(Ai'/sum(Ai)),2);
+% %   end
   if coarse_z==1
-    dMFdt = squeeze(sum(sum(PMB.*reshape((rho0B(1:end-1,:)+F(1:end-1,:)),coarse_z,[],Ni),2),3)); % (zi,ACE-i)
+    dMFdt = squeeze(sum(sum(PMB.*reshape((rho0B(1:end-1,:)+F(1:end-1,:)),coarse_z,[],Ni)...
+                            +PMDv.*reshape(dz2FH,coarse_z,[],Ni)...
+                            +PMD.*reshape(DHh(1:end-1,:),coarse_z,[],Ni),2),3)); % (zi,ACE-i)
   else
-    dMFdt = interp1(Z,squeeze(sum(sum(PMB.*mean(reshape((rho0B(1:end-1,:)+F(1:end-1,:)),coarse_z,[],Ni)),2),3)),zm,'pchip'); % (zi,ACE-i)
+    dMFdt = interp1(Z,squeeze(sum(sum(PMB.*mean(reshape((rho0B(1:end-1,:)+F(1:end-1,:)),coarse_z,[],Ni))...
+                                      +PMDv.*mean(reshape(dz2FH,coarse_z,[],Ni))...
+                                      +PMD.*mean(reshape(DHh(1:end-1,:),coarse_z,[],Ni)),2),3)),zm,'makima'); % (zi,ACE-i)
   end
 end
 
-function [dtheta_e, dqt] = PRECIP_SINKS(T, q, ql, qi)
-global p_zc qc_ramp dqc tau_pr 
+function [dTH, dQt, rho0B] = microrad(y, p_zc, rho_zc, Tv_zc, theta_e_diag, ace)
+  [T, Q, QL, QI] = INV_THETA_E(squeeze(y(:,1,:)), squeeze(y(:,2,:)), p_zc, theta_e_diag); % (z,ACE-i)
+  [dTH, dQt] = PRECIP_SINKS(T, Q, QL, QI, p_zc, ace.qc_ramp, ace.dqc, ace.tau_pr);
+  % Radiative forcing
+  % % % dT = 1e-8;  
+  % % % dtheta_e = dtheta_e+ RF.* ( eval_theta_e(T+dT,Q,QL,QI,p_mf) - eval_theta_e(T,Q,QL,QI,p_mf) )/1e-8;
+  Tv = eval_Tv(T, Q, QL+QI);
+  rho0B = rho_zc.*eval_B(Tv, Tv_zc);
+end
+
+function [dtheta_e, dqt] = PRECIP_SINKS(T, q, ql, qi, p_zc, qc_ramp, dqc, tau_pr)
   qc = ql+qi;
   dqt = -(qc_ramp/dqc/tau_pr) * log( 1+exp( (dqc/qc_ramp) * (qc-qc_ramp) ) );
   % Finite-difference estimate for d(theta_e)/dqc
@@ -636,9 +549,8 @@ global p_zc qc_ramp dqc tau_pr
   dtheta_e(qc<=0) = 0;
 end
 
-function [T, q, ql, qi] = INV_THETA_E(theta_e, qt)
-global p_zc Nzm theta_e_diag Tim
-  Np = size(theta_e,2);
+function [T, q, ql, qi] = INV_THETA_E(theta_e, qt, p_zc, theta_e_diag)
+  [Nzm,Np] = size(theta_e);
   T = zeros(Nzm,Np);
   q = zeros(Nzm,Np);
   ql = zeros(Nzm,Np);
@@ -647,12 +559,6 @@ global p_zc Nzm theta_e_diag Tim
     [T(idp), q(idp), ql(idp), qi(idp)]...
           = inv_T_from_theta_e(theta_e(idp), qt(idp), p_zc(mod(idp-1,Nzm)+1));
   end
-% % %   for idp=1:Np
-% % %     for idz=1:Nzm
-% % %       [T(idz,idp), q(idz,idp), ql(idz,idp), qi(idz,idp)]...
-% % %             = inv_T_from_theta_e(theta_e(idz,idp), qt(idz,idp), p_mf(idz));
-% % %     end
-% % %   end
   % Double check values after inversion
   if theta_e_diag && sum(abs(imag(T(:)))+abs(imag(q(:)))+abs(imag(ql(:)))+abs(imag(qi(:))))>0
     format long
@@ -674,7 +580,6 @@ global p_zc Nzm theta_e_diag Tim
     disp('theta_e difference (K): ')
     dtheta_e = eval_theta_e(T(Ii),q(Ii),ql(Ii),qi(Ii),P_MF(Ii))-theta_e(Ii);
     disp(dtheta_e)
-    Tim(end+1) = 1;
   end
   T = real(T);
   q = real(q);
@@ -682,44 +587,19 @@ global p_zc Nzm theta_e_diag Tim
   qi = real(qi);
 end
 
-function [theta_e, qt, mf, theta, RH, B,... 
-          qsat, qv, qc, ql, qi, Tv, T, dtheta_e_pr_accum, pr_accum] = POST_PROCESS(X)
-global Tv_zc p_zc Nzm g Ni
-  Nt = size(X,2);
-  X = reshape(X,[5*Nzm,Ni,size(X,2)]); % X(var&z,ACE-i,time)
-  X = permute(X,[1,3,2]); % X(var&z,time,ACE-i)
-  theta_e = X(1:Nzm,:,:);
-  qt = X(Nzm+1:2*Nzm,:,:);
-  mf = X(2*Nzm+1:3*Nzm,:,:);
-  dtheta_e_pr_accum = X(3*Nzm+1:4*Nzm,:,:);
-  pr_accum = X(4*Nzm+1:end,:,:);
-  theta = zeros(Nzm,Nt,Ni);
-  qsat = zeros(Nzm,Nt,Ni);
-  q = zeros(Nzm,Nt,Ni);
-  ql = zeros(Nzm,Nt,Ni);
-  qi = zeros(Nzm,Nt,Ni);
-  T = zeros(Nzm,Nt,Ni);
-  for ida=1:Ni
-    for idt=1:Nt
-      for idz=1:Nzm
-        [T(idz,idt,ida), q(idz,idt,ida), ql(idz,idt,ida), qi(idz,idt,ida)]...
-            = inv_T_from_theta_e(theta_e(idz,idt,ida), qt(idz,idt,ida), p_zc(idz));
-      end
-      theta(:,idt,ida) = eval_theta(T(:,idt,ida),p_zc);
-      qsat(:,idt,ida) = eval_qsat(T(:,idt,ida),p_zc,qt(:,idt,ida));
-    end
-  end
-  Tv = eval_Tv(T,q,ql+qi);
-  RH = q./qsat;
-  B = g.*(Tv-Tv_zc)./Tv_zc;
-  qc = (qt-qsat).*(qt>qsat);
-  qv = qt-qc;
+function X = ImDamp(X,theta_e_zc,qt_zc,Nzm,damp)
+  % X(z,var,ACE-i)=[theta_e,qt,MF,dtheta_e_pr_accum,pr_accum]
+  % damp = dt*(eps_sl./[rho_zc,rho_zc,rho_mf])
+  X(:,1:3,:) = ( X(:,1:3,:) + damp.*[theta_e_zc,qt_zc,zeros(Nzm,1)] )./(1+damp);
 end
 
+%% Subroutines used in CPU 
+%%   (i.e., before GPU subroutines are called)
 function [T_env, q_env, Tv_env, theta_e_env, rho_env, p_z,...
           T_zm, q_zm, Tv_zm, theta_e_zm, rho_zm, p_zm, theta_zm,...
-          theta_es_zm, rh_zm] = INTERP_Z_GRID(T_p, q_p, z_p)
-global RD g dz z zm p
+          theta_es_zm, rh_zm] = INTERP_Z_GRID(T_p, q_p, z_p, p, zm, z, dz)
+  RD = 287.04; 
+  g = 9.80665;
   % Interpolate sounding values to 50-m z-grid (_env) & zm-grid (_zm)
   T_env = nan([length(z),size(T_p,2)]);
   q_env = nan([length(z),size(T_p,2)]);
@@ -730,20 +610,20 @@ global RD g dz z zm p
   Tv_zm = nan([length(zm),size(T_p,2)]);
   p_zm = nan([length(zm),size(T_p,2)]);
   for pidx=1:size(T_p,2)
-    T_env(:,pidx) = interp1(z_p(:,pidx),T_p(:,pidx),z,'pchip',T_p(end,pidx));
-    q_env(:,pidx) = interp1(z_p(:,pidx),q_p(:,pidx),z,'pchip',q_p(end,pidx));
+    T_env(:,pidx) = interp1(z_p(:,pidx),T_p(:,pidx),z,'makima',T_p(end,pidx));
+    q_env(:,pidx) = interp1(z_p(:,pidx),q_p(:,pidx),z,'makima',q_p(end,pidx));
     q_env(q_env(:,pidx)<0,pidx) = 0; % Fix negative q_env due to interp1
-    Tv_env(:,pidx) = eval_Tv(T_env(:,pidx),q_env(:,pidx));
-    p_z(:,pidx) = interp1(z_p(:,pidx),p,z,'pchip');
+    Tv_env(:,pidx) = eval_Tv(T_env(:,pidx),q_env(:,pidx),0);
+    p_z(:,pidx) = interp1(z_p(:,pidx),p,z,'makima');
     midz = sum(z<=max(z_p(:,pidx)));
     for idz=midz+1:length(z)
       p_z(idz,pidx) = p_z(idz-1,pidx)*(1-g*dz/2/RD/Tv_env(idz-1,pidx))/(1+g*dz/2/RD/Tv_env(idz-1,pidx));
     end
-    T_zm(:,pidx) = interp1(z_p(:,pidx),T_p(:,pidx),zm,'pchip',T_p(end,pidx));
-    q_zm(:,pidx) = interp1(z_p(:,pidx),q_p(:,pidx),zm,'pchip',q_p(end,pidx));
+    T_zm(:,pidx) = interp1(z_p(:,pidx),T_p(:,pidx),zm,'makima',T_p(end,pidx));
+    q_zm(:,pidx) = interp1(z_p(:,pidx),q_p(:,pidx),zm,'makima',q_p(end,pidx));
     q_zm(q_zm(:,pidx)<0,pidx) = 0; % Fix negative q_zm due to interp1
-    Tv_zm(:,pidx) = eval_Tv(T_zm(:,pidx),q_zm(:,pidx));
-    p_zm(:,pidx) = interp1(z_p(:,pidx),p,zm,'pchip');
+    Tv_zm(:,pidx) = eval_Tv(T_zm(:,pidx),q_zm(:,pidx),0);
+    p_zm(:,pidx) = interp1(z_p(:,pidx),p,zm,'makima');
     midz = sum(zm<=max(z_p(:,pidx)));
     for idz=midz+1:length(zm)
       p_zm(idz,pidx) = p_zm(idz-1,pidx)*(1-g*dz/2/RD/Tv_zm(idz-1,pidx))/(1+g*dz/2/RD/Tv_zm(idz-1,pidx));
@@ -755,11 +635,31 @@ global RD g dz z zm p
   theta_e_zm = eval_theta_e(T_zm,q_zm,0,0,p_zm);
   theta_es_zm= eval_theta_es(T_zm,p_zm);
   theta_zm= eval_theta(T_zm,p_zm);
-  rh_zm = q_zm./eval_qsat(T_zm,p_zm);
+  rh_zm = q_zm./eval_qsat2(T_zm,p_zm);
 end
 
-function [T_p, q_p, rho_p, z_p] = INTERP_P_GRID(plev, ta, hus)
-global RD g p
+function q_tw = TWEAK_THETA_E(T_p, q_p, p)
+  theta_e = eval_theta_e(T_p,q_p,0,0,p);
+  theta_es = eval_theta_es(T_p,p);
+  theta_tw = theta_e;
+  theta_tw(theta_e>theta_es) = theta_es(theta_e>theta_es)-0.1;
+  q_tw = q_p;
+  for idz=1:length(theta_e)
+    if theta_es(idz)<theta_e(idz)
+      dq = 999;
+      while dq>1e-7
+        dq = 1e-8*( eval_theta_e(T_p(idz),q_tw(idz),0,0,p(idz))-theta_tw(idz) )...
+                  /( eval_theta_e(T_p(idz),q_tw(idz)+1e-8,0,0,p(idz))-eval_theta_e(T_p(idz),q_tw(idz),0,0,p(idz)) );
+        q_tw(idz) = q_tw(idz) - dq;
+      end
+    end
+  end%idz
+  q_tw(q_tw<=0) = q_p(q_tw<=0);
+end
+
+function [T_p, q_p, rho_p, z_p] = INTERP_P_GRID(plev, ta, hus, p)
+  RD = 287.04; 
+  g = 9.80665;
   % Interpolate sounding values to 5-hPa p-grid (_p)
   T_p = nan([length(p),size(ta,2)]);
   q_p = nan([length(p),size(ta,2)]);
@@ -768,11 +668,11 @@ global RD g p
   z_p = nan([length(p),size(ta,2)]);
   % pidx = find(prw==max(prw));
   for pidx=1:size(ta,2)
-    T_p(:,pidx) = interp1(plev,ta(:,pidx),p,'pchip');
-    q_p(:,pidx) = interp1(plev,hus(:,pidx),p,'pchip');
+    T_p(:,pidx) = interp1(plev,ta(:,pidx),p,'makima');
+    q_p(:,pidx) = interp1(plev,hus(:,pidx),p,'makima');
     % Fix negative q_p due to interp1
     q_p(q_p(:,pidx)<0,pidx) = 0;
-    Tv_p(:,pidx) = eval_Tv(T_p(:,pidx),q_p(:,pidx));
+    Tv_p(:,pidx) = eval_Tv(T_p(:,pidx),q_p(:,pidx),0);
     rho_p(:,pidx) = p./Tv_p(:,pidx)/RD;
     % Compute height assuming hydrostatic balance
     z_p(:,pidx) = (RD/g*(p(1)-p(2)))*cumtrapz(Tv_p(:,pidx)./p);
@@ -780,7 +680,7 @@ global RD g p
 end
 
 function [plev, pr, ta, hus, prw, date, hh] = LOAD_SOUNDINGS(armbefn, arm)
-global g
+  g = 9.80665;
   % Load sounding data
   if arm<=2 % Manus or Nauru
     plev = ncread(armbefn,'pressure'); % Pa
@@ -811,205 +711,87 @@ global g
     pr = pr(avail);
     ta = ta(avail,:)';
     rh = rh(avail,:)';
-    hus = eval_q(eval_es(ta).*rh/100,repmat(plev,[1,size(ta,2)])); % Evaluated w.r.t. liquid water
+    hus = eval_q2(eval_es(ta).*rh/100,repmat(plev,[1,size(ta,2)])); % Evaluated w.r.t. liquid water
     prw = sum( (hus(1:end-1,:)+hus(2:end,:)) .* (plev(1:end-1)-plev(2:end)) ,1)'/2/g;
     date = date(avail);
     hh = hh(avail);
   end
 end
 
-function [theta_e_plu, qt_plu, T_plu, q_plu, ql_plu, qi_plu, B_plu] = ENTRAIN_PLUME(T_p, q_p, rho_p, z_p, p_p, mixing)
-global g
-  theta_e_plu = zeros(size(z_p));
-  qt_plu = zeros(size(z_p));
-  T_plu = zeros(size(z_p));
-  q_plu = zeros(size(z_p));
-  ql_plu = zeros(size(z_p));
-  qi_plu = zeros(size(z_p));
-  if nargin==5 %Mixing ratio not prescribed
-    for pidx=1:size(z_p,2)
-      [theta_e_plu(:,pidx),... 
-       qt_plu(:,pidx),...
-       T_plu(:,pidx),...
-       q_plu(:,pidx),...
-       ql_plu(:,pidx),...
-       qi_plu(:,pidx)] = entrain_plume_calc(T_p(:,pidx), q_p(:,pidx), rho_p(:,pidx), z_p(:,pidx), p_p);
-    end
-  else
-    for pidx=1:size(z_p,2)
-      [theta_e_plu(:,pidx),... 
-       qt_plu(:,pidx),...
-       T_plu(:,pidx),...
-       q_plu(:,pidx),...
-       ql_plu(:,pidx),...
-       qi_plu(:,pidx)] = entrain_plume_calc(T_p(:,pidx), q_p(:,pidx), rho_p(:,pidx), z_p(:,pidx), p_p, mixing);
-    end
+%%
+%%
+%%
+function [zip,pip,tip,qip,tvip,rhoip] = init_profile(casename)
+  RD = 287.04; % gas constant of dry air
+  %  Height [m]     Pressure [Pa]  Temperature [K] Specific Humidity [kg/kg] Heating Forcing [K/s] Moistening Forcing [kg/kg/s] Longwave Forcing [K/s] Shortwave Forcing [K/s]     U [m/s]         V [m/s]    
+  switch casename
+    case 'control'
+      IP = [ 131.52838391  99578.91915163    296.55438232  1.673266850411891937e-02  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+             289.97864807  97949.91546659    297.64855957  1.582421734929084778e-02  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+             474.49026618  96058.39643441    297.05429077  1.604560948908329010e-02  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+             685.19700548  93921.18448309    296.64520264  1.700756512582302094e-02  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+             921.44938427  91556.38994717    295.68576050  1.683137379586696625e-02  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+            1182.76888249  88983.72365096    294.23962402  1.744279079139232635e-02  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+            1468.16035504  86224.19540957    292.37695312  1.602962985634803772e-02  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+            1977.51736073  82341.10502825    289.12118530  1.243595965206623077e-02  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+            2705.62438328  76572.76437306    286.26889038  8.816661313176155090e-03  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+            3644.01948849  69342.49044712    281.96749878  8.689201436936855316e-03  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+            4779.43572639  61148.81473122    276.53851318  6.220520008355379105e-03  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+            6064.31290315  52605.67003334    269.48092651  5.279533099383115768e-03  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+            7306.09281143  44704.77275285    260.84603882  2.322068903595209122e-03  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+            8518.15762274  37988.88359210    254.72683716  1.057708053849637508e-03  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+            9694.64449108  32280.26919165    247.20910645  7.716922555118799210e-04  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           10829.05760709  27427.85314797    238.33445740  3.528153465595096350e-04  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           11919.49289391  23303.22169280    229.01876831  1.307350321440026164e-04  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           12964.68110030  19797.21828025    219.40652466  4.439524855115450919e-05  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           13960.55907493  16822.50797749    209.82656860  1.352904018858680502e-05  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           14917.85879517  14299.40387607    201.69915771  4.332222033553989604e-06  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           15841.80788577  12154.72407639    194.67286682  1.591559566804789938e-06  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           16753.07327964  10331.71266317    192.00050354  1.226931999553926289e-06  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           17646.13846979   8782.12302923    188.16571045  7.562057362520135939e-07  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           19045.53999513   7201.24505460    198.11062622  1.983422407647594810e-06  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           20923.30653282   5459.54797417    200.63613892  2.971873300339211710e-06  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           23360.55643097   3826.82997733    209.65176392  2.695391231100074947e-06  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           26490.23669076   2461.22200042    217.23307800  2.681364549061981961e-06  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           30398.18089116   1435.66322513    228.25141907  2.682006197574082762e-06  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           35145.10292720    759.48196463    240.26202393  2.749030272752861492e-06  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           40661.82969029    364.34656940    247.32139587  3.008777639479376376e-06  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000];
+    case 'linear'
+      IP = [ 131.52838391  99578.91915163    296.55438232  1.673266850411891937e-02  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+             289.97864807  97949.91546659    297.64855957  1.582421734929084778e-02  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+             474.49026618  96058.39643441    297.05429077  1.604560948908329010e-02  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+             685.19700548  93921.18448309    296.64520264  1.700756512582302094e-02  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+             921.44938427  91556.38994717    295.68576050  1.683137379586696625e-02  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+            1182.76888249  88983.72365096    294.23962402  1.521850097924470901e-02  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+            1468.16035504  86224.19540957    292.37695312  1.353968121111392975e-02  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+            1977.51736073  82341.10502825    289.12118530  1.243595965206623077e-02  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+            2705.62438328  76572.76437306    286.26889038  8.816661313176155090e-03  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+            3644.01948849  69342.49044712    281.96749878  8.689201436936855316e-03  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+            4779.43572639  61148.81473122    276.53851318  6.220520008355379105e-03  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+            6064.31290315  52605.67003334    269.48092651  5.279533099383115768e-03  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+            7306.09281143  44704.77275285    260.84603882  2.322068903595209122e-03  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+            8518.15762274  37988.88359210    254.72683716  1.057708053849637508e-03  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+            9694.64449108  32280.26919165    247.20910645  7.716922555118799210e-04  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           10829.05760709  27427.85314797    238.33445740  3.528153465595096350e-04  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           11919.49289391  23303.22169280    229.01876831  1.307350321440026164e-04  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           12964.68110030  19797.21828025    219.40652466  4.439524855115450919e-05  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           13960.55907493  16822.50797749    209.82656860  1.352904018858680502e-05  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           14917.85879517  14299.40387607    201.69915771  4.332222033553989604e-06  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           15841.80788577  12154.72407639    194.67286682  1.591559566804789938e-06  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           16753.07327964  10331.71266317    192.00050354  1.226931999553926289e-06  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           17646.13846979   8782.12302923    188.16571045  7.562057362520135939e-07  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           19045.53999513   7201.24505460    198.11062622  1.983422407647594810e-06  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           20923.30653282   5459.54797417    200.63613892  2.971873300339211710e-06  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           23360.55643097   3826.82997733    209.65176392  2.695391231100074947e-06  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           26490.23669076   2461.22200042    217.23307800  2.681364549061981961e-06  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           30398.18089116   1435.66322513    228.25141907  2.682006197574082762e-06  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           35145.10292720    759.48196463    240.26202393  2.749030272752861492e-06  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000;
+           40661.82969029    364.34656940    247.32139587  3.008777639479376376e-06  0.00000000000000e+00  0.000000000000000000000e+00  0.000000000000000e+00  0.0000000000000000e+00      0.00000000      0.00000000];
   end
-  Tv = eval_Tv(T_p, q_p, 0);
-  Tv_plu = eval_Tv(T_plu, q_plu, ql_plu+qi_plu);
-  B_plu = g*(Tv_plu-Tv)./Tv;
+  zip = IP(:,1);
+  pip = IP(:,2);
+  tip = IP(:,3);
+  qip = IP(:,4);
+  tvip = eval_Tv(tip,qip,0);
+  rhoip = pip./tvip/RD;
 end
-
-function yn = SSPRK93(yn,dt,Inonneg)
-  K1 = expFun(yn,1); %expFun(y,rkstage)
-  yi = yn+(dt/6)*K1;
-%       yi(Inonneg) = yi(Inonneg).*(yi(Inonneg)>0); % Non-negative qt
-  K2 = expFun(yi,2);
-  yi = yn+(dt/6)*(K1+K2);
-%       yi(Inonneg) = yi(Inonneg).*(yi(Inonneg)>0); 
-  K2 = K2 + expFun(yi,3);
-  yi = yn+(dt/6)*(K1+K2);
-%       yi(Inonneg) = yi(Inonneg).*(yi(Inonneg)>0); 
-  K2 = K2 + expFun(yi,4);
-  yi = yn+(dt/6)*(K1+K2);
-%       yi(Inonneg) = yi(Inonneg).*(yi(Inonneg)>0); 
-  K2 = K2 + expFun(yi,5);
-  yi = yn+(dt/6)*(K1+K2);
-%       yi(Inonneg) = yi(Inonneg).*(yi(Inonneg)>0); 
-  K2 = (K2 + expFun(yi,6))/15;
-  yi = yn+dt*(K1/6+K2);
-%       yi(Inonneg) = yi(Inonneg).*(yi(Inonneg)>0); 
-  K1 = K1 + expFun(yi,7);
-  yi = yn+dt*(K1/6+K2);
-%       yi(Inonneg) = yi(Inonneg).*(yi(Inonneg)>0);
-  K1 = K1 + expFun(yi,8);
-  yi = yn+dt*(K1/6+K2);
-%       yi(Inonneg) = yi(Inonneg).*(yi(Inonneg)>0);
-  yn = yn + dt*((K1 + expFun(yi,9))/6+K2);
-%  yn(Inonneg) = yn(Inonneg).*(yn(Inonneg)>0); % Non-negative qt (moved after precipitation)
-end
-
-%%
-% % % figure('Units','normalized','Position',[0 0 1 1])
-% % % cmp = colormap(turbo(Nt));
-% % % for i=1:Ni
-% % %   subplot(1,Ni,i)
-% % %   hold all
-% % %   for idt=1:Nt
-% % %     plot(theta_e(:,idt,i),zm/1e3,'color',cmp(idt,:),'linewidth',2)
-% % %   end
-% % %   xlabel(['\theta_e (K)'])
-% % %   ylabel('Height (km)')
-% % %   ylim([0 40])
-% % %   grid on
-% % %   box on
-% % %   title(['ACE-' num2str(i)])
-% % %   set(gca,'fontsize',20)
-% % % end
-
-%% Explicit RK time integrators
-%%
-% %       % SSPRK93 %dt<=22
-% %       k1 = expFun(yn);
-% %       k2 = expFun(yn+(dt/6)*k1);
-% %       k3 = expFun(yn+(dt/6)*(k1+k2));
-% %       k4 = expFun(yn+(dt/6)*(k1+k2+k3));
-% %       k5 = expFun(yn+(dt/6)*(k1+k2+k3+k4));
-% %       k6 = expFun(yn+(dt/6)*(k1+k2+k3+k4+k5));
-% %       k7 = expFun(yn+(dt/6)*k1+(dt/15)*(k2+k3+k4+k5+k6));
-% %       k8 = expFun(yn+(dt/6)*(k1+k7)+(dt/15)*(k2+k3+k4+k5+k6));
-% %       k9 = expFun(yn+(dt/6)*(k1+k7+k8)+(dt/15)*(k2+k3+k4+k5+k6));
-% %       yn = yn + (dt/6)*(k1+k7+k8+k9) + (dt/15)*(k2+k3+k4+k5+k6);
-% %       % SSPRK93 (low-storage) %dt<=22
-% %       K1 = expFun(yn);
-% %       K2 = expFun(yn+(dt/6)*K1);
-% %       K2 = K2 + expFun(yn+(dt/6)*(K1+K2));
-% %       K2 = K2 + expFun(yn+(dt/6)*(K1+K2));
-% %       K2 = K2 + expFun(yn+(dt/6)*(K1+K2));
-% %       K2 = (K2 + expFun(yn+(dt/6)*(K1+K2)))/15;
-% %       K1 = K1 + expFun(yn+dt*(K1/6+K2));
-% %       K1 = K1 + expFun(yn+dt*(K1/6+K2));
-% %       yn = yn + dt*((K1 + expFun(yn+dt*(K1/6+K2)))/6+K2);
-% % %       % SSPRK(10,4) %dt<=22
-% % %       k1 = expFun(yn);
-% % %       k2 = expFun(yn+(dt/6)*k1);
-% % %       k3 = expFun(yn+(dt/6)*(k1+k2));
-% % %       k4 = expFun(yn+(dt/6)*(k1+k2+k3));
-% % %       k5 = expFun(yn+(dt/6)*(k1+k2+k3+k4));
-% % %       k6 = expFun(yn+(dt/15)*(k1+k2+k3+k4+k5));
-% % %       k7 = expFun(yn+(dt/15)*(k1+k2+k3+k4+k5)+(dt/6)*k6);
-% % %       k8 = expFun(yn+(dt/15)*(k1+k2+k3+k4+k5)+(dt/6)*(k6+k7));
-% % %       k9 = expFun(yn+(dt/15)*(k1+k2+k3+k4+k5)+(dt/6)*(k6+k7+k8));
-% % %       k10 = expFun(yn+(dt/15)*(k1+k2+k3+k4+k5)+(dt/6)*(k6+k7+k8+k9));
-% % %       yn = yn + (dt/10)*(k1+k2+k3+k4+k5 + k6+k7+k8+k9 + k10);
-% % %       % SSPRK(10,4) (low-storage) %dt<=22
-% % %       K1 = expFun(yn);
-% % %       K1 = K1 + expFun(yn+(dt/6)*K1);
-% % %       K1 = K1 + expFun(yn+(dt/6)*K1);
-% % %       K1 = K1 + expFun(yn+(dt/6)*K1);
-% % %       K1 = K1 + expFun(yn+(dt/6)*K1);
-% % %       K2 = expFun(yn+(dt/15)*K1);
-% % %       K2 = K2 + expFun(yn+(dt/15)*K1+(dt/6)*K2);
-% % %       K2 = K2 + expFun(yn+(dt/15)*K1+(dt/6)*K2);
-% % %       K2 = K2 + expFun(yn+(dt/15)*K1+(dt/6)*K2);
-% % %       yn = yn + (dt/10)*(K1+K2 + expFun(yn+(dt/15)*K1+(dt/6)*K2));
-% %       % SSPRK42 %dt<=10
-% %       k1 = expFun(yn);
-% %       k2 = expFun(yn+(dt/3)*k1);
-% %       k3 = expFun(yn+(dt/3)*(k1+k2));
-% %       k4 = expFun(yn+(dt/3)*(k1+k2+k3));
-% %       yn = yn + (dt/4)*(k1+k2+k3+k4);
-% %       % SSPRK42 (low-storage)
-% %       K1 = expFun(yn);
-% %       K1 = K1 + expFun(yn+(dt/3)*K1);
-% %       K1 = K1 + expFun(yn+(dt/3)*K1);
-% %       yn = yn + (dt/4)*(K1 + expFun(yn+(dt/3)*K1));
-% % %       % eSSPRK54 %dt<=8
-% % %       k1 = yn + (0.391752226571890*dt)*expFun(yn);
-% % %       k2 = 0.444370493651235*yn + 0.555629506348765*k1 + (0.368410593050371*dt)*expFun(k1);
-% % %       k3 = 0.620101851488403*yn + 0.379898148511597*k2 + (0.251891774271694*dt)*expFun(k2);
-% % %       Fk3 = expFun(k3);
-% % %       k4 = 0.178079954393132*yn + 0.821920045606868*k3 + (0.544974750228521*dt)*Fk3;
-% % %       yn = 0.517231671970585*k2 + 0.096059710526147*k3 + (0.063692468666290*dt)*Fk3 +...
-% % %            0.386708617503268*k4 + (0.226007483236906*dt)*expFun(k4);
-% %       % SSPRK33 %dt<=8
-% %       y1 = yn + dt*expFun(yn);
-% %       y2 = 0.75*yn + 0.25*(y1 + dt*expFun(y1));
-% %       yn = (yn + 2*(y2 + dt*expFun(y2)))/3;
-% % %       % SSPRK22 %dt<=6
-% % %       y1 = yn + dt*expFun(yn);
-% % %       yn = 0.5*(yn + y1 + dt*expFun(y1));
-% %       % RK5 %dt=12
-% %       K1 = expFun(yn);
-% %       yi = yn+(dt/4)*K1;
-% %       yi(Inonneg) = yi(Inonneg).*(yi(Inonneg)>0); % Non-negative qt
-% %       K2 = expFun(yi);
-% %       yi = yn+(dt/8)*(K1+K2);
-% %       yi(Inonneg) = yi(Inonneg).*(yi(Inonneg)>0); 
-% %       K3 = expFun(yi);
-% %       yi = yn+(dt/2)*K3;
-% %       yi(Inonneg) = yi(Inonneg).*(yi(Inonneg)>0); 
-% %       K4 = expFun(yi);
-% %       yi = yn+(3*dt/16)*(K1-2*K2+2*K3+3*K4);
-% %       yi(Inonneg) = yi(Inonneg).*(yi(Inonneg)>0); 
-% %       K5 = expFun(yi);
-% %       yi = yn+(dt/7)*(-3*K1+8*K2+6*K3-12*K4+8*K5);
-% %       yi(Inonneg) = yi(Inonneg).*(yi(Inonneg)>0); 
-% %       K6 = expFun(yi);
-% %       yn = yn + (dt/90)*(7*(K1+K6)+32*(K3+K5)+12*K4);
-% %       yn(Inonneg) = yn(Inonneg).*(yn(Inonneg)>0);
-% % %       % SSPRK85 (Ruuth-Spiteri) %dt=12
-% % %       K1 = expFun(yn);
-% % %       yi = yn+(0.276*dt)*K1;
-% % %       yi(Inonneg) = yi(Inonneg).*(yi(Inonneg)>0); % Non-negative qt
-% % %       K2 = expFun(yi);
-% % %       yi = yn+dt*(0.15*K1+0.289*K2);
-% % %       yi(Inonneg) = yi(Inonneg).*(yi(Inonneg)>0); 
-% % %       K3 = expFun(yi);
-% % %       yi = yn+dt*(0.057*K1+0.11*K2+0.203*K3);
-% % %       yi(Inonneg) = yi(Inonneg).*(yi(Inonneg)>0); 
-% % %       K4 = expFun(yi);
-% % %       yi = yn+dt*(0.169*K1+0.326*K2+0.451*K3);
-% % %       yi(Inonneg) = yi(Inonneg).*(yi(Inonneg)>0); 
-% % %       K5 = expFun(yi);
-% % %       yi = yn+dt*(0.062*K1+0.119*K2+0.199*K3+0.521*K4-0.001*K5);
-% % %       yi(Inonneg) = yi(Inonneg).*(yi(Inonneg)>0); 
-% % %       K6 = expFun(yi);
-% % %       yi = yn+dt*(0.111*K1+0.214*K2+0.116*K3+0.223*K4-0.037*K5+0.228*K6);
-% % %       yi(Inonneg) = yi(Inonneg).*(yi(Inonneg)>0); 
-% % %       K7 = expFun(yi);
-% % %       yi = yn+dt*(0.071*K1+0.137*K2+0.155*K3+0.043*K4-0.164*K5+0.044*K6+0.103*K7);
-% % %       yi(Inonneg) = yi(Inonneg).*(yi(Inonneg)>0);
-% % %       K8 = expFun(yi);
-% % %       yn = yn + dt*(0.107*K1+0.149*K2+0.105*K3+0.125*K4-0.068*K5+0.128*K6+0.298*K7+0.156*K8);
-% % %       yn(Inonneg) = yn(Inonneg).*(yn(Inonneg)>0); 

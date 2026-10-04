@@ -16,8 +16,8 @@ function qs = eval_qs(T, p, qt)
 %   global EPS
   es = eval_es(T);
   
-  if nargin==2 %assuming condensate-free
-    qs = eval_q(es,p);
-  else %given qt (suitable for plume computations)
+  % % if nargin==2 %assuming condensate-free
+  % %   qs = eval_q(es,p);
+  % % else %given qt (suitable for plume computations)
     qs = eval_q(es,p,qt);
-  end
+  % % end
