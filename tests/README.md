@@ -1,5 +1,9 @@
 # ACE reference tests
 
+For default-real32 Fortran precipitation checks and their real64 comparison,
+see [precision tests](precision/README.md). These retain the frozen v0.18
+reference cases and document the subsequent precipitation evaluation change.
+
 The canonical initial runtime comparison for v0.18, v0.20 and v0.24 is
 **`manus_saturated_bubble`**, designated by the developer on 2026-10-02.
 Its fixed definition is [`cases/manus_saturated_bubble.json`](cases/manus_saturated_bubble.json);

@@ -1,0 +1,259 @@
+{
+  "case": "manus",
+  "profile_index": 208,
+  "duration_seconds": 43200,
+  "dt_seconds": 4,
+  "output_step_seconds": 60,
+  "ace_mode": "multi",
+  "precipitation": "enabled",
+  "bubble": {
+    "enabled": false
+  },
+  "fortran_label": "Fortran (single precision)",
+  "precision_bits": 32,
+  "input_sha256": "85f8f5ebf0b4a0bca4a96b9b3f6f9b43a1d9bdb4470658b018dcd71d5219b1d9",
+  "seed_sha256": "48834bbb550ce2c07219f0d43440b76a217df502c665fcf8cd6ac03bb84324a8",
+  "reference_mf_sha256": "ca631bc0a9c36166660dbb82abf4faa70d6f4c1aaef213e57c03919f3128ddb0",
+  "reference_directory": "/scratch/peter50504/ACE/migration_work/manus208_multi_outer_pulse_12h",
+  "git_revision": "ba5ac0872d517c17c8158654e0c5a99f64843f9e",
+  "compiler": "GNU Fortran (conda-forge gcc 11.2.0-16) 11.2.0",
+  "sources_sha256": {
+    "fortran/src/ace_module.F": "53e156736fd5fc33157dc3ec8d155ca215dc5c1452a0129a6dc40db102e96d5d",
+    "fortran/src/ace_input.F": "e349ea2a0326c37756f4b7f58e4905f01a7134fed5feb748993d5e819ee6a2da",
+    "fortran/src/test.F": "07c8114571393c8d26b84a2efe665f3c8c6d1c9365718775c8998975f3eacd89",
+    "tests/precision/fortran_case.f90": "39ab109bfd146354f8a92274e4dfae0c1c99dc2117e2b5c9a5e36ad684c6b855",
+    "tests/precision/run_multi.py": "1bdc8ea83a2ec7609392eab8e357ddfe1e7ee0823a55ef09c973ed0776a3e098"
+  },
+  "scope": "All eight ACEs, original ACE 8 outer pulse, no bubble or sustained forcing; native precipitation, full geometry/PMB, original damping, MF diffusion off. Default-real32 prognostics/tendencies with existing binary64 PMB/input reads. No P3.",
+  "commands": [
+    {
+      "argv": [
+        "gfortran",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "ace_input.F"
+      ],
+      "cwd": "/scratch/peter50504/ACE/migration_work/manus_multi_single_precision_12h"
+    },
+    {
+      "argv": [
+        "gfortran",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "ace_module.F"
+      ],
+      "cwd": "/scratch/peter50504/ACE/migration_work/manus_multi_single_precision_12h"
+    },
+    {
+      "argv": [
+        "gfortran",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "test.F",
+        "ace_module.o",
+        "ace_input.o",
+        "-L/home/peter50504/miniconda3/lib",
+        "-lnetcdff",
+        "-lnetcdf",
+        "-Wl,-rpath,/home/peter50504/miniconda3/lib",
+        "-o",
+        "base.exe"
+      ],
+      "cwd": "/scratch/peter50504/ACE/migration_work/manus_multi_single_precision_12h"
+    },
+    {
+      "argv": [
+        "gfortran",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "driver.f90",
+        "ace_module.o",
+        "ace_input.o",
+        "-L/home/peter50504/miniconda3/lib",
+        "-lnetcdff",
+        "-lnetcdf",
+        "-Wl,-rpath,/home/peter50504/miniconda3/lib",
+        "-o",
+        "case.exe"
+      ],
+      "cwd": "/scratch/peter50504/ACE/migration_work/manus_multi_single_precision_12h"
+    },
+    {
+      "argv": [
+        "/scratch/peter50504/ACE/migration_work/manus_multi_single_precision_12h/base.exe",
+        "--input",
+        "/scratch/peter50504/ACE/data/input/manus208.nc",
+        "--validate-input",
+        "/scratch/peter50504/ACE/migration_work/manus_multi_single_precision_12h/init.bin"
+      ],
+      "cwd": "/scratch/peter50504/ACE/migration_work/manus_multi_single_precision_12h"
+    },
+    {
+      "argv": [
+        "/scratch/peter50504/ACE/migration_work/manus_multi_single_precision_12h/case.exe",
+        "/scratch/peter50504/ACE/migration_work/manus_multi_single_precision_12h/init.bin",
+        "/scratch/peter50504/ACE/data/input/manus208.nc",
+        "/scratch/peter50504/ACE/migration_work/manus_multi_single_precision_12h/state.bin",
+        "/scratch/peter50504/ACE/migration_work/manus208_multi_outer_pulse_12h/initial_override.bin",
+        "43200",
+        "multi"
+      ],
+      "cwd": "/scratch/peter50504/ACE/migration_work/manus_multi_single_precision_12h"
+    }
+  ],
+  "status": "passed execution checks; MF visual comparison ready; no scientific tolerance imposed",
+  "integration_wall_seconds": 912.4016158909071,
+  "execution_checks": {
+    "saved_times": 721,
+    "finite": true,
+    "qt_min": 1.4413128610613057e-06,
+    "initial_state_equals_binary32_seed": true,
+    "positive_precipitation_steps": 10585
+  },
+  "per_ace": [
+    {
+      "ace": 1,
+      "matlab_peak_abs_mf": 17.96202095394021,
+      "fortran_peak_abs_mf": 18.088481903076172,
+      "fortran_peak_seconds": 35460,
+      "fortran_peak_height_m": 6450.0,
+      "mf_max_abs_difference": 17.972288039335965,
+      "mf_rms_difference": 1.8109822663079387,
+      "matlab_peak_seconds": 33540,
+      "matlab_peak_height_m": 7350.0,
+      "matlab_terminal_max_abs_mf": 13.098348712264729,
+      "fortran_terminal_max_abs_mf": 0.7182328104972839
+    },
+    {
+      "ace": 2,
+      "matlab_peak_abs_mf": 6.141301887707147,
+      "fortran_peak_abs_mf": 5.0791449546813965,
+      "fortran_peak_seconds": 35640,
+      "fortran_peak_height_m": 6600.0,
+      "mf_max_abs_difference": 7.086446853305444,
+      "mf_rms_difference": 0.45187005786945755,
+      "matlab_peak_seconds": 35820,
+      "matlab_peak_height_m": 5450.0,
+      "matlab_terminal_max_abs_mf": 2.8010337199663664,
+      "fortran_terminal_max_abs_mf": 0.940937876701355
+    },
+    {
+      "ace": 3,
+      "matlab_peak_abs_mf": 3.4348768608628744,
+      "fortran_peak_abs_mf": 2.877140522003174,
+      "fortran_peak_seconds": 37740,
+      "fortran_peak_height_m": 4650.0,
+      "mf_max_abs_difference": 5.14193292831939,
+      "mf_rms_difference": 0.21947301668844668,
+      "matlab_peak_seconds": 35700,
+      "matlab_peak_height_m": 4650.0,
+      "matlab_terminal_max_abs_mf": 0.8833931499014235,
+      "fortran_terminal_max_abs_mf": 1.599289059638977
+    },
+    {
+      "ace": 4,
+      "matlab_peak_abs_mf": 0.8992760056255305,
+      "fortran_peak_abs_mf": 0.9111763834953308,
+      "fortran_peak_seconds": 36240,
+      "fortran_peak_height_m": 3000.0,
+      "mf_max_abs_difference": 1.3467738248283516,
+      "mf_rms_difference": 0.0758235804003321,
+      "matlab_peak_seconds": 33960,
+      "matlab_peak_height_m": 10400.0,
+      "matlab_terminal_max_abs_mf": 0.15794488349626937,
+      "fortran_terminal_max_abs_mf": 0.34404227137565613
+    },
+    {
+      "ace": 5,
+      "matlab_peak_abs_mf": 0.7980290400998498,
+      "fortran_peak_abs_mf": 0.7354390621185303,
+      "fortran_peak_seconds": 36480,
+      "fortran_peak_height_m": 2800.0,
+      "mf_max_abs_difference": 0.7921258572084826,
+      "mf_rms_difference": 0.04970039227392895,
+      "matlab_peak_seconds": 34440,
+      "matlab_peak_height_m": 2250.0,
+      "matlab_terminal_max_abs_mf": 0.1933265911182649,
+      "fortran_terminal_max_abs_mf": 0.15225398540496826
+    },
+    {
+      "ace": 6,
+      "matlab_peak_abs_mf": 0.677067889387269,
+      "fortran_peak_abs_mf": 0.6857358813285828,
+      "fortran_peak_seconds": 36720,
+      "fortran_peak_height_m": 2200.0,
+      "mf_max_abs_difference": 0.8759061865963229,
+      "mf_rms_difference": 0.04294950697010103,
+      "matlab_peak_seconds": 34680,
+      "matlab_peak_height_m": 2250.0,
+      "matlab_terminal_max_abs_mf": 0.3043229262906561,
+      "fortran_terminal_max_abs_mf": 0.12613458931446075
+    },
+    {
+      "ace": 7,
+      "matlab_peak_abs_mf": 1.3852260572483681,
+      "fortran_peak_abs_mf": 1.3624489307403564,
+      "fortran_peak_seconds": 4500,
+      "fortran_peak_height_m": 450.0,
+      "mf_max_abs_difference": 0.5437495934898469,
+      "mf_rms_difference": 0.03400587084645453,
+      "matlab_peak_seconds": 4500,
+      "matlab_peak_height_m": 450.0,
+      "matlab_terminal_max_abs_mf": 0.38497298401112917,
+      "fortran_terminal_max_abs_mf": 0.11832458525896072
+    },
+    {
+      "ace": 8,
+      "matlab_peak_abs_mf": 0.8038966093196451,
+      "fortran_peak_abs_mf": 0.8077066540718079,
+      "fortran_peak_seconds": 9660,
+      "fortran_peak_height_m": 2200.0,
+      "mf_max_abs_difference": 0.45895105339122005,
+      "mf_rms_difference": 0.026944781614759192,
+      "matlab_peak_seconds": 9660,
+      "matlab_peak_height_m": 2200.0,
+      "matlab_terminal_max_abs_mf": 0.10909982384666185,
+      "fortran_terminal_max_abs_mf": 0.08460281044244766
+    }
+  ],
+  "artifact_sha256": {
+    "state.bin": "8781ccb1998f73efdc6645a1f0acca175e28b24067a98cd35373ecea708d5e4d",
+    "mf_all_aces.npz": "84abfdb587bcbf22451c8ce46085f8984abe07681562e39aad5f45b5fa2f5ed7",
+    "fort.97": "15b822504901912ac1cac0a2043805c3ba2b7efc87356b0b5ceef061d072f890",
+    "ace_module.F": "b36ba3f2434ebbd35ba4f43d3972051c19c016fc0087df9bd7e9de67acc1edbd"
+  },
+  "figures": {
+    "docs/figures/manus_multi_outer_pulse_12h_single_precision_comparison.png": "1a1d06c7822ff39788454c523f250e46e64c1091f1ee4ac75ff09094711f39aa",
+    "docs/figures/manus_multi_outer_pulse_12h_single_precision_comparison.pdf": "06e3d5549a01a3ba78ea0a202bae637fc70c48a312fadf5d8d2e14d77e3c8fd3",
+    "docs/figures/manus_multi_outer_pulse_12h_single_precision_response.png": "b652efdf6cb5a9c1199b099006613478718b259f6823c6982dd77ded0578dfc9",
+    "docs/figures/manus_multi_outer_pulse_12h_single_precision_response.pdf": "5f818d43e78ded9f0578a76662ef3c90438893dc73e334fe7a06debaa52932c8"
+  },
+  "visual_review": "Both runs show early outer-ACE response and later strong inner-ACE convection. Real32 ACE 1 peaks 32 minutes later and at a lower height. Inner-ACE timing, oscillations and late evolution differ visibly; at 12 h MATLAB ACE 1 strengthens again while real32 remains much weaker. Execution checks do not establish agreement of the multiACE trajectory.",
+  "evidence_directory": "migration_work/manus_multi_single_precision_12h"
+}

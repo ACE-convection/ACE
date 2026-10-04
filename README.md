@@ -65,7 +65,10 @@ Refactoring and repository restructuring remain separate from scientific changes
 
 ## P3 microphysics
 
-The Fortran implementation of ACE can use the **Predicted Particle Properties (P3) microphysics scheme** developed by Morrison, Milbrandt, and collaborators.
+Integration of the **Predicted Particle Properties (P3) microphysics scheme**
+developed by Morrison, Milbrandt, and collaborators is planned for ACE v0.20.
+The current v0.18 Fortran implementation uses native simplified precipitation
+and does not include an integrated P3 scheme.
 
 The current upstream P3 source code is maintained separately at the
 [P3-microphysics repository](https://github.com/P3-microphysics/P3-microphysics).

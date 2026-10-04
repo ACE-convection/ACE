@@ -24,6 +24,7 @@ def plot_comparison(work, report, hours, height, m, f, height_km):
     fig = plt.figure(figsize=(figure_width, figure_height))
     selected = height <= height_km
     axes = []
+    fortran_label = report.get('fortran_label', 'Fortran')
     for i in range(8):
         y = bottom+(7-i)*(panel_height+row_gap)
         limit = max(float(abs(m[:, selected, i]).max()), float(abs(f[:, selected, i]).max()))
@@ -49,7 +50,7 @@ def plot_comparison(work, report, hours, height, m, f, height_km):
             if i == 7:
                 ax.set_xlabel('Time (hours)', fontsize=10)
             if i == 0:
-                ax.set_title(['MATLAB', 'Fortran', 'Fortran − MATLAB'][j], fontsize=14, pad=10)
+                ax.set_title(['MATLAB', fortran_label, fortran_label+' − MATLAB'][j], fontsize=14, pad=10)
             if j in [1, 2]:
                 cax = fig.add_axes([(x+panel_width+0.08)/figure_width, y/figure_height,
                                     0.12/figure_width, panel_height/figure_height])
@@ -81,6 +82,7 @@ def main():
     args = parser.parse_args()
     work = args.work.resolve()
     report = json.loads((work/'results.json').read_text())
+    fortran_label = report.get('fortran_label', 'Fortran')
     assert report['ace_mode'] == 'multi'
     with np.load(work/'mf_all_aces.npz') as data:
         hours = data['time_seconds']/3600
@@ -117,7 +119,7 @@ def main():
                 ax.set_ylabel('Height (km)')
         bar = fig.colorbar(mesh, ax=axes.ravel().tolist(), pad=0.02)
         bar.set_label(('ΔMF' if label == 'difference' else 'MF')+' (kg m$^{-2}$ s$^{-1}$)')
-        title = {'matlab': 'MATLAB', 'fortran': 'Fortran', 'difference': 'Fortran − MATLAB'}[label]
+        title = {'matlab': 'MATLAB', 'fortran': fortran_label, 'difference': fortran_label+' − MATLAB'}[label]
         fig.suptitle(f"{report['case'].upper()} {report['profile_index']} · "
                      f"{hours[-1]:g} hours · {title}\n"
                      f"ACE 8 initial MF pulse · precipitation {report['precipitation']}")
@@ -128,7 +130,7 @@ def main():
         plt.close(fig)
     fig, axes = plt.subplots(2, 1, figsize=(11, 8), sharex=True, sharey=True,
                              layout='constrained')
-    for ax, values, label in zip(axes, [m, f], ['MATLAB', 'Fortran']):
+    for ax, values, label in zip(axes, [m, f], ['MATLAB', fortran_label]):
         for i in range(8):
             ax.plot(hours, abs(values[:, :, i]).max(axis=1), label=f'ACE {i+1}')
         ax.set_title(label, loc='left')

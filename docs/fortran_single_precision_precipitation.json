@@ -1,0 +1,319 @@
+{
+  "baseline_revision": "v0.18.0",
+  "git_revision": "ba5ac0872d517c17c8158654e0c5a99f64843f9e",
+  "compiler": "GNU Fortran (conda-forge gcc 11.2.0-16) 11.2.0",
+  "source_sha256": "53e156736fd5fc33157dc3ec8d155ca215dc5c1452a0129a6dc40db102e96d5d",
+  "duration_seconds": 10800,
+  "dt_seconds": 4,
+  "probes": {
+    "baseline32": {
+      "finite_cases": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false
+      ],
+      "dtheta_e": [
+        0.0,
+        -0.0,
+        -0.0,
+        null,
+        -0.0,
+        null,
+        -0.0,
+        null
+      ],
+      "dqt": [
+        0.0,
+        -0.0,
+        -5.77622714e-08,
+        null,
+        -5.77622714e-08,
+        null,
+        -5.00000033e-06,
+        null
+      ]
+    },
+    "baseline64": {
+      "finite_cases": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "dtheta_e": [
+        0.0,
+        2.2017334107386014e-14,
+        4.94769249499823e-06,
+        0.0007025456720081517,
+        3.3285875246262196e-05,
+        0.004705428011675394,
+        0.0014582416270059184,
+        null
+      ],
+      "dqt": [
+        0.0,
+        -2.562399917936107e-16,
+        -5.776226504666211e-08,
+        -8.333333333333334e-06,
+        -5.776226504666211e-08,
+        -8.333333333333334e-06,
+        -5e-06,
+        null
+      ]
+    },
+    "corrected32": {
+      "finite_cases": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "dtheta_e": [
+        0.0,
+        2.20173933e-14,
+        4.94768619e-06,
+        0.000702545105,
+        3.32858945e-05,
+        0.00470542954,
+        0.00145824102,
+        0.00493449299
+      ],
+      "dqt": [
+        0.0,
+        -2.56239934e-16,
+        -5.77622714e-08,
+        -8.33333434e-06,
+        -5.77622714e-08,
+        -8.33333434e-06,
+        -5.00000033e-06,
+        -6.50000075e-05
+      ],
+      "derivative_vs_centered_binary64_relative_error": [
+        2.8865462147315256e-06,
+        1.240315954196288e-06,
+        9.538352637335138e-07,
+        4.135005374077573e-07,
+        1.5784313763206878e-07,
+        5.01554258138572e-07,
+        1.174122233703073e-06
+      ]
+    },
+    "corrected64": {
+      "finite_cases": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "dtheta_e": [
+        0.0,
+        2.201733451692422e-14,
+        4.947691782169279e-06,
+        0.0007025456898867728,
+        3.3285877076696736e-05,
+        0.004705428228187676,
+        0.0014582416551926843,
+        0.00493449821184676
+      ],
+      "dqt": [
+        0.0,
+        -2.5623998957159784e-16,
+        -5.776226504666211e-08,
+        -8.333333333333334e-06,
+        -5.776226504666211e-08,
+        -8.333333333333334e-06,
+        -5e-06,
+        -6.500000000000001e-05
+      ],
+      "derivative_vs_centered_binary64_relative_error": [
+        1.8197986854999816e-10,
+        6.672751063497666e-11,
+        5.104899835974823e-10,
+        4.7412356396877876e-11,
+        1.4386539168969621e-10,
+        3.3789527531480454e-11,
+        5.051773630003648e-10
+      ]
+    }
+  },
+  "runtime": {
+    "baseline64": {
+      "saved_times": 181,
+      "finite": true,
+      "qt_min": 2.583502650483959e-06,
+      "peak_abs_mf": 16.046092538609194
+    },
+    "corrected32": {
+      "saved_times": 181,
+      "finite": true,
+      "qt_min": 2.583542027423391e-06,
+      "peak_abs_mf": 16.04183578491211,
+      "sum_unweighted_qt_removal": 33.88693616976547,
+      "vs_baseline64": {
+        "theta_e_K": {
+          "max_abs": 4.713330713535186,
+          "rms": 0.031386891286453014,
+          "maximum_location": {
+            "seconds": 10740,
+            "height_m": 15600,
+            "ace_one_based": 1,
+            "baseline": 352.7964349114648,
+            "current": 357.509765625
+          }
+        },
+        "qt_kg_kg": {
+          "max_abs": 0.000976255975786388,
+          "rms": 4.690779628828951e-06,
+          "maximum_location": {
+            "seconds": 10140,
+            "height_m": 15600,
+            "ace_one_based": 1,
+            "baseline": 0.001894621350459546,
+            "current": 0.0009183653746731579
+          }
+        },
+        "mf_kg_m2_s": {
+          "max_abs": 0.15855225249759464,
+          "rms": 0.00516990423254369,
+          "maximum_location": {
+            "seconds": 7740,
+            "height_m": 13800,
+            "ace_one_based": 1,
+            "baseline": 8.51898201629154,
+            "current": 8.360429763793945
+          }
+        }
+      }
+    },
+    "corrected64": {
+      "saved_times": 181,
+      "finite": true,
+      "qt_min": 2.5835026505001636e-06,
+      "peak_abs_mf": 16.04609257470043,
+      "sum_unweighted_qt_removal": 33.945021035856534,
+      "vs_baseline64": {
+        "theta_e_K": {
+          "max_abs": 0.000294883046024097,
+          "rms": 5.701578453076039e-07,
+          "maximum_location": {
+            "seconds": 10200,
+            "height_m": 15650,
+            "ace_one_based": 1,
+            "baseline": 362.72436887113946,
+            "current": 362.72407398809344
+          }
+        },
+        "qt_kg_kg": {
+          "max_abs": 3.508706254186367e-08,
+          "rms": 7.820305060920622e-11,
+          "maximum_location": {
+            "seconds": 10200,
+            "height_m": 15600,
+            "ace_one_based": 1,
+            "baseline": 0.001945263720398076,
+            "current": 0.001945298807460618
+          }
+        },
+        "mf_kg_m2_s": {
+          "max_abs": 3.4827866071118763e-06,
+          "rms": 5.542735652042566e-08,
+          "maximum_location": {
+            "seconds": 10140,
+            "height_m": 15550,
+            "ace_one_based": 1,
+            "baseline": 0.3968185422507756,
+            "current": 0.39682202503738273
+          }
+        }
+      }
+    }
+  },
+  "scope": "Default real32 or real64 prognostics; PMB and NetCDF input remain binary64. Fixed Manus 208 saturated bubble seed, native precipitation, single ACE 1 mask; eight-ACE geometry, stage-1 cache and damping retained. No P3.",
+  "input_sha256": "85f8f5ebf0b4a0bca4a96b9b3f6f9b43a1d9bdb4470658b018dcd71d5219b1d9",
+  "seed_sha256": "2fbb0c2361f238756f8828b3de12fe4bdd13dad98669d1654955714950677bbb",
+  "status": "passed focused numerical and runtime checks; no scientific acceptance tolerance assigned",
+  "baseline64_vs_frozen_mf_max_abs": 0.0,
+  "production_smoke32": {
+    "commands": [
+      [
+        "make",
+        "-f",
+        "/scratch/peter50504/ACE/fortran/makefile",
+        "VPATH=/scratch/peter50504/ACE/fortran/src",
+        "FC=gfortran",
+        "FCFLAGS=-O2 -ffree-form -ffree-line-length-none -fcheck=all,no-array-temps -ffpe-trap=invalid,zero,overflow -fbacktrace",
+        "FINCLUDE=-I/home/peter50504/miniconda3/include -I/home/peter50504/miniconda3/include",
+        "LDLIBS=-L/home/peter50504/miniconda3/lib -lnetcdff -lnetcdf -Wl,-rpath,/home/peter50504/miniconda3/lib"
+      ],
+      [
+        "/scratch/peter50504/ACE/migration_work/single_precision_precip_corrected/production_build32/ace_model.exe",
+        "--input",
+        "/scratch/peter50504/ACE/data/input/manus208.nc",
+        "--intervals",
+        "1",
+        "--output",
+        "/scratch/peter50504/ACE/migration_work/single_precision_precip_corrected/production_build32/output.bin"
+      ]
+    ],
+    "cwd": "/scratch/peter50504/ACE/migration_work/single_precision_precip_corrected/production_build32",
+    "duration_seconds": 60,
+    "finite_all_nine_output_fields": true,
+    "qt_min": 2.584866933830199e-06,
+    "scope": "Uninstrumented production source and makefile; default real32; native multiACE outer pulse defaults"
+  },
+  "runtime_runner_sha256": "d87d38118c9bc8933327a0839da39467956083aec6c5ad2cd90a8986fb16699a",
+  "sources_sha256": {
+    "fortran/src/ace_module.F": "53e156736fd5fc33157dc3ec8d155ca215dc5c1452a0129a6dc40db102e96d5d",
+    "fortran/src/ace_input.F": "e349ea2a0326c37756f4b7f58e4905f01a7134fed5feb748993d5e819ee6a2da",
+    "fortran/src/test.F": "07c8114571393c8d26b84a2efe665f3c8c6d1c9365718775c8998975f3eacd89",
+    "tests/precision/fortran_case.f90": "cab952cac4421efff1b395382c156e9cd729b0f73015b66c7e63d2e68d426817",
+    "tests/precision/precipitation_probe.f90": "2d6c2a1872816b028306040c7c89fb4bf79d8f63b80ebf3ea85d4af751af9bd6"
+  },
+  "verification_script_sha256": "f1621acdbbeb2d17b82943e447bf84192d9d78b057fafba015899f098f788b2a",
+  "evidence_directory": "migration_work/single_precision_precip_corrected",
+  "scientific_status": "Execution and focused evaluation checks passed. Real32 trajectory differences, particularly near 15.6 km, require developer review; scientific equivalence is not established. No P3.",
+  "mf_plot": {
+    "case": "manus",
+    "profile_index": 208,
+    "duration_seconds": 10800,
+    "precipitation": "enabled",
+    "bubble": {
+      "enabled": true
+    },
+    "fortran_label": "Fortran (single precision)",
+    "scope": "Frozen MATLAB reference versus corrected default-real32 Fortran; ACE 1 MF. Fortran PMB/input reads retain binary64. Original time/height coordinates and panel layout.",
+    "sources": {
+      "matlab_reference": "/scratch/peter50504/ACE/tests/reference/manus_saturated_bubble_precip/mf.npz",
+      "matlab_reference_sha256": "4def89f34a90995f2e7a0271ed56b43d6b9389b9c0a031075b0ae103dcc31994",
+      "fortran_state": "/scratch/peter50504/ACE/migration_work/single_precision_precip_corrected/corrected32/state.bin",
+      "fortran_state_sha256": "4d33f0666b1c570d0f28cd7d2ab29309ee381fe7574a3bea2a977b4adf98b1a2",
+      "fortran_source_sha256": "53e156736fd5fc33157dc3ec8d155ca215dc5c1452a0129a6dc40db102e96d5d"
+    },
+    "artifacts_sha256": {
+      "mf.npz": "9f7531c24c63e71af4d65656c57ad1ff6b01d45dd5a2ead033a12bc95f555e41",
+      "mf_three_panels.png": "1bf0be78fc6d476392e49635e4a74c2b30615356b6cefed68204d4a2a02a9747",
+      "mf_three_panels.pdf": "be50e8a2779520b2d2e3050c43c2b3b2cfed037097020fd836ddc5288c218b0c"
+    },
+    "published_figures": [
+      "docs/figures/manus_saturated_bubble_precip_single_precision_mf.png",
+      "docs/figures/manus_saturated_bubble_precip_single_precision_mf.pdf"
+    ]
+  }
+}

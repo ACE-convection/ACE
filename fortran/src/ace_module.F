@@ -314,26 +314,57 @@ real, dimension(ncols,nz), intent(inout) :: dthe, dqt
 
 ! local variables
 integer :: i,k
-real :: qc, dql, dqi
+real :: qc, ramp_argument, ramp, tail, one_plus_tail
 
 
 do k=1,nz
 do i=1,ncols
   qc = ql(i,k) + qi(i,k)
-  !dqt(i,k) = - ( qc_ramp / dqc / tau_pr ) * log( 1. + exp( dqc / qc_ramp * ( qc - qc_ramp ) ) ) ! should use -r8 to compile
-  dqt(i,k) = - ( qc_ramp / dqc / tau_pr ) * log( 1. + exp( dqc / qc_ramp * ( qc - qc_ramp ) ) )
-  dql = 1.e-8 * ql(i,k) / qc
-  dqi = 1.e-8 * qi(i,k) / qc
-  dthe(i,k) = dqt(i,k) * ( theta_e(T(i,k),q(i,k),ql(i,k)+dql,qi(i,k)+dqi,p(i,k)) &
-                         - theta_e(T(i,k),q(i,k),ql(i,k),qi(i,k),p(i,k)) ) / 1.e-8
   if ( qc <= 0. ) then
     dqt(i,k) = 0.
     dthe(i,k) = 0.
-  endif 
+    cycle
+  endif
+  ! Same softplus ramp, with a nonpositive exponential argument in either branch.
+  ramp_argument = dqc / qc_ramp * ( qc - qc_ramp )
+  tail = exp(-abs(ramp_argument))
+  one_plus_tail = 1. + tail
+  ! Accurate log(1+tail) when adding a small tail rounds toward one.
+  if (one_plus_tail == 1.) then
+    ramp = tail
+  else
+    ramp = log(one_plus_tail) * tail / (one_plus_tail - 1.)
+  endif
+  ramp = max(ramp_argument,0.) + ramp
+  dqt(i,k) = - ( qc_ramp / dqc / tau_pr ) * ramp
+  ! Fixed T, vapor and liquid/ice ratio: derivative of the existing theta_e.
+  ! Avoid subtracting nearly equal theta_e values with a 1.e-8 kg/kg increment.
+  dthe(i,k) = dqt(i,k) * condensate_theta_e_derivative(T(i,k),q(i,k),ql(i,k),qi(i,k),p(i,k))
 enddo
 enddo
 
 end subroutine precip_sinks
+
+function condensate_theta_e_derivative(T,q,ql,qi,p) result(derivative)
+implicit none
+real, intent(in) :: T,q,ql,qi,p
+real, parameter :: Rd=287.04, Rv=461.5, Cpd=1005.7, Cl=4190.
+real, parameter :: Lf=0.3337e6, T0=273.1636783445389, P0=1.e5
+real :: derivative, qt, Re, R, Cpl, the, ice_fraction
+qt = q + ql + qi
+Re = (1.-qt)*Rd
+R = Re + q*Rv
+Cpl = Cpd + qt*(Cl-Cpd)
+the = theta_e(T,q,ql,qi,p)
+ice_fraction = qi/(ql+qi)
+! Write theta_e = T*exp(U/Cpl). Along dql+dqi=dqc,
+! dU/dqc = -Rd*log(P0*R/(p*Re))
+!           + (qi/qc)*((Cl-Ci(T0))*log(T0/T)-Lf/T0).
+! Terms from R and vapor pressure cancel at fixed vapor.
+derivative = the/Cpl * ( -Rd*log(P0*R/p/Re) &
+    + ice_fraction*((Cl-Ci(T0))*log(T0/T)-Lf/T0) &
+    - (Cl-Cpd)*log(the/T) )
+end function condensate_theta_e_derivative
 
 function theta_e(T,q,ql,qi,p)
 implicit none

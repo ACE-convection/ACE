@@ -1,0 +1,483 @@
+{
+  "double_run": {
+    "case": "manus",
+    "profile_index": 208,
+    "duration_seconds": 43200,
+    "dt_seconds": 4,
+    "output_step_seconds": 60,
+    "ace_mode": "multi",
+    "precipitation": "enabled",
+    "bubble": {
+      "enabled": false
+    },
+    "fortran_label": "Fortran (double precision)",
+    "precision_bits": 64,
+    "input_sha256": "85f8f5ebf0b4a0bca4a96b9b3f6f9b43a1d9bdb4470658b018dcd71d5219b1d9",
+    "seed_sha256": "48834bbb550ce2c07219f0d43440b76a217df502c665fcf8cd6ac03bb84324a8",
+    "reference_mf_sha256": "ca631bc0a9c36166660dbb82abf4faa70d6f4c1aaef213e57c03919f3128ddb0",
+    "reference_directory": "/scratch/peter50504/ACE/migration_work/manus208_multi_outer_pulse_12h",
+    "git_revision": "ba5ac0872d517c17c8158654e0c5a99f64843f9e",
+    "compiler": "GNU Fortran (conda-forge gcc 11.2.0-16) 11.2.0",
+    "sources_sha256": {
+      "fortran/src/ace_module.F": "53e156736fd5fc33157dc3ec8d155ca215dc5c1452a0129a6dc40db102e96d5d",
+      "fortran/src/ace_input.F": "e349ea2a0326c37756f4b7f58e4905f01a7134fed5feb748993d5e819ee6a2da",
+      "fortran/src/test.F": "07c8114571393c8d26b84a2efe665f3c8c6d1c9365718775c8998975f3eacd89",
+      "tests/precision/fortran_case.f90": "39ab109bfd146354f8a92274e4dfae0c1c99dc2117e2b5c9a5e36ad684c6b855",
+      "tests/precision/run_multi.py": "2977a9d438e13fddaaea3f510220ee7c5694661fcf7c340c600d7ed9e637ded9"
+    },
+    "scope": "All eight ACEs, original ACE 8 outer pulse, no bubble or sustained forcing; native precipitation, full geometry/PMB, original damping, MF diffusion off. Default-real64 prognostics/tendencies with existing binary64 PMB/input reads. No P3.",
+    "commands": [
+      {
+        "argv": [
+          "gfortran",
+          "-O2",
+          "-ffree-form",
+          "-ffree-line-length-none",
+          "-fcheck=all,no-array-temps",
+          "-ffpe-trap=invalid,zero,overflow",
+          "-fbacktrace",
+          "-fdefault-real-8",
+          "-fdefault-double-8",
+          "-I/home/peter50504/miniconda3/include",
+          "-I/home/peter50504/miniconda3/include",
+          "-c",
+          "ace_input.F"
+        ],
+        "cwd": "/scratch/peter50504/ACE/migration_work/manus_multi_double_precision_12h"
+      },
+      {
+        "argv": [
+          "gfortran",
+          "-O2",
+          "-ffree-form",
+          "-ffree-line-length-none",
+          "-fcheck=all,no-array-temps",
+          "-ffpe-trap=invalid,zero,overflow",
+          "-fbacktrace",
+          "-fdefault-real-8",
+          "-fdefault-double-8",
+          "-I/home/peter50504/miniconda3/include",
+          "-I/home/peter50504/miniconda3/include",
+          "-c",
+          "ace_module.F"
+        ],
+        "cwd": "/scratch/peter50504/ACE/migration_work/manus_multi_double_precision_12h"
+      },
+      {
+        "argv": [
+          "gfortran",
+          "-O2",
+          "-ffree-form",
+          "-ffree-line-length-none",
+          "-fcheck=all,no-array-temps",
+          "-ffpe-trap=invalid,zero,overflow",
+          "-fbacktrace",
+          "-fdefault-real-8",
+          "-fdefault-double-8",
+          "-I/home/peter50504/miniconda3/include",
+          "-I/home/peter50504/miniconda3/include",
+          "test.F",
+          "ace_module.o",
+          "ace_input.o",
+          "-L/home/peter50504/miniconda3/lib",
+          "-lnetcdff",
+          "-lnetcdf",
+          "-Wl,-rpath,/home/peter50504/miniconda3/lib",
+          "-o",
+          "base.exe"
+        ],
+        "cwd": "/scratch/peter50504/ACE/migration_work/manus_multi_double_precision_12h"
+      },
+      {
+        "argv": [
+          "gfortran",
+          "-O2",
+          "-ffree-form",
+          "-ffree-line-length-none",
+          "-fcheck=all,no-array-temps",
+          "-ffpe-trap=invalid,zero,overflow",
+          "-fbacktrace",
+          "-fdefault-real-8",
+          "-fdefault-double-8",
+          "-I/home/peter50504/miniconda3/include",
+          "-I/home/peter50504/miniconda3/include",
+          "driver.f90",
+          "ace_module.o",
+          "ace_input.o",
+          "-L/home/peter50504/miniconda3/lib",
+          "-lnetcdff",
+          "-lnetcdf",
+          "-Wl,-rpath,/home/peter50504/miniconda3/lib",
+          "-o",
+          "case.exe"
+        ],
+        "cwd": "/scratch/peter50504/ACE/migration_work/manus_multi_double_precision_12h"
+      },
+      {
+        "argv": [
+          "/scratch/peter50504/ACE/migration_work/manus_multi_double_precision_12h/base.exe",
+          "--input",
+          "/scratch/peter50504/ACE/data/input/manus208.nc",
+          "--validate-input",
+          "/scratch/peter50504/ACE/migration_work/manus_multi_double_precision_12h/init.bin"
+        ],
+        "cwd": "/scratch/peter50504/ACE/migration_work/manus_multi_double_precision_12h"
+      },
+      {
+        "argv": [
+          "/scratch/peter50504/ACE/migration_work/manus_multi_double_precision_12h/case.exe",
+          "/scratch/peter50504/ACE/migration_work/manus_multi_double_precision_12h/init.bin",
+          "/scratch/peter50504/ACE/data/input/manus208.nc",
+          "/scratch/peter50504/ACE/migration_work/manus_multi_double_precision_12h/state.bin",
+          "/scratch/peter50504/ACE/migration_work/manus208_multi_outer_pulse_12h/initial_override.bin",
+          "43200",
+          "multi"
+        ],
+        "cwd": "/scratch/peter50504/ACE/migration_work/manus_multi_double_precision_12h"
+      }
+    ],
+    "status": "passed execution checks; MF visual comparison ready; no scientific tolerance imposed",
+    "integration_wall_seconds": 945.1117571520153,
+    "execution_checks": {
+      "saved_times": 721,
+      "finite": true,
+      "qt_min": 1.4044134527777954e-06,
+      "initial_state_equals_binary64_seed": true,
+      "positive_precipitation_steps": 10586
+    },
+    "per_ace": [
+      {
+        "ace": 1,
+        "matlab_peak_abs_mf": 17.96202095394021,
+        "fortran_peak_abs_mf": 17.96202127684268,
+        "fortran_peak_seconds": 33540,
+        "fortran_peak_height_m": 7350.0,
+        "mf_max_abs_difference": 6.678905579171612e-05,
+        "mf_rms_difference": 1.6268856314048806e-06
+      },
+      {
+        "ace": 2,
+        "matlab_peak_abs_mf": 6.141301887707147,
+        "fortran_peak_abs_mf": 6.141302597139755,
+        "fortran_peak_seconds": 35820,
+        "fortran_peak_height_m": 5450.0,
+        "mf_max_abs_difference": 2.0737504456191935e-05,
+        "mf_rms_difference": 6.971872988161573e-07
+      },
+      {
+        "ace": 3,
+        "matlab_peak_abs_mf": 3.4348768608628744,
+        "fortran_peak_abs_mf": 3.4348767900677326,
+        "fortran_peak_seconds": 35700,
+        "fortran_peak_height_m": 4650.0,
+        "mf_max_abs_difference": 8.45530967827357e-06,
+        "mf_rms_difference": 3.8198656833306594e-07
+      },
+      {
+        "ace": 4,
+        "matlab_peak_abs_mf": 0.8992760056255305,
+        "fortran_peak_abs_mf": 0.8992760862713414,
+        "fortran_peak_seconds": 33960,
+        "fortran_peak_height_m": 10400.0,
+        "mf_max_abs_difference": 1.9542197529642813e-06,
+        "mf_rms_difference": 1.4224908321361406e-07
+      },
+      {
+        "ace": 5,
+        "matlab_peak_abs_mf": 0.7980290400998498,
+        "fortran_peak_abs_mf": 0.7980291303990976,
+        "fortran_peak_seconds": 34440,
+        "fortran_peak_height_m": 2250.0,
+        "mf_max_abs_difference": 1.5545405996145178e-06,
+        "mf_rms_difference": 8.552238353518022e-08
+      },
+      {
+        "ace": 6,
+        "matlab_peak_abs_mf": 0.677067889387269,
+        "fortran_peak_abs_mf": 0.6770679559746874,
+        "fortran_peak_seconds": 34680,
+        "fortran_peak_height_m": 2250.0,
+        "mf_max_abs_difference": 8.949198022495386e-07,
+        "mf_rms_difference": 7.553648818780001e-08
+      },
+      {
+        "ace": 7,
+        "matlab_peak_abs_mf": 1.3852260572483681,
+        "fortran_peak_abs_mf": 1.385226057030602,
+        "fortran_peak_seconds": 4500,
+        "fortran_peak_height_m": 450.0,
+        "mf_max_abs_difference": 1.035647971721343e-06,
+        "mf_rms_difference": 5.8371233564314425e-08
+      },
+      {
+        "ace": 8,
+        "matlab_peak_abs_mf": 0.8038966093196451,
+        "fortran_peak_abs_mf": 0.8038966105907607,
+        "fortran_peak_seconds": 9660,
+        "fortran_peak_height_m": 2200.0,
+        "mf_max_abs_difference": 5.169193278836692e-07,
+        "mf_rms_difference": 3.660208319710894e-08
+      }
+    ],
+    "artifact_sha256": {
+      "state.bin": "6d193423d2632770c4081581cca9ad95ed032276634941f08c98f2d662021c3b",
+      "mf_all_aces.npz": "76630df3fe936658d1520ff46ec1db6f2bab50e78abf14e2a5ec9ebac3200159",
+      "fort.97": "9c3fd05b47547ffe61853b61a589fdedfdfc987b8c982f23c2a6caa90e1c3e06",
+      "ace_module.F": "b36ba3f2434ebbd35ba4f43d3972051c19c016fc0087df9bd7e9de67acc1edbd"
+    }
+  },
+  "precision_comparison": {
+    "scope": "Matched numerical sources and case settings; default-real32 versus default-real64. MATLAB reference is identical in both comparisons; no acceptance threshold.",
+    "sources": {
+      "/scratch/peter50504/ACE/migration_work/manus_multi_single_precision_12h/results.json": "0298dad57ff70120d6e5ecbdc2ade4b008bfcfa1ade598d9ccbc9a7f9f386895",
+      "/scratch/peter50504/ACE/migration_work/manus_multi_double_precision_12h/results.json": "44cf6042cefcb7f913a84b8649f59da21c3af8ada40c7e2a9afcc950d2ba2903",
+      "/scratch/peter50504/ACE/migration_work/manus_multi_single_precision_12h/mf_all_aces.npz": "84abfdb587bcbf22451c8ce46085f8984abe07681562e39aad5f45b5fa2f5ed7",
+      "/scratch/peter50504/ACE/migration_work/manus_multi_double_precision_12h/mf_all_aces.npz": "76630df3fe936658d1520ff46ec1db6f2bab50e78abf14e2a5ec9ebac3200159"
+    },
+    "per_ace": [
+      {
+        "ace": 1,
+        "matlab": {
+          "peak_abs_mf": 17.96202095394021,
+          "peak_seconds": 33540,
+          "peak_height_m": 7350.0,
+          "terminal_max_abs_mf": 13.098348712264729
+        },
+        "double": {
+          "peak_abs_mf": 17.96202127684268,
+          "peak_seconds": 33540,
+          "peak_height_m": 7350.0,
+          "terminal_max_abs_mf": 13.098336852839047
+        },
+        "single": {
+          "peak_abs_mf": 18.088481903076172,
+          "peak_seconds": 35460,
+          "peak_height_m": 6450.0,
+          "terminal_max_abs_mf": 0.7182328104972839
+        },
+        "double_minus_matlab": {
+          "max_abs": 6.678905579171612e-05,
+          "rms": 1.6268856314048806e-06
+        },
+        "single_minus_double": {
+          "max_abs": 17.972288362238434,
+          "rms": 1.8109823481849063
+        }
+      },
+      {
+        "ace": 2,
+        "matlab": {
+          "peak_abs_mf": 6.141301887707147,
+          "peak_seconds": 35820,
+          "peak_height_m": 5450.0,
+          "terminal_max_abs_mf": 2.8010337199663664
+        },
+        "double": {
+          "peak_abs_mf": 6.141302597139755,
+          "peak_seconds": 35820,
+          "peak_height_m": 5450.0,
+          "terminal_max_abs_mf": 2.801030999382598
+        },
+        "single": {
+          "peak_abs_mf": 5.0791449546813965,
+          "peak_seconds": 35640,
+          "peak_height_m": 6600.0,
+          "terminal_max_abs_mf": 0.940937876701355
+        },
+        "double_minus_matlab": {
+          "max_abs": 2.0737504456191935e-05,
+          "rms": 6.971872988161573e-07
+        },
+        "single_minus_double": {
+          "max_abs": 7.086447291686396,
+          "rms": 0.4518700169740096
+        }
+      },
+      {
+        "ace": 3,
+        "matlab": {
+          "peak_abs_mf": 3.4348768608628744,
+          "peak_seconds": 35700,
+          "peak_height_m": 4650.0,
+          "terminal_max_abs_mf": 0.8833931499014235
+        },
+        "double": {
+          "peak_abs_mf": 3.4348767900677326,
+          "peak_seconds": 35700,
+          "peak_height_m": 4650.0,
+          "terminal_max_abs_mf": 0.8833964589250484
+        },
+        "single": {
+          "peak_abs_mf": 2.877140522003174,
+          "peak_seconds": 37740,
+          "peak_height_m": 4650.0,
+          "terminal_max_abs_mf": 1.599289059638977
+        },
+        "double_minus_matlab": {
+          "max_abs": 8.45530967827357e-06,
+          "rms": 3.8198656833306594e-07
+        },
+        "single_minus_double": {
+          "max_abs": 5.141932994010656,
+          "rms": 0.2194730103333973
+        }
+      },
+      {
+        "ace": 4,
+        "matlab": {
+          "peak_abs_mf": 0.8992760056255305,
+          "peak_seconds": 33960,
+          "peak_height_m": 10400.0,
+          "terminal_max_abs_mf": 0.15794488349626937
+        },
+        "double": {
+          "peak_abs_mf": 0.8992760862713414,
+          "peak_seconds": 33960,
+          "peak_height_m": 10400.0,
+          "terminal_max_abs_mf": 0.15794477213065714
+        },
+        "single": {
+          "peak_abs_mf": 0.9111763834953308,
+          "peak_seconds": 36240,
+          "peak_height_m": 3000.0,
+          "terminal_max_abs_mf": 0.34404227137565613
+        },
+        "double_minus_matlab": {
+          "max_abs": 1.9542197529642813e-06,
+          "rms": 1.4224908321361406e-07
+        },
+        "single_minus_double": {
+          "max_abs": 1.3467730901491224,
+          "rms": 0.0758235702721358
+        }
+      },
+      {
+        "ace": 5,
+        "matlab": {
+          "peak_abs_mf": 0.7980290400998498,
+          "peak_seconds": 34440,
+          "peak_height_m": 2250.0,
+          "terminal_max_abs_mf": 0.1933265911182649
+        },
+        "double": {
+          "peak_abs_mf": 0.7980291303990976,
+          "peak_seconds": 34440,
+          "peak_height_m": 2250.0,
+          "terminal_max_abs_mf": 0.19332613192304132
+        },
+        "single": {
+          "peak_abs_mf": 0.7354390621185303,
+          "peak_seconds": 36480,
+          "peak_height_m": 2800.0,
+          "terminal_max_abs_mf": 0.15225398540496826
+        },
+        "double_minus_matlab": {
+          "max_abs": 1.5545405996145178e-06,
+          "rms": 8.552238353518022e-08
+        },
+        "single_minus_double": {
+          "max_abs": 0.7921258695792661,
+          "rms": 0.049700392421923985
+        }
+      },
+      {
+        "ace": 6,
+        "matlab": {
+          "peak_abs_mf": 0.677067889387269,
+          "peak_seconds": 34680,
+          "peak_height_m": 2250.0,
+          "terminal_max_abs_mf": 0.3043229262906561
+        },
+        "double": {
+          "peak_abs_mf": 0.6770679559746874,
+          "peak_seconds": 34680,
+          "peak_height_m": 2250.0,
+          "terminal_max_abs_mf": 0.3043229598249122
+        },
+        "single": {
+          "peak_abs_mf": 0.6857358813285828,
+          "peak_seconds": 36720,
+          "peak_height_m": 2200.0,
+          "terminal_max_abs_mf": 0.12613458931446075
+        },
+        "double_minus_matlab": {
+          "max_abs": 8.949198022495386e-07,
+          "rms": 7.553648818780001e-08
+        },
+        "single_minus_double": {
+          "max_abs": 0.8759060547863314,
+          "rms": 0.04294950098441708
+        }
+      },
+      {
+        "ace": 7,
+        "matlab": {
+          "peak_abs_mf": 1.3852260572483681,
+          "peak_seconds": 4500,
+          "peak_height_m": 450.0,
+          "terminal_max_abs_mf": 0.38497298401112917
+        },
+        "double": {
+          "peak_abs_mf": 1.385226057030602,
+          "peak_seconds": 4500,
+          "peak_height_m": 450.0,
+          "terminal_max_abs_mf": 0.3849729721519701
+        },
+        "single": {
+          "peak_abs_mf": 1.3624489307403564,
+          "peak_seconds": 4500,
+          "peak_height_m": 450.0,
+          "terminal_max_abs_mf": 0.11832458525896072
+        },
+        "double_minus_matlab": {
+          "max_abs": 1.035647971721343e-06,
+          "rms": 5.8371233564314425e-08
+        },
+        "single_minus_double": {
+          "max_abs": 0.5437497001787814,
+          "rms": 0.03400587565878901
+        }
+      },
+      {
+        "ace": 8,
+        "matlab": {
+          "peak_abs_mf": 0.8038966093196451,
+          "peak_seconds": 9660,
+          "peak_height_m": 2200.0,
+          "terminal_max_abs_mf": 0.10909982384666185
+        },
+        "double": {
+          "peak_abs_mf": 0.8038966105907607,
+          "peak_seconds": 9660,
+          "peak_height_m": 2200.0,
+          "terminal_max_abs_mf": 0.10909979264552745
+        },
+        "single": {
+          "peak_abs_mf": 0.8077066540718079,
+          "peak_seconds": 9660,
+          "peak_height_m": 2200.0,
+          "terminal_max_abs_mf": 0.08460281044244766
+        },
+        "double_minus_matlab": {
+          "max_abs": 5.169193278836692e-07,
+          "rms": 3.660208319710894e-08
+        },
+        "single_minus_double": {
+          "max_abs": 0.4589510402399342,
+          "rms": 0.026944776547605066
+        }
+      }
+    ],
+    "figures_sha256": {
+      "mf_precision_response.png": "5a204edc65d202a152ef4c10580322f6d10ad01e496bf0b2e72e976bd8fc120a",
+      "mf_precision_response.pdf": "9af79252583d7de72b7d8aebe9bb0f7ea007f0f922d8761810ac250637bbf61b"
+    }
+  },
+  "figures": {
+    "docs/figures/manus_multi_outer_pulse_12h_double_precision_comparison.png": "90fc7b4ab680fac7daec71cc9d7861a14df9ec9c9c80bf2995965ba53af38960",
+    "docs/figures/manus_multi_outer_pulse_12h_double_precision_comparison.pdf": "98cacafaebb6e9ae369d3907f6899061c3ff545fa452b187fc289c1571ee021f",
+    "docs/figures/manus_multi_outer_pulse_12h_precision_response.png": "5a204edc65d202a152ef4c10580322f6d10ad01e496bf0b2e72e976bd8fc120a",
+    "docs/figures/manus_multi_outer_pulse_12h_precision_response.pdf": "9af79252583d7de72b7d8aebe9bb0f7ea007f0f922d8761810ac250637bbf61b"
+  },
+  "interpretation": "Corrected real64 closely reproduces MATLAB MF evolution, including the ACE 1 peak time/height and renewed growth near 12 h. Matched-source real32 differs visibly in timing and late evolution. For this case, the large trajectory divergence appears when lowering default real precision; the real64 precipitation correction does not produce a comparable divergence. This is a case-specific inference, not universal scientific equivalence or a tolerance."
+}

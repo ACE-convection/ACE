@@ -36,7 +36,8 @@ def main():
                           difference_limit if difference_limit else 1)
     fig, axes = plt.subplots(3, 1, figsize=(10, 10), sharex=True, sharey=True,
                              layout='constrained')
-    labels = ['MATLAB', 'Fortran', 'Fortran − MATLAB']
+    fortran_label = report.get('fortran_label', 'Fortran')
+    labels = ['MATLAB', fortran_label, fortran_label+' − MATLAB']
     for i, (ax, values, label) in enumerate(zip(axes, [m, f, difference], labels)):
         mesh = ax.pcolormesh(hours, height[selected], values[:, selected].T,
                              shading='nearest', cmap='RdBu_r',
