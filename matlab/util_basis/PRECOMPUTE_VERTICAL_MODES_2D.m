@@ -1,7 +1,7 @@
 % Assuming Nx, Ny = 2^n; 512x512x256 ~ 1.25G
 basis_dir = 'D:\MATCHING_STEP_BASIS\KHN26\';
-Lx = 880; % km
-Nx = 880; % Must be an integer
+Lx = 1000; % km
+Nx = 1000/0.625; % Must be an integer
 Z = [0:0.2:40]'; % km; Vertical grid; recommend dz=200m~4dx/2pi
 
 %%

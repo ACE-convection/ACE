@@ -1,4 +1,4 @@
-function [T, q, ql, qi] = inv_T_from_theta_il(theta_il, qt, p, ABS_TOL)
+function [T, q, ql, qi] = inv_T_from_theta_il(theta_il, qt, p)%, ABS_TOL)
 % function [T, q, ql, qi, step] = inv_T_from_theta_il(theta_il, qt, p, ABS_TOL, P0)
 %{
   Invert air temperature and specific humidities, 
@@ -28,9 +28,9 @@ function [T, q, ql, qi] = inv_T_from_theta_il(theta_il, qt, p, ABS_TOL)
 %}
 %% Goal: solve (T,q,ql,qi) given (theta_il,p,qt)
 %    F(T,...) = c1 * T * R^chi / qv^e1 * exp( E(T,ql,qi) ) - theta_il == 0  ...Eq. (1)
-if nargin==3
+% if nargin==3
   ABS_TOL = 1e-3; %<--Apply only for Newton iteration: NOT for ice-liquid coexisting
-end
+% end
 
 T0 = 273.1636783445389; % Triple-point temperature; for water-ice saturation consistency
 
@@ -104,9 +104,9 @@ if q>qsat % If condensate ==> Step 2
       qi = qt-qsi;
       R = 287.04*(1-qt) + 461.5*qsi;
       % The following 3 lines for dG/dT verified!
-      EXP = exp(-2.834e6*qi./CPL./T);
+      EXP = exp(-2834.e6*qi./CPL./T);
       dGdT = EXP .* R.^chi ./ CPL ./ qsi.^gamma ...
-                 .*( dTqsi.*( 2.834e6 + 461.5*(RL./R - qt./qsi).*T ) + CPL + 2.834e6*qi./T );
+                 .*( dTqsi.*( 2834.e6 + 461.5*(RL./R - qt./qsi).*T ) + CPL + 2834.e6*qi./T );
       G = T./qsi.^gamma .* EXP .* R.^chi - G0;
       % Newton: T(n+1) = T(n) - G(Tn)/G'(Tn)
       dT = -G./dGdT;
@@ -129,7 +129,7 @@ if q>qsat % If condensate ==> Step 2
       R = 287.04*(1-qt) + 461.5*q;
       % Just find out the partition (ql,qi) s.t. ql+qi=qt-qs
       qc = qt-q;
-      ql = ( 2.834e6*qc - CPL.*T.*log((T0./G0) ./ q.^gamma .* R.^chi) )./(2.834e6-lv(T0));
+      ql = ( 2834.e6*qc - CPL.*T.*log((T0./G0) ./ q.^gamma .* R.^chi) )./2.831499031733759e+09;
       qi = qc-ql;
       if qc<0 %if discrepancy arises from qs(T0)>qsi(T0) [because of formulae for es(T) & esi(T)]
         q = qt;

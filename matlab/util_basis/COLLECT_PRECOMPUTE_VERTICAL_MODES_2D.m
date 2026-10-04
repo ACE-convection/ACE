@@ -1,6 +1,6 @@
 %% Collect for 2D domain when only one pre-computed file is needed
 basis_dir = 'D:\MATCHING_STEP_BASIS\KHN26\';
-basis_fn = 'PRECOMPUTED_VERTICAL_MODES_2Dat*KM.mat';
+basis_fn = 'PRECOMPUTED_VERTICAL_MODES_2D_4UNEVEN_dx=625m.mat';
 PLOT4DOUBLECHECK = 1;
 DELETE_REDUNDANT_FILES = 1; %<--will delete files created by PRECOMPUTE_VERTICAL_MODES_2D.m
 

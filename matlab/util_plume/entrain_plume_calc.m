@@ -1,6 +1,5 @@
 function [theta_e, qt, T, q, ql, qi] = entrain_plume_calc(T_p, q_p, rho_p, z_p, p_p, mixing)
-% % global qc_cap eps_tur
-  qc_cap = 4e-3;
+global qc_cap eps_tur
   Np = length(p_p);
   theta_e_p = eval_theta_e(T_p,q_p,0,0,p_p);
   z_p = z_p-z_p(1);

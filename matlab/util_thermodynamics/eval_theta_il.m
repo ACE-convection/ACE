@@ -31,7 +31,7 @@ function theta_il = eval_theta_il(T, q, ql, qi, p)
   RL = 287.04*( 1 + 0.607789855072462*qt );
   R = (1-qt)*287.04 + q*461.5;
   
-  CPL = 1005.7 + qt*864.3;
+  CPL = 1005.7 + qt*3184.3;
   
   chi = RL./CPL;
   gamma = 461.5*qt ./ CPL;

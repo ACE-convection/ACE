@@ -1,0 +1,562 @@
+{
+  "author_confirmation": {
+    "reported_on": "2026-10-04",
+    "KHN26_version": "2025-11",
+    "earlier_v020": "2025-06",
+    "release_reference": "KHN26",
+    "evidence": "Developer report of author confirmation; dates are not inferred from filesystem metadata.",
+    "earlier_snapshot_date_mapping": "Not independently established for each historical blob."
+  },
+  "current_commit": "c7d9183f1f5acb77e8f3c2c8ad2a1f129bd872c5",
+  "files": [
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/ACE_V020_2D88ACEs_NoGlobal.m",
+      "target": "matlab/ace.m",
+      "sha256": "9f6b28804d22068f886b83dc40245eca6365cb1c8a3804eaf726b72e25fd5c09",
+      "bytes": 48942,
+      "comparison": "different",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/ACE_V020_2D88ACEs.m",
+      "historical_comparison": "different",
+      "current_sha256": "77a2d1678c851551cbcbda75299ea08450d59f2371efed302c0fc07d3d5fae34"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_basis/COLLECT_PRECOMPUTE_VERTICAL_MODES_2D.m",
+      "target": "matlab/util_basis/COLLECT_PRECOMPUTE_VERTICAL_MODES_2D.m",
+      "sha256": "40af7d61aa58d08ad13078b7007eda6224e0e4d9b4e206c88e34a526b4a62ead",
+      "bytes": 1908,
+      "comparison": "different",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_basis/COLLECT_PRECOMPUTE_VERTICAL_MODES_2D.m",
+      "historical_comparison": "different",
+      "current_sha256": "caca37f99f09200a648ff791a444c424811bf5ecdd8c58dde8eb208fab4274fc"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_basis/PRECOMPUTE_COMPOSITE_ACE_BASIS_2D_4uneven.m",
+      "target": "matlab/util_basis/PRECOMPUTE_COMPOSITE_ACE_BASIS_2D_4uneven.m",
+      "sha256": "acd47fb0839b88924d681c6531d21f358b19a1cdf9a459fdd55607a2cc938961",
+      "bytes": 6392,
+      "comparison": "missing",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_basis/uneven_tests/PRECOMPUTE_COMPOSITE_ACE_BASIS_2D_4uneven.m",
+      "historical_comparison": "identical",
+      "current_sha256": null
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_basis/PRECOMPUTE_COMPOSITE_ACE_BASIS_2D_truncate.m",
+      "target": "matlab/util_basis/PRECOMPUTE_COMPOSITE_ACE_BASIS_2D_truncate.m",
+      "sha256": "4c98737aa0950e786b62a0c7401a486a3083e305749627eb3cfbb77aa3ad8609",
+      "bytes": 4942,
+      "comparison": "missing",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_basis/uneven_tests/PRECOMPUTE_COMPOSITE_ACE_BASIS_2D_truncate.m",
+      "historical_comparison": "identical",
+      "current_sha256": null
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_basis/PRECOMPUTE_VERTICAL_MODES_2D.m",
+      "target": "matlab/util_basis/PRECOMPUTE_VERTICAL_MODES_2D.m",
+      "sha256": "a48f64b41c2c440714e611c7981921c6c6d7e50834e78f06bf2d0b3758b690e8",
+      "bytes": 2175,
+      "comparison": "different",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_basis/PRECOMPUTE_VERTICAL_MODES_2D.m",
+      "historical_comparison": "different",
+      "current_sha256": "1de958b52e5e378f47d2b50bd04e5f8626836444ebcc65053b5fc4d8caa66d9a"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_basis/bak/COLLECT_PRECOMPUTE_VERTICAL_MODES_2D.m",
+      "target": "matlab/util_basis/bak/COLLECT_PRECOMPUTE_VERTICAL_MODES_2D.m",
+      "sha256": "caca37f99f09200a648ff791a444c424811bf5ecdd8c58dde8eb208fab4274fc",
+      "bytes": 1897,
+      "comparison": "missing",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_basis/COLLECT_PRECOMPUTE_VERTICAL_MODES_2D.m",
+      "historical_comparison": "identical",
+      "current_sha256": null
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_basis/bak/PRECOMPUTE_COMPOSITE_ACE_BASIS_2D.m",
+      "target": "matlab/util_basis/bak/PRECOMPUTE_COMPOSITE_ACE_BASIS_2D.m",
+      "sha256": "338aad46c71a9ec08ef8fabba9552f0bbb208ec30e4b6ae5baa9b76060c92b7c",
+      "bytes": 4669,
+      "comparison": "missing",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_basis/PRECOMPUTE_COMPOSITE_ACE_BASIS_2D.m",
+      "historical_comparison": "identical",
+      "current_sha256": null
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_basis/bak/PRECOMPUTE_VERTICAL_MODES_2D.m",
+      "target": "matlab/util_basis/bak/PRECOMPUTE_VERTICAL_MODES_2D.m",
+      "sha256": "1de958b52e5e378f47d2b50bd04e5f8626836444ebcc65053b5fc4d8caa66d9a",
+      "bytes": 2167,
+      "comparison": "missing",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_basis/PRECOMPUTE_VERTICAL_MODES_2D.m",
+      "historical_comparison": "identical",
+      "current_sha256": null
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_basis/bak/vertical_solutions_reconstruct_util.m",
+      "target": "matlab/util_basis/bak/vertical_solutions_reconstruct_util.m",
+      "sha256": "48e242ae4d6b298fe5bfae6355e5f13a552a8ffc6f4cff1091a1ee447f15409d",
+      "bytes": 1262,
+      "comparison": "missing",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_basis/vertical_solutions_reconstruct_util.m",
+      "historical_comparison": "identical",
+      "current_sha256": null
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_basis/vertical_solutions_reconstruct_util.m",
+      "target": "matlab/util_basis/vertical_solutions_reconstruct_util.m",
+      "sha256": "48e242ae4d6b298fe5bfae6355e5f13a552a8ffc6f4cff1091a1ee447f15409d",
+      "bytes": 1262,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_basis/vertical_solutions_reconstruct_util.m",
+      "historical_comparison": "identical",
+      "current_sha256": "48e242ae4d6b298fe5bfae6355e5f13a552a8ffc6f4cff1091a1ee447f15409d"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_plume/cin_cape_calc.m",
+      "target": "matlab/util_plume/cin_cape_calc.m",
+      "sha256": "d3dd0639db6bb06259a6ea94ee1c3e0df2afbd80cdb873ba3af687ec54e6d639",
+      "bytes": 1285,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_plume/cin_cape_calc.m",
+      "historical_comparison": "identical",
+      "current_sha256": "d3dd0639db6bb06259a6ea94ee1c3e0df2afbd80cdb873ba3af687ec54e6d639"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_plume/entrain_plume_calc.m",
+      "target": "matlab/util_plume/entrain_plume_calc.m",
+      "sha256": "ab7a4297ca87f31a331d28d2d462429ecbe0d5084fb8056a29bdab577ceddeed",
+      "bytes": 2058,
+      "comparison": "different",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_plume/entrain_plume_calc.m",
+      "historical_comparison": "different",
+      "current_sha256": "ea1fe088e0a9383878477f507dfacde96f1af2233ff6dfde305089e7a2045c7d"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/IMPORT_CONSTANTS.m",
+      "target": "matlab/util_thermodynamics/IMPORT_CONSTANTS.m",
+      "sha256": "9fde477680e8eea17fc2f5f2aca61ef95d556fbc4c4f7f676cc53f6d3d82ba89",
+      "bytes": 1162,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/IMPORT_CONSTANTS.m",
+      "historical_comparison": "identical",
+      "current_sha256": "9fde477680e8eea17fc2f5f2aca61ef95d556fbc4c4f7f676cc53f6d3d82ba89"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/IMPORT_CONSTANTS_NOGLOBAL.m",
+      "target": "matlab/util_thermodynamics/IMPORT_CONSTANTS_NOGLOBAL.m",
+      "sha256": "68056228f1419b0d3708c72682d0e6fee0bcdc1f5f3a1d09c1ea822113297499",
+      "bytes": 1197,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/IMPORT_CONSTANTS_NOGLOBAL.m",
+      "historical_comparison": "identical",
+      "current_sha256": "68056228f1419b0d3708c72682d0e6fee0bcdc1f5f3a1d09c1ea822113297499"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/NOTE.m",
+      "target": "matlab/util_thermodynamics/NOTE.m",
+      "sha256": "d8b2a2c3dab6cdcb343cb18974af1bce8d4f7a60c36d1e98bd1aeb736748b9fc",
+      "bytes": 841,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/NOTE.m",
+      "historical_comparison": "identical",
+      "current_sha256": "d8b2a2c3dab6cdcb343cb18974af1bce8d4f7a60c36d1e98bd1aeb736748b9fc"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/ci.m",
+      "target": "matlab/util_thermodynamics/ci.m",
+      "sha256": "dba544e76ce1e74136daff7fd988670f68000c8835732344d5ac6c20697389ce",
+      "bytes": 280,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/ci.m",
+      "historical_comparison": "identical",
+      "current_sha256": "dba544e76ce1e74136daff7fd988670f68000c8835732344d5ac6c20697389ce"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_B.m",
+      "target": "matlab/util_thermodynamics/eval_B.m",
+      "sha256": "4260dae12c5e40d915ce2ac348b85d3358d9470dd9ad17bf3771a0e803647e6b",
+      "bytes": 71,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_B.m",
+      "historical_comparison": "identical",
+      "current_sha256": "4260dae12c5e40d915ce2ac348b85d3358d9470dd9ad17bf3771a0e803647e6b"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_Tv.m",
+      "target": "matlab/util_thermodynamics/eval_Tv.m",
+      "sha256": "d86992e3f9ef64bbf038424876b9c2c3b2a6ec1d2f23f673a553bca014213690",
+      "bytes": 614,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_Tv.m",
+      "historical_comparison": "identical",
+      "current_sha256": "d86992e3f9ef64bbf038424876b9c2c3b2a6ec1d2f23f673a553bca014213690"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_dTes.m",
+      "target": "matlab/util_thermodynamics/eval_dTes.m",
+      "sha256": "dccd232253f4422bdb334a7089c5065459c0207def6cde54714fa1fa97bcf116",
+      "bytes": 616,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_dTes.m",
+      "historical_comparison": "identical",
+      "current_sha256": "dccd232253f4422bdb334a7089c5065459c0207def6cde54714fa1fa97bcf116"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_dTqs.m",
+      "target": "matlab/util_thermodynamics/eval_dTqs.m",
+      "sha256": "35e4585653c828cb6bede2d25914c66d71b59c7894ad4e877180ffd57c57a74a",
+      "bytes": 1055,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_dTqs.m",
+      "historical_comparison": "identical",
+      "current_sha256": "35e4585653c828cb6bede2d25914c66d71b59c7894ad4e877180ffd57c57a74a"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_dTqsi.m",
+      "target": "matlab/util_thermodynamics/eval_dTqsi.m",
+      "sha256": "5ce3913522b068b98badfdd279ab0fa1ad0ed9a7ce751e5fd4ef2b688a734de6",
+      "bytes": 936,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_dTqsi.m",
+      "historical_comparison": "identical",
+      "current_sha256": "5ce3913522b068b98badfdd279ab0fa1ad0ed9a7ce751e5fd4ef2b688a734de6"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_dTqsscl.m",
+      "target": "matlab/util_thermodynamics/eval_dTqsscl.m",
+      "sha256": "4e025fb26f0deb388b8c7551fdd5ca5160d4aa7c2f13d0dd230c3177851cedde",
+      "bytes": 1301,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_dTqsscl.m",
+      "historical_comparison": "identical",
+      "current_sha256": "4e025fb26f0deb388b8c7551fdd5ca5160d4aa7c2f13d0dd230c3177851cedde"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_es.m",
+      "target": "matlab/util_thermodynamics/eval_es.m",
+      "sha256": "a6d89db08505d726edae0b520d69360da23aed5dd4079697797302cdaab6ec2c",
+      "bytes": 1192,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_es.m",
+      "historical_comparison": "identical",
+      "current_sha256": "a6d89db08505d726edae0b520d69360da23aed5dd4079697797302cdaab6ec2c"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_esi.m",
+      "target": "matlab/util_thermodynamics/eval_esi.m",
+      "sha256": "13e7d32f678a1b8e9a0f97e326dbaf94027a3e09b808f424e3b02c427f1813db",
+      "bytes": 444,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_esi.m",
+      "historical_comparison": "identical",
+      "current_sha256": "13e7d32f678a1b8e9a0f97e326dbaf94027a3e09b808f424e3b02c427f1813db"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_esscl.m",
+      "target": "matlab/util_thermodynamics/eval_esscl.m",
+      "sha256": "7fa1acdff3547765addb2f6295b0d0cfaff96436356c4dfefdb2d0caeb981724",
+      "bytes": 857,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_esscl.m",
+      "historical_comparison": "identical",
+      "current_sha256": "7fa1acdff3547765addb2f6295b0d0cfaff96436356c4dfefdb2d0caeb981724"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_h.m",
+      "target": "matlab/util_thermodynamics/eval_h.m",
+      "sha256": "6a6bc3c9990469ae0296dfac8f234dfcbccb3851aa3faa6bececb536f271497b",
+      "bytes": 831,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_h.m",
+      "historical_comparison": "identical",
+      "current_sha256": "6a6bc3c9990469ae0296dfac8f234dfcbccb3851aa3faa6bececb536f271497b"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_q.m",
+      "target": "matlab/util_thermodynamics/eval_q.m",
+      "sha256": "19fc7e2235e52c12948b3b10654a90ea45b9391a7b1821a3a39d2683ca02be8c",
+      "bytes": 590,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_q.m",
+      "historical_comparison": "identical",
+      "current_sha256": "19fc7e2235e52c12948b3b10654a90ea45b9391a7b1821a3a39d2683ca02be8c"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_q2.m",
+      "target": "matlab/util_thermodynamics/eval_q2.m",
+      "sha256": "f0986c79fc1b362ca92e188977b04d073a31b9bb3e27b96fc5b35968539f1f11",
+      "bytes": 414,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_q2.m",
+      "historical_comparison": "identical",
+      "current_sha256": "f0986c79fc1b362ca92e188977b04d073a31b9bb3e27b96fc5b35968539f1f11"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_qs.m",
+      "target": "matlab/util_thermodynamics/eval_qs.m",
+      "sha256": "09f7e3c707ed1eaacb9baba896cc8ab9cb16e742fa7dc823273b8cc2c71fe402",
+      "bytes": 610,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_qs.m",
+      "historical_comparison": "identical",
+      "current_sha256": "09f7e3c707ed1eaacb9baba896cc8ab9cb16e742fa7dc823273b8cc2c71fe402"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_qs2.m",
+      "target": "matlab/util_thermodynamics/eval_qs2.m",
+      "sha256": "6c1f03213c04a6e98dd515d5ce98ebcba6a2cd8f62e99ebd750599af8978671d",
+      "bytes": 463,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_qs2.m",
+      "historical_comparison": "identical",
+      "current_sha256": "6c1f03213c04a6e98dd515d5ce98ebcba6a2cd8f62e99ebd750599af8978671d"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_qsat.m",
+      "target": "matlab/util_thermodynamics/eval_qsat.m",
+      "sha256": "1aff97bbd0e4b66c33e817aa99741056ccf95ab30840c787a6a4a81b0a516310",
+      "bytes": 940,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_qsat.m",
+      "historical_comparison": "identical",
+      "current_sha256": "1aff97bbd0e4b66c33e817aa99741056ccf95ab30840c787a6a4a81b0a516310"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_qsat2.m",
+      "target": "matlab/util_thermodynamics/eval_qsat2.m",
+      "sha256": "16a75d060676e65e16d4fdee2067716db779a2f6d9dbd3ac6b278051091e4a3d",
+      "bytes": 925,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_qsat2.m",
+      "historical_comparison": "identical",
+      "current_sha256": "16a75d060676e65e16d4fdee2067716db779a2f6d9dbd3ac6b278051091e4a3d"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_qsi.m",
+      "target": "matlab/util_thermodynamics/eval_qsi.m",
+      "sha256": "5a92de14d0b02b6394a2f186aafc8cf75530d322db4582ce52045c4f9b30f270",
+      "bytes": 589,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_qsi.m",
+      "historical_comparison": "identical",
+      "current_sha256": "5a92de14d0b02b6394a2f186aafc8cf75530d322db4582ce52045c4f9b30f270"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_qsi2.m",
+      "target": "matlab/util_thermodynamics/eval_qsi2.m",
+      "sha256": "3c7b3674ea2e00c004aa526c3a0c79cf6c2f039d2b989d98a15ef3f2cc12161e",
+      "bytes": 448,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_qsi2.m",
+      "historical_comparison": "identical",
+      "current_sha256": "3c7b3674ea2e00c004aa526c3a0c79cf6c2f039d2b989d98a15ef3f2cc12161e"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_qsscl.m",
+      "target": "matlab/util_thermodynamics/eval_qsscl.m",
+      "sha256": "1b47aa01ca8ec7e9ee2368d4f83d601767c7fe793766ee475cdc18cd7e60cf82",
+      "bytes": 866,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_qsscl.m",
+      "historical_comparison": "identical",
+      "current_sha256": "1b47aa01ca8ec7e9ee2368d4f83d601767c7fe793766ee475cdc18cd7e60cf82"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_rho.m",
+      "target": "matlab/util_thermodynamics/eval_rho.m",
+      "sha256": "b22b7816d5199e9f025304b57719f7ab68367e5222ac351224ba7ee8a2f2c91a",
+      "bytes": 513,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_rho.m",
+      "historical_comparison": "identical",
+      "current_sha256": "b22b7816d5199e9f025304b57719f7ab68367e5222ac351224ba7ee8a2f2c91a"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_theta.m",
+      "target": "matlab/util_thermodynamics/eval_theta.m",
+      "sha256": "c69e40c66320d5d1b0d62365db0897cbdc87a9c523c0aecd211945780811d71b",
+      "bytes": 473,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_theta.m",
+      "historical_comparison": "identical",
+      "current_sha256": "c69e40c66320d5d1b0d62365db0897cbdc87a9c523c0aecd211945780811d71b"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_theta_e.m",
+      "target": "matlab/util_thermodynamics/eval_theta_e.m",
+      "sha256": "631d04f3cac84824255fb4404068081bab52bb163efe37800559c223988a9843",
+      "bytes": 1564,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_theta_e.m",
+      "historical_comparison": "identical",
+      "current_sha256": "631d04f3cac84824255fb4404068081bab52bb163efe37800559c223988a9843"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_theta_es.m",
+      "target": "matlab/util_thermodynamics/eval_theta_es.m",
+      "sha256": "39ff2e6d87d2bc4ad2f0b33922e524b2998e64939bec58e908b76fce8ef32b79",
+      "bytes": 1363,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_theta_es.m",
+      "historical_comparison": "identical",
+      "current_sha256": "39ff2e6d87d2bc4ad2f0b33922e524b2998e64939bec58e908b76fce8ef32b79"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_theta_il.m",
+      "target": "matlab/util_thermodynamics/eval_theta_il.m",
+      "sha256": "f5f98373a466be1d84199ce7d882fe98faae7c96a4dd6aa9d614e2f2dbf0931b",
+      "bytes": 1420,
+      "comparison": "different",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_theta_il.m",
+      "historical_comparison": "different",
+      "current_sha256": "359b4d62245072deccbef8128ceb7d3ffa55c2ac728193e22797b2f3e73adbeb"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_theta_l.m",
+      "target": "matlab/util_thermodynamics/eval_theta_l.m",
+      "sha256": "6628625f218e53e004623b44871ad6984a13b6308264d123193464143292c90d",
+      "bytes": 1211,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_theta_l.m",
+      "historical_comparison": "identical",
+      "current_sha256": "6628625f218e53e004623b44871ad6984a13b6308264d123193464143292c90d"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/eval_theta_v.m",
+      "target": "matlab/util_thermodynamics/eval_theta_v.m",
+      "sha256": "f531d0ca252a777616935340b23079911faa5f79ef890e2de9371cf094413274",
+      "bytes": 667,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/eval_theta_v.m",
+      "historical_comparison": "identical",
+      "current_sha256": "f531d0ca252a777616935340b23079911faa5f79ef890e2de9371cf094413274"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/gputest_invTq.m",
+      "target": "matlab/util_thermodynamics/gputest_invTq.m",
+      "sha256": "c2918e5cb0aa97278730069c6f4edf4b2a09c1bb56eb0411882fa2a73d1c219f",
+      "bytes": 1050,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/gputest_invTq.m",
+      "historical_comparison": "identical",
+      "current_sha256": "c2918e5cb0aa97278730069c6f4edf4b2a09c1bb56eb0411882fa2a73d1c219f"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/inv_T_from_h.m",
+      "target": "matlab/util_thermodynamics/inv_T_from_h.m",
+      "sha256": "73621892b81e2179d9cda710b56de9bb5d6a8883c36b71d432ce25d6b584faed",
+      "bytes": 5688,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/inv_T_from_h.m",
+      "historical_comparison": "identical",
+      "current_sha256": "73621892b81e2179d9cda710b56de9bb5d6a8883c36b71d432ce25d6b584faed"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/inv_T_from_theta_e.m",
+      "target": "matlab/util_thermodynamics/inv_T_from_theta_e.m",
+      "sha256": "e001fe0db37d6bff77b3e0b15ac8491fb84a2c3774c07622854d97062bcce440",
+      "bytes": 5747,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/inv_T_from_theta_e.m",
+      "historical_comparison": "identical",
+      "current_sha256": "e001fe0db37d6bff77b3e0b15ac8491fb84a2c3774c07622854d97062bcce440"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/inv_T_from_theta_e_nogpu.m",
+      "target": "matlab/util_thermodynamics/inv_T_from_theta_e_nogpu.m",
+      "sha256": "0b57c816e4dee65cef71a3bd61535c28f926b506dfe1f11f8e05a7832f187eed",
+      "bytes": 5527,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/inv_T_from_theta_e_nogpu.m",
+      "historical_comparison": "identical",
+      "current_sha256": "0b57c816e4dee65cef71a3bd61535c28f926b506dfe1f11f8e05a7832f187eed"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/inv_T_from_theta_il.m",
+      "target": "matlab/util_thermodynamics/inv_T_from_theta_il.m",
+      "sha256": "6d0faaf7ee84460e6a1e10d7ea40dcf175e51f0462d4fa0c01a89698d0e8c05b",
+      "bytes": 5077,
+      "comparison": "different",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/inv_T_from_theta_il.m",
+      "historical_comparison": "different",
+      "current_sha256": "1377036c47679caa1c76cbb779b80e289241dbe8ea10b4db922a56d3d1217658"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_thermodynamics/lv.m",
+      "target": "matlab/util_thermodynamics/lv.m",
+      "sha256": "c389332e53409f9a3f01adc2641fd140e0e59f4c4ad88ad49914724b7021a2d1",
+      "bytes": 293,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_thermodynamics/lv.m",
+      "historical_comparison": "identical",
+      "current_sha256": "c389332e53409f9a3f01adc2641fd140e0e59f4c4ad88ad49914724b7021a2d1"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_timeint/ssprk93.m",
+      "target": "matlab/util_timeint/ssprk93.m",
+      "sha256": "b23650cbd13f1854deb9970282f0c6b4edbe4e0a660a6f2421b51d1da8042ae0",
+      "bytes": 1417,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_timeint/ssprk93.m",
+      "historical_comparison": "identical",
+      "current_sha256": "b23650cbd13f1854deb9970282f0c6b4edbe4e0a660a6f2421b51d1da8042ae0"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_weno/reconstruction_up3.m",
+      "target": "matlab/util_weno/reconstruction_up3.m",
+      "sha256": "748ac867a4a5ef7089db896e1fcd5a20c8b1dfcaa461c3aac34a410f20c66c20",
+      "bytes": 630,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_weno/reconstruction_up3.m",
+      "historical_comparison": "identical",
+      "current_sha256": "748ac867a4a5ef7089db896e1fcd5a20c8b1dfcaa461c3aac34a410f20c66c20"
+    },
+    {
+      "source": "/scratch/peter50504/KHN26-ACE_MATLAB/util_weno/reconstruction_weno_vec.m",
+      "target": "matlab/util_weno/reconstruction_weno_vec.m",
+      "sha256": "7db699727a68b1838a177e57c02b53901b90256cfc99c6172da338529e9ebdf4",
+      "bytes": 30729,
+      "comparison": "identical",
+      "historical_path": "c9ae729:matlab/history/snapshots/ACE_V020/util_weno/reconstruction_weno_vec.m",
+      "historical_comparison": "identical",
+      "current_sha256": "7db699727a68b1838a177e57c02b53901b90256cfc99c6172da338529e9ebdf4"
+    }
+  ],
+  "reviewed_current_support_files": [
+    {
+      "path": "fortran/src/ace_module.F",
+      "sha256": "2cbdf8bc055f20e1f6e8f029a7c1d6291f434eb7f115b1e337e4f2c6b96234ca"
+    },
+    {
+      "path": "fortran/src/test.F",
+      "sha256": "1e82e997e7857e5f85563a9dcce1cf7f6d2254b89bddf5c2c2d9eadb57ed3194"
+    },
+    {
+      "path": "fortran/src/ace_input.F",
+      "sha256": "5c3d56bbbaff2a5da7f8296d9f7fa4f45a590ee40197ddd389d8a04d22050297"
+    },
+    {
+      "path": "fortran/src/ace_interpolation.F",
+      "sha256": "6802c7c6cf31d1b5ecdb9eff55b2dec8e3f03f08ce21a0d0e3e78026b996e57a"
+    },
+    {
+      "path": "fortran/src/microphy_p3.F",
+      "sha256": "8ab448e72a43230543b6d0911a195141ba7dc1264cdd0f532b21b49d9a9d1b11"
+    },
+    {
+      "path": "fortran/makefile",
+      "sha256": "69bc14e4de1293a28d8ba3f2f036b316ea2d5d1449040ffa64e5a2c531e01b7f"
+    },
+    {
+      "path": "matlab/read_shared_input.m",
+      "sha256": "eb6bdd7218ea623d58a6f7a5d4684e4f0e3112d03f648787e844c1cc645809a7"
+    },
+    {
+      "path": "tools/input/create_s20_shared_input.m",
+      "sha256": "af96603376be2ed0c6817876cfeebdb9ffb85b95f7576c55bfa446179c7646b2"
+    }
+  ],
+  "summary": {
+    "different": 6,
+    "missing": 6,
+    "identical": 39
+  }
+}
