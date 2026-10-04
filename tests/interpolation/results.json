@@ -1,0 +1,92 @@
+{
+  "source_sha256": "6802c7c6cf31d1b5ecdb9eff55b2dec8e3f03f08ce21a0d0e3e78026b996e57a",
+  "compiler": "GNU Fortran (conda-forge gcc 11.2.0-16) 11.2.0",
+  "cases": 21,
+  "seed": 20261004,
+  "required_precision": "real64",
+  "real32_check": "compile only",
+  "invalid_grid_checks": 6,
+  "unsupported_method_checks": 1,
+  "matlab_version": "23.2.0.2668659 (R2023b) Update 9",
+  "numpy_version": "2.3.5",
+  "all_passed": true,
+  "queries_per_method_policy": 3094,
+  "total_queries": 18564,
+  "amplitude_scale_definition": "max(max(abs(MATLAB reference)), max(abs(input y)), float64 tiny)",
+  "test_file_sha256": {
+    "run.py": "6df4a552cef6b18d1f3ebf7a2d8281e13c9915ccfd81205e8dc01043c2e459d3",
+    "probe.f90": "77cb86277a83b5dfcb5676f751216f99d474cb7efdcee53a2938be8d5d517a46",
+    "reference.m": "1829aaf04641057671fe8dd3c9c6adae97ee85a92941d3e87fda23ec3ed804f6"
+  },
+  "scope": "production interp1 only; no basis or model integration",
+  "full_report_sha256": "840d08050f3a02d3525750a424e3971dc32829a59478ae1b63c873a57920a5ad",
+  "full_report_path": "migration_work/interp1_validation_20261004/results.json",
+  "case_names": [
+    "ace_200m_edges",
+    "constant",
+    "large_coordinate_offset",
+    "linear_nonuniform",
+    "plateaus",
+    "random_12_1",
+    "random_12_1e+06",
+    "random_12_1e-06",
+    "random_201_1",
+    "random_201_1e+06",
+    "random_201_1e-06",
+    "random_4_1",
+    "random_4_1e+06",
+    "random_4_1e-06",
+    "random_5_1",
+    "random_5_1e+06",
+    "random_5_1e-06",
+    "sign_changes",
+    "three_points",
+    "two_points",
+    "zero"
+  ],
+  "maximum_scaled_errors": {
+    "pchip_extrap": {
+      "case": "random_4_1e-06",
+      "max_absolute_error": 1.6940658945086007e-21,
+      "max_amplitude_scaled_error": 9.576229570561023e-16,
+      "tolerance": 2.842170943040401e-14,
+      "passed": true
+    },
+    "pchip_endpoint": {
+      "case": "sign_changes",
+      "max_absolute_error": 1.3322676295501878e-15,
+      "max_amplitude_scaled_error": 6.661338147750939e-16,
+      "tolerance": 2.842170943040401e-14,
+      "passed": true
+    },
+    "pchip_default": {
+      "case": "random_4_1e-06",
+      "max_absolute_error": 1.6940658945086007e-21,
+      "max_amplitude_scaled_error": 9.576229570561023e-16,
+      "tolerance": 2.842170943040401e-14,
+      "passed": true
+    },
+    "makima_extrap": {
+      "case": "random_201_1",
+      "max_absolute_error": 2.220446049250313e-15,
+      "max_amplitude_scaled_error": 6.653280933389858e-16,
+      "tolerance": 2.842170943040401e-14,
+      "passed": true
+    },
+    "makima_endpoint": {
+      "case": "random_5_1",
+      "max_absolute_error": 1.1102230246251565e-15,
+      "max_amplitude_scaled_error": 7.169064016381982e-16,
+      "tolerance": 2.842170943040401e-14,
+      "passed": true
+    },
+    "makima_default": {
+      "case": "random_201_1",
+      "max_absolute_error": 2.220446049250313e-15,
+      "max_amplitude_scaled_error": 6.653280933389858e-16,
+      "tolerance": 2.842170943040401e-14,
+      "passed": true
+    }
+  },
+  "interpretation": "Double-precision MATLAB interp1 agreement passes all fixed tolerances. Extrapolation is default; endpoint hold is exact outside the grid. Single precision compile compatibility only."
+}

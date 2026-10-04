@@ -136,5 +136,8 @@ usability can be asserted.
 The later dynamics changes were compiled separately; the input readback
 evidence above is not a validation of their scientific behavior.
 
-The scientific checkpoint aligns Wbar_eq_zero and outer tracer self exchange.
-Interpolation consolidation and numerical checks are recorded separately.
+The subsequent slab alignment also implements Wbar_eq_zero, the outer
+tracer self boundary and modified Akima interpolation. These changes were
+compiled. Standalone interp1 comparisons subsequently passed double-precision
+MATLAB tolerances; model integration remains pending. See the dynamics
+alignment record.

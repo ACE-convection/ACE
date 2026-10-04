@@ -7,6 +7,10 @@ of `v0.18.0` to reproduce the accepted cases. The
 [integration record](../docs/migration/v020_source_integration.md) tracks
 deferred input adapters, basis confirmation and testing.
 
+For the independently runnable v0.20 interp1 comparison (PCHIP/MAKIMA,
+MATLAB versus production Fortran real64, without basis/model integration), see
+[interpolation tests](interpolation/README.md). The recorded checks pass.
+
 For default-real32 Fortran precipitation checks and their real64 comparison,
 see [precision tests](precision/README.md). These retain the frozen v0.18
 reference cases and document the subsequent precipitation evaluation change.

@@ -28,7 +28,8 @@ schema 2 (S20 slab) can be read; model arrays use the file dimensions. Schema
 Fortran model layout. PMDv/PMD branches are implemented with disabled
 defaults matching MATLAB; activation requires coefficient-unit review.
 The fixed environmental Tv_zc reference, slab area-mean buoyancy removal,
-momentum/tracer outer boundaries and area-mean MF removal follow the documented
+momentum/tracer outer boundaries, area-mean MF removal and makima
+coarse-to-fine interpolation follow the documented
 [dynamics alignment](../docs/migration/v020_dynamics_alignment.md).
 Complete MATLAB equivalence has not been established.
 
@@ -55,3 +56,25 @@ See [shared input](../docs/shared_input.md),
 [known code findings](../docs/migration/v020_code_review.md). P3 exceptions
 and further cross-language dynamics alignment remain deferred work.
 Use a separate `v0.18.0` checkout for accepted release tests.
+
+
+### Reusable interp1
+
+`src/ace_interpolation.F` provides unified vector interpolation supporting
+PCHIP and MAKIMA. Both methods use double-precision formulas checked against
+MATLAB R2023b. The old PCHIP routine was moved here and its two-point linear
+case added. From another Fortran procedure:
+
+```fortran
+use ace_interpolation, only: interp1
+call interp1(n,x,y,nq,xq,yq,'pchip',extrap=.true.)
+call interp1(n,x,y,nq,xq,yq,'makima',extrap=.false.)
+```
+
+The optional `extrap` defaults true. False holds the nearest endpoint value
+outside the sample interval. The slab model branch uses MAKIMA, annular uses
+PCHIP, and both explicitly request extrapolation. Existing public PCHIP and
+MAKIMA entries remain available. Arguments use the build's default real kind;
+only real64 MATLAB numerical agreement is an acceptance requirement. Real32
+compile compatibility is retained. See [interpolation tests](../tests/interpolation/README.md)
+and [the dynamics record](../docs/migration/v020_dynamics_alignment.md).

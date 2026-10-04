@@ -1,4 +1,5 @@
 module ace_module
+use ace_interpolation, only: interp1, pchip
 implicit none
 
 private
@@ -378,7 +379,16 @@ do i=1,ncols
     if (.not.turn_off_DHh) dwdt(i,k)=dwdt(i,k)+sum(sum(PMD(i,:,:,k)*coarse_DHh,2),1)
   enddo
 
-  call pchip(coarse_nz+1,coarse_ze,dwdt(i,:),nz,Ref(:,4),dXdt(i,:,1),.True.)
+  if (slab_geometry) then
+    if (coarse_ratio==1) then
+      ! Schema 2 basis edges coincide with MF levels, as in S20's direct branch.
+      dXdt(i,:,1)=dwdt(i,:)
+    else
+      call interp1(coarse_nz+1,coarse_ze,dwdt(i,:),nz,Ref(:,4),dXdt(i,:,1),'makima',extrap=.true.)
+    endif
+  else
+    call interp1(coarse_nz+1,coarse_ze,dwdt(i,:),nz,Ref(:,4),dXdt(i,:,1),'pchip',extrap=.true.)
+  endif
 enddo  
 
 ! single ACE
@@ -794,102 +804,6 @@ Ci = 2106 + 7.3*(T - T0)
 
 end function
 
-
-subroutine pchip(n,x,y,n_i,x_i,y_i,extrap)
-implicit none
-
-! input/output variables
-integer, intent(in) :: n, n_i
-real, dimension(n), intent(in) :: x, y  ! input should be monotonic increase.
-real, dimension(n_i), intent(in) :: x_i
-real, dimension(n_i), intent(out) :: y_i
-logical, intent(in) :: extrap
-
-! local variables
-integer :: i, j
-real :: dxs,w1,w2,dmax,dmin
-real :: a,b,c,h
-real, dimension(n) :: d, m, dx
-
-! calculate slope
-d = 0.
-do i=1,n-1
-  dx(i) = x(i+1) - x(i)
-  d(i) = ( y(i+1) - y(i) ) / dx(i)
-enddo
-
-! calculate for interior points
-m=0.
-do i=2,n-1
-  if ( d(i-1)*d(i) > 0. ) then
-    dxs = dx(i-1) + dx(i)
-    w1 = ( dx(i-1) + dxs ) / ( 3. * dxs )
-    w2 = ( dxs + dx(i) ) / ( 3. * dxs )
-    dmax = max(abs(d(i-1)),abs(d(i)))
-    dmin = min(abs(d(i-1)),abs(d(i)))
-    m(i) = dmin / ( w1 * d(i-1) / dmax + w2 * d(i) / dmax )
-  endif
-enddo
-
-! calculate for end points
-m(1) = (( 2. * dx(1) + dx(2) ) * d(1) - dx(1) * d(2) ) / ( dx(1) + dx(2) )
-if ( m(1)*d(1) <= 0. ) m(1) = 0.
-if ( d(1)*d(2) <= 0. .and. abs(m(1)) > abs(3.*d(1)) ) m(1) = 3. * d(1)
-
-m(n) = (( 2. * dx(n-1) + dx(n-2) ) * d(n-1) - dx(n-1) * d(n-2) ) / ( dx(n-1) + dx(n-2) )
-if ( m(n)*d(n-1) <= 0. ) m(n) = 0.
-if ( d(n-1)*d(n-2) <= 0. .and. abs(m(n)) > abs(3.*d(n-1)) ) m(n) = 3. * d(n-1)
-
-! piecewise cubic Hermite interpolation
-do i=1,n_i
-  if ( x_i(i)<x(1) ) then
-    if (extrap) then
-      j=1
-      h = x(j+1) - x(j)
-      a = ( ( m(j+1) - d(j) ) / h - ( d(j) - m(j) ) / h ) / h
-      b = 2. * ( d(j) - m(j) ) / h - ( m(j+1) - d(j) ) / h
-      c = m(j)
-
-      h = x_i(i) - x(j)
-      y_i(i) = a * h**3. + b * h**2. + c * h + y(j)
-    else
-      y_i(i) = y(1)
-    endif
-    goto 987
-  endif
-
-  if ( x_i(i)>=x(n) ) then
-    if (extrap) then
-      j=n-1
-      h = x(j+1) - x(j)
-      a = ( ( m(j+1) - d(j) ) / h - ( d(j) - m(j) ) / h ) / h
-      b = 2. * ( d(j) - m(j) ) / h - ( m(j+1) - d(j) ) / h
-      c = m(j)
-
-      h = x_i(i) - x(j)
-      y_i(i) = a * h**3. + b * h**2. + c * h + y(j)
-    else
-      y_i(i) = y(n)
-    endif
-    goto 987
-  endif
-
-  do j=1,n-1
-    if ( x(j)<=x_i(i) .and. x_i(i)<x(j+1) ) then
-      h = x(j+1) - x(j)
-      a = ( ( m(j+1) - d(j) ) / h - ( d(j) - m(j) ) / h ) / h
-      b = 2. * ( d(j) - m(j) ) / h - ( m(j+1) - d(j) ) / h 
-      c = m(j)
-
-      h = x_i(i) - x(j)
-      y_i(i) = a * h**3. + b * h**2. + c * h + y(j)
-      goto 987
-    endif
-  enddo  
-  987 continue
-enddo
-
-end subroutine pchip
 
 ! WENO vec scheme
 subroutine weno_vec(k,n,v,c,v_weno) 
