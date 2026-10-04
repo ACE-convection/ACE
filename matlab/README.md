@@ -1,33 +1,34 @@
-# MATLAB S20 development source
+# MATLAB KHN26 v0.20 development source
 
-`ace.m` uses the v0.18 shared NetCDF input pattern, extended for S20's three
-basis operators and slab geometry. The default is
-`../data/input/goamazon314_s20.nc`, which must be generated after the correct
-S20 basis is provided. From `matlab/`:
+`ace.m` now follows the author-selected November 2025 KHN26 driver and its
+paired utilities. The default shared input is
+`../data/input/manaus1342_khn26.nc`: actual 101-ACE 4UNEVEN basis, processed
+Manaus profile 1342, dt=6 s and six-hour duration. No sounding preprocessing
+is repeated. The reference Tv is reconstructed from theta_e/qt as in KHN26.
 
 ```matlab
-setenv('ACE_INPUT_FILE', '/absolute/path/to/case.nc');
+addpath('/absolute/path/to/ACE/matlab');
+setenv('ACE_INPUT_FILE','/absolute/path/to/manaus1342_khn26.nc');
+setenv('ACE_OUTPUT_FILE','/absolute/path/to/fresh-output.nc');
 ace
 ```
 
-Both readers understand `ACE-case-input-1` and `ACE-case-input-2`. This S20
-driver requires schema 2 slab geometry; the v0.18 annular basis is not a
-substitute. Profiles are already prepared by the converter and are used
-without repeating sounding interpolation. `arm` and original profile index
-come from the file; `case_profile_index` preserves the index and `pidx=1`
-selects the file's single profile. Dimensions, spacing and geometry come
-from the file. Bubble, timestep and physics switches retain S20 defaults.
+The output path must be fresh. `ACE_STEPS=10` selects a ten-step smoke run
+with output each step; clear it for the six-hour default. `ACE_PHYSICS` is
+`native` by default, or `none` for dynamics comparisons. `ACE_VALIDATE_INPUT`
+selects an initialization-only MAT dump containing `X0` and `model`.
+Dimensions and slab geometry come from schema 2. PMDv/PMD placeholders are
+marked disabled and cannot be enabled. `case_profile_index` retains the
+original index while `pidx=1` selects the shared file's sole profile.
 
-`ACE_INPUT_MODE=legacy` selects the original MAT/sounding preprocessing.
-`ACE_LEGACY_DATA` selects its `basis/` and `soundings/` root. The required
-final MAT basis contains `D`, `Z`, `PMB`, `PMDv`, `PMD`. The portable shared
-schema and conversion entry are in [shared input](../docs/shared_input.md).
-Historical output/toolbox requirements remain.
+`ACE_INPUT_MODE=legacy` reads the original KHN26 MAT basis and processed
+`acelevels_*.nc`; `ACE_LEGACY_DATA` sets the root containing `basis/` and
+`soundings/`. It does not select the earlier raw-sounding S20 driver.
 
-The [source integration record](../docs/migration/v020_source_integration.md)
-identifies the import baseline; later input-adapter edits are described in
-[the adapter record](../docs/migration/v020_shared_input_adapter.md).
-Reader readback is verified against v0.18 and Fortran using synthetic schema 2
-fixtures. Full driver initialization, model integration and actual basis
-inspection remain deferred; see the adapter record for evidence.
-Use `v0.18.0` for the accepted v0.18 source and tests.
+The [integration record](../docs/migration/v020_khn26_integration.md) explains
+source preservation, adapter changes and scientific alignment. See
+[shared input](../docs/shared_input.md) for conversion and
+[KHN26 tests](../tests/khn26/README.md) for validated scope. The original
+MATLAB native precipitation formula is preserved, including its known
+high-condensate overflow. Full six-hour, real32 and P3 acceptance remain
+separate work. Use `v0.18.0` for the accepted v0.18 source/tests.

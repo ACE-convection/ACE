@@ -1,0 +1,44 @@
+{
+  "output": "data/input/manaus1342_khn26.nc",
+  "output_sha256": "09408f4d0343afd8659df82f8f1cfe5dc59308cff150fb2bcfd569b1b8794d35",
+  "basis_sha256": "8e46bffa0966096f1269addf207b8990766c7fc69d0158f29139cf0ab6378338",
+  "sounding_sha256": "fe8ac6c4b111f06dab9c8eefe71ab0f01919239e3929670df0f353ec1cf04a89",
+  "converter_sha256": "6d0db314c5c013716c75f6e68e92e968a41e19cc75382e92bfc80d2f375f8021",
+  "profile_index": 1342,
+  "dimensions": {
+    "nz": 401,
+    "ncols": 101,
+    "ncoarse": 200
+  },
+  "model_validation": "not performed",
+  "review_scope": "Author-selected processed case; input-only checks; no model integration",
+  "checks": {
+    "selected_processed_profiles": "All twelve profiles exactly equal to original one-based profile 1342 through MATLAB reader",
+    "PMB": "Every one of 410080200 values exactly equal: original MAT, current MATLAB reader and current Fortran reader",
+    "profile_geometry_coarse_readback": "All 5415 doubles in Fortran readback exactly equal to MATLAB values",
+    "geometry": "Widths exactly equal to original D*1000; existing readers validate slab area/perimeter and staggered coordinates",
+    "momentum": "PMDv/PMD exactly zero in MATLAB and Fortran; explicitly tagged disabled_zero_placeholder",
+    "active_sources": "All original KHN26 fingerprints and current MATLAB numerical counterparts unchanged",
+    "python_syntax": "py_compile passed",
+    "diff_whitespace": "git diff --check passed"
+  },
+  "tools": {
+    "matlab": "R2023b",
+    "gfortran": "11.2.0",
+    "netCDF4_python": "1.7.3",
+    "numpy": "2.3.5"
+  },
+  "fortran_flags": "-cpp -ffree-form -ffree-line-length-none -O0 -fcheck=all",
+  "local_evidence_directory": "migration_work/khn26_review",
+  "local_probe_sha256": {
+    "input_probe.f90": "f577cd3744dd34bc58b47f1ef6787c1e603b6020776c239b3c0ecfc64b13d19c",
+    "validate_input.m": "bf2fcbc74df8f83c93b16b771d73607a7546dd6548606cf2096236ff6261e264",
+    "matlab_input_validation.log": "a768759892b138e1b866dbefd3dca470a74495cac879fa79504730812aabf455"
+  },
+  "limitations": [
+    "No model integration or P3 check",
+    "Current drivers still need KHN26 adapters and scientific alignment",
+    "No momentum operator supplied; zero placeholders do not support activation",
+    "Runtime NC is ignored by current *.nc Git rule and has not been LFS-staged"
+  ]
+}

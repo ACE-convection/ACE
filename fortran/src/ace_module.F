@@ -32,7 +32,7 @@ real, dimension(:,:), allocatable, save :: Ta, q, ql, qi
 
 contains
 
-subroutine ace_driver(ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing)
+subroutine ace_driver(ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input)
 implicit none
 
 ! input/output variables
@@ -43,6 +43,7 @@ real, dimension(ncols+1,nz,n_prog), intent(inout) :: X
 real, intent(inout) :: t
 real, intent(in) :: te,dt
 real, dimension(ncols,nz), intent(in) :: B_forcing
+logical, intent(in), optional :: precipitation_input
 
 ! local variables
 real, dimension(ncols+1,nz,n_prog) :: yi
@@ -103,8 +104,13 @@ do while ( t < te)
 
   ! call physics here
   if (n_prog==3) then
-    call precip_sinks(ncols,nz,n_prog,Ref(1:nz,7),K1(:,:,1:2)) ! simplified precipitation
-    X(1:ncols,:,2:n_prog) = X(1:ncols,:,2:n_prog) +  K1(:,:,1:2) * dt
+    ! KHN26 clips total water after SSPRK and recomputes physics from that state.
+    X(1:ncols,:,3)=max(X(1:ncols,:,3),0.)
+    if (.not.present(precipitation_input)) then
+      call apply_native_precipitation()
+    elseif (precipitation_input) then
+      call apply_native_precipitation()
+    endif
   elseif (n_prog==11) then
     call p3_wrapper_ace(ncols,nz,n_prog,dt,yi,X,Ref)
   else
@@ -117,8 +123,8 @@ do while ( t < te)
   do i=1,ncols
     if (X(i,k,2)/=X(i,k,2)) then
       write(*,*) i,k,Ref(k,7)
-      write(*,*) yi(i,k,2:11)
-      write(*,*) X(i,k,2:11)
+      write(*,*) yi(i,k,2:n_prog)
+      write(*,*) X(i,k,2:n_prog)
       stop "check 2"
     endif    
   enddo
@@ -132,12 +138,23 @@ do while ( t < te)
 enddo
 
 
+contains
+subroutine apply_native_precipitation()
+integer :: ii,kk
+do kk=1,nz
+  do ii=1,ncols
+    call inv_theta_e(X(ii,kk,2),X(ii,kk,3),Ref(kk,7),Ta(ii,kk),q(ii,kk),ql(ii,kk),qi(ii,kk))
+  enddo
+enddo
+call precip_sinks(ncols,nz,n_prog,Ref(:,7),K1(:,:,1:2))
+X(1:ncols,:,2:3)=X(1:ncols,:,2:3)+K1(:,:,1:2)*dt
+end subroutine
 endsubroutine ace_driver
 
 
 subroutine ace_initialization(ncols,nz,nz_presolve,z_presolve,ze_presolve,fname,environment_tv,netcdf_input, &
                               turn_off_DHv_input,turn_off_DHh_input,zero_ref_buoyancy_input,Wbar_eq_zero_input)
-use ace_input, only: read_case_basis, read_case_metadata
+use ace_input, only: read_case_basis, read_case_metadata, basis_available
 use, intrinsic :: ieee_arithmetic, only: ieee_is_finite
 implicit none
 
@@ -184,6 +201,10 @@ if (shared) then
   slab_geometry=trim(geometry)=='slab'
   if (slab_geometry) then
     allocate(PMDv(ncols,ncols,coarse_nz,coarse_nz+1),PMD(ncols,ncols,coarse_nz,coarse_nz+1))
+    if (.not.turn_off_DHv .and. .not.basis_available(fname,'PMDv')) &
+      error stop 'Cannot activate unavailable PMDv'
+    if (.not.turn_off_DHh .and. .not.basis_available(fname,'PMD')) &
+      error stop 'Cannot activate unavailable PMD'
     call read_case_basis(fname,'PMDv',PMDv)
     call read_case_basis(fname,'PMD',PMD)
   endif
@@ -444,21 +465,21 @@ real, dimension(ncols,nz,n_prog-1), intent(inout) :: dXdt
 
 ! local variables
 integer :: i,k
-real :: qc, dql, dqi
+real :: qc, dql, dqi, ramp
 
 
 do k=1,nz
 do i=1,ncols
   qc = ql(i,k) + qi(i,k)
-  !!!dqt(i,k) = - ( qc_ramp / dqc / tau_pr ) * log( 1. + exp( dqc / qc_ramp * ( qc - qc_ramp ) ) ) ! should use -r8 to compile
-  dXdt(i,k,2) = - ( qc_ramp / dqc / tau_pr ) * max( dqc / qc_ramp * ( qc - qc_ramp ) , 0. ) 
+  dXdt(i,k,:)=0.
+  if (qc<=0.) cycle
+  ramp=dqc/qc_ramp*(qc-qc_ramp)
+  ! log(1+exp(ramp)), avoiding overflow without changing the physical sink.
+  dXdt(i,k,2)=-(qc_ramp/dqc/tau_pr)*(max(ramp,0.)+log(1.+exp(-abs(ramp))))
   dql = 1.e-8 * ql(i,k) / qc
   dqi = 1.e-8 * qi(i,k) / qc
   dXdt(i,k,1) = dXdt(i,k,2) * ( theta_e(Ta(i,k),q(i,k),ql(i,k)+dql,qi(i,k)+dqi,p(k)) &
                               - theta_e(Ta(i,k),q(i,k),ql(i,k),qi(i,k),p(k)) ) / 1.e-8
-  if ( qc <= 0. ) then
-    dXdt(i,k,:) = 0.
-  endif 
 enddo
 enddo
 
@@ -644,7 +665,7 @@ do while (abs(dT)>tol)
   if (ice==0) then
     dFdT = ( 1. - CPVMCL*qt/CPL)/T
   else
-    dFdT = ( 1. + 300708.*qt/CPL/T )/T
+    dFdT = ( 1. - 300708.*qt/CPL/T )/T
   endif
   dFdT = dFdT*F
   dT = -(F-F0)/dFdT
@@ -674,8 +695,8 @@ if (q>qsat) then
   ! 3 cases: liquid-only, ice-only, co-existing
   if (G0>GT0 .and. G0>HT0) then ! liquid-only
     ! estimate initial T
-    tmp = log(qt*p) - log(610.78*EPS)
-    T = 237.3*tmp/(17.27-tmp) + T0
+    tmp = log(qt*p) - 5.939876353793538
+    T = 237.3*tmp/(17.27-tmp) + 273.15
 
     dT = 9999.
     do while (abs(dT)>tol)
@@ -685,7 +706,7 @@ if (q>qsat) then
       G = T * R**chi *exp(qs*Lv(T)/Cpl/T)
       !es = polysvp1(T,0)
       es = eval_es(T,0)
-      dTqs = (1.-qt)* EPS/Rv * p * Lv(T) * es / ( ( p-es )*T )**2.
+      dTqs = EPS*p*(1.-qt)/(p-es)**2.*(6743.769/T-4.8451)*es/T
       dGdT = 1./T + ( (Rv*Re/R+Lv(T)/T)*dTqs - (Lv0-Cpvmcl*273.15)*qs/T**2. )/Cpl
       dGdT = dGdT*G
       dT = -(G-G0)/dGdT
@@ -702,8 +723,8 @@ if (q>qsat) then
 
   elseif (G0<GT0 .and. G0<HT0) then ! ice-only
     ! estimate initial T
-    tmp = log(qt*p) - log(610.78*EPS)
-    T = 265.5*tmp/(21.875-tmp) + T0   
+    tmp = log(qt*p) - 5.939876353793538
+    T = 265.5*tmp/(21.875-tmp) + 273.16
 
     dT = 9999.
     do while (abs(dT)>tol)
@@ -714,7 +735,7 @@ if (q>qsat) then
       H = T * R**chi * (T0/T)**(dC*qi/Cpl) * exp((qsi*Lv(T)/T - Lf/T0*qi)/Cpl)
       !esi = polysvp1(T,1)
       esi = eval_es(T,1)
-      dTqsi = (1.-qt)* EPS*LS/RV * p * esi / ( ( p-esi )*T )**2.
+      dTqsi = EPS*p*(1.-qt)/(p-esi)**2.*(6111.72784/T+0.15215)*esi/T
       dHdT = 1./T + ( ( Rv*Re/R + Lv(T)/T + dC*log(T/T0) + Lf/T0 )*dTqsi &
                      - ( ((Lv0-Cpvmcl*273.15)/T-dC)*qsi + dC*qt )/T )/Cpl
       dHdT = dHdT*H
@@ -823,6 +844,7 @@ integer :: i
 real, dimension(k+1,n) :: beta, alpha, w
 real, dimension(k+1) :: d
 
+v_weno=0.
 if (k==2) then
 
 d = (/ 0., 2./3., 1./3. /)
@@ -837,6 +859,11 @@ do i=k+1,n-k+1
   v_weno(i) = w(1,i) * ( 1.5*v(i  )-0.5*v(i+1)) &
              +w(2,i) * ( 0.5*v(i-1)+0.5*v(i  )) &
              +w(3,i) * (-0.5*v(i-2)+1.5*v(i-1))
+enddo
+
+! MATLAB computes circular endpoint stencils before applying surface flux zero.
+do i=1,n,n-1
+  call endpoint_weno(i)
 enddo
 
 ! surface BC modification (reduced order)
@@ -906,6 +933,19 @@ else
   write(*,*) "k is", k, ". The choice of order is not supported yet." 
 endif
 
+contains
+subroutine endpoint_weno(index)
+integer, intent(in) :: index
+integer :: ip,im,imm
+real :: bb(3),aa(3),ww(3),weights(3)
+ip=modulo(index,n)+1; im=modulo(index-2,n)+1; imm=modulo(index-3,n)+1
+bb=[(v(ip)-v(index))**2,(v(index)-v(im))**2,(v(im)-v(imm))**2]
+weights=d
+if (c(index)<0.) weights=d(3:1:-1)
+aa=weights/(eps+bb)**p; ww=aa/sum(aa)
+v_weno(index)=ww(1)*(1.5*v(index)-0.5*v(ip))+ww(2)*(0.5*v(im)+0.5*v(index)) &
+             +ww(3)*(-0.5*v(imm)+1.5*v(im))
+end subroutine
 end subroutine weno_vec
 
 
@@ -925,12 +965,17 @@ c_up3 = 0.
 
 do i=2,n-2
   up3 = 7. * ( c(i) + c(i+1) ) - c(i-1) - c(i+2)
-  c_up3(i) =  up3 + sign(1.,up3) * ( 3. * ( c(i) - c(i+1) ) + c(i+2) - c(i-1) )
+  c_up3(i) =  up3 + merge(sign(1.,up3),0.,up3/=0.) * ( 3. * ( c(i) - c(i+1) ) + c(i+2) - c(i-1) )
+enddo
+
+do i=n-1,n
+  up3=7.*(c(i)+c(modulo(i,n)+1))-c(i-1)-c(modulo(i+1,n)+1)
+  c_up3(i)=up3+merge(sign(1.,up3),0.,up3/=0.)*(3.*(c(i)-c(modulo(i,n)+1))+c(modulo(i+1,n)+1)-c(i-1))
 enddo
 
 ! surface BC modification
 up3 = 8. * c(2) - c(3) 
-c_up3(1) = up3 + sign(1.,up3) * ( c(3) - 2. * c(2) )
+c_up3(1) = up3 + merge(sign(1.,up3),0.,up3/=0.) * ( c(3) - 2. * c(2) )
 
 c_up3 = c_up3 / 12.
 

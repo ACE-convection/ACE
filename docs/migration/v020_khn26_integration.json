@@ -1,0 +1,362 @@
+{
+  "source_archive": "docs/migration/khn26_sources.tar.gz",
+  "archive_sha256": "72faa10c1d01f2979e0171711d61ba39db596c677cf14094ef0f9ad8db0314dd",
+  "original_source_inventory": "v020_khn26_source_inventory.json",
+  "source_import": "KHN26 originals archived; active main adapted for shared processed input; backup files excluded from active path",
+  "no_commit_created": true,
+  "reference_version": "KHN26 2025-11",
+  "authorized_on": "2026-10-04",
+  "branch": "migration/v020-preparation",
+  "base_commit": "c7d9183f1f5acb77e8f3c2c8ad2a1f129bd872c5",
+  "files": [
+    {
+      "source": "ACE_V020_2D88ACEs_NoGlobal.m",
+      "target": "matlab/ace.m",
+      "source_sha256": "9f6b28804d22068f886b83dc40245eca6365cb1c8a3804eaf726b72e25fd5c09",
+      "active_sha256": "2dd437b0398be53a4575171570ad37a9f4543a06e32ae1e9025ddc99424442e4",
+      "disposition": "adapter"
+    },
+    {
+      "source": "util_basis/COLLECT_PRECOMPUTE_VERTICAL_MODES_2D.m",
+      "target": "matlab/util_basis/COLLECT_PRECOMPUTE_VERTICAL_MODES_2D.m",
+      "source_sha256": "40af7d61aa58d08ad13078b7007eda6224e0e4d9b4e206c88e34a526b4a62ead",
+      "active_sha256": "40af7d61aa58d08ad13078b7007eda6224e0e4d9b4e206c88e34a526b4a62ead",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_basis/PRECOMPUTE_COMPOSITE_ACE_BASIS_2D_4uneven.m",
+      "target": "matlab/util_basis/uneven_tests/PRECOMPUTE_COMPOSITE_ACE_BASIS_2D_4uneven.m",
+      "source_sha256": "acd47fb0839b88924d681c6531d21f358b19a1cdf9a459fdd55607a2cc938961",
+      "active_sha256": "acd47fb0839b88924d681c6531d21f358b19a1cdf9a459fdd55607a2cc938961",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_basis/PRECOMPUTE_COMPOSITE_ACE_BASIS_2D_truncate.m",
+      "target": "matlab/util_basis/uneven_tests/PRECOMPUTE_COMPOSITE_ACE_BASIS_2D_truncate.m",
+      "source_sha256": "4c98737aa0950e786b62a0c7401a486a3083e305749627eb3cfbb77aa3ad8609",
+      "active_sha256": "4c98737aa0950e786b62a0c7401a486a3083e305749627eb3cfbb77aa3ad8609",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_basis/PRECOMPUTE_VERTICAL_MODES_2D.m",
+      "target": "matlab/util_basis/PRECOMPUTE_VERTICAL_MODES_2D.m",
+      "source_sha256": "a48f64b41c2c440714e611c7981921c6c6d7e50834e78f06bf2d0b3758b690e8",
+      "active_sha256": "a48f64b41c2c440714e611c7981921c6c6d7e50834e78f06bf2d0b3758b690e8",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_basis/bak/COLLECT_PRECOMPUTE_VERTICAL_MODES_2D.m",
+      "disposition": "archive only",
+      "source_sha256": "caca37f99f09200a648ff791a444c424811bf5ecdd8c58dde8eb208fab4274fc"
+    },
+    {
+      "source": "util_basis/bak/PRECOMPUTE_COMPOSITE_ACE_BASIS_2D.m",
+      "disposition": "archive only",
+      "source_sha256": "338aad46c71a9ec08ef8fabba9552f0bbb208ec30e4b6ae5baa9b76060c92b7c"
+    },
+    {
+      "source": "util_basis/bak/PRECOMPUTE_VERTICAL_MODES_2D.m",
+      "disposition": "archive only",
+      "source_sha256": "1de958b52e5e378f47d2b50bd04e5f8626836444ebcc65053b5fc4d8caa66d9a"
+    },
+    {
+      "source": "util_basis/bak/vertical_solutions_reconstruct_util.m",
+      "disposition": "archive only",
+      "source_sha256": "48e242ae4d6b298fe5bfae6355e5f13a552a8ffc6f4cff1091a1ee447f15409d"
+    },
+    {
+      "source": "util_basis/vertical_solutions_reconstruct_util.m",
+      "target": "matlab/util_basis/vertical_solutions_reconstruct_util.m",
+      "source_sha256": "48e242ae4d6b298fe5bfae6355e5f13a552a8ffc6f4cff1091a1ee447f15409d",
+      "active_sha256": "48e242ae4d6b298fe5bfae6355e5f13a552a8ffc6f4cff1091a1ee447f15409d",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_plume/cin_cape_calc.m",
+      "target": "matlab/util_plume/cin_cape_calc.m",
+      "source_sha256": "d3dd0639db6bb06259a6ea94ee1c3e0df2afbd80cdb873ba3af687ec54e6d639",
+      "active_sha256": "d3dd0639db6bb06259a6ea94ee1c3e0df2afbd80cdb873ba3af687ec54e6d639",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_plume/entrain_plume_calc.m",
+      "target": "matlab/util_plume/entrain_plume_calc.m",
+      "source_sha256": "ab7a4297ca87f31a331d28d2d462429ecbe0d5084fb8056a29bdab577ceddeed",
+      "active_sha256": "ab7a4297ca87f31a331d28d2d462429ecbe0d5084fb8056a29bdab577ceddeed",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/IMPORT_CONSTANTS.m",
+      "target": "matlab/util_thermodynamics/IMPORT_CONSTANTS.m",
+      "source_sha256": "9fde477680e8eea17fc2f5f2aca61ef95d556fbc4c4f7f676cc53f6d3d82ba89",
+      "active_sha256": "9fde477680e8eea17fc2f5f2aca61ef95d556fbc4c4f7f676cc53f6d3d82ba89",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/IMPORT_CONSTANTS_NOGLOBAL.m",
+      "target": "matlab/util_thermodynamics/IMPORT_CONSTANTS_NOGLOBAL.m",
+      "source_sha256": "68056228f1419b0d3708c72682d0e6fee0bcdc1f5f3a1d09c1ea822113297499",
+      "active_sha256": "68056228f1419b0d3708c72682d0e6fee0bcdc1f5f3a1d09c1ea822113297499",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/NOTE.m",
+      "target": "matlab/util_thermodynamics/NOTE.m",
+      "source_sha256": "d8b2a2c3dab6cdcb343cb18974af1bce8d4f7a60c36d1e98bd1aeb736748b9fc",
+      "active_sha256": "d8b2a2c3dab6cdcb343cb18974af1bce8d4f7a60c36d1e98bd1aeb736748b9fc",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/ci.m",
+      "target": "matlab/util_thermodynamics/ci.m",
+      "source_sha256": "dba544e76ce1e74136daff7fd988670f68000c8835732344d5ac6c20697389ce",
+      "active_sha256": "dba544e76ce1e74136daff7fd988670f68000c8835732344d5ac6c20697389ce",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_B.m",
+      "target": "matlab/util_thermodynamics/eval_B.m",
+      "source_sha256": "4260dae12c5e40d915ce2ac348b85d3358d9470dd9ad17bf3771a0e803647e6b",
+      "active_sha256": "4260dae12c5e40d915ce2ac348b85d3358d9470dd9ad17bf3771a0e803647e6b",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_Tv.m",
+      "target": "matlab/util_thermodynamics/eval_Tv.m",
+      "source_sha256": "d86992e3f9ef64bbf038424876b9c2c3b2a6ec1d2f23f673a553bca014213690",
+      "active_sha256": "d86992e3f9ef64bbf038424876b9c2c3b2a6ec1d2f23f673a553bca014213690",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_dTes.m",
+      "target": "matlab/util_thermodynamics/eval_dTes.m",
+      "source_sha256": "dccd232253f4422bdb334a7089c5065459c0207def6cde54714fa1fa97bcf116",
+      "active_sha256": "dccd232253f4422bdb334a7089c5065459c0207def6cde54714fa1fa97bcf116",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_dTqs.m",
+      "target": "matlab/util_thermodynamics/eval_dTqs.m",
+      "source_sha256": "35e4585653c828cb6bede2d25914c66d71b59c7894ad4e877180ffd57c57a74a",
+      "active_sha256": "35e4585653c828cb6bede2d25914c66d71b59c7894ad4e877180ffd57c57a74a",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_dTqsi.m",
+      "target": "matlab/util_thermodynamics/eval_dTqsi.m",
+      "source_sha256": "5ce3913522b068b98badfdd279ab0fa1ad0ed9a7ce751e5fd4ef2b688a734de6",
+      "active_sha256": "5ce3913522b068b98badfdd279ab0fa1ad0ed9a7ce751e5fd4ef2b688a734de6",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_dTqsscl.m",
+      "target": "matlab/util_thermodynamics/eval_dTqsscl.m",
+      "source_sha256": "4e025fb26f0deb388b8c7551fdd5ca5160d4aa7c2f13d0dd230c3177851cedde",
+      "active_sha256": "4e025fb26f0deb388b8c7551fdd5ca5160d4aa7c2f13d0dd230c3177851cedde",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_es.m",
+      "target": "matlab/util_thermodynamics/eval_es.m",
+      "source_sha256": "a6d89db08505d726edae0b520d69360da23aed5dd4079697797302cdaab6ec2c",
+      "active_sha256": "a6d89db08505d726edae0b520d69360da23aed5dd4079697797302cdaab6ec2c",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_esi.m",
+      "target": "matlab/util_thermodynamics/eval_esi.m",
+      "source_sha256": "13e7d32f678a1b8e9a0f97e326dbaf94027a3e09b808f424e3b02c427f1813db",
+      "active_sha256": "13e7d32f678a1b8e9a0f97e326dbaf94027a3e09b808f424e3b02c427f1813db",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_esscl.m",
+      "target": "matlab/util_thermodynamics/eval_esscl.m",
+      "source_sha256": "7fa1acdff3547765addb2f6295b0d0cfaff96436356c4dfefdb2d0caeb981724",
+      "active_sha256": "7fa1acdff3547765addb2f6295b0d0cfaff96436356c4dfefdb2d0caeb981724",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_h.m",
+      "target": "matlab/util_thermodynamics/eval_h.m",
+      "source_sha256": "6a6bc3c9990469ae0296dfac8f234dfcbccb3851aa3faa6bececb536f271497b",
+      "active_sha256": "6a6bc3c9990469ae0296dfac8f234dfcbccb3851aa3faa6bececb536f271497b",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_q.m",
+      "target": "matlab/util_thermodynamics/eval_q.m",
+      "source_sha256": "19fc7e2235e52c12948b3b10654a90ea45b9391a7b1821a3a39d2683ca02be8c",
+      "active_sha256": "19fc7e2235e52c12948b3b10654a90ea45b9391a7b1821a3a39d2683ca02be8c",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_q2.m",
+      "target": "matlab/util_thermodynamics/eval_q2.m",
+      "source_sha256": "f0986c79fc1b362ca92e188977b04d073a31b9bb3e27b96fc5b35968539f1f11",
+      "active_sha256": "f0986c79fc1b362ca92e188977b04d073a31b9bb3e27b96fc5b35968539f1f11",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_qs.m",
+      "target": "matlab/util_thermodynamics/eval_qs.m",
+      "source_sha256": "09f7e3c707ed1eaacb9baba896cc8ab9cb16e742fa7dc823273b8cc2c71fe402",
+      "active_sha256": "09f7e3c707ed1eaacb9baba896cc8ab9cb16e742fa7dc823273b8cc2c71fe402",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_qs2.m",
+      "target": "matlab/util_thermodynamics/eval_qs2.m",
+      "source_sha256": "6c1f03213c04a6e98dd515d5ce98ebcba6a2cd8f62e99ebd750599af8978671d",
+      "active_sha256": "6c1f03213c04a6e98dd515d5ce98ebcba6a2cd8f62e99ebd750599af8978671d",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_qsat.m",
+      "target": "matlab/util_thermodynamics/eval_qsat.m",
+      "source_sha256": "1aff97bbd0e4b66c33e817aa99741056ccf95ab30840c787a6a4a81b0a516310",
+      "active_sha256": "1aff97bbd0e4b66c33e817aa99741056ccf95ab30840c787a6a4a81b0a516310",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_qsat2.m",
+      "target": "matlab/util_thermodynamics/eval_qsat2.m",
+      "source_sha256": "16a75d060676e65e16d4fdee2067716db779a2f6d9dbd3ac6b278051091e4a3d",
+      "active_sha256": "16a75d060676e65e16d4fdee2067716db779a2f6d9dbd3ac6b278051091e4a3d",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_qsi.m",
+      "target": "matlab/util_thermodynamics/eval_qsi.m",
+      "source_sha256": "5a92de14d0b02b6394a2f186aafc8cf75530d322db4582ce52045c4f9b30f270",
+      "active_sha256": "5a92de14d0b02b6394a2f186aafc8cf75530d322db4582ce52045c4f9b30f270",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_qsi2.m",
+      "target": "matlab/util_thermodynamics/eval_qsi2.m",
+      "source_sha256": "3c7b3674ea2e00c004aa526c3a0c79cf6c2f039d2b989d98a15ef3f2cc12161e",
+      "active_sha256": "3c7b3674ea2e00c004aa526c3a0c79cf6c2f039d2b989d98a15ef3f2cc12161e",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_qsscl.m",
+      "target": "matlab/util_thermodynamics/eval_qsscl.m",
+      "source_sha256": "1b47aa01ca8ec7e9ee2368d4f83d601767c7fe793766ee475cdc18cd7e60cf82",
+      "active_sha256": "1b47aa01ca8ec7e9ee2368d4f83d601767c7fe793766ee475cdc18cd7e60cf82",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_rho.m",
+      "target": "matlab/util_thermodynamics/eval_rho.m",
+      "source_sha256": "b22b7816d5199e9f025304b57719f7ab68367e5222ac351224ba7ee8a2f2c91a",
+      "active_sha256": "b22b7816d5199e9f025304b57719f7ab68367e5222ac351224ba7ee8a2f2c91a",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_theta.m",
+      "target": "matlab/util_thermodynamics/eval_theta.m",
+      "source_sha256": "c69e40c66320d5d1b0d62365db0897cbdc87a9c523c0aecd211945780811d71b",
+      "active_sha256": "c69e40c66320d5d1b0d62365db0897cbdc87a9c523c0aecd211945780811d71b",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_theta_e.m",
+      "target": "matlab/util_thermodynamics/eval_theta_e.m",
+      "source_sha256": "631d04f3cac84824255fb4404068081bab52bb163efe37800559c223988a9843",
+      "active_sha256": "631d04f3cac84824255fb4404068081bab52bb163efe37800559c223988a9843",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_theta_es.m",
+      "target": "matlab/util_thermodynamics/eval_theta_es.m",
+      "source_sha256": "39ff2e6d87d2bc4ad2f0b33922e524b2998e64939bec58e908b76fce8ef32b79",
+      "active_sha256": "39ff2e6d87d2bc4ad2f0b33922e524b2998e64939bec58e908b76fce8ef32b79",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_theta_il.m",
+      "target": "matlab/util_thermodynamics/eval_theta_il.m",
+      "source_sha256": "f5f98373a466be1d84199ce7d882fe98faae7c96a4dd6aa9d614e2f2dbf0931b",
+      "active_sha256": "f5f98373a466be1d84199ce7d882fe98faae7c96a4dd6aa9d614e2f2dbf0931b",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_theta_l.m",
+      "target": "matlab/util_thermodynamics/eval_theta_l.m",
+      "source_sha256": "6628625f218e53e004623b44871ad6984a13b6308264d123193464143292c90d",
+      "active_sha256": "6628625f218e53e004623b44871ad6984a13b6308264d123193464143292c90d",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/eval_theta_v.m",
+      "target": "matlab/util_thermodynamics/eval_theta_v.m",
+      "source_sha256": "f531d0ca252a777616935340b23079911faa5f79ef890e2de9371cf094413274",
+      "active_sha256": "f531d0ca252a777616935340b23079911faa5f79ef890e2de9371cf094413274",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/gputest_invTq.m",
+      "target": "matlab/util_thermodynamics/gputest_invTq.m",
+      "source_sha256": "c2918e5cb0aa97278730069c6f4edf4b2a09c1bb56eb0411882fa2a73d1c219f",
+      "active_sha256": "c2918e5cb0aa97278730069c6f4edf4b2a09c1bb56eb0411882fa2a73d1c219f",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/inv_T_from_h.m",
+      "target": "matlab/util_thermodynamics/inv_T_from_h.m",
+      "source_sha256": "73621892b81e2179d9cda710b56de9bb5d6a8883c36b71d432ce25d6b584faed",
+      "active_sha256": "73621892b81e2179d9cda710b56de9bb5d6a8883c36b71d432ce25d6b584faed",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/inv_T_from_theta_e.m",
+      "target": "matlab/util_thermodynamics/inv_T_from_theta_e.m",
+      "source_sha256": "e001fe0db37d6bff77b3e0b15ac8491fb84a2c3774c07622854d97062bcce440",
+      "active_sha256": "e001fe0db37d6bff77b3e0b15ac8491fb84a2c3774c07622854d97062bcce440",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/inv_T_from_theta_e_nogpu.m",
+      "target": "matlab/util_thermodynamics/inv_T_from_theta_e_nogpu.m",
+      "source_sha256": "0b57c816e4dee65cef71a3bd61535c28f926b506dfe1f11f8e05a7832f187eed",
+      "active_sha256": "0b57c816e4dee65cef71a3bd61535c28f926b506dfe1f11f8e05a7832f187eed",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/inv_T_from_theta_il.m",
+      "target": "matlab/util_thermodynamics/inv_T_from_theta_il.m",
+      "source_sha256": "6d0faaf7ee84460e6a1e10d7ea40dcf175e51f0462d4fa0c01a89698d0e8c05b",
+      "active_sha256": "6d0faaf7ee84460e6a1e10d7ea40dcf175e51f0462d4fa0c01a89698d0e8c05b",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_thermodynamics/lv.m",
+      "target": "matlab/util_thermodynamics/lv.m",
+      "source_sha256": "c389332e53409f9a3f01adc2641fd140e0e59f4c4ad88ad49914724b7021a2d1",
+      "active_sha256": "c389332e53409f9a3f01adc2641fd140e0e59f4c4ad88ad49914724b7021a2d1",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_timeint/ssprk93.m",
+      "target": "matlab/util_timeint/ssprk93.m",
+      "source_sha256": "b23650cbd13f1854deb9970282f0c6b4edbe4e0a660a6f2421b51d1da8042ae0",
+      "active_sha256": "b23650cbd13f1854deb9970282f0c6b4edbe4e0a660a6f2421b51d1da8042ae0",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_weno/reconstruction_up3.m",
+      "target": "matlab/util_weno/reconstruction_up3.m",
+      "source_sha256": "748ac867a4a5ef7089db896e1fcd5a20c8b1dfcaa461c3aac34a410f20c66c20",
+      "active_sha256": "748ac867a4a5ef7089db896e1fcd5a20c8b1dfcaa461c3aac34a410f20c66c20",
+      "disposition": "exact reference bytes"
+    },
+    {
+      "source": "util_weno/reconstruction_weno_vec.m",
+      "target": "matlab/util_weno/reconstruction_weno_vec.m",
+      "source_sha256": "7db699727a68b1838a177e57c02b53901b90256cfc99c6172da338529e9ebdf4",
+      "active_sha256": "7db699727a68b1838a177e57c02b53901b90256cfc99c6172da338529e9ebdf4",
+      "disposition": "exact reference bytes"
+    }
+  ]
+}

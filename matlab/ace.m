@@ -1,16 +1,17 @@
+format long
 %% Directory/file paths
-dir_ace = pwd;
+dir_ace = fileparts(mfilename('fullpath'));
 addpath(dir_ace);
 input_mode=getenv('ACE_INPUT_MODE');
 if isempty(input_mode), input_mode='shared'; end
 assert(ismember(input_mode,{'shared','legacy'}), 'ACE_INPUT_MODE must be shared or legacy');
 shared_input=strcmp(input_mode,'shared');
 input_file=getenv('ACE_INPUT_FILE');
-if isempty(input_file), input_file=fullfile(dir_ace,'../data/input/goamazon314_s20.nc'); end
+if isempty(input_file), input_file=fullfile(dir_ace,'../data/input/manaus1342_khn26.nc'); end
 if shared_input
   input=read_shared_input(input_file);
   assert(strcmp(input.schema,'ACE-case-input-2') && strcmp(input.geometry,'slab'), ...
-    'S20 driver requires schema 2 slab geometry; v0.18 annular data are not interchangeable');
+      'KHN26 driver requires schema 2 slab geometry');
 end
 
 % Subroutines
@@ -21,36 +22,51 @@ dir_util_thermodynamics = [dir_ace '/util_thermodynamics/'];
 addpath(dir_util_weno,dir_util_plume,dir_util_timeint,dir_util_thermodynamics)
 
 % Data folder
-dir_data = [dir_ace '/data/'];
+% dir_data = [dir_ace '/../../data/'];
+dir_data = fullfile(dir_ace,'data/');
+legacy_data=getenv('ACE_LEGACY_DATA');
+if ~isempty(legacy_data), dir_data=[legacy_data '/']; end
+% dir_data = 'C:\Users\r9822\Dropbox\JULIACE\data\';
 
 % Pre-computed anelastic basis for massflux
 dir_basis = [dir_data  '/basis/'];
 
 % ARM best-estimate soundings (4 options from 3 sites)
+%dir_armbe = [dir_data '/soundings/'];
+%armfnlist = {'manus_3hr_ARMBEsonde_profiles.nc';
+%             'nauru_3hr_ARMBEsonde_profiles.nc';
+%             'maoarmbeatmM1.c1.20140101.003000.nc'};
 dir_armbe = [dir_data '/soundings/'];
-legacy_data=getenv('ACE_LEGACY_DATA');
-if ~isempty(legacy_data)
-  dir_basis=[fullfile(legacy_data,'basis') '/'];
-  dir_armbe=[fullfile(legacy_data,'soundings') '/'];
-end
-armfnlist = {'manus_3hr_ARMBEsonde_profiles.nc';
-             'nauru_3hr_ARMBEsonde_profiles.nc';
-             'maoarmbeatmM1.c1.20140101.003000.nc'};
+armfnlist = {'acelevels_manaus.nc',
+             'acelevels_manus.nc',
+             'acelevels_nauru.nc',
+             'acelevels_sgp.nc'};
+
 
 %% Restart or continue a run
 conti = 0; 
 restart = 0; % conti with initial conditions reset
 ensemble = 0; % Check dTbl=0.5K for ensemble
 save_output = 1;
-output_filename = 'GoAmazon_idp=314_2D101ACEs_KHN26_dz=100m_1cloud-tripleCheck.mat';
+% output_filename = 'GoAmazon_idp=314_2DUNEVEN61ACEs_KHN26_dz=100m_kknw25linear-2clouds.mat'; %Ex~1.5s/1s; Im~1.3s/1s
+% output_filename = 'GoAmazon_idp=314_2D101ACEs_KHN26_dz=100m_ensemble.mat'; %Ex~1.5s/1s; Im~1.3s/1s
+%output_filename = 'GoAmazon_idp=314_2DUNEVEN41ACEs_KHN26_dz=100m-1cloud.mat';
+output_filename = 'manaus1342_khn26.nc';
+output_override=getenv('ACE_OUTPUT_FILE');
+if ~isempty(output_override), output_filename=output_override; end
+
+%%
+%%
+% load(['/home/yhkuo/Desktop/OUTPUT/' output_filename])
+%%
+%%
 
 %% Loading pre-computed massflux basis
-pcbsfn = 'COMPOSITE_ACE_BASIS_2D_V020.mat';
+pcbsfn = 'COMPOSITE_ACE_BASIS_2D_KHN26_4UNEVEN.mat';%'COMPOSITE_ACE_BASIS_2D_KHN26_UNEVEN41ACEs.mat';%
 if conti==0
   if shared_input
     PMB=input.PMB; PMDv=input.PMDv; PMD=input.PMD;
-    Z=input.basis_z;
-    D=(input.ace_width(:)/1000)'; % m -> km, row vector required by S20
+    D=(input.ace_width(:)/1000)'; Z=input.basis_z;
   else
     load([dir_basis pcbsfn]) % PMB(edge,coarse,forcing,response)
   end
@@ -59,10 +75,47 @@ if conti==0
   Ai = D'; % ACE area in km^2 (index i or ida)
   Bi = ones(Ni,1); % ACE outer perimeter in km (index i or ida)
   if shared_input
-    Ai=input.ace_area(:)/1e6; % m^2 -> km^2
-    Bi=input.ace_perimeter(:)/1000; % m -> km
+    Ai=input.ace_area(:)/1e6; Bi=input.ace_perimeter(:)/1000;
   end
 end
+
+%nzi = size(PMB,1);
+%nzc = size(PMB,2);
+%nfor = size(PMB,3);
+%nres = size(PMB,4);
+%
+%ncoutput = 'mf_KHN26_4UNEVEN.nc';
+%if isfile(ncoutput)
+%  delete(ncoutput);
+%end
+%nccreate(ncoutput,'R','Dimensions',{'ncols-response',nres},'format','netcdf4')
+%Dout = D;
+%ncwrite(ncoutput,'R',Dout/2.*1.e3)
+%ncwriteatt(ncoutput,'R','long_name','Width of slab ACE columns')
+%ncwriteatt(ncoutput,'R','units','m')
+%nccreate(ncoutput,'B','Dimensions',{'ncols-response',nres})
+%ncwrite(ncoutput,'B',Bi*1.e3)
+%ncwriteatt(ncoutput,'B','long_name','Perimeter of ACE columns')
+%ncwriteatt(ncoutput,'B','units','m')
+%nccreate(ncoutput,'A','Dimensions',{'ncols-response',nres})
+%ncwrite(ncoutput,'A',Ai*1.e6)
+%ncwriteatt(ncoutput,'A','long_name','Area of ACE columns')
+%ncwriteatt(ncoutput,'A','units','m^2')
+%nccreate(ncoutput,'Zc','Dimensions',{'nzc',nzc})
+%ncwrite(ncoutput,'Zc',Z(1:nzc))
+%ncwriteatt(ncoutput,'Zc','long_name','Height of grid center')
+%ncwriteatt(ncoutput,'Zc','units','m')
+%nccreate(ncoutput,'Zi','Dimensions',{'nzi',nzi})
+%ncwrite(ncoutput,'Zi',Z)
+%ncwriteatt(ncoutput,'Zi','long_name','Height of grid interface')
+%ncwriteatt(ncoutput,'Zi','units','m')
+%nccreate(ncoutput,'PMB','Dimensions',{'ncols-response',nres,'ncols-forcing',nfor,'nzc',nzc,'nzi',nzi})
+%ncwrite(ncoutput,'PMB',permute(PMB,[4,3,2,1]))
+%ncwriteatt(ncoutput,'PMB','long_name','Precomputed massflux basis')
+%ncwriteatt(ncoutput,'PMB','units','unitless')
+%
+%error("output")
+
 
 %% Test Turning off nonlocal response
 one_ace_only = 0;
@@ -74,6 +127,12 @@ turn_off_DHh = 1;
 turn_off_v_nonlocal = 0;
 truncate_h_nonlocal = 0;
 zero_ref_buoyancy = 1;
+if shared_input
+  assert(turn_off_DHv || ~strcmp(input.PMDv_source_status,'disabled_zero_placeholder'), ...
+      'Cannot activate unavailable PMDv');
+  assert(turn_off_DHh || ~strcmp(input.PMD_source_status,'disabled_zero_placeholder'), ...
+      'Cannot activate unavailable PMD');
+end
 for i=1:Ni %response_region_index
   for j=1:Ni %forcing_region_index
     if truncate_h_nonlocal && abs(i-j)>=truncate_h_nonlocal
@@ -101,15 +160,13 @@ savefigure = 1;
 theta_e_diag = 1; 
 
 % ARM sounding option
-arm = 3;%1;% %1=Manus/2=Nauru/3,4=GOAmazon
+arm = 1;%1;% %1=Manus/2=Nauru/3,4=GOAmazon
 armfn = armfnlist{arm};
 pidx = 314;%208;% % Profile index for environment
+pidx = 1342;
+case_profile_index=pidx;
 if shared_input
-  arm=input.arm; armfn=armfnlist{arm};
-  case_profile_index=input.profile_index;
-  pidx=1; % shared file contains one selected sounding
-else
-  case_profile_index=pidx;
+  arm=input.arm; case_profile_index=input.profile_index; pidx=1;
 end
 
 % Verital grids setup
@@ -118,11 +175,10 @@ coarse_z = 200/dz;
 ztop = 40e3; % m
 z = [dz/2:dz:ztop+dz/2]'; % z-grid for plume computation
 zm = [0:dz:ztop]'; % z-grid for mass-flux for entrainment rate
-p = [1000:-5:100]'*1e2; % 5-hPa grid
+p = [1000:-5:100]'*1e2; % nominal, unused grid in processed-input mode
 if shared_input
   dz=input.dz; z=input.z; zm=input.zm; p=input.p;
-  ztop=zm(end);
-  coarse_z=(numel(zm)-1)/(size(PMB,2));
+  ztop=zm(end); coarse_z=(numel(zm)-1)/size(PMB,2);
 end
 
 % For precip sinks
@@ -143,7 +199,13 @@ else
   disp('Start Anew!')
 end
 % DO NOT MODIFY THE IF SECTION
-tspan = [0:1:60*8]*60; % sec
+tspan = [0:1:60*6]*60; % sec
+step_count=getenv('ACE_STEPS');
+if ~isempty(step_count)
+  steps=str2double(step_count); assert(isfinite(steps) && steps>=1 && steps==fix(steps));
+  tspan=(0:steps)*dt;
+end
+%tspan = [0:6:60];
 Nt = length(tspan);
 % Update tspan for continuing runs
 if conti==1
@@ -170,13 +232,13 @@ zebt = 14e3; % Top of external buoyancy  layer
 EBF = EB * sin(pi*zm/zebt).*(zm<zebt);
 EBT = 0*60*60; % sec; EBF turned on for t<EBT
 
-% Radiatively imposed profile (RIP)
-RIP = -1.5; % K/day
-zr = [0 9e3 14e3]';
-vr = [1 1.5 0]';
-gf = normpdf([-20:20]'*dz,0,300); % Gaussian filter for smoothing
-vrzm = conv(interp1(zr,vr,zm,'linear',0),gf,'same');
-RF = vrzm/max(vrzm)*RIP/3600/24; % ~dT/dt in K/s
+%% Radiatively imposed profile (RIP)
+%RIP = -1.5; % K/day
+%zr = [0 9e3 14e3]';
+%vr = [1 1.5 0]';
+%gf = normpdf([-20:20]'*dz,0,300); % Gaussian filter for smoothing
+%vrzm = conv(interp1(zr,vr,zm,'linear',0),gf,'same');
+%RF = vrzm/max(vrzm)*RIP/3600/24; % ~dT/dt in K/s
 
 % Turbulent entrainment rate
 nju = 0.09; % Morrison (2017)
@@ -206,47 +268,58 @@ k = 2; %reconstruction_wenoz for k>=3 (k=2 only for reconstruction_weno)
 IMPORT_CONSTANTS_NOGLOBAL
 Nzm = length(zm);
 
-%% Pre-processing sounding data
+%%% Pre-processing sounding data
+%[plev, pr, ta, hus, prw, date, hh] = LOAD_SOUNDINGS([dir_armbe armfn], arm);
+%
+%%% KKNW25 RH-reduced (using GoAmazon idp=314 case)
+%% % % [zip,pip,tip,qip,tvip,rhoip] = init_profile('linear');% control
+%% % % ta(2:end,pidx) = interp1(pip,tip,plev(2:end),'makima');
+%% % % hus(2:end,pidx) = interp1(pip,qip,plev(2:end),'makima');
+%%%
+%
+%% Interpolate sounding values to 5-hPa p-grid (_p)
+%[T_p, q_p, rho_p, z_p] = INTERP_P_GRID(plev, ta(:,pidx), hus(:,pidx), p);
+%
+%% Modify humidity to avoid theta_e supersaturation
+%q_p = TWEAK_THETA_E(T_p, q_p, p);
+%
+%% Interpolate sounding values to 50-m z-grid (_env) & zm-grid (_zm)
+%[T_env, q_env, Tv_env, theta_e_env, rho_env, p_z,...
+% T_zm, q_zm, Tv_zm, theta_e_zm, rho_zm, p_zm,...
+% theta_zm, theta_es_zm, rh_zm] = INTERP_Z_GRID(T_p, q_p, z_p, p, zm, z, dz);
+
+%% Directly read processed data (JD Huang)
+
 if shared_input
-  % Profiles are already prepared by the S20 converter; do not interpolate twice.
-  plev=input.plev; pr=input.pr; ta=input.ta; hus=input.hus;
-  prw=input.prw; date=input.date; hh=input.hh;
-  T_p=input.T_p; q_p=input.q_p; rho_p=input.rho_p; z_p=input.z_p;
+  z=input.z; zm=input.zm;
   T_env=input.T_env; q_env=input.qt_zc; Tv_env=input.Tv_zc;
   theta_e_env=input.theta_e_zc; rho_env=input.rho_zc; p_z=input.p_zc;
   T_zm=input.T_zm; q_zm=input.qt_mf; Tv_zm=input.Tv_mf;
   theta_e_zm=input.theta_e_mf; rho_zm=input.rho_mf; p_zm=input.p_mf;
-  theta_zm=input.theta_zm; theta_es_zm=input.theta_es_zm; rh_zm=input.rh_zm;
 else
-%% Pre-processing sounding data
-[plev, pr, ta, hus, prw, date, hh] = LOAD_SOUNDINGS([dir_armbe armfn], arm);
+start = [1, pidx];
+count = [401, 1];
 
-%% KKNW25 RH-reduced (using GoAmazon idp=314 case)
-% % % [zip,pip,tip,qip,tvip,rhoip] = init_profile('linear');% control
-% % % ta(2:end,pidx) = interp1(pip,tip,plev(2:end),'makima');
-% % % hus(2:end,pidx) = interp1(pip,qip,plev(2:end),'makima');
-%%
+z = ncread([dir_armbe armfn],'zc');
+T_env = ncread([dir_armbe armfn],'T_zc',start,count);
+q_env = ncread([dir_armbe armfn],'Q_zc',start,count);
+Tv_env = ncread([dir_armbe armfn],'Tv_zc',start,count);
+theta_e_env = ncread([dir_armbe armfn],'theta_e_zc',start,count);
+rho_env = ncread([dir_armbe armfn],'rho_zc',start,count);
+p_z = ncread([dir_armbe armfn],'P_zc',start,count);
 
-% Interpolate sounding values to 5-hPa p-grid (_p)
-[T_p, q_p, rho_p, z_p] = INTERP_P_GRID(plev, ta(:,pidx), hus(:,pidx), p);
-
-% Modify humidity to avoid theta_e supersaturation
-q_p = TWEAK_THETA_E(T_p, q_p, p);
-
-% Save sounding
-% % % theta_e_p = eval_theta_e(T_p,q_p,0,0,p);
-% % % theta_es_p = eval_theta_es(T_p,p);
-% % % save('GoAmazon_idp=314_sounding.mat','T_p','q_p','rho_p','z_p','p','theta_e_p','theta_es_p')
-
-% Interpolate sounding values to 50-m z-grid (_env) & zm-grid (_zm)
-[T_env, q_env, Tv_env, theta_e_env, rho_env, p_z,...
- T_zm, q_zm, Tv_zm, theta_e_zm, rho_zm, p_zm,...
- theta_zm, theta_es_zm, rh_zm] = INTERP_Z_GRID(T_p, q_p, z_p, p, zm, z, dz);
+zm = ncread([dir_armbe armfn],'ze');
+T_zm = ncread([dir_armbe armfn],'T_ze',start,count);
+q_zm = ncread([dir_armbe armfn],'Q_ze',start,count);
+Tv_zm = ncread([dir_armbe armfn],'Tv_ze',start,count);
+theta_e_zm = ncread([dir_armbe armfn],'theta_e_ze',start,count);
+rho_zm = ncread([dir_armbe armfn],'rho_ze',start,count);
+p_zm = ncread([dir_armbe armfn],'P_ze',start,count);
 
 end
 
 %% Setup for time-integration
-day = date(pidx); % Can run multiple pidx cases (by adding a for-loop here)
+%day = date(pidx); % Can run multiple pidx cases (by adding a for-loop here)
 
 % _mf(h) = properties of mass flux; will be used as constant reference during time-integration
 theta_e_mf = theta_e_zm; 
@@ -259,11 +332,13 @@ rho_mfh = interp1(zm,rho_mf,zm+dz/2,'makima');
 % _zc = cell center
 theta_e_zc = theta_e_env;
 qt_zc = q_env;
-T_zc = T_env;
 Tv_zc = Tv_env;
 p_zc = p_z;
 rho_zc = rho_env;
 rho_zi = rho_zm; 
+
+[Ta, Qa, QLa, QIa] = INV_THETA_E(theta_e_zc,qt_zc,p_zc,theta_e_diag);
+Tv_zc = eval_Tv(Ta,Qa,QLa+QIa);
 
 % For implicit damping
 damp = dt*(eps_sl./[rho_zc,rho_zc,rho_mf]);
@@ -288,8 +363,8 @@ if conti == 0
     for idx=1:Ni
       if rand(1)<0.1
         bl = BL(1:round(rand(1)*length(BL)));
-        X0(bl,2,idx) = eval_qsat2(T_zc(bl)+dTbl,p_zc(bl)) .* (1-dqcbl);
-        X0(bl,1,idx) = eval_theta_e(T_zc(bl)+dTbl,X0(bl,2,idx),(dqsat==1)*dqcbl*((T_zc(bl)+dTbl)>=T0),(dqsat==1)*dqcbl*((T_zc(bl)+dTbl)<T0),p_zc(bl));
+        X0(bl,2,idx) = eval_qsat2(T_zm(bl)+dTbl,p_mf(bl)) .* (1-dqcbl);
+        X0(bl,1,idx) = eval_theta_e(T_zm(bl)+dTbl,X0(bl,2,idx),(dqsat==1)*dqcbl*((T_zm(bl)+dTbl)>=T0),(dqsat==1)*dqcbl*((T_zm(bl)+dTbl)<T0),p_mf(bl));
       end
     end
 %     contourf(squeeze(X0(:,1,:)),[330:355],'linestyle','none')
@@ -300,11 +375,11 @@ if conti == 0
   % Adding BL/thermal bubble for inner-most ACE
   elseif ~isempty(BL)
     if dqsat==1
-      X0(BL,2,1) = eval_qsat2(T_zc(BL)+dTbl,p_zc(BL)) .* (1-dqcbl);
+      X0(BL,2,1) = eval_qsat2(Ta(BL)+dTbl,p_zc(BL)) .* (1-dqcbl);
     else
-      X0(BL,2,1) = qt_zc(BL)*dqbl;
+      X0(BL,2,1) = q_env(BL)*dqbl;
     end
-    X0(BL,1,1) = eval_theta_e(T_zc(BL)+dTbl,X0(BL,2,1),(dqsat==1)*dqcbl*((T_zc(BL)+dTbl)>=T0),(dqsat==1)*dqcbl*((T_zc(BL)+dTbl)<T0),p_zc(BL));
+    X0(BL,1,1) = eval_theta_e(Ta(BL)+dTbl,X0(BL,2,1),(dqsat==1)*dqcbl*((T_env(BL)+dTbl)>=T0),(dqsat==1)*dqcbl*((T_env(BL)+dTbl)<T0),p_zc(BL));
     % 2nd cloud at the end
     % X0(:,:,end) = X0(:,:,1);
 % %     for idx=2:10
@@ -324,49 +399,57 @@ end
 if restart==1
   X0(:,3,:) = 0; 
   rc = 66; % Column index for restart bubble 
-  X0(BL,2,rc) = eval_qsat2(T(BL,end,rc)+dTbl,p_zc(BL)) .* (1-dqcbl);
-  X0(BL,1,rc)=eval_theta_e(T(BL,end,rc)+dTbl,X0(BL,2,rc),(dqsat==1)*dqcbl*((T(BL,end,rc)+dTbl)>=T0),(dqsat==1)*dqcbl*((T(BL,end,rc)+dTbl)<T0),p_zc(BL));
+  X0(BL,2,rc) = eval_qsat2(T(BL,end,rc)+dTbl,p_mf(BL)) .* (1-dqcbl);
+  X0(BL,1,rc)=eval_theta_e(T(BL,end,rc)+dTbl,X0(BL,2,rc),(dqsat==1)*dqcbl*((T(BL,end,rc)+dTbl)>=T0),(dqsat==1)*dqcbl*((T(BL,end,rc)+dTbl)<T0),p_mf(BL));
 end
 
 %% Define a struc to warp static ACE attributes
-ace.PMB = PMB;
-ace.PMDv = PMDv;
-ace.PMD = PMD;
-ace.damp = damp;
-ace.dt = dt;
-ace.p_zc = p_zc;
-ace.rho_zc = rho_zc;
-ace.Tv_zc = Tv_zc;
-ace.theta_e_diag = theta_e_diag;
-ace.Wbar_eq_zero = Wbar_eq_zero;
-ace.Ai = Ai;
-ace.dz = dz;
-ace.one_ace_only = one_ace_only;
-ace.qt_zc = qt_zc;
-ace.theta_e_zc = theta_e_zc;
-ace.activate_mf_diff = activate_mf_diff;
-ace.Z = Z;
-ace.zm = zm;
-ace.coarse_z = coarse_z;
-ace.Ni = Ni;
-ace.k = k;
-ace.rho_zi = rho_zi;
-ace.Nzm = Nzm;
-ace.Ni = Ni;
-ace.eps_tur = eps_tur;
-ace.turn_off_DHv = turn_off_DHv;
-ace.turn_off_DHh = turn_off_DHh;
-ace.zero_ref_buoyancy = zero_ref_buoyancy;
-ace.qc_ramp = qc_ramp;
-ace.dqc = dqc;
-ace.tau_pr = tau_pr;
-ace.eddiffu = eddiffu;
-ace.eddiwin = eddiwin;
+model.PMB = PMB;
+model.PMDv = PMDv;
+model.PMD = PMD;
+model.damp = damp;
+model.dt = dt;
+model.p_zc = p_zc;
+model.rho_zc = rho_zc;
+model.Tv_zc = Tv_zc;
+model.theta_e_diag = theta_e_diag;
+model.Wbar_eq_zero = Wbar_eq_zero;
+model.Ai = Ai;
+model.dz = dz;
+model.one_ace_only = one_ace_only;
+model.qt_zc = qt_zc;
+model.theta_e_zc = theta_e_zc;
+model.activate_mf_diff = activate_mf_diff;
+model.Z = Z;
+model.zm = zm;
+model.coarse_z = coarse_z;
+model.Ni = Ni;
+model.k = k;
+model.rho_zi = rho_zi;
+model.Nzm = Nzm;
+model.Ni = Ni;
+model.eps_tur = eps_tur;
+model.turn_off_DHv = turn_off_DHv;
+model.turn_off_DHh = turn_off_DHh;
+model.zero_ref_buoyancy = zero_ref_buoyancy;
+model.qc_ramp = qc_ramp;
+model.dqc = dqc;
+model.tau_pr = tau_pr;
+model.eddiffu = eddiffu;
+model.eddiwin = eddiwin;
+physics=getenv('ACE_PHYSICS'); if isempty(physics), physics='native'; end
+assert(ismember(physics,{'native','none'}), 'ACE_PHYSICS must be native or none');
+model.precip_enabled=strcmp(physics,'native');
+validation_file=getenv('ACE_VALIDATE_INPUT');
+if ~isempty(validation_file)
+  save(validation_file,'X0','model','z','zm','D','Ta','Qa','QLa','QIa','case_profile_index','-v7.3');
+  return
+end
 
 %% Time-integration
 %%            in GPU
 tic;
-X = timeint(@ssprk93,tspan,X0,dt,ace);
+X = timeint(@ssprk93,tspan,X0,dt,model);
 if conti==1
   X = cat(4,Xminus1,X);
   tspan = [tminus1 tspan];
@@ -377,17 +460,81 @@ disp(['ODE solver time = ' num2str(Tcost) ' sec'])
 
 % Derived variables evaluated via post-processing (z,time,ACE-i)
 [theta_e, qt, mf, theta, RH, B,...
-   qsat, qv, qc, ql, qi, Tv, T, dtheta_e_pr_accum, pr_accum] = POST_PROCESS(X,ace);
+   qsat, qv, qc, ql, qi, Tv, T, dtheta_e_pr_accum, pr_accum] = POST_PROCESS(X,model);
 
 disp('... done!')
 
 if save_output
-  save(['OUTPUT\' output_filename],'-v7.3')
+  %save(['OUTPUT\' output_filename],'-v7.3')
   % save(['/home/yhkuo/Desktop/OUTPUT/' output_filename],'-v7.3')
+
+  %save(output_filename)
+
+  %nt = size(tspan,2);
+  nt = Inf; % unlimited dimension
+  nc = size(mf,3);
+  nz = size(mf,1);
+  ncoutput = output_filename;
+  assert(~isfile(ncoutput), 'Output already exists; choose a fresh ACE_OUTPUT_FILE');
+  nccreate(ncoutput,'ace_width','Dimensions',{'ncols',nc},'format','netcdf4')
+  ncwrite(ncoutput,'ace_width',D*1000)
+  ncwriteatt(ncoutput,'ace_width','long_name','Width of slab ACE columns')
+  ncwriteatt(ncoutput,'ace_width','units','m')
+  nccreate(ncoutput,'height','Dimensions',{'zc',nz})
+  ncwrite(ncoutput,'height',z)
+  ncwriteatt(ncoutput,'height','long_name','Height')
+  ncwriteatt(ncoutput,'height','units','m')
+  nccreate(ncoutput,'time','Dimensions',{'time',nt})
+  ncwrite(ncoutput,'time',tspan)
+  ncwriteatt(ncoutput,'time','long_name','time of simulation')
+  ncwriteatt(ncoutput,'time','units','s')
+
+  nccreate(ncoutput,'mf','Dimensions',{'ncols',nc,'zc',nz,'time',nt})
+  ncwrite(ncoutput,'mf',permute(mf,[3,1,2]))
+  ncwriteatt(ncoutput,'mf','long_name','Vertical mass flux')
+  ncwriteatt(ncoutput,'mf','units','kg m^-2 s^-1')
+  nccreate(ncoutput,'the','Dimensions',{'ncols',nc,'zc',nz,'time',nt})
+  ncwrite(ncoutput,'the',permute(theta_e,[3,1,2]))
+  ncwriteatt(ncoutput,'the','long_name','Equivalent potential temperature')
+  ncwriteatt(ncoutput,'the','units','K')
+  nccreate(ncoutput,'th','Dimensions',{'ncols',nc,'zc',nz,'time',nt})
+  ncwrite(ncoutput,'th',permute(theta,[3,1,2]))
+  ncwriteatt(ncoutput,'th','long_name','Potential temperature')
+  ncwriteatt(ncoutput,'th','units','K')
+  nccreate(ncoutput,'qt','Dimensions',{'ncols',nc,'zc',nz,'time',nt})
+  ncwrite(ncoutput,'qt',permute(qt,[3,1,2]))
+  ncwriteatt(ncoutput,'qt','long_name','Mixing ratio of total water')
+  ncwriteatt(ncoutput,'qt','units','kg kg^-1')
+  nccreate(ncoutput,'qv','Dimensions',{'ncols',nc,'zc',nz,'time',nt})
+  ncwrite(ncoutput,'qv',permute(qv,[3,1,2]))
+  ncwriteatt(ncoutput,'qv','long_name','Mixing ratio of water vapor')
+  ncwriteatt(ncoutput,'qv','units','kg kg^-1')
+  nccreate(ncoutput,'ql','Dimensions',{'ncols',nc,'zc',nz,'time',nt})
+  ncwrite(ncoutput,'ql',permute(ql,[3,1,2]))
+  ncwriteatt(ncoutput,'ql','long_name','Mixing ratio of liquid water')
+  ncwriteatt(ncoutput,'ql','units','kg kg^-1')
+  nccreate(ncoutput,'qi','Dimensions',{'ncols',nc,'zc',nz,'time',nt})
+  ncwrite(ncoutput,'qi',permute(qi,[3,1,2]))
+  ncwriteatt(ncoutput,'qi','long_name','Mixing ratio of ice water')
+  ncwriteatt(ncoutput,'qi','units','kg kg^-1')
+  nccreate(ncoutput,'rh','Dimensions',{'ncols',nc,'zc',nz,'time',nt})
+  ncwrite(ncoutput,'rh',permute(RH,[3,1,2])*100.)
+  ncwriteatt(ncoutput,'rh','long_name','Relatvie humidity')
+  ncwriteatt(ncoutput,'rh','units','%')
+  nccreate(ncoutput,'B','Dimensions',{'ncols',nc,'zc',nz,'time',nt})
+  ncwrite(ncoutput,'B',permute(B,[3,1,2]))
+  ncwriteatt(ncoutput,'B','long_name','Buoyancy')
+  ncwriteatt(ncoutput,'B','units','m s^-2')
+
+  ncwriteatt(ncoutput,'/','reference_version','KHN26 2025-11');
+  ncwriteatt(ncoutput,'/','profile_index',double(case_profile_index));
+  ncwriteatt(ncoutput,'/','physics',physics);
+  if shared_input, ncwriteatt(ncoutput,'/','input_file',input_file); end
+  disp(["successfully output to", ncoutput])
 end
 
 %% Operator-splitting Time-integration interacting with both CPU & GPU
-function X = timeint(odeint,tspan,X0,dt,ace)
+function X = timeint(odeint,tspan,X0,dt,model)
   X = nan([size(X0),length(tspan)]);
   X(:,:,:,1) = X0;
   yn = X0;
@@ -398,20 +545,23 @@ function X = timeint(odeint,tspan,X0,dt,ace)
       t = t+dt;
       disp(t)
       % Microphysical & Radiative tendencies
-      [dTH, dQt, rho0B] = microrad(yn(:,1:2,:),ace.p_zc,ace.rho_zc,ace.Tv_zc,ace.theta_e_diag,ace);
-      % Built-in weak buoyancy gradient
-      if ace.zero_ref_buoyancy
-        rho0B = rho0B - sum(rho0B.*(ace.Ai/sum(ace.Ai))',2);
-      end
+      [dTH, dQt, rho0B] = microrad(yn(:,1:2,:),model.p_zc,model.rho_zc,model.Tv_zc,model.theta_e_diag,model);
+      dTH(:,:) = 0.;
+      dQt(:,:) = 0.;
       % Time-integrate explicit terms (default: low-storage SSPRK93)
-      yn = odeint(@expFun,yn,dTH,dQt,rho0B,ace.dt,ace.Wbar_eq_zero,ace.Ai,ace);
+      yn = odeint(@expFun,yn,dTH,dQt,rho0B,model.dt,model.Wbar_eq_zero,model.Ai,model);
+      % Microphysical & Radiative tendencies
+      [dTH, dQt, rho0B] = microrad(yn(:,1:2,:),model.p_zc,model.rho_zc,model.Tv_zc,model.theta_e_diag,model);
+      if model.precip_enabled
+        yn(:,1:2,:) = yn(:,1:2,:) + permute(cat(3,dTH,dQt),[1,3,2])*dt;
+      end
       % Implicit Newtonian damping
-      yn = ImDamp(yn,ace.theta_e_zc,ace.qt_zc,ace.Nzm,ace.damp);
+      yn = ImDamp(yn,model.theta_e_zc,model.qt_zc,model.Nzm,model.damp);
       % Implicitly solving massflux diffusion
-      if ace.activate_mf_diff==1
-        yn(:,3,:) = ExDiffMF(yn(:,3,:),ace.dt,ace.dz,ace.rho_zi,ace.eddiffu);
-      elseif ace.activate_mf_diff==2
-        yn(:,3,:) = ImDiffMF(yn(:,3,:),ace.dt,ace.dz,ace.rho_zi,ace.Ni,ace.Nzm,ace.eddiffu,ace.eddiwin);
+      if model.activate_mf_diff==1
+        yn(:,3,:) = ExDiffMF(yn(:,3,:),model.dt,model.dz,model.rho_zi,model.eddiffu);
+      elseif model.activate_mf_diff==2
+        yn(:,3,:) = ImDiffMF(yn(:,3,:),model.dt,model.dz,model.rho_zi,model.Ni,model.Nzm,model.eddiffu,model.eddiwin);
       end
     end%idn
     X(:,:,:,idt+1) = yn;
@@ -419,7 +569,7 @@ function X = timeint(odeint,tspan,X0,dt,ace)
 end
 
 function [theta_e, qt, mf, theta, RH, B,... 
-          qsat, qv, qc, ql, qi, Tv, T, dtheta_e_pr_accum, pr_accum] = POST_PROCESS(X,ace)
+          qsat, qv, qc, ql, qi, Tv, T, dtheta_e_pr_accum, pr_accum] = POST_PROCESS(X,model)
   [Nzm,Nvar,Ni,Nt] = size(X); % Nvar=5 for simplified thermodynamics
   X = reshape(X,[Nvar*Nzm,Ni,Nt]); % X(var&z,ACE-i,time)
   X = permute(X,[1,3,2]); % X(var&z,time,ACE-i)
@@ -438,33 +588,33 @@ function [theta_e, qt, mf, theta, RH, B,...
     for idt=1:Nt
       for idz=1:Nzm
         [T(idz,idt,ida), q(idz,idt,ida), ql(idz,idt,ida), qi(idz,idt,ida)]...
-            = inv_T_from_theta_e(theta_e(idz,idt,ida), qt(idz,idt,ida), ace.p_zc(idz));
+            = inv_T_from_theta_e(theta_e(idz,idt,ida), qt(idz,idt,ida), model.p_zc(idz));
       end
-      theta(:,idt,ida) = eval_theta(T(:,idt,ida),ace.p_zc);
-      qsat(:,idt,ida) = eval_qsat(T(:,idt,ida),ace.p_zc,qt(:,idt,ida));
+      theta(:,idt,ida) = eval_theta(T(:,idt,ida),model.p_zc);
+      qsat(:,idt,ida) = eval_qsat(T(:,idt,ida),model.p_zc,qt(:,idt,ida));
     end
   end
   Tv = eval_Tv(T,q,ql+qi);
   RH = q./qsat;
-  B = eval_B(Tv,ace.Tv_zc);
+  B = eval_B(Tv,model.Tv_zc);
   qc = (qt-qsat).*(qt>qsat);
   qv = qt-qc;
 end
 
 %% Subroutines 
 %%   used in GPU
-function dXdt = expFun(X,dTH,dQt,rho0B,ace)
+function dXdt = expFun(X,dTH,dQt,rho0B,model)
   % X(z,var,ACE-i)=[theta_e,qt,MF,dtheta_e_pr_accum,pr_accum]
   % Compute tracer values Ci(zi) at interface points from C(zc=zi+dz/2)
-  Ci = reconstruction_weno_vec(ace.k,X(:,1:2,:),X(:,3,:)); % Ci(zi,var,ACE-i)
+  Ci = reconstruction_weno_vec(model.k,X(:,1:2,:),X(:,3,:)); % Ci(zi,var,ACE-i)
   % Vertical velocity w(zi) (mass flux already at zi)
-  wi = X(:,3,:)./ace.rho_zi; % (zi,1,ACE-i)
+  wi = X(:,3,:)./model.rho_zi; % (zi,1,ACE-i)
   % Vertical mass flux & velocity at zc=zi+dz/2
   mfc = squeeze(reconstruction_up3(X(:,3,:))); % (zi,1,ACE-i)-->(zc,1,ACE-i)-->(zc,ACE-i)
   % mfc = squeeze(reconstruction_weno_vec(k,X(:,3,:),mfc_up3));
-  wc = mfc./ace.rho_zc; % (zc,ACE-i)
+  wc = mfc./model.rho_zc; % (zc,ACE-i)
   % Admfdz = (ACE area)*dmfdz for dynamic inflow/outflow at zc=zi+dz/2
-  Admfdz = ace.Ai'.* squeeze(( X(2:end,3,:)-X(1:end-1,3,:) )/ace.dz); % (zc,1,ACE-i)-->(zc,ACE-i); size(Admfdz)=(Nzm-1,Ni)
+  Admfdz = model.Ai'.* squeeze(( X(2:end,3,:)-X(1:end-1,3,:) )/model.dz); % (zc,1,ACE-i)-->(zc,ACE-i); size(Admfdz)=(Nzm-1,Ni)
   % ioflow = -Bi*rho_0*u_n (minus h. mass flux * lateral boundary length)
   ioflow = permute(cumsum(Admfdz,2),[1,3,2]); % ioflow(:,1,[i-1,i])=-rho0*u for ACE-i dynamic inflow/outflow
   % Vertical tracer flux rho_0*w*C at zi
@@ -472,44 +622,44 @@ function dXdt = expFun(X,dTH,dQt,rho0B,ace)
   % Set surface fluxes
   rho0wC(1,:,:) = 0; % First try: zeros surface flux
   % Compute flux-based tendencies at zc=zi+dz/2
-  dCdt = zeros(ace.Nzm,2,ace.Ni); % Add zeros(1,2,Ni) for model top
-  dCdt(1:end-1,:,1) = -ace.eps_tur(1,1,1)*( X(1:end-1,1:2,1)-X(1:end-1,1:2,2) )... % Turbulent entrainment
-                +( ioflow(:,1,1).*( (ioflow(:,1,1)>0).*X(1:end-1,1:2,2) + (ioflow(:,1,1)<0).*X(1:end-1,1:2,1) )/ace.Ai(1)...
-                  -( rho0wC(2:end,:,1)-rho0wC(1:end-1,:,1) )/ace.dz )./ace.rho_zc(1:end-1); % Vertical mean flux convergence
-  dCdt(1:end-1,:,2:end-1) = -ace.eps_tur(1,1,2:end-1).*( X(1:end-1,1:2,2:end-1)-X(1:end-1,1:2,3:end) )...  % Turbulent entrainment
-                     -ace.eps_tur(1,2,2:end-1).*( X(1:end-1,1:2,2:end-1)-X(1:end-1,1:2,1:end-2) )... 
+  dCdt = zeros(model.Nzm,2,model.Ni); % Add zeros(1,2,Ni) for model top
+  dCdt(1:end-1,:,1) = -model.eps_tur(1,1,1)*( X(1:end-1,1:2,1)-X(1:end-1,1:2,2) )... % Turbulent entrainment
+                +( ioflow(:,1,1).*( (ioflow(:,1,1)>0).*X(1:end-1,1:2,2) + (ioflow(:,1,1)<0).*X(1:end-1,1:2,1) )/model.Ai(1)...
+                  -( rho0wC(2:end,:,1)-rho0wC(1:end-1,:,1) )/model.dz )./model.rho_zc(1:end-1); % Vertical mean flux convergence
+  dCdt(1:end-1,:,2:end-1) = -model.eps_tur(1,1,2:end-1).*( X(1:end-1,1:2,2:end-1)-X(1:end-1,1:2,3:end) )...  % Turbulent entrainment
+                     -model.eps_tur(1,2,2:end-1).*( X(1:end-1,1:2,2:end-1)-X(1:end-1,1:2,1:end-2) )...
                      +( ( ioflow(:,1,2:end-1).*( (ioflow(:,1,2:end-1)>0).*X(1:end-1,1:2,3:end) + (ioflow(:,1,2:end-1)<0).*X(1:end-1,1:2,2:end-1) )...
-                         -ioflow(:,1,1:end-2).*( (ioflow(:,1,1:end-2)>0).*X(1:end-1,1:2,2:end-1) + (ioflow(:,1,1:end-2)<0).*X(1:end-1,1:2,1:end-2) ) )./permute(ace.Ai(2:end-1),[3,2,1])...
-                       -( rho0wC(2:end,:,2:end-1)-rho0wC(1:end-1,:,2:end-1) )/ace.dz )./ace.rho_zc(1:end-1); % Vertical mean flux convergence          
-  dCdt(1:end-1,:,end) = -ace.eps_tur(1,1,end).*( X(1:end-1,1:2,end)-[X(1:end-1,1:2,end)] )... % Turbulent entrainment
-                 -ace.eps_tur(1,2,end).*( X(1:end-1,1:2,end)-X(1:end-1,1:2,end-1) )... 
+                         -ioflow(:,1,1:end-2).*( (ioflow(:,1,1:end-2)>0).*X(1:end-1,1:2,2:end-1) + (ioflow(:,1,1:end-2)<0).*X(1:end-1,1:2,1:end-2) ) )./permute(model.Ai(2:end-1),[3,2,1])...
+                       -( rho0wC(2:end,:,2:end-1)-rho0wC(1:end-1,:,2:end-1) )/model.dz )./model.rho_zc(1:end-1); % Vertical mean flux convergence
+  dCdt(1:end-1,:,end) = -model.eps_tur(1,1,end).*( X(1:end-1,1:2,end)-[X(1:end-1,1:2,end)] )... % Turbulent entrainment
+                 -model.eps_tur(1,2,end).*( X(1:end-1,1:2,end)-X(1:end-1,1:2,end-1) )...
                  +( ( ioflow(:,1,end).*( (ioflow(:,1,end)>0).*X(1:end-1,1:2,end) + (ioflow(:,1,end)<0).*X(1:end-1,1:2,end) )...
-                     -ioflow(:,1,end-1).*( (ioflow(:,1,end-1)>0).*X(1:end-1,1:2,end) + (ioflow(:,1,end-1)<0).*X(1:end-1,1:2,end-1) ) )/ace.Ai(end)...
-                   -( rho0wC(2:end,:,end)-rho0wC(1:end-1,:,end) )/ace.dz )./ace.rho_zc(1:end-1); % Vertical mean flux convergence
+                     -ioflow(:,1,end-1).*( (ioflow(:,1,end-1)>0).*X(1:end-1,1:2,end) + (ioflow(:,1,end-1)<0).*X(1:end-1,1:2,end-1) ) )/model.Ai(end)...
+                   -( rho0wC(2:end,:,end)-rho0wC(1:end-1,:,end) )/model.dz )./model.rho_zc(1:end-1); % Vertical mean flux convergence
   % F(zc,ACE-i) = local non-PGF dynamic forcing for mass flux (excluding buoyancy and nonlocal effect) 
   ioflow = squeeze(ioflow); % (Nzm-1,1,Ni)-->(Nzm-1,Ni)
   % FH(zc,ACE-i) with size(FH)=(Nzm-1,Ni); turbulent entrainment & horizontal in/outflow
-  FH = -squeeze(ace.eps_tur(1,1,:))'.*( mfc(1:end-1,:)-[mfc(1:end-1,2:end),mfc(1:end-1,end)] )...
-       -squeeze(ace.eps_tur(1,2,:))'.*( mfc(1:end-1,:)-[mfc(1:end-1,1),mfc(1:end-1,1:end-1)] )... % Turbulent entrainment
+  FH = -squeeze(model.eps_tur(1,1,:))'.*( mfc(1:end-1,:)-[mfc(1:end-1,2:end),mfc(1:end-1,end)] )...
+       -squeeze(model.eps_tur(1,2,:))'.*( mfc(1:end-1,:)-[mfc(1:end-1,1),mfc(1:end-1,1:end-1)] )... % Turbulent entrainment
        +( ioflow.*( (ioflow>0).*[wc(1:end-1,2:end),wc(1:end-1,end)] + (ioflow<0).*wc(1:end-1,:) )... % Horizontal inflow/outflow
-         -[zeros(ace.Nzm-1,1),ioflow(:,1:end-1)].*( ([zeros(ace.Nzm-1,1),ioflow(:,1:end-1)]>0).*wc(1:end-1,:)... 
-         + ([zeros(ace.Nzm-1,1),ioflow(:,1:end-1)]<0).*[zeros(ace.Nzm-1,1),wc(1:end-1,1:end-1)] ) )./ace.Ai';
+         -[zeros(model.Nzm-1,1),ioflow(:,1:end-1)].*( ([zeros(model.Nzm-1,1),ioflow(:,1:end-1)]>0).*wc(1:end-1,:)...
+         + ([zeros(model.Nzm-1,1),ioflow(:,1:end-1)]<0).*[zeros(model.Nzm-1,1),wc(1:end-1,1:end-1)] ) )./model.Ai';
   % F(zc,ACE-i) with size(F)=(Nzm-1,Ni); fill zeros(1,Ni) at domain top later
-  F = FH - squeeze( X(2:end,3,:).*wi(2:end,1,:)-X(1:end-1,3,:).*wi(1:end-1,1,:) )/ace.dz; % Vertical mean flux convergence
+  F = FH - squeeze( X(2:end,3,:).*wi(2:end,1,:)-X(1:end-1,3,:).*wi(1:end-1,1,:) )/model.dz; % Vertical mean flux convergence
   % (d/dz)^2(FH) (zc,ACE-i)
-  dz2FH = ([-FH(1,:);FH(1:end-1,:)]-2*FH +[FH(2:end,:);zeros(1,ace.Ni)])/ace.dz^2;
+  dz2FH = ([-FH(1,:);FH(1:end-1,:)]-2*FH +[FH(2:end,:);zeros(1,model.Ni)])/model.dz^2;
   % The other nonlocal acceleration term DHh arising from divergence of horiznotal momemtum flux in the horizontal
-  DHh = [ioflow(:,1).^2, ioflow(:,2:end).^2-ioflow(:,1:end-1).^2]./ace.rho_zc(1:end-1)./ace.Ai';
+  DHh = [ioflow(:,1).^2, ioflow(:,2:end).^2-ioflow(:,1:end-1).^2]./model.rho_zc(1:end-1)./model.Ai';
   % Recall X(z,var,ACE-i)=[theta_e,qt,MF,dtheta_e_pr_accum,pr_accum] 
   dXdt = [ dCdt+permute(cat(3,dTH,dQt),[1,3,2]),...
-           permute(NONLOCAL_RESPONSE(rho0B,[F;zeros(1,ace.Ni)],...
-                                     (ace.turn_off_DHv-1)*dz2FH,...
-                                     (1-ace.turn_off_DHh)*[DHh;zeros(1,ace.Ni)],...
-                                     ace.Z,ace.zm,ace.coarse_z,ace.Ni,ace.PMB,ace.PMDv,ace.PMD),...%,ace.Ai,ace.zero_ref_buoyancy),...
+           permute(NONLOCAL_RESPONSE(rho0B,[F;zeros(1,model.Ni)],...
+                                     (model.turn_off_DHv-1)*dz2FH,...
+                                     (1-model.turn_off_DHh)*[DHh;zeros(1,model.Ni)],...
+                                     model.Z,model.zm,model.coarse_z,model.Ni,model.PMB,model.PMDv,model.PMD,model.Ai,model.zero_ref_buoyancy),...
                                      [1,3,2]),... %+repmat(EBF*(t<EBT),[1,Ni]),[1,3,2]), ...
            -permute(cat(3,dTH,dQt),[1,3,2]) ]; % dXdt(z,var,ACE-i)
   dXdt(end-10:end,1:3,:) = 0; % At domain top
-  if ace.one_ace_only==1
+  if model.one_ace_only==1
     dXdt(:,:,2:end) = 0; % Shut down additional ACEs
   end 
 end
@@ -564,11 +714,11 @@ function MF = ImDiffMF(MF,dt,dz,rho_zi,Ni,Nzm,eddiffu,eddiwin)
   % % MF([1,end-10:end],:,:) = 0;
 end
 
-function dMFdt = NONLOCAL_RESPONSE(rho0B, F, dz2FH, DHh, Z, zm, coarse_z, Ni, PMB, PMDv, PMD)%, Ai, zero_ref_buoyancy)
-% %   if zero_ref_buoyancy
-% %     % Zero out reference buoyancy  
-% %     rho0B = rho0B - sum(rho0B.*(Ai'/sum(Ai)),2);
-% %   end
+function dMFdt = NONLOCAL_RESPONSE(rho0B, F, dz2FH, DHh, Z, zm, coarse_z, Ni, PMB, PMDv, PMD, Ai, zero_ref_buoyancy)
+  if zero_ref_buoyancy
+    % Zero out reference buoyancy
+    rho0B = rho0B - sum(rho0B.*(Ai'/sum(Ai)),2);
+  end
   if coarse_z==1
     dMFdt = squeeze(sum(sum(PMB.*reshape((rho0B(1:end-1,:)+F(1:end-1,:)),coarse_z,[],Ni)...
                             +PMDv.*reshape(dz2FH,coarse_z,[],Ni)...
@@ -580,9 +730,9 @@ function dMFdt = NONLOCAL_RESPONSE(rho0B, F, dz2FH, DHh, Z, zm, coarse_z, Ni, PM
   end
 end
 
-function [dTH, dQt, rho0B] = microrad(y, p_zc, rho_zc, Tv_zc, theta_e_diag, ace)
+function [dTH, dQt, rho0B] = microrad(y, p_zc, rho_zc, Tv_zc, theta_e_diag, model)
   [T, Q, QL, QI] = INV_THETA_E(squeeze(y(:,1,:)), squeeze(y(:,2,:)), p_zc, theta_e_diag); % (z,ACE-i)
-  [dTH, dQt] = PRECIP_SINKS(T, Q, QL, QI, p_zc, ace.qc_ramp, ace.dqc, ace.tau_pr);
+  [dTH, dQt] = PRECIP_SINKS(T, Q, QL, QI, p_zc, model.qc_ramp, model.dqc, model.tau_pr);
   % Radiative forcing
   % % % dT = 1e-8;  
   % % % dtheta_e = dtheta_e+ RF.* ( eval_theta_e(T+dT,Q,QL,QI,p_mf) - eval_theta_e(T,Q,QL,QI,p_mf) )/1e-8;
@@ -622,7 +772,7 @@ function [T, q, ql, qi] = INV_THETA_E(theta_e, qt, p_zc, theta_e_diag)
     disp('qt (kg/kg): ')
     disp(qt(Ii));
     disp('p (Pa): ')
-    P_MF = repmat(p_mf,[1,Np]);
+    P_MF = repmat(p_zc,[1,Np]);
     disp(P_MF(Ii))
     disp('T (K): ')
     disp(T(Ii));

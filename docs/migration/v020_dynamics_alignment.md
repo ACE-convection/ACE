@@ -1,5 +1,11 @@
 # v0.20 reference buoyancy and momentum response alignment
 
+Current reference decision (2026-10-04): the author-selected v0.20 release
+reference is November 2025 KHN26. This page preserves the earlier S20/P3
+work and its evidence scope; use the [KHN26 review](v020_khn26_review.md)
+for the original source/input review. Active KHN26 adapters and numerical
+evidence are recorded in the [KHN26 integration](v020_khn26_integration.md).
+
 Implemented 2026-10-04 on `migration/v020-preparation` after developer
 approval to proceed with the reference-buoyancy/momentum alignment direction.
 The input adapter is recorded separately. This is a scientific

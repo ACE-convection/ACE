@@ -43,6 +43,11 @@ for i=1:numel(operators)
     if ~strcmp(name,'PMB'), unit='native'; end
     validate_variable(file,name,{'basis_edge','coarse_level','forcing_ace','response_ace'},unit);
     assert(isequal(size(s.(name)),[nb+1,nb,nc,nc]), 'Basis shape mismatch');
+    s.([name '_source_status'])='supplied';
+    v=ncinfo(file,name);
+    if any(strcmp({v.Attributes.Name},'source_status'))
+        s.([name '_source_status'])=ncreadatt(file,name,'source_status');
+    end
 end
 profiles={'theta_e_mf','qt_mf','Tv_mf','p_mf','rho_mf','zm','theta_e_zc','qt_zc','Tv_zc','p_zc','rho_zc','z'};
 profile_units={'K','kg kg-1','K','Pa','kg m-3','m','K','kg kg-1','K','Pa','kg m-3','m'};

@@ -4,7 +4,7 @@ use iso_fortran_env, only: real64
 use, intrinsic :: ieee_arithmetic, only: ieee_is_finite
 implicit none
 private
-public :: read_case_profile, read_case_pmb, read_case_basis, read_case_metadata, read_case_geometry
+public :: read_case_profile, read_case_pmb, read_case_basis, read_case_metadata, read_case_geometry, basis_available
 contains
 
 subroutine check(status)
@@ -264,6 +264,22 @@ do k=1,nc
 enddo
 call check(nf90_close(ncid))
 end subroutine
+
+logical function basis_available(file,name)
+character(*), intent(in) :: file,name
+integer :: ncid,id,status
+character(64) :: schema,source_status
+call open_case(file,ncid,schema)
+call check(nf90_inq_varid(ncid,name,id))
+status=nf90_get_att(ncid,id,'source_status',source_status)
+if (status==nf90_enotatt) then
+  basis_available=.true. ! Existing supplied schema-2 operators have no marker.
+else
+  call check(status)
+  basis_available=trim(source_status)/='disabled_zero_placeholder'
+endif
+call check(nf90_close(ncid))
+end function
 
 subroutine read_case_pmb(file,pmb)
 character(*), intent(in) :: file

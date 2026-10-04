@@ -44,7 +44,7 @@ marker meanings; snapshot names do not certify model execution.
 | Milestone | Direction and evidence needed |
 | --- | --- |
 | v0.19, if needed | Use S19 and standalone artifacts as comparison evidence; do not infer missing parent edges or require a separate release from import order. |
-| v0.20.0 | Joint publication/reproducibility release. Packaged MATLAB S20 is the scientific reference. Recover the intended 2D basis and builder inputs, review driver/library contracts, then establish a reference run and a matched Fortran comparison. |
+| v0.20.0 | Joint publication/reproducibility release. Author-selected November 2025 KHN26 is the scientific reference; packaged S20 remains historical comparison evidence. Recover the intended 2D basis and builder inputs, review driver/library contracts, then establish a reference run and a matched Fortran comparison. |
 | v0.24 | Joint active development using S24 p87/GF87 formulation evidence. Recover kernel inputs and fingerprint logs; review CPU/GPU behavior separately. Missing v0.21–v0.23 source history is not reconstructed by interpolation. |
 
 For v0.20 input/API blockers, start with the
@@ -118,3 +118,20 @@ Large historical MAT/NC data use Git LFS. Retain hashes, source provenance and
 conversion/readback evidence. The completed [LFS migration](matlab_data_lfs_migration.md)
 and its commit map are preservation records, not commands to rewrite history
 again. Historical binary contracts remain references for legacy input reads.
+
+## KHN26 release reference confirmed (2026-10-04)
+
+The developer relayed author confirmation of June/November 2025 v0.20
+versions and selected November KHN26 for publication. The [complete source
+review and Fortran alignment plan](v020_khn26_review.md) supersede the
+packaged-S20 final-reference choice above. The selected input is the
+4UNEVEN basis (actual 101 ACEs) and processed Manaus profile 1342, six hours,
+dt=6 s. A shared input is prepared by direct copy; no raw-sounding
+preprocessing should be repeated. Review source promotion and scientific
+alignment in separate small changes before model validation/release.
+
+The authorized KHN26 source promotion and shared adapters are implemented.
+[Integration evidence](v020_khn26_integration.md) covers exact MATLAB
+original/shared initialization and one-step agreement, real64 Fortran
+components and a short native run. Full six-hour trajectory/budget review,
+P3 and real32 numerical validation remain the next milestones.

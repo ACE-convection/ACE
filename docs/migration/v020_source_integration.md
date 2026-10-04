@@ -1,5 +1,11 @@
 # v0.20 source integration
 
+Current reference decision (2026-10-04): the author-selected v0.20 release
+reference is November 2025 KHN26. This page preserves the earlier S20/P3
+work and its evidence scope; use the [KHN26 review](v020_khn26_review.md)
+for the original source/input review. Active KHN26 adapters and numerical
+evidence are recorded in the [KHN26 integration](v020_khn26_integration.md).
+
 The source-only state below describes `d9e8401`. Subsequent developer-authorized
 [shared-input adapters](v020_shared_input_adapter.md) reconnect both drivers
 to NetCDF and extend the contract to three operators. Input-only verification

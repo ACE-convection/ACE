@@ -2,13 +2,12 @@
 
 ## Current v0.20 development interface (2026-10-04)
 
-Both drivers default to shared NetCDF, following the v0.18 input pattern.
-The S20 default is `data/input/goamazon314_s20.nc`; this file has not been
-generated because the final basis is pending. Reader compatibility,
-cross-language readback and Fortran builds have been checked; actual basis
-inspection and model validation remain deferred. The
-[adapter record](migration/v020_shared_input_adapter.md) owns scope and
-limitations.
+Both drivers now default to `data/input/manaus1342_khn26.nc`, the
+November 2025 KHN26 reference selected by the author and developer.
+The [integration record](migration/v020_khn26_integration.md) owns current
+source changes and numerical scope; [the KHN26 tests](../tests/khn26/README.md)
+reproduce initialization/component/short-run checks. The older S20 adapter
+record is historical evidence.
 
 ### Schema: ACE-case-input-2
 
@@ -33,8 +32,9 @@ Python/ncdump see all operators in reversed order:
 `response_ace, forcing_ace, coarse_level, basis_edge`. Fortran stores
 `operator(response,forcing,coarse,edge)`; MATLAB keeps API order.
 Readers reject swapped dimension names even when lengths are equal. Schema
-2 requires all three full operators; absent momentum operators are not
-silently replaced with zero. Fortran now includes PMDv/PMD calculation
+2 requires all three full operators; missing momentum operators must be explicitly marked
+`source_status=disabled_zero_placeholder`. Both drivers reject their
+activation. Older supplied operators without this attribute remain readable. Fortran now includes PMDv/PMD calculation
 branches with the same disabled defaults as MATLAB; see the
 [dynamics alignment record](migration/v020_dynamics_alignment.md).
 
@@ -92,14 +92,13 @@ From `fortran/`:
 
 ```bash
 ./ace_model.exe --input /absolute/path/to/case.nc \
-  --p3-lookup-directory /absolute/path/to/p3-tables \
-  --intervals 2 --output /existing/output/directory/state.dat
+  --physics native --intervals 2 --output /existing/output/directory/state.dat
 ```
 
 Fortran make dependencies include `ace_input.F`. P3 tables remain external
 text data. Legacy input is explicit: MATLAB `ACE_INPUT_MODE=legacy` /
 `ACE_LEGACY_DATA`, Fortran `--legacy-input`. Reader APIs still support schema
-1 files; MATLAB S20 rejects annular geometry rather than reinterpreting it.
+1 files; the current MATLAB KHN26 driver rejects annular geometry rather than reinterpreting it.
 Reading the same case does not match initial perturbations, timesteps,
 physics or boundaries; those remain documented model differences.
 
@@ -107,7 +106,7 @@ physics or boundaries; those remain documented model differences.
 
 The following records the tested v0.18 implementation and schema 1. Its
 commands, compiler validation and conversion evidence apply to a
-`v0.18.0` checkout, not untested S20/P3 sources.
+`v0.18.0` checkout, not the current KHN26/P3 sources.
 
 The published MATLAB and Fortran implementations default to one shared case file
 at `data/input/manus208.nc`. `data/input/goamazon314.nc` is an additional
@@ -300,3 +299,36 @@ path to initialize, then calls the actual numerical routines without the
 normal driver's unused Statistics/plotting diagnostics. Dry agreement does
 not extend to the controlled precipitating cases; review the scientific
 sink and inversion differences before claiming shared model behavior.
+
+## KHN26 processed reference case (2026-10-04)
+
+The author-selected November 2025 KHN26 case uses the actual 101-ACE
+`COMPOSITE_ACE_BASIS_2D_KHN26_4UNEVEN.mat` and
+`acelevels_manaus.nc`, one-based profile 1342. The converter
+[`tools/input/create_khn26_shared_input.py`](../tools/input/create_khn26_shared_input.py)
+produces `data/input/manaus1342_khn26.nc` with schema 2 and direct profile/PMB
+copying. Missing momentum operators are full-shape compressed zero
+placeholders with `source_status=disabled_zero_placeholder`; this is not
+a scientific momentum basis, and momentum activation remains unsupported
+for this case. The original supplied Tv is preserved separately from the
+KHN26 driver's inversion-derived reference decision.
+
+The [KHN26 review](migration/v020_khn26_review.md) preserves input/source
+provenance and readback evidence. The [integration record](migration/v020_khn26_integration.md)
+records current driver/Fortran changes.
+The older raw-sounding S20 converter and default GoAmazon314 input are
+not the selected KHN26 case. No raw-sounding intermediates are fabricated
+to satisfy the older S20 driver; both active drivers now use this processed-input contract.
+
+Reproduce the KHN26 conversion with original data and a fresh output path:
+
+```bash
+python3 tools/input/create_khn26_shared_input.py \
+  /path/COMPOSITE_ACE_BASIS_2D_KHN26_4UNEVEN.mat \
+  /path/acelevels_manaus.nc data/input/manaus1342_khn26.nc --profile 1342
+```
+
+The generated NC is ignored, not committed or uploaded. The tracked
+`data/input/manaus1342_khn26.provenance.json` pins its source and output hashes.
+The legacy raw-sounding S20 recipe above is historical and is not the KHN26
+conversion path.
