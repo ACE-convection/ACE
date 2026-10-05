@@ -22,6 +22,8 @@ integer :: coarse_nz, coarse_ratio
 real, dimension(:), allocatable :: coarse_z, coarse_ze
 real, dimension(:,:), allocatable :: coarse_F
 real, dimension(:,:), allocatable :: dwdt
+! PMB(source level, forcing ACE, response edge, response ACE).
+! Momentum operators retain their input layout.
 real*8, dimension(:,:,:,:), allocatable :: PMB, PMDv, PMD
 ! Slab defaults follow MATLAB S20; momentum coefficients retain their source units.
 logical, save :: slab_geometry=.false., zero_ref_buoyancy=.false., Wbar_eq_zero=.false.
@@ -170,6 +172,7 @@ logical, intent(in), optional :: turn_off_DHv_input,turn_off_DHh_input,zero_ref_
 ! local variables
 integer :: i,j,k,n,record_length,input_nz,input_cols,input_coarse
 logical :: shared
+real*8, allocatable :: packed_pmb(:,:,:,:)
 character(64) :: geometry
 
 if (.not.all(ieee_is_finite(environment_tv)) .or. any(environment_tv<=0.)) &
@@ -223,6 +226,15 @@ else
   close(10)
 endif
 
+! Pack once; release the input layout before time integration.
+allocate(packed_pmb(coarse_nz,ncols,coarse_nz+1,ncols))
+do i=1,ncols
+  do k=1,coarse_nz+1
+    packed_pmb(:,:,k,i)=transpose(PMB(i,:,:,k))
+  enddo
+enddo
+call move_alloc(packed_pmb,PMB)
+
 Wbar_eq_zero=slab_geometry
 if (present(Wbar_eq_zero_input)) Wbar_eq_zero=Wbar_eq_zero_input
 zero_ref_buoyancy=slab_geometry
@@ -248,8 +260,10 @@ real, dimension(ncols+1,nz,n_prog), intent(in) :: X
 real, dimension(ncols,nz,n_prog), intent(out) :: dXdt 
 
 ! local variables
-integer :: i,n,k,ks,ke,outer
+integer :: i,j,l,n,k,ks,ke,outer
 real :: dum1,dum2
+real*8 :: partial,value
+real :: packed_F(coarse_nz,ncols)
 real, dimension(ncols,nz,2) :: eps_tur
 real, dimension(nz) :: Tv, mean_rho0B
 real, dimension(ncols,nz) :: rho0B, FH, dz2FH, DHh
@@ -393,9 +407,28 @@ do i=1,ncols
     coarse_DHh(i,:)=sum(reshape(DHh(i,1:nz-1),[coarse_ratio,coarse_nz]),1)/real(coarse_ratio)
 enddo
 
+packed_F=transpose(coarse_F)
+! Each output keeps the legacy vertical-then-forcing reduction order.
+! Without -fopenmp these directives leave the same serial kernel.
+!$omp parallel do collapse(2) default(none) schedule(static) &
+!$omp shared(ncols,coarse_nz,PMB,packed_F,dwdt) private(i,k,j,l,partial,value)
 do i=1,ncols
   do k=1,coarse_nz+1
-    dwdt(i,k) = sum( sum( PMB(i,:,:,k) * coarse_F(:,:) , 2 ), 1 )
+    value=0.
+    do j=1,ncols
+      partial=0.
+      do l=1,coarse_nz
+        partial=partial+PMB(l,j,k,i)*packed_F(l,j)
+      enddo
+      value=value+partial
+    enddo
+    dwdt(i,k)=value
+  enddo
+enddo
+!$omp end parallel do
+
+do i=1,ncols
+  do k=1,coarse_nz+1
     if (.not.turn_off_DHv) dwdt(i,k)=dwdt(i,k)+sum(sum(PMDv(i,:,:,k)*coarse_DHv,2),1)
     if (.not.turn_off_DHh) dwdt(i,k)=dwdt(i,k)+sum(sum(PMD(i,:,:,k)*coarse_DHh,2),1)
   enddo

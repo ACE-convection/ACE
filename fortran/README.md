@@ -75,3 +75,32 @@ MAKIMA entries remain available. Arguments use the build's default real kind;
 only real64 MATLAB numerical agreement is an acceptance requirement. Real32
 compile compatibility is retained. See [interpolation tests](../tests/interpolation/README.md)
 and [the dynamics record](../docs/migration/v020_dynamics_alignment.md).
+
+### PMB memory layout and optional OpenMP
+
+Initialization packs PMB from the input order `(response ACE, forcing ACE,
+source level, response edge)` into `(source level, forcing ACE, response edge,
+response ACE)`. The input layout is released after packing. The dynamics kernel
+traverses contiguous source levels and keeps the original vertical-then-forcing
+sum order with binary64 accumulators. All forcing and response columns remain
+present. PMDv and PMD keep their existing layout and activation policy.
+
+OpenMP distributes independent PMB output points; it does not parallelize the
+sum within a point. It is optional: normal builds run the serial kernel. For
+Intel, pass `make OPENMP_FLAGS=-qopenmp`; for GNU, add `OPENMP_FLAGS=-fopenmp`
+alongside the existing GNU compiler, NetCDF and precision overrides. Set
+`OMP_NUM_THREADS=8` at runtime to request eight threads. Rebuild in a separate
+build directory when changing flags. Packing temporarily requires one extra
+PMB allocation (3.28 GB for KHN26); the persistent basis size is unchanged.
+
+The regression driver compares serial/OpenMP single steps, an all-response
+single step, and the complete saved prefix of a frozen legacy singleACE run:
+
+```sh
+python3 tests/basis_layout/validate_model.py migration_work/khn26_packed_model --threads 8
+```
+
+This requires the preserved pre-change workspace `migration_work/khn26_single_3h`.
+Use a fresh output directory. The prefix check also compares against the saved
+MATLAB trajectory. See [the layout experiment](../docs/migration/v020_basis_layout.md)
+for kernel measurements and their limits.

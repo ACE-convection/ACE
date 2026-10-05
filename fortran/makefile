@@ -2,6 +2,7 @@
 FC = ifort
 CHECK = -CB -g -traceback -check all,noarg_temp_created -debug all
 FCFLAGS = -r8 -O3 -free -mcmodel=large -heap-arrays 10 -shared-intel -fp-model precise
+# Optional: make OPENMP_FLAGS=-qopenmp (Intel), or -fopenmp with GNU flags.
 ifdef DEBUG
   FCFLAGS += $(CHECK)
 endif
@@ -29,10 +30,10 @@ target = ace_model.exe
 all: $(target)
 
 $(LIST_o): %.o: %.F
-	$(FC) $(FCFLAGS) $(FINCLUDE) -c $<
+	$(FC) $(FCFLAGS) $(OPENMP_FLAGS) $(FINCLUDE) -c $<
 
 $(target) : $(LIST_o)
-	$(FC) $(FCFLAGS) $(FINCLUDE) $^ -o $@ $(LDLIBS)
+	$(FC) $(FCFLAGS) $(OPENMP_FLAGS) $(FINCLUDE) $^ -o $@ $(LDLIBS)
 
 clean:
 	rm -rf *.o *.mod ace_model.exe

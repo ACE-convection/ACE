@@ -70,3 +70,27 @@ hardware isolation. Compare medians, account for one-time packing and
 memory footprint, and avoid treating these measurements as portable speed
 guarantees. `results.json` records source/input/object/forcing hashes,
 compiler commands and timing/error evidence.
+
+## Production model regression
+
+`validate_model.py` builds the current production module with serial and
+optional OpenMP execution. It enables the existing singleACE mask only in a
+test copy, reuses the frozen singleACE driver, and compares against preserved
+pre-change binaries and outputs in `migration_work/khn26_single_3h`.
+The model still calculates all 101 responses and retains all forcing columns.
+It checks binary identity for serial/OpenMP single steps, an unmasked
+all-response single step, and all complete saved legacy trajectory records.
+Incomplete trailing bytes of the stopped legacy stream are excluded.
+Saved MATLAB states are compared at matching times with field tolerances
+`[1e-9,1e-7,1e-11]` for MF/theta_e/qt. Finite states, nonnegative qt,
+mean-MF correction and inactive-column behavior are also checked.
+
+```sh
+python3 tests/basis_layout/validate_model.py migration_work/khn26_packed_model --threads 8
+```
+
+Use a fresh output directory; real64 model checks and real32 compile
+compatibility are included. This is a trajectory-prefix regression, not a
+completed three-hour run. Results and compilation commands are recorded in
+`validation_results.json`. `--analyze` repeats saved-state numerical diagnostics
+without rebuilding or rerunning the model.

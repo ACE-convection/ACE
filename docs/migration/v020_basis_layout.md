@@ -3,8 +3,9 @@
 Measured 2026-10-05 on `migration/v020-preparation` at `a91ac4e`, in
 `migration_work/khn26_basis_layout_full/`. The developer requested separate
 MATLAB and Fortran code to investigate efficient Fortran matrix layout.
-At the time of this experiment, active model sources and the ongoing
-three-hour singleACE run were unchanged.
+At the time of the kernel experiment, active model sources and the ongoing
+three-hour singleACE run were unchanged. The subsequent production integration
+is recorded below.
 
 ## Inputs and numerical scope
 
@@ -97,3 +98,48 @@ singleACE driver, compute only the required response while retaining all
 forcing and mean-MF rules, and compare initialization, steps and matched
 trajectories against the existing production driver. Add OpenMP as a
 separate reviewable step after the serial trajectory is established.
+
+## Production integration
+
+The developer subsequently requested stopping the old run and applying the
+validated layout to Fortran. The old singleACE supervisor, Fortran driver and
+plot watcher were terminated; outputs were preserved. Its stream contains
+24 complete saved states through 1,380 s and an incomplete trailing record.
+The incomplete record is excluded from regression comparisons.
+
+`fortran/src/ace_module.F` packs PMB once at initialization, then releases the
+input-layout allocation with `move_alloc`. The tendency packs the small forcing
+array and evaluates the contiguous grouped kernel with binary64 accumulators.
+PMDv/PMD retain their layout and activation policy. All forcing and response
+columns remain present, including in the masked singleACE test; this integration
+does not implement the one-response shortcut measured above.
+
+Optional OpenMP distributes independent response/edge points with static
+scheduling. Without OpenMP compiler flags the same kernel runs serially.
+`fortran/makefile` accepts `OPENMP_FLAGS` at compilation and linking, including
+when `FCFLAGS` is overridden. Scientific initialization, interpolation, SSPRK,
+damping, physics, mean-MF correction and the existing tendency mask are unchanged.
+Packing temporarily adds one PMB allocation (3.28 GB for KHN26); PMDv/PMD
+allocations remain as before.
+
+`tests/basis_layout/validate_model.py` compares the current module against the
+preserved pre-change binaries/output using GNU Fortran 11.2.0, checked `-O2`,
+binary64 and no fast-math. Separate serial/OpenMP masked single steps and an
+unmasked all-response single step are included. Default-real32 compatibility
+is checked by compilation only. This evidence is specific to the KHN26 shared
+input and does not certify other compiler/configuration combinations or a full
+three-hour trajectory.
+
+The integration regression passed in `migration_work/khn26_packed_model/`.
+Serial and eight-thread singleACE single steps, and the all-101-response single
+step, are byte-identical to the frozen legacy outputs. All 24 saved trajectory
+states (0–1,380 s) are byte-identical across the complete state, including
+inactive columns and the environment row. Against matching MATLAB states,
+maximum MF/theta_e/qt absolute differences are
+`[1.76748e-13, 1.36424e-12, 2.71658e-15]`, below the regression bounds
+`[1e-9, 1e-7, 1e-11]`. States are finite, qt is nonnegative, inactive scalar
+fields retain their initial values within roundoff, and compensating MF is
+equal among inactive columns. The maximum poststep area-mean MF magnitude
+is recorded in [the model report](../../tests/basis_layout/model_results.json).
+The checked eight-thread 23-minute trajectory took 665.2 s wall time including
+initialization and I/O on the shared host; this is not a kernel-only timing.
