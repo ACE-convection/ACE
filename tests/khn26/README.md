@@ -171,3 +171,19 @@ saved-state errors, field ranges, inactive scalar deviations, area-mean MF,
 ACE 1 MF trajectories and source/input/output provenance. Status
 `completed_pending_scientific_review` means numerical evidence is ready;
 it is not a release or physical-acceptance decision.
+
+`plot_single.py WORK` adapts validated full-run MF arrays to the existing
+v0.18 plotter (`tests/alignment/plot_mf.py`). It produces PNG/PDF panels for
+MATLAB, Fortran real64 and Fortran-minus-MATLAB over 0–20 km. MATLAB and
+Fortran share a symmetric color scale; the difference has its own scale.
+`--tag smoke` plots only the validated one-step check and labels it as such.
+`--partial` plots only complete common one-minute states and labels the
+figure as partial. The configured three-hour duration is not substituted
+for the actual available time range.
+
+`--launch` starts a detached plot watcher; it makes matched previews after
+the MATLAB state stream becomes available, then creates `full_comparison/`
+once the supervisor's full validation report exists. Plot directories use
+the actual covered time; existing figures are preserved. `plot_status.json`
+records whether the final plot is ready or the model failed. The normal
+v0.18 matplotlib dependencies and a writable `MPLCONFIGDIR` are required.
