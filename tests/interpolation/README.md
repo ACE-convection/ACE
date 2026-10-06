@@ -79,3 +79,20 @@ ignored `migration_work/interp1_validation_20261004/`. The preceding makima
 comparison remains preserved under
 `migration_work/makima_validation_20261004_repeat/`. Actual basis and model
 trajectories remain pending.
+
+## PCHIP binary-search adoption
+
+Production PCHIP now locates the same interval by binary search; its floating
+point expressions and endpoint behavior are retained. Before/after production
+modules produce byte-identical output for all 126 method/policy/case files
+(21 deterministic fixtures, including two-point and unsorted-query cases).
+Both methods pass the 18,564-value MATLAB comparison, reusing the preserved
+MATLAB references only after exact fixture-byte checks. Default-real32
+compile compatibility and existing rejection tests pass. The added
+`before_after_equivalence` entry in results.json records this gate.
+
+Ignored workspaces `migration_work/pchip_adoption_before` and
+`migration_work/pchip_adoption_after` retain probes, fixtures and logs.
+`production_adoption_results.json` records the current serial real64 model's
+10-step annular/PCHIP before/after comparison; all prognostic output fields
+are bitwise identical. No OpenMP or debug flags are used in those model builds.

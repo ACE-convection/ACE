@@ -113,7 +113,7 @@ real, dimension(n_i), intent(out) :: y_i
 logical, intent(in) :: extrap
 
 ! local variables
-integer :: i, j
+integer :: i, j, lo, hi, mid
 real :: dxs,w1,w2,dmax,dmin
 real :: a,b,c,h
 real, dimension(n) :: d, m, dx
@@ -188,7 +188,19 @@ do i=1,n_i
     goto 987
   endif
 
-  do j=1,n-1
+  ! Find the same interval without scanning from the first knot for each query.
+  ! Queries need not be sorted; interpolation arithmetic is unchanged.
+  lo=1
+  hi=n-1
+  do while (lo<hi)
+    mid=(lo+hi+1)/2
+    if (x(mid)<=x_i(i)) then
+      lo=mid
+    else
+      hi=mid-1
+    endif
+  enddo
+  j=lo
     if ( x(j)<=x_i(i) .and. x_i(i)<x(j+1) ) then
       h = x(j+1) - x(j)
       a = ( ( m(j+1) - d(j) ) / h - ( d(j) - m(j) ) / h ) / h
@@ -199,7 +211,6 @@ do i=1,n_i
       y_i(i) = a * h**3. + b * h**2. + c * h + y(j)
       goto 987
     endif
-  enddo  
   987 continue
 enddo
 

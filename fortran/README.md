@@ -76,6 +76,14 @@ only real64 MATLAB numerical agreement is an acceptance requirement. Real32
 compile compatibility is retained. See [interpolation tests](../tests/interpolation/README.md)
 and [the dynamics record](../docs/migration/v020_dynamics_alignment.md).
 
+PCHIP uses binary search to locate each query interval. This preserves its
+floating-point expressions, endpoint policies and unsorted-query support;
+21 before/after test cases are bitwise identical. The recorded
+[v0.18 serial timestep timings](../docs/performance/serial_timestep.md) include
+packed PMB, binary-search PCHIP and MATLAB default/single-thread comparisons.
+Those eight-ACE timings do not predict KHN26 slab performance, whose existing
+MAKIMA/direct path is unchanged.
+
 ### PMB memory layout and optional OpenMP
 
 Initialization packs PMB from the input order `(response ACE, forcing ACE,

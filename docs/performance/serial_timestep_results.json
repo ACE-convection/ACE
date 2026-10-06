@@ -1,0 +1,1078 @@
+{
+  "profile": {
+    "original": {
+      "average_seconds": {
+        "thermodynamic_inversion": 0.002954049292,
+        "WENO_tracer": 0.002052285532000001,
+        "momentum_reconstruction": 0.00027568173599999967,
+        "local_tracer_momentum": 0.0029972054019999973,
+        "PMB": 0.06933236867599993,
+        "PCHIP": 0.0063398548900000075,
+        "buoyancy_coarsening": 0.0006294862220000006,
+        "forcing_transpose": 0.0,
+        "tendency_setup_assembly_copies": 0.0003304136660000623,
+        "RK_updates_call_overhead": 0.0003186465539999933,
+        "precipitation": 0.0,
+        "qt_clipping": 5.608206e-06,
+        "damping": 5.3484452e-05,
+        "driver_entry_exit_allocations": 5.0913308000004114e-05,
+        "SSPRK93": 0.08522999196999999,
+        "all_nine_tendencies": 0.084911345416,
+        "total": 0.085339997936,
+        "stages": [
+          0.012058045757999998,
+          0.009129684256000001,
+          0.009124901135999999,
+          0.009108734022,
+          0.009098307952,
+          0.009101718126000002,
+          0.009098341,
+          0.009096073369999999,
+          0.009095539796000002
+        ]
+      },
+      "batches": [
+        {
+          "thermodynamic_inversion": 0.0029536480100000023,
+          "WENO_tracer": 0.002053172310000003,
+          "momentum_reconstruction": 0.00027569667999999904,
+          "local_tracer_momentum": 0.003002768099999997,
+          "PMB": 0.06933467651999992,
+          "PCHIP": 0.006370177820000017,
+          "buoyancy_coarsening": 0.0006305583500000009,
+          "forcing_transpose": 0.0,
+          "tendency_setup_assembly_copies": 0.00033079877000007085,
+          "RK_updates_call_overhead": 0.0003191685700000002,
+          "precipitation": 0.0,
+          "qt_clipping": 5.5851399999999995e-06,
+          "damping": 5.3482049999999984e-05,
+          "driver_entry_exit_allocations": 5.0966620000020894e-05,
+          "SSPRK93": 0.08527066513,
+          "all_nine_tendencies": 0.08495149656,
+          "total": 0.08538069894000003,
+          "stages": [
+            0.012057863930000003,
+            0.009106950170000003,
+            0.009159026380000001,
+            0.009129234049999997,
+            0.009103329319999999,
+            0.009100528290000002,
+            0.00910222948,
+            0.009098518719999999,
+            0.009093816219999997
+          ]
+        },
+        {
+          "thermodynamic_inversion": 0.0029580005599999975,
+          "WENO_tracer": 0.0020507592899999903,
+          "momentum_reconstruction": 0.0002752912500000005,
+          "local_tracer_momentum": 0.0029924562600000017,
+          "PMB": 0.06929191156999996,
+          "PCHIP": 0.0063731756700000156,
+          "buoyancy_coarsening": 0.0006288201400000013,
+          "forcing_transpose": 0.0,
+          "tendency_setup_assembly_copies": 0.0003294780900000155,
+          "RK_updates_call_overhead": 0.00031748848000000274,
+          "precipitation": 0.0,
+          "qt_clipping": 5.628390000000002e-06,
+          "damping": 5.3455050000000006e-05,
+          "driver_entry_exit_allocations": 5.065750999996463e-05,
+          "SSPRK93": 0.08521738130999999,
+          "all_nine_tendencies": 0.08489989282999999,
+          "total": 0.08532712225999996,
+          "stages": [
+            0.012059088799999996,
+            0.009132649070000005,
+            0.009113089769999996,
+            0.009101922850000001,
+            0.009098138979999998,
+            0.009102582550000002,
+            0.009099750869999996,
+            0.009095274249999995,
+            0.009097395690000003
+          ]
+        },
+        {
+          "thermodynamic_inversion": 0.0029491542000000016,
+          "WENO_tracer": 0.0020527095300000024,
+          "momentum_reconstruction": 0.00027577259999999964,
+          "local_tracer_momentum": 0.0030181486599999904,
+          "PMB": 0.0692892104200001,
+          "PCHIP": 0.0063716147099999966,
+          "buoyancy_coarsening": 0.0006298460599999989,
+          "forcing_transpose": 0.0,
+          "tendency_setup_assembly_copies": 0.000329683189999902,
+          "RK_updates_call_overhead": 0.00031765418000000156,
+          "precipitation": 0.0,
+          "qt_clipping": 5.6446e-06,
+          "damping": 5.347557000000001e-05,
+          "driver_entry_exit_allocations": 5.075374999997541e-05,
+          "SSPRK93": 0.08523379354999999,
+          "all_nine_tendencies": 0.08491613936999999,
+          "total": 0.08534366746999997,
+          "stages": [
+            0.012049731109999995,
+            0.009148824609999998,
+            0.009122092629999998,
+            0.009101753300000001,
+            0.009099139189999998,
+            0.009105685240000001,
+            0.00909729854,
+            0.009094168500000001,
+            0.009097446250000004
+          ]
+        },
+        {
+          "thermodynamic_inversion": 0.002951741039999999,
+          "WENO_tracer": 0.002051615810000004,
+          "momentum_reconstruction": 0.00027574743999999907,
+          "local_tracer_momentum": 0.002984253739999996,
+          "PMB": 0.06932229709999985,
+          "PCHIP": 0.006294749059999991,
+          "buoyancy_coarsening": 0.0006288104200000009,
+          "forcing_transpose": 0.0,
+          "tendency_setup_assembly_copies": 0.0003295247200001683,
+          "RK_updates_call_overhead": 0.0003174935299999765,
+          "precipitation": 0.0,
+          "qt_clipping": 5.600129999999999e-06,
+          "damping": 5.344575999999999e-05,
+          "driver_entry_exit_allocations": 5.0858910000018576e-05,
+          "SSPRK93": 0.08515623285999999,
+          "all_nine_tendencies": 0.08483873933000001,
+          "total": 0.08526613766,
+          "stages": [
+            0.012053165030000002,
+            0.009111001190000002,
+            0.009110413199999999,
+            0.009097703189999999,
+            0.00909494282,
+            0.009099297830000004,
+            0.009091011549999998,
+            0.009093108999999999,
+            0.009088095520000004
+          ]
+        },
+        {
+          "thermodynamic_inversion": 0.002957702649999999,
+          "WENO_tracer": 0.0020531707200000036,
+          "momentum_reconstruction": 0.00027590071,
+          "local_tracer_momentum": 0.0029884002500000003,
+          "PMB": 0.06942374776999982,
+          "PCHIP": 0.00628955719000002,
+          "buoyancy_coarsening": 0.000629396140000001,
+          "forcing_transpose": 0.0,
+          "tendency_setup_assembly_copies": 0.00033258356000015477,
+          "RK_updates_call_overhead": 0.00032142800999998555,
+          "precipitation": 0.0,
+          "qt_clipping": 5.582769999999997e-06,
+          "damping": 5.3563829999999986e-05,
+          "driver_entry_exit_allocations": 5.132975000004109e-05,
+          "SSPRK93": 0.08527188699999998,
+          "all_nine_tendencies": 0.08495045898999999,
+          "total": 0.08538236335000002,
+          "stages": [
+            0.01207037992,
+            0.009148996239999999,
+            0.009119883700000003,
+            0.00911305672,
+            0.009095989450000001,
+            0.00910049672,
+            0.00910141456,
+            0.009099296379999995,
+            0.009100945300000001
+          ]
+        }
+      ],
+      "cpu_to_wall": 0.9973814584142519
+    },
+    "packed": {
+      "average_seconds": {
+        "thermodynamic_inversion": 0.0029458760599999994,
+        "WENO_tracer": 0.0020507659200000015,
+        "momentum_reconstruction": 0.0002764889119999999,
+        "local_tracer_momentum": 0.002938359293999997,
+        "PMB": 0.021890689553999983,
+        "PCHIP": 0.006095034625999985,
+        "buoyancy_coarsening": 0.0006416641599999994,
+        "forcing_transpose": 8.686939999999987e-06,
+        "tendency_setup_assembly_copies": 0.0003123492580000345,
+        "RK_updates_call_overhead": 0.0002913652800000027,
+        "precipitation": 0.0,
+        "qt_clipping": 3.814338e-06,
+        "damping": 5.425967599999999e-05,
+        "driver_entry_exit_allocations": 4.568194999999631e-05,
+        "SSPRK93": 0.037451280004,
+        "all_nine_tendencies": 0.037159914724,
+        "total": 0.03755503596799999,
+        "stages": [
+          0.006729423318000002,
+          0.0038141735679999996,
+          0.0038116355439999994,
+          0.0038023380440000004,
+          0.003798944526,
+          0.003802370975999999,
+          0.00380400568,
+          0.0037977681920000005,
+          0.0037992548759999993
+        ]
+      },
+      "batches": [
+        {
+          "thermodynamic_inversion": 0.0029508402,
+          "WENO_tracer": 0.0020583907400000003,
+          "momentum_reconstruction": 0.0002774290000000001,
+          "local_tracer_momentum": 0.0029549934299999948,
+          "PMB": 0.021893231349999917,
+          "PCHIP": 0.006084490559999957,
+          "buoyancy_coarsening": 0.0006437689199999993,
+          "forcing_transpose": 8.698039999999991e-06,
+          "tendency_setup_assembly_copies": 0.00031365141000013613,
+          "RK_updates_call_overhead": 0.00029287767999999076,
+          "precipitation": 0.0,
+          "qt_clipping": 3.8129499999999992e-06,
+          "damping": 5.448717999999998e-05,
+          "driver_entry_exit_allocations": 4.57906499999963e-05,
+          "SSPRK93": 0.037478371329999996,
+          "all_nine_tendencies": 0.037185493650000005,
+          "total": 0.03758246210999999,
+          "stages": [
+            0.006741172750000001,
+            0.0038148448299999997,
+            0.0038087094099999996,
+            0.003808111400000001,
+            0.003801227989999999,
+            0.0037956012299999987,
+            0.0038245431300000018,
+            0.0037953390100000013,
+            0.0037959439
+          ]
+        },
+        {
+          "thermodynamic_inversion": 0.00296890301,
+          "WENO_tracer": 0.002067347119999999,
+          "momentum_reconstruction": 0.0002789106099999994,
+          "local_tracer_momentum": 0.002964208200000005,
+          "PMB": 0.02209153725000003,
+          "PCHIP": 0.006136841560000007,
+          "buoyancy_coarsening": 0.000646170269999999,
+          "forcing_transpose": 8.708389999999994e-06,
+          "tendency_setup_assembly_copies": 0.0003151738099999579,
+          "RK_updates_call_overhead": 0.0002937254800000205,
+          "precipitation": 0.0,
+          "qt_clipping": 3.839729999999999e-06,
+          "damping": 5.474161000000002e-05,
+          "driver_entry_exit_allocations": 4.6538019999981937e-05,
+          "SSPRK93": 0.037771525700000017,
+          "all_nine_tendencies": 0.037477800219999996,
+          "total": 0.03787664506,
+          "stages": [
+            0.006788019620000003,
+            0.0038490290400000006,
+            0.0038502473200000002,
+            0.003837832719999998,
+            0.0038306917900000005,
+            0.0038274133799999993,
+            0.0038340673899999985,
+            0.0038304605199999996,
+            0.003830038439999999
+          ]
+        },
+        {
+          "thermodynamic_inversion": 0.0029348956200000004,
+          "WENO_tracer": 0.0020441165200000065,
+          "momentum_reconstruction": 0.0002758335300000008,
+          "local_tracer_momentum": 0.00293008057999999,
+          "PMB": 0.021826464959999976,
+          "PCHIP": 0.006079897369999973,
+          "buoyancy_coarsening": 0.0006405627400000001,
+          "forcing_transpose": 8.666289999999984e-06,
+          "tendency_setup_assembly_copies": 0.0003112304700000415,
+          "RK_updates_call_overhead": 0.00029038111999999533,
+          "precipitation": 0.0,
+          "qt_clipping": 3.7915600000000017e-06,
+          "damping": 5.3997600000000006e-05,
+          "driver_entry_exit_allocations": 4.5259820000006164e-05,
+          "SSPRK93": 0.03734212919999999,
+          "all_nine_tendencies": 0.037051748079999995,
+          "total": 0.03744517818,
+          "stages": [
+            0.0067013390699999995,
+            0.003799163319999999,
+            0.003796206099999999,
+            0.003789058549999999,
+            0.0037937204099999992,
+            0.0037949662899999996,
+            0.003790834720000001,
+            0.0037930105400000003,
+            0.003793449079999999
+          ]
+        },
+        {
+          "thermodynamic_inversion": 0.002935126389999998,
+          "WENO_tracer": 0.0020447875000000003,
+          "momentum_reconstruction": 0.00027556101,
+          "local_tracer_momentum": 0.0029238456299999927,
+          "PMB": 0.021825914879999974,
+          "PCHIP": 0.006100331709999993,
+          "buoyancy_coarsening": 0.0006398828000000011,
+          "forcing_transpose": 8.731269999999987e-06,
+          "tendency_setup_assembly_copies": 0.0003108233200000421,
+          "RK_updates_call_overhead": 0.0002904180499999978,
+          "precipitation": 0.0,
+          "qt_clipping": 3.823499999999999e-06,
+          "damping": 5.3914199999999986e-05,
+          "driver_entry_exit_allocations": 4.5433509999995696e-05,
+          "SSPRK93": 0.03735542256,
+          "all_nine_tendencies": 0.03706500451,
+          "total": 0.03745859376999999,
+          "stages": [
+            0.006703226600000003,
+            0.0038073601500000004,
+            0.0038108317099999995,
+            0.0037900975000000016,
+            0.0037864882,
+            0.0038116178699999985,
+            0.0037856114299999986,
+            0.003784469460000001,
+            0.0037853015899999994
+          ]
+        },
+        {
+          "thermodynamic_inversion": 0.0029396150799999997,
+          "WENO_tracer": 0.0020391877199999993,
+          "momentum_reconstruction": 0.0002747104099999992,
+          "local_tracer_momentum": 0.002918668630000003,
+          "PMB": 0.021816299330000004,
+          "PCHIP": 0.006073611929999999,
+          "buoyancy_coarsening": 0.0006379360699999976,
+          "forcing_transpose": 8.63070999999998e-06,
+          "tendency_setup_assembly_copies": 0.0003108672799999948,
+          "RK_updates_call_overhead": 0.0002894240700000092,
+          "precipitation": 0.0,
+          "qt_clipping": 3.8039499999999994e-06,
+          "damping": 5.415778999999999e-05,
+          "driver_entry_exit_allocations": 4.5387750000001493e-05,
+          "SSPRK93": 0.037308951230000005,
+          "all_nine_tendencies": 0.037019527159999996,
+          "total": 0.03741230072000001,
+          "stages": [
+            0.00671335855,
+            0.0038004704999999982,
+            0.00379218318,
+            0.00378659005,
+            0.0037825942399999997,
+            0.003782256109999999,
+            0.003784971730000001,
+            0.0037855614299999994,
+            0.0037915413699999997
+          ]
+        }
+      ],
+      "cpu_to_wall": 0.9980274907312705
+    },
+    "packed_binary": {
+      "average_seconds": {
+        "thermodynamic_inversion": 0.002945215456,
+        "WENO_tracer": 0.0020664797760000047,
+        "momentum_reconstruction": 0.00027371064399999985,
+        "local_tracer_momentum": 0.0029757252019999942,
+        "PMB": 0.02191268135000001,
+        "PCHIP": 0.0033809999160000067,
+        "buoyancy_coarsening": 0.0006307782159999999,
+        "forcing_transpose": 8.67666799999998e-06,
+        "tendency_setup_assembly_copies": 0.00030975869399997997,
+        "RK_updates_call_overhead": 0.0002955956200000068,
+        "precipitation": 0.0,
+        "qt_clipping": 3.7959879999999994e-06,
+        "damping": 5.339917800000001e-05,
+        "driver_entry_exit_allocations": 4.653858999999623e-05,
+        "SSPRK93": 0.03479962154200001,
+        "all_nine_tendencies": 0.034504025922,
+        "total": 0.034903355298,
+        "stages": [
+          0.0064241522740000005,
+          0.003509151924,
+          0.0035162390779999997,
+          0.0035092911839999996,
+          0.0035049316319999994,
+          0.0035071720860000003,
+          0.003507993282,
+          0.003507367808,
+          0.003517726654000001
+        ]
+      },
+      "batches": [
+        {
+          "thermodynamic_inversion": 0.002947003949999999,
+          "WENO_tracer": 0.002065937120000008,
+          "momentum_reconstruction": 0.00027267329,
+          "local_tracer_momentum": 0.0029790768099999926,
+          "PMB": 0.02189875489000004,
+          "PCHIP": 0.0033782138800000083,
+          "buoyancy_coarsening": 0.0006314997399999993,
+          "forcing_transpose": 8.692429999999985e-06,
+          "tendency_setup_assembly_copies": 0.0003111233199999536,
+          "RK_updates_call_overhead": 0.00029524046000001247,
+          "precipitation": 0.0,
+          "qt_clipping": 3.8043e-06,
+          "damping": 5.343824e-05,
+          "driver_entry_exit_allocations": 4.720310999998601e-05,
+          "SSPRK93": 0.03478821589000001,
+          "all_nine_tendencies": 0.034492975429999996,
+          "total": 0.034892661539999995,
+          "stages": [
+            0.0064317761899999985,
+            0.0035124502300000015,
+            0.0035158155200000003,
+            0.0035066508599999996,
+            0.0035020869799999993,
+            0.00350242239,
+            0.0035084330699999985,
+            0.003507086070000002,
+            0.0035062541200000007
+          ]
+        },
+        {
+          "thermodynamic_inversion": 0.0029421759899999978,
+          "WENO_tracer": 0.0020681897400000038,
+          "momentum_reconstruction": 0.0002784201299999995,
+          "local_tracer_momentum": 0.002975577039999995,
+          "PMB": 0.02192758310000004,
+          "PCHIP": 0.003385114010000004,
+          "buoyancy_coarsening": 0.0006317174600000014,
+          "forcing_transpose": 8.68073999999998e-06,
+          "tendency_setup_assembly_copies": 0.00030914306999995506,
+          "RK_updates_call_overhead": 0.00029561702000002743,
+          "precipitation": 0.0,
+          "qt_clipping": 3.805429999999999e-06,
+          "damping": 5.354369000000003e-05,
+          "driver_entry_exit_allocations": 4.621277999997237e-05,
+          "SSPRK93": 0.03482221830000003,
+          "all_nine_tendencies": 0.03452660128,
+          "total": 0.0349257802,
+          "stages": [
+            0.006418911770000004,
+            0.0035089561299999988,
+            0.0035144177199999994,
+            0.0035127415900000013,
+            0.003508553119999998,
+            0.003511810630000001,
+            0.0035063127599999993,
+            0.00351122074,
+            0.0035336768200000014
+          ]
+        },
+        {
+          "thermodynamic_inversion": 0.0029424204099999995,
+          "WENO_tracer": 0.002063098070000011,
+          "momentum_reconstruction": 0.0002726584,
+          "local_tracer_momentum": 0.002971740589999988,
+          "PMB": 0.021881185010000078,
+          "PCHIP": 0.0033776211500000076,
+          "buoyancy_coarsening": 0.0006296169599999998,
+          "forcing_transpose": 8.654639999999986e-06,
+          "tendency_setup_assembly_copies": 0.0003096008099999076,
+          "RK_updates_call_overhead": 0.0002955544000000157,
+          "precipitation": 0.0,
+          "qt_clipping": 3.7854599999999985e-06,
+          "damping": 5.330612000000001e-05,
+          "driver_entry_exit_allocations": 4.6392419999993964e-05,
+          "SSPRK93": 0.03475215044000001,
+          "all_nine_tendencies": 0.034456596039999995,
+          "total": 0.034855634440000005,
+          "stages": [
+            0.006415884789999998,
+            0.003501869559999998,
+            0.0035118248699999993,
+            0.00350726692,
+            0.00350391544,
+            0.0035036203400000015,
+            0.00350486508,
+            0.00350293734,
+            0.0035044117
+          ]
+        },
+        {
+          "thermodynamic_inversion": 0.0029487121000000022,
+          "WENO_tracer": 0.0020667511999999956,
+          "momentum_reconstruction": 0.00027244108999999997,
+          "local_tracer_momentum": 0.002977330799999996,
+          "PMB": 0.02194858065999994,
+          "PCHIP": 0.0033822198800000027,
+          "buoyancy_coarsening": 0.0006299239199999991,
+          "forcing_transpose": 8.69880999999997e-06,
+          "tendency_setup_assembly_copies": 0.00030978320000005916,
+          "RK_updates_call_overhead": 0.00029587085999999846,
+          "precipitation": 0.0,
+          "qt_clipping": 3.7851500000000005e-06,
+          "damping": 5.3380619999999996e-05,
+          "driver_entry_exit_allocations": 4.6568940000004394e-05,
+          "SSPRK93": 0.03484031251999999,
+          "all_nine_tendencies": 0.034544441659999994,
+          "total": 0.03494404723,
+          "stages": [
+            0.006433075649999997,
+            0.0035132327300000012,
+            0.003518426530000001,
+            0.0035091205299999993,
+            0.00350358826,
+            0.0035085551399999994,
+            0.0035116381500000012,
+            0.0035102414000000005,
+            0.0035365632699999997
+          ]
+        },
+        {
+          "thermodynamic_inversion": 0.0029457648300000006,
+          "WENO_tracer": 0.002068422750000006,
+          "momentum_reconstruction": 0.0002723603099999996,
+          "local_tracer_momentum": 0.0029749007699999986,
+          "PMB": 0.021907303089999965,
+          "PCHIP": 0.0033818306600000127,
+          "buoyancy_coarsening": 0.0006311329999999997,
+          "forcing_transpose": 8.656719999999986e-06,
+          "tendency_setup_assembly_copies": 0.00030914307000002444,
+          "RK_updates_call_overhead": 0.0002956953599999798,
+          "precipitation": 0.0,
+          "qt_clipping": 3.799599999999999e-06,
+          "damping": 5.332721999999999e-05,
+          "driver_entry_exit_allocations": 4.631570000002442e-05,
+          "SSPRK93": 0.034795210559999984,
+          "all_nine_tendencies": 0.034499515200000004,
+          "total": 0.03489865308000001,
+          "stages": [
+            0.006421112970000001,
+            0.00350925097,
+            0.0035207107499999994,
+            0.00351067602,
+            0.003506514359999999,
+            0.0035094519300000004,
+            0.003508717350000001,
+            0.00350535349,
+            0.003507727360000002
+          ]
+        }
+      ],
+      "cpu_to_wall": 0.9982336355769847
+    },
+    "matlab": {
+      "average_seconds": {
+        "thermodynamic_inversion": 0.006319864,
+        "WENO_tracer": 0.00731654199999999,
+        "momentum_reconstruction": 0.0005229499999999969,
+        "local_tracer_momentum": 0.005925299999999996,
+        "PMB": 0.042131304,
+        "PCHIP": 0.0020028239999999873,
+        "buoyancy_coarsening": 0.0005067679999999964,
+        "forcing_transpose": 0.0,
+        "tendency_setup_assembly_copies": 0.0013618200000000385,
+        "RK_updates_call_overhead": 0.0006999779999999928,
+        "precipitation": 0.0,
+        "qt_clipping": 9.558800000000003e-05,
+        "damping": 0.00010517999999999997,
+        "driver_entry_exit_allocations": 1.1205999999989774e-05,
+        "SSPRK93": 0.06678735,
+        "all_nine_tendencies": 0.066087372,
+        "total": 0.06699932399999999,
+        "stages": [
+          0.013237422000000004,
+          0.006641693999999998,
+          0.006664959999999999,
+          0.006662596,
+          0.006587551999999999,
+          0.006580176,
+          0.006559206000000002,
+          0.006567381999999999,
+          0.006586384000000002
+        ]
+      },
+      "batches": [
+        {
+          "thermodynamic_inversion": 0.0072010600000000004,
+          "WENO_tracer": 0.009002909999999973,
+          "momentum_reconstruction": 0.0006259399999999956,
+          "local_tracer_momentum": 0.007547259999999996,
+          "PMB": 0.04955312000000005,
+          "PCHIP": 0.0023168799999999943,
+          "buoyancy_coarsening": 0.0005168999999999961,
+          "forcing_transpose": 0.0,
+          "tendency_setup_assembly_copies": 0.0015172600000000064,
+          "RK_updates_call_overhead": 0.0006980400000000109,
+          "precipitation": 0.0,
+          "qt_clipping": 9.542000000000003e-05,
+          "damping": 0.00010521999999999993,
+          "driver_entry_exit_allocations": 1.6189999999959592e-05,
+          "SSPRK93": 0.07897937000000002,
+          "all_nine_tendencies": 0.07828133000000001,
+          "total": 0.07919619999999998,
+          "stages": [
+            0.015051400000000006,
+            0.007938979999999997,
+            0.00816165,
+            0.008075770000000003,
+            0.00785109,
+            0.00787593,
+            0.0077254300000000045,
+            0.0077563300000000005,
+            0.007844750000000001
+          ]
+        },
+        {
+          "thermodynamic_inversion": 0.006160290000000001,
+          "WENO_tracer": 0.006961129999999995,
+          "momentum_reconstruction": 0.0004999499999999975,
+          "local_tracer_momentum": 0.005580470000000002,
+          "PMB": 0.04052027999999997,
+          "PCHIP": 0.0019381099999999818,
+          "buoyancy_coarsening": 0.0005086799999999971,
+          "forcing_transpose": 0.0,
+          "tendency_setup_assembly_copies": 0.0013315500000000494,
+          "RK_updates_call_overhead": 0.0007053700000000246,
+          "precipitation": 0.0,
+          "qt_clipping": 9.648000000000005e-05,
+          "damping": 0.00010563999999999996,
+          "driver_entry_exit_allocations": 1.0019999999957908e-05,
+          "SSPRK93": 0.06420583000000002,
+          "all_nine_tendencies": 0.06350046,
+          "total": 0.06441796999999998,
+          "stages": [
+            0.012897589999999999,
+            0.006339549999999999,
+            0.006346839999999996,
+            0.006315169999999998,
+            0.006345599999999999,
+            0.006303489999999999,
+            0.006311799999999999,
+            0.0063095999999999985,
+            0.006330819999999998
+          ]
+        },
+        {
+          "thermodynamic_inversion": 0.00607248,
+          "WENO_tracer": 0.006876049999999986,
+          "momentum_reconstruction": 0.0004962999999999975,
+          "local_tracer_momentum": 0.005511769999999994,
+          "PMB": 0.04053762999999996,
+          "PCHIP": 0.001921299999999982,
+          "buoyancy_coarsening": 0.0005031399999999966,
+          "forcing_transpose": 0.0,
+          "tendency_setup_assembly_copies": 0.0013284100000000923,
+          "RK_updates_call_overhead": 0.000701109999999977,
+          "precipitation": 0.0,
+          "qt_clipping": 9.499000000000002e-05,
+          "damping": 0.00010558999999999997,
+          "driver_entry_exit_allocations": 9.890000000032026e-06,
+          "SSPRK93": 0.06394818999999999,
+          "all_nine_tendencies": 0.06324708000000001,
+          "total": 0.06415866000000002,
+          "stages": [
+            0.012748550000000004,
+            0.006407509999999995,
+            0.006287019999999999,
+            0.00643055,
+            0.006259789999999999,
+            0.006263179999999999,
+            0.006265610000000002,
+            0.006282660000000001,
+            0.006302210000000005
+          ]
+        },
+        {
+          "thermodynamic_inversion": 0.00607192,
+          "WENO_tracer": 0.006878399999999999,
+          "momentum_reconstruction": 0.0004969799999999972,
+          "local_tracer_momentum": 0.005508249999999992,
+          "PMB": 0.040033040000000006,
+          "PCHIP": 0.0019281999999999821,
+          "buoyancy_coarsening": 0.0005028399999999958,
+          "forcing_transpose": 0.0,
+          "tendency_setup_assembly_copies": 0.0013132800000000416,
+          "RK_updates_call_overhead": 0.0006996399999999597,
+          "precipitation": 0.0,
+          "qt_clipping": 9.508000000000006e-05,
+          "damping": 0.00010491999999999998,
+          "driver_entry_exit_allocations": 1.0060000000039623e-05,
+          "SSPRK93": 0.06343254999999998,
+          "all_nine_tendencies": 0.06273291000000002,
+          "total": 0.06364261000000002,
+          "stages": [
+            0.012740529999999998,
+            0.006265270000000004,
+            0.006271110000000001,
+            0.006247640000000002,
+            0.0062454200000000015,
+            0.006230400000000001,
+            0.006267430000000002,
+            0.006236110000000002,
+            0.006229
+          ]
+        },
+        {
+          "thermodynamic_inversion": 0.00609357,
+          "WENO_tracer": 0.006864219999999996,
+          "momentum_reconstruction": 0.0004955799999999964,
+          "local_tracer_momentum": 0.005478749999999996,
+          "PMB": 0.040012450000000026,
+          "PCHIP": 0.0019096299999999946,
+          "buoyancy_coarsening": 0.0005022799999999964,
+          "forcing_transpose": 0.0,
+          "tendency_setup_assembly_copies": 0.001318600000000003,
+          "RK_updates_call_overhead": 0.0006957299999999916,
+          "precipitation": 0.0,
+          "qt_clipping": 9.597000000000003e-05,
+          "damping": 0.00010453,
+          "driver_entry_exit_allocations": 9.86999999995972e-06,
+          "SSPRK93": 0.06337081,
+          "all_nine_tendencies": 0.06267508000000001,
+          "total": 0.06358117999999996,
+          "stages": [
+            0.012749040000000005,
+            0.006257160000000001,
+            0.006258179999999999,
+            0.006243849999999998,
+            0.006235860000000001,
+            0.006227879999999999,
+            0.006225760000000002,
+            0.006252209999999998,
+            0.006225140000000001
+          ]
+        }
+      ],
+      "cpu_to_wall": 0.9954985723797869
+    }
+  },
+  "benchmark": {
+    "original": {
+      "kernel": {
+        "seconds": [
+          0.007853763082,
+          0.007850435107,
+          0.007855236186,
+          0.007858240272,
+          0.007885989638
+        ],
+        "median_seconds": 0.007855236186
+      },
+      "step": {
+        "seconds": [
+          0.08742028730000002,
+          0.08741750056999999,
+          0.08744088303000003,
+          0.08745837231000002,
+          0.08774141128
+        ],
+        "median_seconds": 0.08744088303000003
+      },
+      "evolving100": {
+        "seconds": [
+          0.08802157709999997,
+          0.08836034264000002,
+          0.08756200286999999
+        ],
+        "median_seconds": 0.08802157709999997
+      }
+    },
+    "packed": {
+      "kernel": {
+        "seconds": [
+          0.002433758903,
+          0.00244172381,
+          0.0024419446439999997,
+          0.002469424516,
+          0.00243562717
+        ],
+        "median_seconds": 0.00244172381
+      },
+      "step": {
+        "seconds": [
+          0.03787186193000001,
+          0.03821047464,
+          0.03782043450999998,
+          0.037893930369999995,
+          0.037922454909999986
+        ],
+        "median_seconds": 0.037893930369999995
+      },
+      "evolving100": {
+        "seconds": [
+          0.037858598310000005,
+          0.03788697458,
+          0.037863710749999994
+        ],
+        "median_seconds": 0.037863710749999994
+      }
+    },
+    "packed_binary": {
+      "kernel": {
+        "seconds": [
+          0.0024755409280000002,
+          0.002411575263,
+          0.0024099867709999998,
+          0.002408837636,
+          0.0024084791509999997
+        ],
+        "median_seconds": 0.0024099867709999998
+      },
+      "step": {
+        "seconds": [
+          0.035087898749999985,
+          0.035058565279999995,
+          0.03504245046,
+          0.03505286194999999,
+          0.035036752200000014
+        ],
+        "median_seconds": 0.03505286194999999
+      },
+      "evolving100": {
+        "seconds": [
+          0.03507042705999999,
+          0.03502782694999999,
+          0.03504573707999999
+        ],
+        "median_seconds": 0.03504573707999999
+      }
+    },
+    "matlab": {
+      "kernel": {
+        "seconds": [
+          0.007145081,
+          0.004503025,
+          0.004444513,
+          0.004471979,
+          0.004431007
+        ],
+        "median_seconds": 0.004471979
+      },
+      "step": {
+        "seconds": [
+          0.06560373,
+          0.06531446000000003,
+          0.06536023,
+          0.06532475999999997,
+          0.06535290000000002
+        ],
+        "median_seconds": 0.06535290000000002
+      },
+      "evolving100": {
+        "seconds": [
+          0.06259462000000003,
+          0.06819478000000001,
+          0.06251620999999999
+        ],
+        "median_seconds": 0.06259462000000003
+      }
+    }
+  },
+  "comparisons": {
+    "original_profile_first_step": {
+      "max_abs": 0.0,
+      "relative_L2": 0.0,
+      "binary_identical": true
+    },
+    "packed_profile_first_step": {
+      "max_abs": 0.0,
+      "relative_L2": 0.0,
+      "binary_identical": true
+    },
+    "packed_binary_profile_first_step": {
+      "max_abs": 0.0,
+      "relative_L2": 0.0,
+      "binary_identical": true
+    },
+    "matlab_profile_first_step": {
+      "max_abs": 0.0,
+      "relative_L2": 0.0,
+      "binary_identical": true
+    },
+    "packed_trajectory100": {
+      "theta_e": {
+        "max_abs": 0.0,
+        "relative_L2": 0.0,
+        "binary_identical": true
+      },
+      "qt": {
+        "max_abs": 0.0,
+        "relative_L2": 0.0,
+        "binary_identical": true
+      },
+      "MF": {
+        "max_abs": 0.0,
+        "relative_L2": 0.0,
+        "binary_identical": true
+      }
+    },
+    "packed_trajectory100_dwdt": {
+      "max_abs": 0.0,
+      "relative_L2": 0.0,
+      "binary_identical": true
+    },
+    "packed_binary_trajectory100": {
+      "theta_e": {
+        "max_abs": 0.0,
+        "relative_L2": 0.0,
+        "binary_identical": true
+      },
+      "qt": {
+        "max_abs": 0.0,
+        "relative_L2": 0.0,
+        "binary_identical": true
+      },
+      "MF": {
+        "max_abs": 0.0,
+        "relative_L2": 0.0,
+        "binary_identical": true
+      }
+    },
+    "packed_binary_trajectory100_dwdt": {
+      "max_abs": 0.0,
+      "relative_L2": 0.0,
+      "binary_identical": true
+    },
+    "matlab_vs_original_100": {
+      "theta_e": {
+        "max_abs": 1.8758328224066645e-12,
+        "relative_L2": 1.1778636286065417e-16,
+        "binary_identical": false
+      },
+      "qt": {
+        "max_abs": 7.632783294297951e-17,
+        "relative_L2": 2.5977870147275947e-16,
+        "binary_identical": false
+      },
+      "MF": {
+        "max_abs": 3.108624468950438e-14,
+        "relative_L2": 3.984989707903934e-15,
+        "binary_identical": false
+      }
+    },
+    "packed_regression": {
+      "theta_e": {
+        "max_abs": 0.0,
+        "relative_L2": 0.0,
+        "binary_identical": true
+      },
+      "qt": {
+        "max_abs": 0.0,
+        "relative_L2": 0.0,
+        "binary_identical": true
+      },
+      "MF": {
+        "max_abs": 0.0,
+        "relative_L2": 0.0,
+        "binary_identical": true
+      }
+    },
+    "packed_regression_dwdt": {
+      "max_abs": 0.0,
+      "relative_L2": 0.0,
+      "binary_identical": true
+    },
+    "packed_binary_regression": {
+      "theta_e": {
+        "max_abs": 0.0,
+        "relative_L2": 0.0,
+        "binary_identical": true
+      },
+      "qt": {
+        "max_abs": 0.0,
+        "relative_L2": 0.0,
+        "binary_identical": true
+      },
+      "MF": {
+        "max_abs": 0.0,
+        "relative_L2": 0.0,
+        "binary_identical": true
+      }
+    },
+    "packed_binary_regression_dwdt": {
+      "max_abs": 0.0,
+      "relative_L2": 0.0,
+      "binary_identical": true
+    },
+    "original_vs_archived_fortran_MF": {
+      "max_abs": 0.0,
+      "relative_L2": 0.0,
+      "binary_identical": true
+    },
+    "optimized_vs_archived_matlab_MF": {
+      "max_abs": 6.448175327022909e-13,
+      "relative_L2": 1.3579812576440596e-14,
+      "binary_identical": false
+    }
+  },
+  "baseline": "main d7d25b1, v0.18 eight-ACE Manus 208, binary64, dt4 SSPRK93, precipitation/MF diffusion disabled; serial only",
+  "matlab_threads": {
+    "current": 1,
+    "restored": 1
+  },
+  "gap_ranking": [
+    {
+      "component": "PMB",
+      "fortran_minus_matlab_ms": 27.201064675999927
+    },
+    {
+      "component": "PCHIP",
+      "fortran_minus_matlab_ms": 4.33703089000002
+    },
+    {
+      "component": "buoyancy_coarsening",
+      "fortran_minus_matlab_ms": 0.12271822200000417
+    },
+    {
+      "component": "driver_entry_exit_allocations",
+      "fortran_minus_matlab_ms": 0.03970730800001434
+    },
+    {
+      "component": "forcing_transpose",
+      "fortran_minus_matlab_ms": 0.0
+    },
+    {
+      "component": "precipitation",
+      "fortran_minus_matlab_ms": 0.0
+    },
+    {
+      "component": "damping",
+      "fortran_minus_matlab_ms": -0.051695547999999966
+    },
+    {
+      "component": "qt_clipping",
+      "fortran_minus_matlab_ms": -0.08997979400000004
+    },
+    {
+      "component": "momentum_reconstruction",
+      "fortran_minus_matlab_ms": -0.24726826399999718
+    },
+    {
+      "component": "RK_updates_call_overhead",
+      "fortran_minus_matlab_ms": -0.3813314459999995
+    },
+    {
+      "component": "tendency_setup_assembly_copies",
+      "fortran_minus_matlab_ms": -1.0314063339999762
+    },
+    {
+      "component": "local_tracer_momentum",
+      "fortran_minus_matlab_ms": -2.928094597999999
+    },
+    {
+      "component": "thermodynamic_inversion",
+      "fortran_minus_matlab_ms": -3.365814708
+    },
+    {
+      "component": "WENO_tracer",
+      "fortran_minus_matlab_ms": -5.2642564679999895
+    }
+  ],
+  "source_hashes": {
+    "fortran/src/ace_module.F": "10b296473123f8f64f08af05ff65dc16bf15757ae2c25baaf0fc866417f133f5",
+    "matlab/ace.m": "3d7d2d258cdc7a59ea75c7ab5fc01dcd2712db1e9bb3a228386ae121a318d9ad",
+    "tests/performance/timestep_serial/analyze.py": "4156c06aa291c73b7ba5cfe28ca0c9399bcd526d28110667ca3ecac22d71fec3",
+    "tests/performance/timestep_serial/report.py": "a13570bdcfb1716eb15572e01d87aed088267895751664a51eea84b7697e5357",
+    "tests/performance/timestep_serial/pipeline.py": "a40e2474eefc9f9ee34f353fbeb6dc1f370361709347676021af08d6a5ef7447",
+    "tests/performance/timestep_serial/pchip_micro.py": "008c3162543e39da411231ed69c1cf2ece22012bf0951fc8a77705b3171370e2",
+    "tests/performance/timestep_serial/profile.py": "fe126943dbd6165a777070246397266d5e2d334658dc0b85bf853b94cc889e1c",
+    "tests/performance/timestep_serial/pchip_probe.f90": "0672cc258f13227a9fdcd780582a8d569cceaf336726b2bd0dd5255154b21e2f",
+    "tests/performance/timestep_serial/driver.f90": "8f39dcb142a73eee3563969409d2880df7358cc024b895d966881d38f877c0f3",
+    "tests/performance/timestep_serial/matlab_profile_header.m": "1e16a875da8c6667c7b8bde916cebc53ae8888b3635eacbe2d933d9d315b13cc"
+  }
+}
