@@ -187,3 +187,191 @@ once the supervisor's full validation report exists. Plot directories use
 the actual covered time; existing figures are preserved. `plot_status.json`
 records whether the final plot is ready or the model failed. The normal
 v0.18 matplotlib dependencies and a writable `MPLCONFIGDIR` are required.
+
+## Packed singleACE timing
+
+`serial_timing.py` uses the frozen three-hour case/completed MATLAB outputs
+in `migration_work/khn26_single_3h`. Following developer instruction, it
+rebuilds all modules and the driver in separate debug/production directories.
+Both are packed real64 `-O2`; debug adds `-g`, `-fcheck`, FPE traps and
+backtrace flags, while production adds none of these. By default, compilation
+is serial and OpenMP runtime linkage is rejected. `--threads 6` enables
+`-fopenmp` with six requested threads, dynamic teams disabled, a six-thread
+limit and close/core affinity. The only model parallel region is the PMB
+contraction; reductions within each output retain their original order.
+Runtime linkage is checked against the requested mode. An isolated driver
+has observational wall timers around `ace_driver` calls.
+
+```bash
+python3 tests/khn26/serial_timing.py migration_work/khn26_single_production_3h --launch
+# Six-thread OpenMP replacement (stop the previous run first):
+python3 tests/khn26/serial_timing.py migration_work/khn26_single_openmp6_3h --threads 6 --launch
+```
+
+Use a fresh directory. The detached supervisor records progress and actual
+driver exit status in `timing_status.json`. It first integrates ten individual
+steps with debug checks and then with the production build. All eleven saved
+states must be finite with nonnegative qt and both complete streams must be
+byte-identical; initial/single-step output must also match frozen legacy.
+OpenMP runs additionally require ten-step byte identity against the completed
+serial production gate in `migration_work/khn26_single_production_3h`.
+`debug_gate_results.json` records gate exits, hashes and timings. Only a passed
+gate starts the fresh three-hour production run from the original initial
+state, without debug flags. The supervisor then runs the existing full-state
+comparison and writes `full_results.json`, `full_mf.npz` and
+`efficiency_results.json`. Input, source, object, executable and MATLAB
+artifact hashes are recorded and rechecked. Failed runs preserve logs/outputs.
+Stop any previous run before launching its replacement. The earlier checked
+serial run in `migration_work/khn26_single_serial_3h` was stopped by developer
+instruction, with partial outputs preserved; it is not three-hour acceptance.
+The [recorded gate report](serial_gate_results.json) confirms the first ten-step
+debug/production comparison passed; it does not certify the three-hour run.
+The serial production run was subsequently stopped for the developer-requested
+six-thread OpenMP replacement; its partial streams are preserved.
+The [OpenMP gate report](openmp_gate_results.json) records successful six-thread
+debug/production and serial-reference ten-step identity checks.
+
+Efficiency is integration wall seconds divided by three simulated hours.
+Fortran times `ace_driver` calls, excluding initialization and output diagnostics;
+MATLAB uses its preserved `timeint` tic/toc (including loop/reporting overhead).
+Fortran process wall time is reported separately; comparable MATLAB process
+wall time was not recorded. These are historical/shared-host measurements,
+not simultaneous runs or isolated hardware benchmarks. The MATLAB reference
+integration took 5,798.9891 s, or 32.2166 wall minutes per simulated hour.
+
+## Completed-run diagnostics and 15-minute serial timing
+
+```bash
+python3 tests/khn26/plot_single.py migration_work/khn26_single_openmp6_3h
+python3 tests/khn26/diagnose_single.py migration_work/khn26_single_openmp6_3h
+python3 tests/khn26/benchmark_single.py migration_work/khn26_single_serial_15min
+```
+
+The diagnostic script rechecks complete-state agreement, finite/nonnegative
+states, inactive scalars and compensation MF before plotting theta_e/qt
+anomalies and diagnostic curves. PNG/PDF files and `diagnostic_summary.json`
+are written alongside the MF panels in `full_comparison/`. Matplotlib is
+required; set a writable `MPLCONFIGDIR` when needed.
+
+The benchmark requires a fresh directory, the preserved serial ten-step gate,
+and the completed three-hour MATLAB/OpenMP state streams. It rebuilds current
+sources using the serial production real64 `-O2` flags and checks ten-step
+binary identity before timing. Fortran and MATLAB run sequentially for 900
+simulated seconds with `dt=4 s` (225 steps), saving every 60 s. MATLAB copies
+the original three-hour source and launcher with only duration/artifact-path
+changes and a natural thread-cap query; no computational-thread setter or
+affinity pinning is added. Use a writable `MATLAB_PREFDIR` if required.
+Both short state streams must match their completed three-hour prefixes.
+
+`benchmark_results.json` reports integration wall seconds per step and
+separate full-process wall times. Fortran times `ace_driver`; MATLAB retains
+the original `timeint` tic/toc including loop/reporting overhead. Inputs,
+source/object/executable hashes, build/run commands and timing scope are
+recorded in `benchmark_configuration.json`. This is one evolving run per
+language on shared hardware, not an isolated or repeated-run benchmark.
+
+If MATLAB fails before creating state output because the sandbox cannot
+reach its license server, preserve the completed Fortran run and failure log.
+After obtaining the required execution permission, use
+`benchmark_single.py WORK --resume-matlab` to rerun only MATLAB with the same
+launcher. The recovery verifies model/input/build hashes and records its
+script hash. If the failed supervisor did not persist Fortran process wall
+time, that optional value is reported as null; its completed integration
+timing remains valid. Existing MATLAB state files are never overwritten.
+
+The [saved 15-minute report](serial_benchmark_results.json) records 225 steps:
+Fortran serial averaged 4.094963 s/step and MATLAB default averaged
+1.835955 s/step. Both 16-state streams reproduced their three-hour prefixes
+byte-for-byte. The [three-hour diagnostic summary](openmp_diagnostic_results.json)
+records the earlier plotted numerical checks.
+
+## MATLAB one-minute section comparison
+
+```bash
+python3 tests/khn26/profile_matlab.py migration_work/khn26_matlab_profile_1min
+python3 tests/khn26/profile_matlab.py migration_work/khn26_matlab_profile_1min --run
+python3 tests/khn26/profile_matlab.py migration_work/khn26_matlab_control_1min --control
+python3 tests/khn26/profile_matlab.py migration_work/khn26_matlab_control_1min --run
+```
+
+Use fresh workspaces and the original MATLAB batch/default thread settings.
+The section copy retains floating-point expressions and reduction grouping,
+names the coarse nonlocal result before interpolation, and adds observational
+timers. Explicit outer/nested `tic` handles preserve the integration clock.
+Only integration sections are timed; postprocessing inversion is excluded.
+Both 0/60 s states must match the completed three-hour MATLAB prefix exactly.
+There are 15 steps, 135 tendencies/nonlocal evaluations and 30 `microrad`
+calls. The control adds no section timers.
+
+[Comparison and scope](../../docs/performance/khn26_section_profile.md),
+[MATLAB section report](matlab_profile_results.json) and
+[control report](matlab_control_results.json) preserve measurements and hashes.
+MATLAB section timing measured 3.257407 s/step versus 1.893833 s/step in the
+uninstrumented one-minute control. Instrumentation/JIT and shared-host load
+effects are not separated; use the section measurements to locate work,
+not as precise original-driver section costs. Cross-language aggregates are
+additive but their internal boundaries and thermodynamic call counts differ.
+
+## Revised MATLAB profiling and interleaved controls
+
+`profile_matlab.py --timer-mode unsplit` times the whole original nonlocal
+function without splitting its PMB/interpolation expression. `split_only`
+is an expression-naming sensitivity control without section timers; the
+default `helper` preserves the initial split/timer experiment.
+
+`profile_sensitivity.py WORK` runs fresh-process control/split-only/unsplit/
+helper/control samples sequentially. `profile_paired.py WORK` prepares one
+initialized MATLAB model with a single shared PMB allocation and five
+same-initial-state minute samples (control/profile/control/profile/control).
+`profile_paired.py WORK --run` executes them, recording wall/CPU times and
+exact state identity. No natural thread setting or affinity is changed.
+Use fresh paths, licensed MATLAB, writable preferences and the same
+license-network execution permission as earlier MATLAB tests.
+
+The paired unsplit profile measured 1.875705–1.929413 s/step, within the
+control range of 1.789522–2.271917. This does not establish zero overhead;
+the earlier 72% difference cannot be treated as a fixed overhead correction.
+`--compare-fortran PATH_TO_PROFILE_JSON` combines completed paired samples
+with a new validated serial Fortran minute report, without rerunning either
+model, and verifies additive section sums.
+
+[Updated comparison](low_perturbation_comparison.json),
+[paired samples](profile_paired_results.json) and
+[sensitivity samples](profile_sensitivity_results.json) preserve raw evidence.
+See [methodology and updated table](../../docs/performance/khn26_section_profile.md).
+The default MATLAB run has substantial measured parallel CPU use; this
+comparison retains serial Fortran and does not equalize CPU resources.
+
+## Fifteen-minute MATLAB single-thread benchmark
+
+```sh
+python3 tests/khn26/benchmark_matlab_single.py migration_work/khn26_matlab_single_15min
+MATLAB_PREFDIR=/tmp/ace-khn26-matlab-single-prefs python3 tests/khn26/benchmark_matlab_single.py migration_work/khn26_matlab_single_15min --run
+```
+
+Use a fresh workspace, writable preferences and licensed MATLAB. The run
+starts MATLAB with `-singleCompThread`, queries/asserts computational cap
+one before and after the original frozen model, and retains the original
+15-minute configuration, expression and integration `tic`/`toc`. CPU time
+is sampled outside that timer; no section instrumentation, thread setter
+or CPU pinning is introduced. The source diff records duration/output
+path changes and outer CPU measurements. The full run comprises 225
+SSPRK93 steps and exports 16 complete minute-spaced states.
+
+The runner checks source/input/reference hashes, finiteness/nonnegative
+saved qt and state agreement against the frozen default MATLAB trajectory.
+Exact identity and per-field errors are reported separately; thread-dependent
+rounding differences are not silently accepted as scientific equivalence.
+Results include CPU/wall ratio, computational cap, process/integration
+timings and comparisons to the earlier default MATLAB and serial Fortran
+15-minute measurements. A single computational thread does not imply the
+MATLAB process has no background threads. This experiment does not rerun
+the reference measurements or change production sources.
+
+The 2026-10-06 single-thread attempt was interrupted at the user's request.
+The last step started at simulated second 552 (at least 548 seconds
+completed). MATLAB exited on SIGTERM; no final timing or complete state
+stream exists. The runtime workspace preserves `cancellation.json`, the
+configuration/source diff and log. This is not a completed 15-minute result.
+The [tracked cancellation record](matlab_single_cancellation.json) preserves
+configuration and artifact hashes; only startup cap one was observed.

@@ -1,0 +1,34 @@
+{
+  "saved_states": 181,
+  "finite_saved_states": true,
+  "nonnegative_saved_qt": true,
+  "max_abs_error_MF_theta_e_qt": [
+    1.7332801860447944e-12,
+    9.549694368615746e-12,
+    1.3380789531947102e-14
+  ],
+  "max_poststep_area_mean_MF_matlab_fortran": [
+    1.5677563414140394e-16,
+    1.855069917122698e-16
+  ],
+  "max_inactive_theta_e_qt_deviation_matlab_fortran": [
+    [
+      1.5347723092418164e-10,
+      9.367506770274758e-15
+    ],
+    [
+      1.5347723092418164e-10,
+      9.367506770274758e-15
+    ]
+  ],
+  "compensation_MF_equal_in_inactive_columns": true,
+  "scope": "Saved states only; initial pulse precedes mean correction. No independent energy/water budget acceptance.",
+  "artifacts_sha256": {
+    "mf_three_panels.png": "43e03dfc70f8f7398647aff91b577e0820c24032f4b613d963838068279a779e",
+    "mf_three_panels.pdf": "74075c7ffadcbefb6c46f61c9cd899f4371242141d3620c20c93477429b7bdcd",
+    "scalar_anomalies.pdf": "0dff87354eede97a28f54179f72a16bab7a11c5897c9c87adb7dfbf19065e64c",
+    "scalar_anomalies.png": "a53aae03107c7e2a754fe299f1bd8a020b669269ddb3094bd97cd8ccefc759b4",
+    "diagnostics.png": "34179d4949bba63ed7f2f7677ad194833bef63da5c2697d59697d95cb8a22ec1",
+    "diagnostics.pdf": "f47c1e12ec3ee3de5e6602da5bb3d747f440e4aac37aa8ca4e08178c758203cd"
+  }
+}

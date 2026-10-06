@@ -1,0 +1,62 @@
+{
+  "duration_seconds_each": 60,
+  "steps_each": 15,
+  "dt_seconds": 4,
+  "comparison": [
+    {
+      "section": "nonlocal_response_interpolation_assembly",
+      "fortran_ms_per_step": 3888.1766435333348,
+      "matlab_ms_per_step": 1559.1510333333335
+    },
+    {
+      "section": "transport_and_other_buoyancy_setup",
+      "fortran_ms_per_step": 49.04185306666665,
+      "matlab_ms_per_step": 143.44083333333336
+    },
+    {
+      "section": "thermodynamic_inversions",
+      "fortran_ms_per_step": 12.8156354,
+      "matlab_ms_per_step": 187.33596666666668
+    },
+    {
+      "section": "damping",
+      "fortran_ms_per_step": 0.2516502666666667,
+      "matlab_ms_per_step": 0.6554000000000001
+    },
+    {
+      "section": "other_driver_timer_overhead",
+      "fortran_ms_per_step": 2.382488399998787,
+      "matlab_ms_per_step": 11.975333333332898
+    }
+  ],
+  "fortran_ms_per_step": 3952.6682706666666,
+  "matlab_ms_per_step": 1902.5585666666666,
+  "matlab_control": {
+    "median_seconds_per_step": 2.0363416666666665,
+    "range_seconds_per_step": [
+      1.7895221333333333,
+      2.2719171333333334
+    ]
+  },
+  "matlab_unsplit": {
+    "median_seconds_per_step": 1.9025585666666667,
+    "range_seconds_per_step": [
+      1.8757045333333333,
+      1.9294126
+    ]
+  },
+  "matlab_cpu_to_wall_ratios": [
+    66.3136916283695,
+    65.58602264578417,
+    68.15095984868225,
+    65.98588606708591,
+    64.35423803270831
+  ],
+  "source_reports": {
+    "/scratch/peter50504/ACE/migration_work/khn26_matlab_profile_interleaved/paired_results.json": "25853945b50cd76551f151cde7cc3235697093fed7dda7c312ce0fb2ae7d0781",
+    "/scratch/peter50504/ACE/migration_work/khn26_serial_profile_interleaved/profile_results.json": "629e3b2fba84b6cec16fbcabddad334e3ac313030917b80a2c590c77795591b9"
+  },
+  "binary_identity_all_samples": true,
+  "method": "Fortran: fresh serial production one-minute profile average. MATLAB: component medians over two unsplit profiles (equivalent to their mean), interleaved with three original-expression controls in one process and one PMB allocation. Nonlocal/interpolation/assembly are combined; no scalar overhead correction is applied.",
+  "limits": "Shared hardware, one Fortran run and two MATLAB profiled samples. Control range documents observed variability; it does not prove zero instrumentation overhead. Default parallel MATLAB resources and serial Fortran differ; CPU/wall ratios are not thread-count measurements."
+}

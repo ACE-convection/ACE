@@ -1,0 +1,266 @@
+{
+  "sequence": [
+    {
+      "variant": "control_before",
+      "wall_seconds_per_step": 3.0567866666666665,
+      "binary_identical": true,
+      "report": "/scratch/peter50504/ACE/migration_work/khn26_matlab_profile_sensitivity/control_before/control_results.json",
+      "report_sha256": "6c79881a5e239806a2ff929fe2991b35e6bccec6d4628f950829aa2075a64689",
+      "comparison": null,
+      "sections": null
+    },
+    {
+      "variant": "split_only",
+      "wall_seconds_per_step": 2.3629733333333336,
+      "binary_identical": true,
+      "report": "/scratch/peter50504/ACE/migration_work/khn26_matlab_profile_sensitivity/split_only/control_results.json",
+      "report_sha256": "29fe74f14b83ee417e5f719c4523fedce670556b759a83b7052661f096f02c30",
+      "comparison": null,
+      "sections": null
+    },
+    {
+      "variant": "unsplit_timers",
+      "wall_seconds_per_step": 1.9129714,
+      "binary_identical": true,
+      "report": "/scratch/peter50504/ACE/migration_work/khn26_matlab_profile_sensitivity/unsplit_timers/profile_results.json",
+      "report_sha256": "8b247612aa9a40535a8ad3a265c2aaea26ec1bbb898d5c870277107d657efb2b",
+      "comparison": [
+        {
+          "section": "nonlocal_response_interpolation_assembly",
+          "fortran_ms_per_step": 3916.587339200001,
+          "matlab_ms_per_step": 1499.187866666667
+        },
+        {
+          "section": "transport_and_other_buoyancy_setup",
+          "fortran_ms_per_step": 55.039739933333315,
+          "matlab_ms_per_step": 206.3082
+        },
+        {
+          "section": "thermodynamic_inversions",
+          "fortran_ms_per_step": 12.932397599999996,
+          "matlab_ms_per_step": 185.27773333333334
+        },
+        {
+          "section": "damping",
+          "fortran_ms_per_step": 0.25599193333333325,
+          "matlab_ms_per_step": 0.9516666666666667
+        },
+        {
+          "section": "other_driver_timer_overhead",
+          "fortran_ms_per_step": 2.785630466665623,
+          "matlab_ms_per_step": 21.2459333333328
+        }
+      ],
+      "sections": {
+        "tendency_total": {
+          "wall_seconds": 25.38802500000001,
+          "calls": 135,
+          "wall_seconds_per_step": 1.6925350000000006,
+          "percent_of_driver": 88.47675401733663,
+          "wall_seconds_per_call": 0.18805944444444453
+        },
+        "transport_setup": {
+          "wall_seconds": 2.900207000000001,
+          "calls": 135,
+          "wall_seconds_per_step": 0.1933471333333334,
+          "percent_of_driver": 10.107162780025535,
+          "wall_seconds_per_call": 0.02148301481481482
+        },
+        "microrad_total": {
+          "wall_seconds": 2.973581999999999,
+          "calls": 30,
+          "wall_seconds_per_step": 0.19823879999999994,
+          "percent_of_driver": 10.362873172071467,
+          "wall_seconds_per_call": 0.09911939999999997
+        },
+        "thermodynamics_nested": {
+          "wall_seconds": 2.779166,
+          "calls": 30,
+          "wall_seconds_per_step": 0.18527773333333333,
+          "percent_of_driver": 9.68533734133889,
+          "wall_seconds_per_call": 0.09263886666666667
+        },
+        "mean_buoyancy": {
+          "wall_seconds": 0.0,
+          "calls": 0,
+          "wall_seconds_per_step": 0.0,
+          "percent_of_driver": 0.0
+        },
+        "interpolation": {
+          "wall_seconds": 0.0,
+          "calls": 0,
+          "wall_seconds_per_step": 0.0,
+          "percent_of_driver": 0.0
+        },
+        "damping": {
+          "wall_seconds": 0.014275,
+          "calls": 15,
+          "wall_seconds_per_step": 0.0009516666666666666,
+          "percent_of_driver": 0.049748086493434596,
+          "wall_seconds_per_call": 0.0009516666666666666
+        },
+        "driver_total": {
+          "wall_seconds": 28.694571,
+          "calls": 1,
+          "wall_seconds_per_step": 1.9129714,
+          "percent_of_driver": 100.0,
+          "wall_seconds_per_call": 28.694571
+        },
+        "nonlocal_response_total": {
+          "wall_seconds": 22.114362,
+          "calls": 135,
+          "wall_seconds_per_step": 1.4742908,
+          "percent_of_driver": 77.06810462508744,
+          "wall_seconds_per_call": 0.1638100888888889
+        },
+        "microrad_excluding_inversion": {
+          "wall_seconds": 0.19441599999999903,
+          "wall_seconds_per_step": 0.012961066666666602,
+          "percent_of_driver": 0.6775358307325766
+        },
+        "tendency_assembly_mask_timer_overhead": {
+          "wall_seconds": 0.373456000000008,
+          "wall_seconds_per_step": 0.0248970666666672,
+          "percent_of_driver": 1.3014866122236433
+        },
+        "other_driver_timer_overhead": {
+          "wall_seconds": 0.318688999999992,
+          "wall_seconds_per_step": 0.0212459333333328,
+          "percent_of_driver": 1.1106247240984783
+        }
+      }
+    },
+    {
+      "variant": "split_timers",
+      "wall_seconds_per_step": 2.020840333333333,
+      "binary_identical": true,
+      "report": "/scratch/peter50504/ACE/migration_work/khn26_matlab_profile_sensitivity/split_timers/profile_results.json",
+      "report_sha256": "8e1d64fec49534c40d912ab15bdebb824a650eb7f6f718444f65aefdfdee11d5",
+      "comparison": [
+        {
+          "section": "nonlocal_basis_and_preparation",
+          "fortran_ms_per_step": 3901.348682466668,
+          "matlab_ms_per_step": 1643.4122666666672
+        },
+        {
+          "section": "transport_and_other_buoyancy_setup",
+          "fortran_ms_per_step": 55.039739933333315,
+          "matlab_ms_per_step": 147.73360000000005
+        },
+        {
+          "section": "thermodynamic_inversions",
+          "fortran_ms_per_step": 12.932397599999996,
+          "matlab_ms_per_step": 187.12380000000002
+        },
+        {
+          "section": "interpolation_assembly_mask",
+          "fortran_ms_per_step": 15.23865673333332,
+          "matlab_ms_per_step": 31.29273333333335
+        },
+        {
+          "section": "damping",
+          "fortran_ms_per_step": 0.25599193333333325,
+          "matlab_ms_per_step": 0.7837333333333332
+        },
+        {
+          "section": "other_driver_timer_overhead",
+          "fortran_ms_per_step": 2.785630466665623,
+          "matlab_ms_per_step": 10.494199999999646
+        }
+      ],
+      "sections": {
+        "tendency_total": {
+          "wall_seconds": 27.170583000000008,
+          "calls": 135,
+          "wall_seconds_per_step": 1.8113722000000005,
+          "percent_of_driver": 89.63460250282021,
+          "wall_seconds_per_call": 0.20126357777777784
+        },
+        "transport_setup": {
+          "wall_seconds": 2.0500080000000005,
+          "calls": 135,
+          "wall_seconds_per_step": 0.13666720000000004,
+          "percent_of_driver": 6.762889563599039,
+          "wall_seconds_per_call": 0.015185244444444449
+        },
+        "microrad_total": {
+          "wall_seconds": 2.972853,
+          "calls": 30,
+          "wall_seconds_per_step": 0.1981902,
+          "percent_of_driver": 9.807316131358554,
+          "wall_seconds_per_call": 0.0990951
+        },
+        "thermodynamics_nested": {
+          "wall_seconds": 2.806857,
+          "calls": 30,
+          "wall_seconds_per_step": 0.1871238,
+          "percent_of_driver": 9.25970235814441,
+          "wall_seconds_per_call": 0.0935619
+        },
+        "mean_buoyancy": {
+          "wall_seconds": 0.033011,
+          "calls": 135,
+          "wall_seconds_per_step": 0.0022007333333333334,
+          "percent_of_driver": 0.10890189081406892,
+          "wall_seconds_per_call": 0.00024452592592592593
+        },
+        "basis_contraction": {
+          "wall_seconds": 24.618173000000006,
+          "calls": 135,
+          "wall_seconds_per_step": 1.6412115333333337,
+          "percent_of_driver": 81.21431002053438,
+          "wall_seconds_per_call": 0.1823568370370371
+        },
+        "interpolation": {
+          "wall_seconds": 0.19242300000000007,
+          "calls": 135,
+          "wall_seconds_per_step": 0.012828200000000005,
+          "percent_of_driver": 0.634795326894538,
+          "wall_seconds_per_call": 0.001425355555555556
+        },
+        "damping": {
+          "wall_seconds": 0.011755999999999997,
+          "calls": 15,
+          "wall_seconds_per_step": 0.0007837333333333332,
+          "percent_of_driver": 0.03878254607283009,
+          "wall_seconds_per_call": 0.0007837333333333332
+        },
+        "driver_total": {
+          "wall_seconds": 30.312605,
+          "calls": 1,
+          "wall_seconds_per_step": 2.0208403333333336,
+          "percent_of_driver": 100.0,
+          "wall_seconds_per_call": 30.312605
+        },
+        "microrad_excluding_inversion": {
+          "wall_seconds": 0.16599600000000025,
+          "wall_seconds_per_step": 0.011066400000000016,
+          "percent_of_driver": 0.5476137732141472
+        },
+        "tendency_assembly_mask_timer_overhead": {
+          "wall_seconds": 0.2769680000000001,
+          "wall_seconds_per_step": 0.018464533333333342,
+          "percent_of_driver": 0.9137057009781907
+        },
+        "other_driver_timer_overhead": {
+          "wall_seconds": 0.1574129999999947,
+          "wall_seconds_per_step": 0.010494199999999647,
+          "percent_of_driver": 0.5192988197484006
+        }
+      }
+    },
+    {
+      "variant": "control_after",
+      "wall_seconds_per_step": 23.349766666666667,
+      "binary_identical": true,
+      "report": "/scratch/peter50504/ACE/migration_work/khn26_matlab_profile_sensitivity/control_after/control_results.json",
+      "report_sha256": "2c27794e494b1cbce782bdfc9fdbb93c6295f0157c5402758f8b65fa2a2ac3e5",
+      "comparison": null,
+      "sections": null
+    }
+  ],
+  "duration_seconds_each": 60,
+  "steps_each": 15,
+  "settings": "Fresh MATLAB batch/default process for each run, no thread setter/CPU pin.",
+  "limits": "Single sample per variant with before/after unchanged controls on shared hardware. Differences identify source-transformation sensitivity; exact JIT/allocation attribution is not directly measured."
+}

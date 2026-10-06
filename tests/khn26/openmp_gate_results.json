@@ -1,0 +1,46 @@
+{
+  "steps": 10,
+  "saved_states": 11,
+  "debug_exit_code": 0,
+  "production_exit_code": 0,
+  "binary_identical": true,
+  "frozen_single_step_identical": true,
+  "openmp": true,
+  "threads": 6,
+  "serial_ten_step_identical": true,
+  "finite_states_nonnegative_qt": true,
+  "wall_seconds": {
+    "debug": 61.720218101050705,
+    "production": 46.008519959053956
+  },
+  "commands": {
+    "debug": [
+      "/scratch/peter50504/ACE/migration_work/khn26_single_openmp6_3h/debug/ace_model.exe",
+      "--input",
+      "/scratch/peter50504/ACE/data/input/manaus1342_khn26.nc",
+      "--physics",
+      "none",
+      "--dt",
+      "4.0",
+      "--steps",
+      "10",
+      "--state-output",
+      "/scratch/peter50504/ACE/migration_work/khn26_single_openmp6_3h/debug_gate.bin"
+    ],
+    "production": [
+      "/scratch/peter50504/ACE/migration_work/khn26_single_openmp6_3h/build/ace_model.exe",
+      "--input",
+      "/scratch/peter50504/ACE/data/input/manaus1342_khn26.nc",
+      "--physics",
+      "none",
+      "--dt",
+      "4.0",
+      "--steps",
+      "10",
+      "--state-output",
+      "/scratch/peter50504/ACE/migration_work/khn26_single_openmp6_3h/production_gate.bin"
+    ]
+  },
+  "debug_sha256": "2529a73a5c26f8afd6b4bc7f45b9de04c3e0130a9de9672710ac5f7adae8592c",
+  "production_sha256": "2529a73a5c26f8afd6b4bc7f45b9de04c3e0130a9de9672710ac5f7adae8592c"
+}

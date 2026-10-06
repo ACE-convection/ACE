@@ -1,0 +1,274 @@
+{
+  "case": {
+    "duration_seconds": 10800,
+    "dt_seconds": 4.0,
+    "bubble_delta_K": 1.0,
+    "physics": "none",
+    "mean_mf_zero": true,
+    "initial_mf_amplitude": 0.03,
+    "input": "/scratch/peter50504/ACE/data/input/manaus1342_khn26.nc",
+    "input_sha256": "09408f4d0343afd8659df82f8f1cfe5dc59308cff150fb2bcfd569b1b8794d35",
+    "active_ace_one_based": 1,
+    "full_basis_columns": 101,
+    "profile_index": 1342,
+    "bubble_levels_one_based": [
+      11,
+      51
+    ],
+    "output_interval_seconds": 60,
+    "policy": "Mask dynamics tendencies in ACEs 2..101; physics and damping retain driver behavior.",
+    "basis_policy": "Complete geometry and PMB retained; PMDv/PMD disabled.",
+    "compiled_commands": [
+      [
+        "gfortran",
+        "-cpp",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-O2",
+        "-g",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/migration_work/khn26_single_3h/ace_module_single.F",
+        "-o",
+        "ace_module.o"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-O2",
+        "-g",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/migration_work/khn26_single_3h/single_driver.F",
+        "-o",
+        "test.o"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-O2",
+        "-g",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "test.o",
+        "ace_module.o",
+        "/scratch/peter50504/ACE/migration_work/khn26_single_3h/build64/ace_input.o",
+        "/scratch/peter50504/ACE/migration_work/khn26_single_3h/build64/ace_interpolation.o",
+        "/scratch/peter50504/ACE/migration_work/khn26_single_3h/build64/microphy_p3.o",
+        "-L/home/peter50504/miniconda3/lib",
+        "-lnetcdff",
+        "-lnetcdf",
+        "-o",
+        "ace_model.exe"
+      ]
+    ],
+    "generated_sha256": {
+      "single_main.m": "94a854eef7b27508ec85215bbd0e70823e9162bd7c7d7280f6b9b870b07b919c",
+      "ace_module_single.F": "b4db355d9c02f110513e91c897090b5c96c33018cf2c395925bc6530aaa13342",
+      "single_driver.F": "2089204c5ba51014fa01f195056226dbf249853c0a4282242043dbf84b2a5729"
+    },
+    "not_frozen_manus_reference": "Manaus/KHN26 basis and grid; no byte comparison to v0.18 Manus."
+  },
+  "compiled_commands": [
+    [
+      "gfortran",
+      "-cpp",
+      "-ffree-form",
+      "-ffree-line-length-none",
+      "-O2",
+      "-fdefault-real-8",
+      "-fdefault-double-8",
+      "-I/home/peter50504/miniconda3/include",
+      "-I/home/peter50504/miniconda3/include",
+      "-c",
+      "/scratch/peter50504/ACE/migration_work/khn26_serial_profile_interleaved/profile_module.F",
+      "-o",
+      "ace_module.o"
+    ],
+    [
+      "gfortran",
+      "-cpp",
+      "-ffree-form",
+      "-ffree-line-length-none",
+      "-O2",
+      "-fdefault-real-8",
+      "-fdefault-double-8",
+      "-I/home/peter50504/miniconda3/include",
+      "-I/home/peter50504/miniconda3/include",
+      "-c",
+      "/scratch/peter50504/ACE/migration_work/khn26_serial_profile_interleaved/profile_driver.F",
+      "-o",
+      "test.o"
+    ],
+    [
+      "gfortran",
+      "-cpp",
+      "-ffree-form",
+      "-ffree-line-length-none",
+      "-O2",
+      "-fdefault-real-8",
+      "-fdefault-double-8",
+      "test.o",
+      "ace_module.o",
+      "/scratch/peter50504/ACE/migration_work/khn26_single_serial_15min/build/ace_input.o",
+      "/scratch/peter50504/ACE/migration_work/khn26_single_serial_15min/build/ace_interpolation.o",
+      "/scratch/peter50504/ACE/migration_work/khn26_single_serial_15min/build/microphy_p3.o",
+      "-L/home/peter50504/miniconda3/lib",
+      "-lnetcdff",
+      "-lnetcdf",
+      "-o",
+      "ace_model.exe"
+    ]
+  ],
+  "sha256": {
+    "/scratch/peter50504/ACE/fortran/src/ace_module.F": "e185be73ed0df2757df72e10317d6f12abf39477e3de795b65e82d733b1c6c5d",
+    "/scratch/peter50504/ACE/data/input/manaus1342_khn26.nc": "09408f4d0343afd8659df82f8f1cfe5dc59308cff150fb2bcfd569b1b8794d35",
+    "/scratch/peter50504/ACE/migration_work/khn26_serial_profile_interleaved/profile_module.F": "43ca6a6052f128771e2e488aeb40ccd55bf8c5b22d56886528f20ebb569ea3a0",
+    "/scratch/peter50504/ACE/migration_work/khn26_serial_profile_interleaved/profile_driver.F": "3f02cbec9b1ded4b86ac1bffe6505d8dd00696d1a55bbbc70e06c59fe37e2504",
+    "/scratch/peter50504/ACE/migration_work/khn26_single_serial_15min/build/ace_input.o": "5c5f11c37df2f8b2563fe995656935e35246430cfb35d8311c041b60d1c2298f",
+    "/scratch/peter50504/ACE/migration_work/khn26_single_serial_15min/build/ace_interpolation.o": "a581690a1328932e476fdffdde085ce23ad48323e10ebf6428ca7d8a98dab28f",
+    "/scratch/peter50504/ACE/migration_work/khn26_single_serial_15min/build/microphy_p3.o": "f7bee96a3a73b882ddbf486d0586249e9b351833c2bd715ab8ae21cac6ca1c74",
+    "/scratch/peter50504/ACE/migration_work/khn26_single_serial_15min/full_fortran_states.bin": "8f7f30707ec89800378a04408ad12a01065ce76cee80d86298cc2367002fd05e",
+    "/scratch/peter50504/ACE/tests/basis_layout/profile_model.py": "b68731251efd929524939baa9bef6a535d52ce77edd6d8d3eb2b7f935124c6ff"
+  },
+  "runs": [
+    {
+      "command": [
+        "/scratch/peter50504/ACE/migration_work/khn26_serial_profile_interleaved/build/ace_model.exe",
+        "--input",
+        "/scratch/peter50504/ACE/data/input/manaus1342_khn26.nc",
+        "--physics",
+        "none",
+        "--dt",
+        "4.0",
+        "--state-output",
+        "/scratch/peter50504/ACE/migration_work/khn26_serial_profile_interleaved/state_0.bin",
+        "--intervals",
+        "1",
+        "--output",
+        "/scratch/peter50504/ACE/migration_work/khn26_serial_profile_interleaved/profile_0.dat"
+      ],
+      "process_wall_seconds": 95.8893872849876,
+      "sections": {
+        "initialization": {
+          "wall_seconds": 36.505822658,
+          "calls": 1,
+          "wall_seconds_per_call": 36.505822658
+        },
+        "tendency_total": {
+          "wall_seconds": 59.25054003500002,
+          "calls": 135,
+          "wall_seconds_per_step": 3.9500360023333347,
+          "percent_of_driver": 99.93340528086138,
+          "wall_seconds_per_call": 0.43889288914814834
+        },
+        "transport_and_thermodynamics": {
+          "wall_seconds": 0.9278623269999997,
+          "calls": 135,
+          "wall_seconds_per_step": 0.061857488466666645,
+          "percent_of_driver": 1.564955220900276,
+          "wall_seconds_per_call": 0.006873054274074072
+        },
+        "thermodynamics_nested": {
+          "wall_seconds": 0.192234531,
+          "calls": 1515,
+          "wall_seconds_per_step": 0.012815635399999999,
+          "percent_of_driver": 0.32422744643426615,
+          "wall_seconds_per_call": 0.00012688747920792077
+        },
+        "mean_buoyancy_and_coarsening": {
+          "wall_seconds": 0.04392686199999999,
+          "calls": 135,
+          "wall_seconds_per_step": 0.002928457466666666,
+          "percent_of_driver": 0.07408811633395042,
+          "wall_seconds_per_call": 0.0003253841629629629
+        },
+        "forcing_pack": {
+          "wall_seconds": 0.0013210639999999998,
+          "calls": 135,
+          "wall_seconds_per_step": 8.807093333333332e-05,
+          "percent_of_driver": 0.002228138748372098,
+          "wall_seconds_per_call": 9.785659259259258e-06
+        },
+        "PMB_contraction": {
+          "wall_seconds": 58.05994179400002,
+          "calls": 135,
+          "wall_seconds_per_step": 3.870662786266668,
+          "percent_of_driver": 97.92531326221899,
+          "wall_seconds_per_call": 0.43007364291851863
+        },
+        "momentum_interpolation_mask": {
+          "wall_seconds": 0.21745993300000008,
+          "calls": 135,
+          "wall_seconds_per_step": 0.014497328866666671,
+          "percent_of_driver": 0.36677322441282223,
+          "wall_seconds_per_call": 0.0016108143185185192
+        },
+        "damping": {
+          "wall_seconds": 0.0037747540000000004,
+          "calls": 15,
+          "wall_seconds_per_step": 0.0002516502666666667,
+          "percent_of_driver": 0.0063665921204215485,
+          "wall_seconds_per_call": 0.0002516502666666667
+        },
+        "driver_total": {
+          "wall_seconds": 59.29002406,
+          "calls": 1,
+          "wall_seconds_per_step": 3.9526682706666665,
+          "percent_of_driver": 99.99999999999999,
+          "wall_seconds_per_call": 59.29002406
+        },
+        "initial_PMB_pack": {
+          "wall_seconds": 4.495492297,
+          "calls": 1,
+          "wall_seconds_per_call": 4.495492297
+        },
+        "transport_excluding_thermodynamics": {
+          "wall_seconds": 0.7356277959999997,
+          "wall_seconds_per_step": 0.04904185306666665,
+          "percent_of_driver": 1.2407277744660097
+        },
+        "other_driver_and_timer_overhead": {
+          "wall_seconds": 0.035737325999981806,
+          "wall_seconds_per_step": 0.002382488399998787,
+          "percent_of_driver": 0.06027544526515378
+        }
+      },
+      "binary_identical": true,
+      "PMB_percent_of_driver": 97.92531326221899,
+      "state_sha256": "bb3c107edd10874d8d6af694d1f3c6c9803db7ad66b6978502201ac03f9ee74b"
+    }
+  ],
+  "duration_seconds": 60,
+  "steps": 15,
+  "production": true,
+  "flags": [
+    "-cpp",
+    "-ffree-form",
+    "-ffree-line-length-none",
+    "-O2",
+    "-fdefault-real-8",
+    "-fdefault-double-8"
+  ],
+  "limits": "Section wall timings in an evolving serial run on a shared host. Instrumentation can affect performance. Nested timings are not additive; initialization is separate and paid once; no long-run speed guarantee.",
+  "provenance_rechecked": true
+}

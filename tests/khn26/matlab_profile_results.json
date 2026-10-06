@@ -1,0 +1,242 @@
+{
+  "duration_seconds": 60,
+  "steps": 15,
+  "dt_seconds": 4,
+  "sections": {
+    "tendency_total": {
+      "wall_seconds": 45.574643,
+      "calls": 135,
+      "wall_seconds_per_step": 3.0383095333333334,
+      "percent_of_driver": 93.27386313057004,
+      "wall_seconds_per_call": 0.3375899481481482
+    },
+    "transport_setup": {
+      "wall_seconds": 2.6562659999999996,
+      "calls": 135,
+      "wall_seconds_per_step": 0.17708439999999998,
+      "percent_of_driver": 5.4363605508086295,
+      "wall_seconds_per_call": 0.01967604444444444
+    },
+    "microrad_total": {
+      "wall_seconds": 2.9865699999999995,
+      "calls": 30,
+      "wall_seconds_per_step": 0.19910466666666662,
+      "percent_of_driver": 6.112366506301902,
+      "wall_seconds_per_call": 0.09955233333333331
+    },
+    "thermodynamics_nested": {
+      "wall_seconds": 2.8050250000000005,
+      "calls": 30,
+      "wall_seconds_per_step": 0.1870016666666667,
+      "percent_of_driver": 5.740813327442351,
+      "wall_seconds_per_call": 0.09350083333333335
+    },
+    "mean_buoyancy": {
+      "wall_seconds": 0.03617900000000003,
+      "calls": 135,
+      "wall_seconds_per_step": 0.0024119333333333355,
+      "percent_of_driver": 0.07404457549345797,
+      "wall_seconds_per_call": 0.0002679925925925928
+    },
+    "basis_contraction": {
+      "wall_seconds": 42.32033300000002,
+      "calls": 135,
+      "wall_seconds_per_step": 2.8213555333333344,
+      "percent_of_driver": 86.61353524770665,
+      "wall_seconds_per_call": 0.3134839481481483
+    },
+    "interpolation": {
+      "wall_seconds": 0.20174600000000012,
+      "calls": 135,
+      "wall_seconds_per_step": 0.013449733333333342,
+      "percent_of_driver": 0.41289689951361747,
+      "wall_seconds_per_call": 0.0014944148148148158
+    },
+    "damping": {
+      "wall_seconds": 0.013632,
+      "calls": 15,
+      "wall_seconds_per_step": 0.0009088,
+      "percent_of_driver": 0.02789949012208237,
+      "wall_seconds_per_call": 0.0009088
+    },
+    "driver_total": {
+      "wall_seconds": 48.861108,
+      "calls": 1,
+      "wall_seconds_per_step": 3.2574072000000003,
+      "percent_of_driver": 100.0,
+      "wall_seconds_per_call": 48.861108
+    },
+    "microrad_excluding_inversion": {
+      "wall_seconds": 0.18154499999999896,
+      "wall_seconds_per_step": 0.01210299999999993,
+      "percent_of_driver": 0.3715531788595522
+    },
+    "tendency_assembly_mask_timer_overhead": {
+      "wall_seconds": 0.3601189999999832,
+      "wall_seconds_per_step": 0.024007933333332215,
+      "percent_of_driver": 0.7370258570476609
+    },
+    "other_driver_timer_overhead": {
+      "wall_seconds": 0.28626299999999816,
+      "wall_seconds_per_step": 0.019084199999999878,
+      "percent_of_driver": 0.585870873005987
+    }
+  },
+  "comparison": [
+    {
+      "section": "nonlocal_basis_and_preparation",
+      "fortran_ms_per_step": 3901.348682466668,
+      "matlab_ms_per_step": 2823.7674666666676
+    },
+    {
+      "section": "transport_and_other_buoyancy_setup",
+      "fortran_ms_per_step": 55.039739933333315,
+      "matlab_ms_per_step": 189.18739999999988
+    },
+    {
+      "section": "thermodynamic_inversions",
+      "fortran_ms_per_step": 12.932397599999996,
+      "matlab_ms_per_step": 187.0016666666667
+    },
+    {
+      "section": "interpolation_assembly_mask",
+      "fortran_ms_per_step": 15.23865673333332,
+      "matlab_ms_per_step": 37.45766666666556
+    },
+    {
+      "section": "damping",
+      "fortran_ms_per_step": 0.25599193333333325,
+      "matlab_ms_per_step": 0.9087999999999999
+    },
+    {
+      "section": "other_driver_timer_overhead",
+      "fortran_ms_per_step": 2.785630466665623,
+      "matlab_ms_per_step": 19.08419999999988
+    }
+  ],
+  "fortran_ms_per_step": 3987.6010991333337,
+  "matlab_ms_per_step": 3257.4072,
+  "matlab_process_wall_seconds": 73.52831222000532,
+  "matlab_initialization_postprocessing_output_and_startup_wall_seconds": 24.667204220005317,
+  "binary_identical_to_three_hour_prefix": true,
+  "provenance_rechecked": true,
+  "state_sha256": "b6062a7f41efc7349cdf73dc47e9d23f72b850aa84df258edb2706858905c18a",
+  "configuration": {
+    "case": {
+      "duration_seconds": 10800,
+      "dt_seconds": 4.0,
+      "bubble_delta_K": 1.0,
+      "physics": "none",
+      "mean_mf_zero": true,
+      "initial_mf_amplitude": 0.03,
+      "input": "/scratch/peter50504/ACE/data/input/manaus1342_khn26.nc",
+      "input_sha256": "09408f4d0343afd8659df82f8f1cfe5dc59308cff150fb2bcfd569b1b8794d35",
+      "active_ace_one_based": 1,
+      "full_basis_columns": 101,
+      "profile_index": 1342,
+      "bubble_levels_one_based": [
+        11,
+        51
+      ],
+      "output_interval_seconds": 60,
+      "policy": "Mask dynamics tendencies in ACEs 2..101; physics and damping retain driver behavior.",
+      "basis_policy": "Complete geometry and PMB retained; PMDv/PMD disabled.",
+      "compiled_commands": [
+        [
+          "gfortran",
+          "-cpp",
+          "-ffree-form",
+          "-ffree-line-length-none",
+          "-O2",
+          "-g",
+          "-fcheck=all,no-array-temps",
+          "-ffpe-trap=invalid,zero,overflow",
+          "-fbacktrace",
+          "-fdefault-real-8",
+          "-fdefault-double-8",
+          "-I/home/peter50504/miniconda3/include",
+          "-I/home/peter50504/miniconda3/include",
+          "-c",
+          "/scratch/peter50504/ACE/migration_work/khn26_single_3h/ace_module_single.F",
+          "-o",
+          "ace_module.o"
+        ],
+        [
+          "gfortran",
+          "-cpp",
+          "-ffree-form",
+          "-ffree-line-length-none",
+          "-O2",
+          "-g",
+          "-fcheck=all,no-array-temps",
+          "-ffpe-trap=invalid,zero,overflow",
+          "-fbacktrace",
+          "-fdefault-real-8",
+          "-fdefault-double-8",
+          "-I/home/peter50504/miniconda3/include",
+          "-I/home/peter50504/miniconda3/include",
+          "-c",
+          "/scratch/peter50504/ACE/migration_work/khn26_single_3h/single_driver.F",
+          "-o",
+          "test.o"
+        ],
+        [
+          "gfortran",
+          "-cpp",
+          "-ffree-form",
+          "-ffree-line-length-none",
+          "-O2",
+          "-g",
+          "-fcheck=all,no-array-temps",
+          "-ffpe-trap=invalid,zero,overflow",
+          "-fbacktrace",
+          "-fdefault-real-8",
+          "-fdefault-double-8",
+          "test.o",
+          "ace_module.o",
+          "/scratch/peter50504/ACE/migration_work/khn26_single_3h/build64/ace_input.o",
+          "/scratch/peter50504/ACE/migration_work/khn26_single_3h/build64/ace_interpolation.o",
+          "/scratch/peter50504/ACE/migration_work/khn26_single_3h/build64/microphy_p3.o",
+          "-L/home/peter50504/miniconda3/lib",
+          "-lnetcdff",
+          "-lnetcdf",
+          "-o",
+          "ace_model.exe"
+        ]
+      ],
+      "generated_sha256": {
+        "single_main.m": "94a854eef7b27508ec85215bbd0e70823e9162bd7c7d7280f6b9b870b07b919c",
+        "ace_module_single.F": "b4db355d9c02f110513e91c897090b5c96c33018cf2c395925bc6530aaa13342",
+        "single_driver.F": "2089204c5ba51014fa01f195056226dbf249853c0a4282242043dbf84b2a5729"
+      },
+      "not_frozen_manus_reference": "Manaus/KHN26 basis and grid; no byte comparison to v0.18 Manus."
+    },
+    "duration_seconds": 60,
+    "steps": 15,
+    "dt_seconds": 4,
+    "command": [
+      "matlab",
+      "-batch",
+      "run('/scratch/peter50504/ACE/migration_work/khn26_matlab_profile_1min/full_launch.m')"
+    ],
+    "sha256": {
+      "/scratch/peter50504/ACE/data/input/manaus1342_khn26.nc": "09408f4d0343afd8659df82f8f1cfe5dc59308cff150fb2bcfd569b1b8794d35",
+      "/scratch/peter50504/ACE/migration_work/khn26_single_3h/single_main.m": "94a854eef7b27508ec85215bbd0e70823e9162bd7c7d7280f6b9b870b07b919c",
+      "/scratch/peter50504/ACE/migration_work/khn26_matlab_profile_1min/single_main.m": "33cccaed5f44ad4c43c77c3274a67b6505d82c41b9ffe4e2f39da734a70400ba",
+      "/scratch/peter50504/ACE/migration_work/khn26_matlab_profile_1min/full_launch.m": "b31d7d5578c36cb4aab6d8576e09d657bc9caf730ac3847e29e180e00b9cd3c6",
+      "/scratch/peter50504/ACE/matlab/util_timeint/ssprk93.m": "b23650cbd13f1854deb9970282f0c6b4edbe4e0a660a6f2421b51d1da8042ae0",
+      "/scratch/peter50504/ACE/migration_work/khn26_single_3h/full_matlab_states.bin": "78e1e79cf5997825be1731ab8ce9c5d5bcd02e7cfee86947e12863a766c8a381",
+      "/scratch/peter50504/ACE/migration_work/khn26_serial_profile_1min/profile_results.json": "d2324ff7e78c7b6d48b08695bfe45239dbde2f4d2f265ca7d9c746dd57e66279",
+      "/scratch/peter50504/ACE/tests/khn26/profile_matlab.py": "7befd00840a21263c71984b47a2fe156994e78e994088cfdbb32e4194404df64"
+    },
+    "environment": {
+      "OMP_NUM_THREADS": null,
+      "MKL_NUM_THREADS": null,
+      "OPENBLAS_NUM_THREADS": null,
+      "MATLAB_PREFDIR": "/tmp/ace-khn26-alignment-prefs"
+    },
+    "settings": "Frozen three-hour batch/default settings; no thread setter or CPU pinning."
+  },
+  "scope": "Exclusive comparison aggregates are additive. MATLAB basis timing includes original coarsening/temporary arrays and disabled PMDv/PMD expressions; Fortran packs forcing separately. MATLAB microrad includes two inversion/sink evaluations per step even with precipitation disabled; Fortran inversion is once per step. Interpolation/assembly boundaries are approximate across architectures.",
+  "limits": "One instrumented evolving serial Fortran run and one default-thread MATLAB run, measured sequentially at different times on shared hardware; timers can affect JIT/code generation. MATLAB process-minus-integration includes initialization, startup, postprocessing and output, not initialization alone."
+}

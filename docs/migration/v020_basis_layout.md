@@ -143,3 +143,137 @@ equal among inactive columns. The maximum poststep area-mean MF magnitude
 is recorded in [the model report](../../tests/basis_layout/model_results.json).
 The checked eight-thread 23-minute trajectory took 665.2 s wall time including
 initialization and I/O on the shared host; this is not a kernel-only timing.
+
+## Serial production profiling (2026-10-05 local time)
+
+The developer requested profiling after the serial three-hour run progressed
+slowly. `perf` and `gdb` were unavailable, so
+[`profile_model.py`](../../tests/basis_layout/profile_model.py) instrumented
+isolated copies with section wall timers. Active sources and the background
+run were unchanged. Two initial-state 4 s steps used checked GNU `-O2`,
+real64, no fast-math and no OpenMP, with the same frozen singleACE settings.
+Both complete state streams are byte-identical to the validated legacy
+single-step output. Source/input/reused-object hashes were rechecked.
+The [report](../../tests/basis_layout/profile_results.json) preserves evidence.
+
+Mean integration wall time across the two repeats:
+
+| Section | Seconds per 4 s model step | Share of driver time |
+| --- | ---: | ---: |
+| PMB contraction (nine stages) | 12.7453 | 99.20% |
+| Transport/setup excluding nested thermodynamics | 0.0658 | 0.51% |
+| Thermodynamic inversions | 0.0135 | 0.11% |
+| Momentum/interpolation/mask | 0.0165 | 0.13% |
+| Mean buoyancy and coarsening | 0.00327 | 0.03% |
+| Forcing packing | 0.000128 | <0.01% |
+| Damping | 0.000299 | <0.01% |
+| Complete driver | 12.8481 | 100% |
+
+Other SSPRK/state-update/check/timer overhead accounts for the small remainder.
+Initialization separately took 36.5–36.7 s, including about 4.46 s to pack PMB;
+it is outside the integration totals and is paid once per run. Native
+precipitation is disabled in this case, and P3 is not executed.
+
+The dominant measured cost is therefore the packed PMB contraction, which
+still computes all 101 response columns before the singleACE tendency mask.
+Average contraction time is about 1.416 s per stage, versus 0.592 s in the
+earlier standalone checked packed-grouped benchmark. Different production
+code context and shared-host conditions prevent attributing that discrepancy
+to bounds checks, vectorization or memory placement without a controlled
+comparison. The profiling run temporarily competed with the existing serial
+run; initial-state section timings are not a completed trajectory benchmark.
+
+Next, isolate the production contraction and compare compiler/runtime-check
+costs with identical inputs and reduction grouping. A one-response shortcut
+must retain every forcing column and separately pass model/compensation-MF
+regression before use; it is not implemented by this profiling work.
+
+## Controlled compiler/check comparison (2026-10-06 UTC)
+
+The follow-up isolated the exact production PMB loop with its module-global
+allocatable arrays and compared it with the same reduction using assumed-shape
+array arguments. Both receive packed forcing, compute all 101 responses and
+retain scalar vertical-then-forcing grouping. Five flag combinations share
+the same packed basis allocation, actual forcing and signed stress forcing.
+No OpenMP or fast-math is used; invalid/zero/overflow FPE traps remain enabled
+even in the variants without `-fcheck`. Active model sources and the running
+serial trajectory were unchanged.
+
+Actual-forcing medians, three repeats after a warmup, seconds per contraction:
+
+| Compiler/check flags | Production module globals | Assumed-shape arguments |
+| --- | ---: | ---: |
+| `-O2 -fcheck=all,no-array-temps` | 1.40414 | 0.684112 |
+| `-O2 -fcheck=bounds` | 1.30940 | 0.466916 |
+| `-O2`, without `-fcheck` | 0.416095 | 0.438168 |
+| `-O3 -fcheck=all,no-array-temps` | 0.998391 | 0.489075 |
+| `-O3`, without `-fcheck` | 0.432022 | 0.428861 |
+
+The checked production kernel reproduces the preceding full-model section
+measurement (~1.416 s per stage). Removing bounds checks accounts for most
+of its measured overhead: bounds-only retains most of the complete-check
+cost, while removing `-fcheck` gives about 3.37× relative to checked `-O2`.
+Changing to assumed-shape arguments while retaining complete checks gives
+about 2.05× in the isolated test. The comparable unchecked timings suggest
+that array access/context interacts with check generation, rather than a
+different PMB layout causing the performance gap. Exact attribution to
+specific generated instructions still requires assembly analysis.
+
+Compiler reports show the production inner reduction vectorized with 16-byte
+vectors in unchecked `-O3`, while checked `-O3` reports control flow and runtime
+check calls blocking vectorization. However, unchecked `-O3` is not faster
+than unchecked `-O2` here, so SIMD alone does not explain the timing results.
+
+All 60 timed and 20 warmup outputs (two forcing cases, two methods, five
+builds) are byte-identical to frozen legacy contraction outputs. The
+[comparison script](../../tests/basis_layout/compare_compilers.py) and
+[report](../../tests/basis_layout/compiler_results.json) preserve reproduction
+and provenance. Shared-host load, concurrent serial integration and the
+isolated kernel scope still limit whole-model speed projections.
+
+Recommended next small change: extract the PMB contraction into a private
+array-argument routine while retaining checked builds, every response/forcing
+column and the original reduction order. Validate serial single steps and
+the existing trajectory prefix before measuring the model again. Disabling
+model checks or changing response selection is a separate decision; neither
+was applied by this investigation.
+
+## One-minute serial production section profile (2026-10-06)
+
+Following the developer's request, the same KHN26 singleACE case was run for
+60 simulated seconds using serial production `-O2`, real64, no OpenMP,
+no debug checks and no fast-math. Fifteen evolving 4 s SSPRK93 steps contain
+135 tendency/PMB evaluations. Dependency objects and input hashes were
+verified against the completed 15-minute serial benchmark. Observational
+timers were inserted only into isolated module/driver copies; model output
+at 0/60 s is byte-identical to the validated serial trajectory prefix.
+Provenance was rechecked after completion.
+
+| Exclusive section | Mean ms per full 4 s step | Integration wall share |
+| --- | ---: | ---: |
+| PMB contraction | 3898.243 | 97.7591% |
+| Transport/setup excluding thermodynamics | 55.040 | 1.3803% |
+| Momentum/interpolation/mask | 15.239 | 0.3822% |
+| Thermodynamic inversions (nested in transport) | 12.932 | 0.3243% |
+| Mean buoyancy/coarsening | 3.012 | 0.0755% |
+| Other driver/state updates/timer overhead | 2.786 | 0.0699% |
+| Damping | 0.256 | 0.0064% |
+| Forcing packing | 0.093 | 0.0023% |
+| Complete integration | 3987.601 | 100% |
+
+Integration wall time was 59.814016 s, or 3.987601 s/step. One PMB evaluation
+averaged 0.433138 s (nine per step). Module initialization separately took
+37.875398 s, including 4.542772 s to pack PMB. These initialization timings
+must not be added to each-step totals or added together as exclusive costs.
+Complete process wall time including initialization/output was 97.785329 s.
+Native precipitation is disabled and P3 is not executed in this case.
+
+The [production profile report](../../tests/basis_layout/production_profile_results.json)
+records counts, raw cumulative wall times, averages, commands and hashes.
+Runtime artifacts and the exact execution-script snapshot are retained in
+`migration_work/khn26_serial_profile_1min/`. The 3.9876 s/step average is
+close to the preceding 15-minute serial measurement of 4.0950 s/step, but
+different host load, evolving duration and instrumentation limit attribution
+of their difference. The unchecked production profile still places nearly
+all integration time in PMB; this finding is separate from the earlier
+checked initial-state profile (12.8481 s/step, 99.2% PMB).

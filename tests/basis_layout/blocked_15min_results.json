@@ -1,0 +1,239 @@
+{
+  "duration_seconds": 900,
+  "steps": 225,
+  "dt_seconds": 4,
+  "saved_states": 16,
+  "independent_output_block": 4,
+  "flags": [
+    "-cpp",
+    "-ffree-form",
+    "-ffree-line-length-none",
+    "-O2",
+    "-fdefault-real-8",
+    "-fdefault-double-8"
+  ],
+  "integration_wall_seconds": {
+    "fortran_original": 921.3665819140002,
+    "fortran_outputs4": 536.413525961,
+    "matlab_previous": 413.0898
+  },
+  "wall_seconds_per_step": {
+    "fortran_original": 4.094962586284446,
+    "fortran_outputs4": 2.3840601153822223,
+    "matlab_previous": 1.8359546666666668
+  },
+  "speedup_vs_original": 1.7176423362243634,
+  "step_time_reduction_percent": 41.78066184615881,
+  "candidate_over_matlab_ratio": 1.2985397508265757,
+  "candidate_module_identical_to_one_minute": true,
+  "one_minute_candidate_seconds_per_step": 2.3944720606666667,
+  "candidate_process_wall_seconds": 573.5652459620032,
+  "initialization_seconds": 36.819405638,
+  "initial_PMB_pack_seconds": 4.547247634,
+  "sections": {
+    "initialization": {
+      "wall_seconds": 36.819405638,
+      "calls": 1,
+      "wall_seconds_per_call": 36.819405638
+    },
+    "tendency_total": {
+      "wall_seconds": 535.7731802809998,
+      "calls": 2025,
+      "wall_seconds_per_step": 2.3812141345822213,
+      "percent_of_driver": 99.88062462092972,
+      "wall_seconds_per_call": 0.2645793482869135
+    },
+    "transport_and_thermodynamics": {
+      "wall_seconds": 14.035192190999952,
+      "calls": 2025,
+      "wall_seconds_per_step": 0.062378631959999785,
+      "percent_of_driver": 2.616487376200201,
+      "wall_seconds_per_call": 0.006930959106666643
+    },
+    "thermodynamics_nested": {
+      "wall_seconds": 2.884100340999989,
+      "calls": 22725,
+      "wall_seconds_per_step": 0.012818223737777728,
+      "percent_of_driver": 0.5376636123843151,
+      "wall_seconds_per_call": 0.00012691310631463096
+    },
+    "mean_buoyancy_and_coarsening": {
+      "wall_seconds": 0.6832026999999998,
+      "calls": 2025,
+      "wall_seconds_per_step": 0.003036456444444444,
+      "percent_of_driver": 0.12736492779074182,
+      "wall_seconds_per_call": 0.00033738404938271594
+    },
+    "forcing_pack": {
+      "wall_seconds": 0.017358300999999986,
+      "calls": 2025,
+      "wall_seconds_per_step": 7.714800444444438e-05,
+      "percent_of_driver": 0.003235992412551883,
+      "wall_seconds_per_call": 8.572000493827154e-06
+    },
+    "PMB_contraction": {
+      "wall_seconds": 517.7116946809999,
+      "calls": 2025,
+      "wall_seconds_per_step": 2.3009408652488887,
+      "percent_of_driver": 96.51354218809169,
+      "wall_seconds_per_call": 0.2556600961387654
+    },
+    "momentum_interpolation_mask": {
+      "wall_seconds": 3.325267451999991,
+      "calls": 2025,
+      "wall_seconds_per_step": 0.014778966453333294,
+      "percent_of_driver": 0.6199074577850512,
+      "wall_seconds_per_call": 0.0016421073837036993
+    },
+    "damping": {
+      "wall_seconds": 0.057006518999999985,
+      "calls": 225,
+      "wall_seconds_per_step": 0.0002533623066666666,
+      "percent_of_driver": 0.010627345553576636,
+      "wall_seconds_per_call": 0.0002533623066666666
+    },
+    "driver_total": {
+      "wall_seconds": 536.413525961,
+      "calls": 15,
+      "wall_seconds_per_step": 2.3840601153822223,
+      "percent_of_driver": 100.0,
+      "wall_seconds_per_call": 35.76090173073333
+    },
+    "initial_PMB_pack": {
+      "wall_seconds": 4.547247634,
+      "calls": 1,
+      "wall_seconds_per_call": 4.547247634
+    },
+    "transport_excluding_thermodynamics": {
+      "wall_seconds": 11.151091849999963,
+      "wall_seconds_per_step": 0.04956040822222206,
+      "percent_of_driver": 2.078823763815886
+    },
+    "other_driver_and_timer_overhead": {
+      "wall_seconds": 0.5838041170001134,
+      "wall_seconds_per_step": 0.0025946849644449483,
+      "percent_of_driver": 0.10883471216618033
+    }
+  },
+  "binary_identical_to_original_all_16_states": true,
+  "finite_saved_states": true,
+  "nonnegative_saved_qt": true,
+  "time_seconds": [
+    0,
+    60,
+    120,
+    180,
+    240,
+    300,
+    360,
+    420,
+    480,
+    540,
+    600,
+    660,
+    720,
+    780,
+    840,
+    900
+  ],
+  "max_abs_error_each_state_MF_theta_e_qt": [
+    [
+      0.0,
+      3.410605131648481e-13,
+      7.632783294297951e-17
+    ],
+    [
+      1.9984014443252818e-15,
+      7.958078640513122e-13,
+      6.591949208711867e-17
+    ],
+    [
+      6.217248937900877e-15,
+      6.821210263296962e-13,
+      3.642919299551295e-17
+    ],
+    [
+      1.199040866595169e-14,
+      6.821210263296962e-13,
+      4.336808689942018e-17
+    ],
+    [
+      1.509903313490213e-14,
+      7.958078640513122e-13,
+      3.9898639947466563e-17
+    ],
+    [
+      2.0872192862952943e-14,
+      9.094947017729282e-13,
+      3.9898639947466563e-17
+    ],
+    [
+      2.3092638912203256e-14,
+      1.1368683772161603e-12,
+      3.642919299551295e-17
+    ],
+    [
+      2.5757174171303632e-14,
+      1.1368683772161603e-12,
+      3.469446951953614e-17
+    ],
+    [
+      3.9968028886505635e-14,
+      1.0231815394945443e-12,
+      3.2959746043559335e-17
+    ],
+    [
+      4.707345624410664e-14,
+      1.1368683772161603e-12,
+      4.163336342344337e-17
+    ],
+    [
+      5.684341886080802e-14,
+      1.1368683772161603e-12,
+      6.505213034913027e-17
+    ],
+    [
+      6.750155989720952e-14,
+      7.958078640513122e-13,
+      9.454242944073599e-17
+    ],
+    [
+      6.394884621840902e-14,
+      9.094947017729282e-13,
+      1.196959198423997e-16
+    ],
+    [
+      6.927791673660977e-14,
+      7.958078640513122e-13,
+      1.951563910473908e-16
+    ],
+    [
+      5.684341886080802e-14,
+      7.958078640513122e-13,
+      2.8709673527416157e-16
+    ],
+    [
+      7.061018436615996e-14,
+      5.684341886080801e-13,
+      3.885780586188048e-16
+    ]
+  ],
+  "max_abs_error_MF_theta_e_qt": [
+    7.061018436615996e-14,
+    1.1368683772161603e-12,
+    3.885780586188048e-16
+  ],
+  "source_reports_sha256": {
+    "/scratch/peter50504/ACE/migration_work/khn26_blocked_model_15min/profile_results.json": "bad870404834cb637522675959c6d062236bd6b8a96f677eee6f1775cf49005c",
+    "/scratch/peter50504/ACE/tests/khn26/serial_benchmark_results.json": "ac6636b343d05eb4084a780fe3b88484945f5025ddb110939b1044284a0325ad",
+    "/scratch/peter50504/ACE/tests/basis_layout/blocked_model_results.json": "221a872de8eeeb0f19710743199bde6dafe98ba12a9079cd667328663b322b86"
+  },
+  "candidate_module_sha256": "8bd1ec7f83d40b755d48597022e456413a21d7e4eeb4851b7453ca0c04d7d31a",
+  "artifacts_sha256": {
+    "/scratch/peter50504/ACE/migration_work/khn26_blocked_model_15min/state_0.bin": "8f7f30707ec89800378a04408ad12a01065ce76cee80d86298cc2367002fd05e",
+    "/scratch/peter50504/ACE/migration_work/khn26_single_serial_15min/full_fortran_states.bin": "8f7f30707ec89800378a04408ad12a01065ce76cee80d86298cc2367002fd05e",
+    "/scratch/peter50504/ACE/migration_work/khn26_single_serial_15min/full_matlab_states.bin": "5091a88937bebab64871f0eafe754c6a48d915612364cf5f1866b661775b5720"
+  },
+  "reporting_script_sha256": "53d03f9a4c2c4ef7543e889e44ff8acef80b242e225773c6e75d5cce29d80fe3",
+  "limits": "One evolving 225-step serial candidate on a shared host. Original Fortran and default parallel MATLAB are previous uninstrumented 15-minute measurements, not fresh controls or equal CPU budgets. Candidate section timers may affect performance. Exact numerical agreement covers all 16 complete exported states; intermediate steps are not exported. No three-hour candidate validation or independent water/energy budget acceptance. Production sources unchanged."
+}

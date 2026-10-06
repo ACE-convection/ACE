@@ -31,6 +31,16 @@ initial X, reference Tv, and saved X arrays in Fortran order. X includes the
 extra environmental column (ncols+1,nz,n_prog). Interval runs optionally
 write this stream at each saved minute.
 
+For new configurations, use a separate debug build for the first ten
+integration steps. After successful checks, rebuild every object in a fresh
+production directory without debug flags before starting a long run. For
+GNU these debug-only flags are `-g`, `-fcheck=all,no-array-temps`,
+`-ffpe-trap=invalid,zero,overflow` and `-fbacktrace`; do not reuse objects
+compiled with them in the production build. Retain precision and numerical
+optimization settings, and do not add fast-math. For the KHN26 singleACE
+timing case, the [timing supervisor](../tests/khn26/README.md) automates the
+ten-step debug/production gate and only then launches the serial long run.
+
 `--validate-input /path/dump.bin` initializes then exits. Its four-integer
 header is (ncols,nz,n_prog,ncoarse), followed by binary64 X, Ref, A, B, Tv0,
 coarse_z and coarse_ze. This layout differs from the v0.18 validation dump.
