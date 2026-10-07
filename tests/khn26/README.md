@@ -375,3 +375,25 @@ stream exists. The runtime workspace preserves `cancellation.json`, the
 configuration/source diff and log. This is not a completed 15-minute result.
 The [tracked cancellation record](matlab_single_cancellation.json) preserves
 configuration and artifact hashes; only startup cap one was observed.
+
+## Saved-state physical review
+
+`review_single.py` reads the completed three-hour singleACE outputs without
+integrating either model. It verifies preserved artifact hashes, computes
+area/density-weighted water and theta_e inventories, reconstructs sampled
+ACE 1 lateral exchange/mixing and sponge rates, and compares vertical kinetic
+energy. An independent MATLAB NetCDF/longdouble calculation checks net
+inventory changes. Source constants, dynamics masks, cutoff-interface MF,
+finite/nonnegative states and cross-language agreement are checked.
+
+```sh
+python3 tests/khn26/review_single.py migration_work/khn26_single_openmp6_3h --output tests/khn26/single_physical_review.json --plot docs/figures/khn26_single_physical_review
+```
+
+NumPy/netCDF4 are required and matplotlib is optional for plotting.
+Existing model outputs are read only; selected analysis outputs are
+regenerated. The [physical review](../../docs/migration/v020_khn26_single_physical_review.md)
+explains the masked-case reservoir behavior and sparse-sampling limits.
+Theta_e inventory and vertical KE do not establish total-energy closure.
+The [saved report](single_physical_review.json) contains all 181 samples and
+provenance. No new performance measurement or model run is part of this review.
