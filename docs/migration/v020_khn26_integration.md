@@ -1,5 +1,11 @@
 # KHN26 v0.20 source integration and Fortran alignment
 
+This page records the initial 2026-10-04 integration. Subsequent PMB,
+constant and thermodynamic changes and their validation scope are indexed
+in [current development status](v020_khn26_status.md). In particular,
+`b1010ea` updates native softplus evaluation to follow MATLAB when the
+exponential is representable; the description below is the initial method.
+
 Implemented 2026-10-04 on `migration/v020-preparation`, after the developer
 confirmed promotion of the author-selected November 2025 KHN26 reference.
 The [pre-promotion review](v020_khn26_review.md) preserves the earlier

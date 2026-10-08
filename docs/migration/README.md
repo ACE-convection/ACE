@@ -13,6 +13,7 @@ ancestry. v0.20 preparation is now tracked in the roadmap.
 | Purpose | Authoritative document |
 | --- | --- |
 | Accepted v0.18 scope, results and retained limitations | [Release record](../releases/v0.18.0.md) |
+| Current KHN26 progress, source-version scope and stale runtime statuses | [KHN26 development status](v020_khn26_status.md) |
 | Author-selected KHN26 v0.20 source review, input and Fortran alignment | [KHN26 review](v020_khn26_review.md) |
 | Active KHN26 drivers, numerical changes and validation scope | [KHN26 integration](v020_khn26_integration.md) |
 | Current development sequence and joint MATLAB/Fortran milestones | [Roadmap](matlab_fortran_alignment_plan.md) |

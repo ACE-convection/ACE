@@ -135,3 +135,10 @@ The authorized KHN26 source promotion and shared adapters are implemented.
 original/shared initialization and one-step agreement, real64 Fortran
 components and a short native run. Full six-hour trajectory/budget review,
 P3 and real32 numerical validation remain the next milestones.
+
+For subsequent completed three-hour comparisons, PMB/interpolation work,
+the `b1010ea` thermodynamic alignment, fresh ten-minute gates and remaining
+evidence gaps, use [current KHN26 development status](v020_khn26_status.md).
+The old six-hour `running` record is stale and does not establish completion
+or a currently active process. Aligned-source three-hour validation remains
+pending; no v0.20 release acceptance follows from the short gates.
