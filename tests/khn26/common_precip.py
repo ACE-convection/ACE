@@ -19,19 +19,22 @@ FIELDS=['T','q','ql','qi','theta_e_base','theta_e_perturbed',
         'theta_e_condensate_derivative','theta_e_sink','qt_sink']
 
 
-def prepare(work,source):
+def prepare(work,source,sample_data=None,provenance=()):
     work.mkdir(parents=True,exist_ok=False)
     cfg=json.loads((source/'configuration.json').read_text())
     records=[0,45,48,53,88,150]  # 0, 180, 192, 212, 352, 600 seconds.
     aces=np.array([0,1,50,100])
     with Dataset(cfg['case']['input']) as ds:p=np.asarray(ds['p_zc'][:])
     samples=[];labels=[]
-    for language in ('matlab','fortran'):
-        for record,state in enumerate(multi.state_frames(source,'gate_native',language,151)):
-            if record not in records:continue
-            for ace in aces:
-                samples.extend(np.column_stack([state[ace,:,1],state[ace,:,2],p]))
-                labels.extend([[language,record*4,int(ace+1),level+1] for level in range(multi.Z)])
+    if sample_data is None:
+        for language in ('matlab','fortran'):
+            for record,state in enumerate(multi.state_frames(source,'gate_native',language,151)):
+                if record not in records:continue
+                for ace in aces:
+                    samples.extend(np.column_stack([state[ace,:,1],state[ace,:,2],p]))
+                    labels.extend([[language,record*4,int(ace+1),level+1] for level in range(multi.Z)])
+    else:
+        samples,labels=sample_data
     samples=np.asarray(samples,dtype='<f8');samples.ravel(order='F').tofile(work/'inputs.bin')
     multi.write(work/'sample_labels.json',labels)
     n=len(samples)
@@ -141,7 +144,9 @@ end program
     paths=[Path(__file__).resolve(),ROOT/'fortran/src/ace_module.F',ROOT/'matlab/ace.m',
            work/'inputs.bin',work/'sample_labels.json',work/'common_probe.m',work/'ace_module_probe.F',work/'probe.F',build/'probe.exe',*objects]
     paths.extend(sorted((ROOT/'matlab/util_thermodynamics').glob('*.m')))
-    paths.extend(source/'gate_native'/(name+'_states.bin') for name in ('matlab','fortran'))
+    if sample_data is None:
+        paths.extend(source/'gate_native'/(name+'_states.bin') for name in ('matlab','fortran'))
+    paths.extend(provenance)
     multi.write(work/'configuration.json',{'source_work':str(source),'samples':n,'cpu_sets':cfg['cpu_sets'],
          'fields':FIELDS,'compiled_commands':commands,'sha256':{str(p):digest(p) for p in paths},
          'scope':'Saved post-step states; independent inverse thermodynamics and common MATLAB T/q/ql/qi. No time integration or formula edits.'})

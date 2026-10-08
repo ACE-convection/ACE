@@ -1,0 +1,713 @@
+{
+  "status": {
+    "state": "completed",
+    "samples": 12180,
+    "byte_identical_inputs": true,
+    "threads_per_language": 32
+  },
+  "common_state_results": {
+    "samples": 12180,
+    "field_order": [
+      "T",
+      "q",
+      "ql",
+      "qi",
+      "theta_e_base",
+      "theta_e_perturbed",
+      "theta_e_condensate_derivative",
+      "theta_e_sink",
+      "qt_sink"
+    ],
+    "byte_identical_inputs": true,
+    "finite_outputs": true,
+    "comparisons": {
+      "fortran_outputs": {
+        "max_abs_error": [
+          1.1368683772161603e-13,
+          1.700029006457271e-16,
+          1.700029006457271e-16,
+          4.163336342344337e-17,
+          6.252776074688882e-13,
+          6.252776074688882e-13,
+          1.7053025658242404e-05,
+          1.3994157308655497e-10,
+          3.006966962752766e-19
+        ],
+        "rms_error": [
+          1.5780891054890507e-14,
+          4.840721856943534e-18,
+          4.62889696613597e-18,
+          1.416214836405865e-18,
+          5.365515319337071e-14,
+          5.4252555501225827e-14,
+          1.8549257694789525e-06,
+          6.291299192971576e-12,
+          1.1965606825621255e-20
+        ],
+        "worst_samples": [
+          {
+            "field": "T",
+            "sample": {
+              "minute": 90,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 130,
+              "height_m": 12950
+            },
+            "matlab": 215.09332511074203,
+            "fortran": 215.09332511074192
+          },
+          {
+            "field": "q",
+            "sample": {
+              "minute": 180,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 14,
+              "height_m": 1350
+            },
+            "matlab": 0.016042217554847377,
+            "fortran": 0.016042217554847207
+          },
+          {
+            "field": "ql",
+            "sample": {
+              "minute": 180,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 14,
+              "height_m": 1350
+            },
+            "matlab": 0.000424982023422258,
+            "fortran": 0.000424982023422428
+          },
+          {
+            "field": "qi",
+            "sample": {
+              "minute": 90,
+              "seed": "fortran",
+              "SSPRK_source": "matlab",
+              "ace": 101,
+              "level": 52,
+              "height_m": 5150
+            },
+            "matlab": 9.904405994657847e-06,
+            "fortran": 9.90440599469948e-06
+          },
+          {
+            "field": "theta_e_base",
+            "sample": {
+              "minute": 180,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 14,
+              "height_m": 1350
+            },
+            "matlab": 348.18788199607275,
+            "fortran": 348.1878819960721
+          },
+          {
+            "field": "theta_e_perturbed",
+            "sample": {
+              "minute": 180,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 14,
+              "height_m": 1350
+            },
+            "matlab": 348.1878799853227,
+            "fortran": 348.18787998532207
+          },
+          {
+            "field": "theta_e_condensate_derivative",
+            "sample": {
+              "minute": 90,
+              "seed": "fortran",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 53,
+              "height_m": 5250
+            },
+            "matlab": -697.0463857669529,
+            "fortran": -697.0463687139272
+          },
+          {
+            "field": "theta_e_sink",
+            "sample": {
+              "minute": 180,
+              "seed": "matlab",
+              "SSPRK_source": "fortran",
+              "ace": 1,
+              "level": 95,
+              "height_m": 9450
+            },
+            "matlab": 0.006795433170453807,
+            "fortran": 0.006795433030512234
+          },
+          {
+            "field": "qt_sink",
+            "sample": {
+              "minute": 180,
+              "seed": "fortran",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 26,
+              "height_m": 2550
+            },
+            "matlab": -2.68865499521631e-06,
+            "fortran": -2.688654995216009e-06
+          }
+        ]
+      },
+      "fortran_fixed_thermo": {
+        "max_abs_error": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          2.2737367544323206e-13,
+          2.2737367544323206e-13,
+          1.7053025658242404e-05,
+          1.3688709193937498e-10,
+          4.235164736271502e-22
+        ],
+        "rms_error": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          3.384526085179684e-14,
+          3.41029398763181e-14,
+          1.5400162591106448e-06,
+          5.35923169964255e-12,
+          1.0856033238145147e-23
+        ],
+        "worst_samples": [
+          {
+            "field": "T",
+            "sample": {
+              "minute": 90,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 1,
+              "height_m": 50
+            },
+            "matlab": 297.78266014491743,
+            "fortran": 297.78266014491743
+          },
+          {
+            "field": "q",
+            "sample": {
+              "minute": 90,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 1,
+              "height_m": 50
+            },
+            "matlab": 0.016445892481762106,
+            "fortran": 0.016445892481762106
+          },
+          {
+            "field": "ql",
+            "sample": {
+              "minute": 90,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 1,
+              "height_m": 50
+            },
+            "matlab": 0.0,
+            "fortran": 0.0
+          },
+          {
+            "field": "qi",
+            "sample": {
+              "minute": 90,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 1,
+              "height_m": 50
+            },
+            "matlab": 0.0,
+            "fortran": 0.0
+          },
+          {
+            "field": "theta_e_base",
+            "sample": {
+              "minute": 90,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 350,
+              "height_m": 34950
+            },
+            "matlab": 946.1804890785779,
+            "fortran": 946.1804890785777
+          },
+          {
+            "field": "theta_e_perturbed",
+            "sample": {
+              "minute": 90,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 350,
+              "height_m": 34950
+            },
+            "matlab": 946.1804890785779,
+            "fortran": 946.1804890785777
+          },
+          {
+            "field": "theta_e_condensate_derivative",
+            "sample": {
+              "minute": 90,
+              "seed": "fortran",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 53,
+              "height_m": 5250
+            },
+            "matlab": -697.0463857669529,
+            "fortran": -697.0463687139272
+          },
+          {
+            "field": "theta_e_sink",
+            "sample": {
+              "minute": 180,
+              "seed": "fortran",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 67,
+              "height_m": 6650
+            },
+            "matlab": 0.0059653961858311365,
+            "fortran": 0.005965396322718228
+          },
+          {
+            "field": "qt_sink",
+            "sample": {
+              "minute": 155,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 41,
+              "height_m": 4050
+            },
+            "matlab": -2.1682225298231214e-06,
+            "fortran": -2.168222529823121e-06
+          }
+        ]
+      }
+    },
+    "artifacts_sha256": {
+      "fortran_outputs.bin": "25bd492341f34988cd25fc1f38da23c62788bc30a023f24b505472bd07e245f6",
+      "fortran_inputs_echo.bin": "11ae670f47db01c9fa9ddac5c82c32e651950d35997eb5c595da2862797bf91a",
+      "matlab_outputs.bin": "03a6b6365d7b0f179a8b99f801ea95950a6f89dba23a69cdccef9c68b9ba1a80",
+      "common_thermo.bin": "0cc5d48441b8506924ee6d367d395b5c580a684e515d4c99bc06674c5bdab03a",
+      "inputs.bin": "11ae670f47db01c9fa9ddac5c82c32e651950d35997eb5c595da2862797bf91a",
+      "matlab_inputs_echo.bin": "11ae670f47db01c9fa9ddac5c82c32e651950d35997eb5c595da2862797bf91a",
+      "fortran_fixed_thermo.bin": "aba8b2a8234c75719f28ac09976483d0f0e60b9c0986207e5ba23db985a7ad44"
+    }
+  },
+  "local_attribution": {
+    "samples": 12180,
+    "points": [
+      {
+        "sample": {
+          "minute": 180,
+          "seed": "matlab",
+          "SSPRK_source": "matlab",
+          "ace": 1,
+          "level": 82,
+          "height_m": 8150
+        },
+        "is_replay_target": true,
+        "matlab": {
+          "T": 256.23854820255116,
+          "q": 0.0023398749270208564,
+          "ql": 0.0,
+          "qi": 0.0038266842124559334,
+          "theta_e_base": 345.55781703635427,
+          "theta_e_perturbed": 345.5578091839122,
+          "theta_e_condensate_derivative": -785.2442081457411,
+          "theta_e_sink": 0.008707531700536326,
+          "qt_sink": -1.1088947374853111e-05
+        },
+        "fortran_independent": {
+          "T": 256.2385482025511,
+          "q": 0.0023398749270208395,
+          "ql": 0.0,
+          "qi": 0.0038266842124559503,
+          "theta_e_base": 345.55781703635404,
+          "theta_e_perturbed": 345.55780918391207,
+          "theta_e_condensate_derivative": -785.2441967770574,
+          "theta_e_sink": 0.008707531574469636,
+          "qt_sink": -1.1088947374853169e-05
+        },
+        "fortran_fixed_thermo": {
+          "T": 256.23854820255116,
+          "q": 0.0023398749270208564,
+          "ql": 0.0,
+          "qi": 0.0038266842124559334,
+          "theta_e_base": 345.55781703635427,
+          "theta_e_perturbed": 345.5578091839122,
+          "theta_e_condensate_derivative": -785.2442081457411,
+          "theta_e_sink": 0.008707531700536326,
+          "qt_sink": -1.1088947374853111e-05
+        },
+        "fixed_thermo_base_delta_K": 0.0,
+        "fixed_thermo_perturbed_delta_K": 0.0,
+        "fixed_thermo_derivative_delta": 0.0,
+        "derivative_delta_from_forward_roundoff": 0.0,
+        "independent_sink_delta_K_per_s": -1.2606669007320104e-10,
+        "inversion_contribution_K_per_s": -1.2606669007320104e-10,
+        "fixed_thermo_contribution_K_per_s": 0.0,
+        "derivative_sink_contribution_K_per_s": -0.0,
+        "qt_sink_contribution_K_per_s": -0.0,
+        "four_second_independent_theta_delta_K": -5.042667602928042e-10
+      },
+      {
+        "sample": {
+          "minute": 180,
+          "seed": "fortran",
+          "SSPRK_source": "matlab",
+          "ace": 1,
+          "level": 67,
+          "height_m": 6650
+        },
+        "is_replay_target": false,
+        "matlab": {
+          "T": 264.94439467935786,
+          "q": 0.004229799760920097,
+          "ql": 0.0,
+          "qi": 0.002908143186163205,
+          "theta_e_base": 343.9446343668501,
+          "theta_e_perturbed": 343.94462693532,
+          "theta_e_condensate_derivative": -743.1530093526817,
+          "theta_e_sink": 0.0059653961858311365,
+          "qt_sink": -8.02714395387735e-06
+        },
+        "fortran_independent": {
+          "T": 264.94439467935786,
+          "q": 0.004229799760920097,
+          "ql": 0.0,
+          "qi": 0.002908143186163205,
+          "theta_e_base": 343.9446343668502,
+          "theta_e_perturbed": 343.94462693531995,
+          "theta_e_condensate_derivative": -743.1530264057074,
+          "theta_e_sink": 0.005965396322718228,
+          "qt_sink": -8.02714395387735e-06
+        },
+        "fortran_fixed_thermo": {
+          "T": 264.94439467935786,
+          "q": 0.004229799760920097,
+          "ql": 0.0,
+          "qi": 0.002908143186163205,
+          "theta_e_base": 343.9446343668502,
+          "theta_e_perturbed": 343.94462693531995,
+          "theta_e_condensate_derivative": -743.1530264057074,
+          "theta_e_sink": 0.005965396322718228,
+          "qt_sink": -8.02714395387735e-06
+        },
+        "fixed_thermo_base_delta_K": 1.1368683772161603e-13,
+        "fixed_thermo_perturbed_delta_K": -5.684341886080802e-14,
+        "fixed_thermo_derivative_delta": -1.7053025658242404e-05,
+        "derivative_delta_from_forward_roundoff": -1.7053025658242404e-05,
+        "independent_sink_delta_K_per_s": 1.3688709193937498e-10,
+        "inversion_contribution_K_per_s": 0.0,
+        "fixed_thermo_contribution_K_per_s": 1.3688709193937498e-10,
+        "derivative_sink_contribution_K_per_s": 1.3688709180787583e-10,
+        "qt_sink_contribution_K_per_s": -0.0,
+        "four_second_independent_theta_delta_K": 5.475483677574999e-10
+      },
+      {
+        "sample": {
+          "minute": 180,
+          "seed": "matlab",
+          "SSPRK_source": "fortran",
+          "ace": 1,
+          "level": 95,
+          "height_m": 9450
+        },
+        "is_replay_target": false,
+        "matlab": {
+          "T": 246.60737570831947,
+          "q": 0.0010952851997808744,
+          "ql": 0.0,
+          "qi": 0.002961878008233003,
+          "theta_e_base": 346.6836377357713,
+          "theta_e_perturbed": 346.6836294549794,
+          "theta_e_condensate_derivative": -828.0791917059105,
+          "theta_e_sink": 0.006795433170453807,
+          "qt_sink": -8.206260027443344e-06
+        },
+        "fortran_independent": {
+          "T": 246.6073757083195,
+          "q": 0.0010952851997808784,
+          "ql": 0.0,
+          "qi": 0.0029618780082329996,
+          "theta_e_base": 346.6836377357713,
+          "theta_e_perturbed": 346.68362945497955,
+          "theta_e_condensate_derivative": -828.0791746528848,
+          "theta_e_sink": 0.006795433030512234,
+          "qt_sink": -8.206260027443332e-06
+        },
+        "fortran_fixed_thermo": {
+          "T": 246.60737570831947,
+          "q": 0.0010952851997808744,
+          "ql": 0.0,
+          "qi": 0.002961878008233003,
+          "theta_e_base": 346.6836377357713,
+          "theta_e_perturbed": 346.6836294549794,
+          "theta_e_condensate_derivative": -828.0791917059105,
+          "theta_e_sink": 0.006795433170453807,
+          "qt_sink": -8.206260027443344e-06
+        },
+        "fixed_thermo_base_delta_K": 0.0,
+        "fixed_thermo_perturbed_delta_K": 0.0,
+        "fixed_thermo_derivative_delta": 0.0,
+        "derivative_delta_from_forward_roundoff": 0.0,
+        "independent_sink_delta_K_per_s": -1.3994157308655497e-10,
+        "inversion_contribution_K_per_s": -1.3994157308655497e-10,
+        "fixed_thermo_contribution_K_per_s": 0.0,
+        "derivative_sink_contribution_K_per_s": -0.0,
+        "qt_sink_contribution_K_per_s": -0.0,
+        "four_second_independent_theta_delta_K": -5.597662923462199e-10
+      }
+    ],
+    "scope": "Local thermodynamics/sink attribution; not a causal proof for the full three-hour divergence.",
+    "source_sha256": "b274aa2e1be66ac121ecdb8f735c27c22ef436708ae05d03ff2eb1c446adef55",
+    "results_sha256": "157d32d412c281294914c0c3641255fc16aa7b22b2df512b62b2252d0c592d4c"
+  },
+  "target_replay": {
+    "post_SSPRK_theta_delta_K": 0.0,
+    "post_SSPRK_qt_delta": 0.0,
+    "post_physics_theta_delta_K": -5.042579687142279e-10,
+    "reconstructed_rounded_update_delta_K": -5.042579687142279e-10,
+    "exact_reproduction": true
+  },
+  "selection": {
+    "replay": "/scratch/peter50504/ACE/migration_work/khn26_multi_boundary_common_state",
+    "scope": "Common theta_e/qt/p and fixed MATLAB T/q/ql/qi; no integration or formula changes.",
+    "dt_seconds": 4,
+    "provenance_sha256": {
+      "/scratch/peter50504/ACE/tests/khn26/probe_replay_precip.py": "b274aa2e1be66ac121ecdb8f735c27c22ef436708ae05d03ff2eb1c446adef55",
+      "/scratch/peter50504/ACE/migration_work/khn26_multi_boundary_common_state/configuration.json": "34058fabdcd84c782bd890e899c00b114b0302763f0534e5a590904e5ef29b21",
+      "/scratch/peter50504/ACE/data/input/manaus1342_khn26.nc": "09408f4d0343afd8659df82f8f1cfe5dc59308cff150fb2bcfd569b1b8794d35",
+      "/scratch/peter50504/ACE/migration_work/khn26_multi_boundary_common_state/matlab_outputs.bin": "03c794259d3672ab5275573f36f89f42a669eb73f3e29fefe761754b16df6267",
+      "/scratch/peter50504/ACE/migration_work/khn26_multi_boundary_common_state/fortran_outputs.bin": "e7dab5c1067532819aa1c86d8f83dc42244f5a1cac804114fc69fc26d9d714d0"
+    }
+  },
+  "configuration": {
+    "source_work": "/scratch/peter50504/ACE/migration_work/khn26_multi32_bubble_ci_12h",
+    "samples": 12180,
+    "cpu_sets": {
+      "matlab": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67
+      ],
+      "fortran": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75
+      ]
+    },
+    "fields": [
+      "T",
+      "q",
+      "ql",
+      "qi",
+      "theta_e_base",
+      "theta_e_perturbed",
+      "theta_e_condensate_derivative",
+      "theta_e_sink",
+      "qt_sink"
+    ],
+    "compiled_commands": [
+      [
+        "gfortran",
+        "-cpp",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-O2",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-fopenmp",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/scratch/peter50504/ACE/migration_work/khn26_multi32_bubble_ci_12h/build",
+        "-c",
+        "/scratch/peter50504/ACE/migration_work/khn26_multi_replay_precip/ace_module_probe.F",
+        "-o",
+        "/scratch/peter50504/ACE/migration_work/khn26_multi_replay_precip/build/ace_module_probe.o"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-O2",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-fopenmp",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/scratch/peter50504/ACE/migration_work/khn26_multi32_bubble_ci_12h/build",
+        "-c",
+        "/scratch/peter50504/ACE/migration_work/khn26_multi_replay_precip/probe.F",
+        "-o",
+        "/scratch/peter50504/ACE/migration_work/khn26_multi_replay_precip/build/probe.o"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-O2",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-fopenmp",
+        "/scratch/peter50504/ACE/migration_work/khn26_multi32_bubble_ci_12h/build/ace_input.o",
+        "/scratch/peter50504/ACE/migration_work/khn26_multi32_bubble_ci_12h/build/ace_interpolation.o",
+        "/scratch/peter50504/ACE/migration_work/khn26_multi32_bubble_ci_12h/build/microphy_p3.o",
+        "/scratch/peter50504/ACE/migration_work/khn26_multi_replay_precip/build/ace_module_probe.o",
+        "/scratch/peter50504/ACE/migration_work/khn26_multi_replay_precip/build/probe.o",
+        "-L/home/peter50504/miniconda3/lib",
+        "-lnetcdff",
+        "-lnetcdf",
+        "-o",
+        "/scratch/peter50504/ACE/migration_work/khn26_multi_replay_precip/build/probe.exe"
+      ]
+    ],
+    "sha256": {
+      "/scratch/peter50504/ACE/tests/khn26/common_precip.py": "60feaa2c2d650bef6ec7252013ff3147b377dfbd0d894b300494e5851f4dcf62",
+      "/scratch/peter50504/ACE/fortran/src/ace_module.F": "1d09586a50e2f73866a70e6ab75b21828a2a97268ddb3d80d4ff5f02ae0a44c0",
+      "/scratch/peter50504/ACE/matlab/ace.m": "2dd437b0398be53a4575171570ad37a9f4543a06e32ae1e9025ddc99424442e4",
+      "/scratch/peter50504/ACE/migration_work/khn26_multi_replay_precip/inputs.bin": "11ae670f47db01c9fa9ddac5c82c32e651950d35997eb5c595da2862797bf91a",
+      "/scratch/peter50504/ACE/migration_work/khn26_multi_replay_precip/sample_labels.json": "e91fb17fbe58ced48c11de5d74b91e37af739fcb8440e728e2a480172893ab01",
+      "/scratch/peter50504/ACE/migration_work/khn26_multi_replay_precip/common_probe.m": "9f846da8470f2818845924cf325a5fa2d6451000c38c459f6e3c2dd11e5e107e",
+      "/scratch/peter50504/ACE/migration_work/khn26_multi_replay_precip/ace_module_probe.F": "1e75e7de283c029524b94e818b99a49fc4880a48f98fd6defa4e7f6dbb5775c2",
+      "/scratch/peter50504/ACE/migration_work/khn26_multi_replay_precip/probe.F": "b5ded364428c1ee4ecf79db1e042ab50efb3d75303ddeb53930e2b358643d97e",
+      "/scratch/peter50504/ACE/migration_work/khn26_multi_replay_precip/build/probe.exe": "3bf956af9c48b31447eca289fb3ca5e52b471fe55671f7433578ee3b7cceee3c",
+      "/scratch/peter50504/ACE/migration_work/khn26_multi32_bubble_ci_12h/build/ace_input.o": "5c5f11c37df2f8b2563fe995656935e35246430cfb35d8311c041b60d1c2298f",
+      "/scratch/peter50504/ACE/migration_work/khn26_multi32_bubble_ci_12h/build/ace_interpolation.o": "a581690a1328932e476fdffdde085ce23ad48323e10ebf6428ca7d8a98dab28f",
+      "/scratch/peter50504/ACE/migration_work/khn26_multi32_bubble_ci_12h/build/microphy_p3.o": "f7bee96a3a73b882ddbf486d0586249e9b351833c2bd715ab8ae21cac6ca1c74",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/IMPORT_CONSTANTS.m": "9fde477680e8eea17fc2f5f2aca61ef95d556fbc4c4f7f676cc53f6d3d82ba89",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/IMPORT_CONSTANTS_NOGLOBAL.m": "68056228f1419b0d3708c72682d0e6fee0bcdc1f5f3a1d09c1ea822113297499",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/NOTE.m": "d8b2a2c3dab6cdcb343cb18974af1bce8d4f7a60c36d1e98bd1aeb736748b9fc",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/ci.m": "dba544e76ce1e74136daff7fd988670f68000c8835732344d5ac6c20697389ce",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_B.m": "4260dae12c5e40d915ce2ac348b85d3358d9470dd9ad17bf3771a0e803647e6b",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_Tv.m": "d86992e3f9ef64bbf038424876b9c2c3b2a6ec1d2f23f673a553bca014213690",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_dTes.m": "dccd232253f4422bdb334a7089c5065459c0207def6cde54714fa1fa97bcf116",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_dTqs.m": "35e4585653c828cb6bede2d25914c66d71b59c7894ad4e877180ffd57c57a74a",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_dTqsi.m": "5ce3913522b068b98badfdd279ab0fa1ad0ed9a7ce751e5fd4ef2b688a734de6",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_dTqsscl.m": "4e025fb26f0deb388b8c7551fdd5ca5160d4aa7c2f13d0dd230c3177851cedde",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_es.m": "a6d89db08505d726edae0b520d69360da23aed5dd4079697797302cdaab6ec2c",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_esi.m": "13e7d32f678a1b8e9a0f97e326dbaf94027a3e09b808f424e3b02c427f1813db",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_esscl.m": "7fa1acdff3547765addb2f6295b0d0cfaff96436356c4dfefdb2d0caeb981724",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_h.m": "6a6bc3c9990469ae0296dfac8f234dfcbccb3851aa3faa6bececb536f271497b",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_q.m": "19fc7e2235e52c12948b3b10654a90ea45b9391a7b1821a3a39d2683ca02be8c",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_q2.m": "f0986c79fc1b362ca92e188977b04d073a31b9bb3e27b96fc5b35968539f1f11",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_qs.m": "09f7e3c707ed1eaacb9baba896cc8ab9cb16e742fa7dc823273b8cc2c71fe402",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_qs2.m": "6c1f03213c04a6e98dd515d5ce98ebcba6a2cd8f62e99ebd750599af8978671d",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_qsat.m": "1aff97bbd0e4b66c33e817aa99741056ccf95ab30840c787a6a4a81b0a516310",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_qsat2.m": "16a75d060676e65e16d4fdee2067716db779a2f6d9dbd3ac6b278051091e4a3d",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_qsi.m": "5a92de14d0b02b6394a2f186aafc8cf75530d322db4582ce52045c4f9b30f270",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_qsi2.m": "3c7b3674ea2e00c004aa526c3a0c79cf6c2f039d2b989d98a15ef3f2cc12161e",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_qsscl.m": "1b47aa01ca8ec7e9ee2368d4f83d601767c7fe793766ee475cdc18cd7e60cf82",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_rho.m": "b22b7816d5199e9f025304b57719f7ab68367e5222ac351224ba7ee8a2f2c91a",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_theta.m": "c69e40c66320d5d1b0d62365db0897cbdc87a9c523c0aecd211945780811d71b",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_theta_e.m": "631d04f3cac84824255fb4404068081bab52bb163efe37800559c223988a9843",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_theta_es.m": "39ff2e6d87d2bc4ad2f0b33922e524b2998e64939bec58e908b76fce8ef32b79",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_theta_il.m": "f5f98373a466be1d84199ce7d882fe98faae7c96a4dd6aa9d614e2f2dbf0931b",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_theta_l.m": "6628625f218e53e004623b44871ad6984a13b6308264d123193464143292c90d",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/eval_theta_v.m": "f531d0ca252a777616935340b23079911faa5f79ef890e2de9371cf094413274",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/gputest_invTq.m": "c2918e5cb0aa97278730069c6f4edf4b2a09c1bb56eb0411882fa2a73d1c219f",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/inv_T_from_h.m": "73621892b81e2179d9cda710b56de9bb5d6a8883c36b71d432ce25d6b584faed",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/inv_T_from_theta_e.m": "e001fe0db37d6bff77b3e0b15ac8491fb84a2c3774c07622854d97062bcce440",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/inv_T_from_theta_e_nogpu.m": "0b57c816e4dee65cef71a3bd61535c28f926b506dfe1f11f8e05a7832f187eed",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/inv_T_from_theta_il.m": "6d0faaf7ee84460e6a1e10d7ea40dcf175e51f0462d4fa0c01a89698d0e8c05b",
+      "/scratch/peter50504/ACE/matlab/util_thermodynamics/lv.m": "c389332e53409f9a3f01adc2641fd140e0e59f4c4ad88ad49914724b7021a2d1",
+      "/scratch/peter50504/ACE/tests/khn26/probe_replay_precip.py": "b274aa2e1be66ac121ecdb8f735c27c22ef436708ae05d03ff2eb1c446adef55",
+      "/scratch/peter50504/ACE/migration_work/khn26_multi_boundary_common_state/configuration.json": "34058fabdcd84c782bd890e899c00b114b0302763f0534e5a590904e5ef29b21",
+      "/scratch/peter50504/ACE/data/input/manaus1342_khn26.nc": "09408f4d0343afd8659df82f8f1cfe5dc59308cff150fb2bcfd569b1b8794d35",
+      "/scratch/peter50504/ACE/migration_work/khn26_multi_boundary_common_state/matlab_outputs.bin": "03c794259d3672ab5275573f36f89f42a669eb73f3e29fefe761754b16df6267",
+      "/scratch/peter50504/ACE/migration_work/khn26_multi_boundary_common_state/fortran_outputs.bin": "e7dab5c1067532819aa1c86d8f83dc42244f5a1cac804114fc69fc26d9d714d0"
+    },
+    "scope": "Saved post-step states; independent inverse thermodynamics and common MATLAB T/q/ql/qi. No time integration or formula edits."
+  },
+  "evidence_sha256": {
+    "migration_work/khn26_multi_replay_precip/matlab.log": "181e1c785e4fed71fe5d9f5c5ea19b165a247383f98a228b7c208dbc67790e73",
+    "migration_work/khn26_multi_replay_precip/fortran.log": "2f6522fb01f381b8bb5b14f40c6e9fd396968fe52d3c2aa8495aa7c14f3ff104",
+    "migration_work/khn26_multi_boundary_common_state/matlab_outputs.bin": "03c794259d3672ab5275573f36f89f42a669eb73f3e29fefe761754b16df6267",
+    "migration_work/khn26_multi_boundary_common_state/fortran_outputs.bin": "e7dab5c1067532819aa1c86d8f83dc42244f5a1cac804114fc69fc26d9d714d0"
+  }
+}
