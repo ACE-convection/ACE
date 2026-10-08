@@ -881,43 +881,33 @@ real, dimension(n), intent(out) :: v_weno  ! estimated values
 ! local variables
 integer, parameter :: p=2
 real, parameter :: eps=1.e-10
-integer :: i 
+integer :: i,ip,im,imm
 real, dimension(k+1,n) :: beta, alpha, w
-real, dimension(k+1) :: d
+real, dimension(k+1) :: d,weights
 
 v_weno=0.
 if (k==2) then
 
-d = (/ 0., 2./3., 1./3. /)
+! Match MATLAB reconstruction_weno_vec's written weights and grouping.
+d = (/ 0., 0.666666666666667, 0.333333333333333 /)
 
-do i=k+1,n-k+1
-  beta(:,i) = (/ v(i+1)-v(i), v(i)-v(i-1), v(i-1)-v(i-2) /) ** 2.
-  alpha(:,i) = 0.5 * ( ( d(1:k+1) + sign(1.,c(i)) * d(1:k+1) ) &
-                     + ( d(k+1:1:-1) - sign(1.,c(i)) * d(k+1:1:-1) ) ) &
-                    / (eps + beta(:,i)) ** p
+do i=1,n
+  ip=modulo(i,n)+1; im=modulo(i-2,n)+1; imm=modulo(i-3,n)+1
+  beta(:,i) = (/ v(ip)-v(i), v(i)-v(im), v(im)-v(imm) /) ** 2.
+  weights=d
+  if (c(i)<0.) weights=d(3:1:-1)
+  alpha(:,i) = weights / (eps + beta(:,i)) ** p
   w(:,i) = alpha(:,i) / sum(alpha(:,i),1)
 
-  v_weno(i) = w(1,i) * ( 1.5*v(i  )-0.5*v(i+1)) &
-             +w(2,i) * ( 0.5*v(i-1)+0.5*v(i  )) &
-             +w(3,i) * (-0.5*v(i-2)+1.5*v(i-1))
+  v_weno(i) = w(1,i) * ( 1.5*v(i)-0.5*v(ip)) &
+             +w(2,i) * ( 0.5*(v(im)+v(i)) ) &
+             +w(3,i) * (-0.5*v(imm)+1.5*v(im))
 enddo
 
-! MATLAB computes circular endpoint stencils before applying surface flux zero.
-do i=1,n,n-1
-  call endpoint_weno(i)
-enddo
-
-! surface BC modification (reduced order)
+! MATLAB retains the circular reconstruction for negative flow at level 2.
+! Positive/zero flow uses the first scalar value; surface flux is zeroed later.
 i=k
-if (c(i)>=0.) then
-  v_weno(i) = v(i-1) 
-else
-  beta(1:k,i) = (/ v(i+1)-v(i), v(i)-v(i-1) /) ** 2.
-  alpha(1:k,i) = d(k+1:2:-1) / (eps + beta(1:k,i)) ** p
-  w(1:k,i) = alpha(1:k,i) / sum(alpha(1:k,i),1)
-  v_weno(i) = w(1,i) * ( 1.5*v(i  )-0.5*v(i+1)) &
-             +w(2,i) * ( 0.5*v(i-1)+0.5*v(i  )) 
-endif
+if (c(i)>=0.) v_weno(i) = v(i-1)
 
 elseif (k==3) then
 
@@ -974,19 +964,6 @@ else
   write(*,*) "k is", k, ". The choice of order is not supported yet." 
 endif
 
-contains
-subroutine endpoint_weno(index)
-integer, intent(in) :: index
-integer :: ip,im,imm
-real :: bb(3),aa(3),ww(3),weights(3)
-ip=modulo(index,n)+1; im=modulo(index-2,n)+1; imm=modulo(index-3,n)+1
-bb=[(v(ip)-v(index))**2,(v(index)-v(im))**2,(v(im)-v(imm))**2]
-weights=d
-if (c(index)<0.) weights=d(3:1:-1)
-aa=weights/(eps+bb)**p; ww=aa/sum(aa)
-v_weno(index)=ww(1)*(1.5*v(index)-0.5*v(ip))+ww(2)*(0.5*v(im)+0.5*v(index)) &
-             +ww(3)*(-0.5*v(imm)+1.5*v(im))
-end subroutine
 end subroutine weno_vec
 
 
