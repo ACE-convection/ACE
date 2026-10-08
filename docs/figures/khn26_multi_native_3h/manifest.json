@@ -1,0 +1,68 @@
+{
+  "source_workspace": "migration_work/khn26_multi_matlab_default_fortran32_12h",
+  "comparison_duration_seconds": 10800,
+  "saved_states": 181,
+  "original_launch_target_seconds": 43200,
+  "stop_policy": "Both model processes intentionally stopped at the developer-revised three-hour target; Fortran raw stream retains additional records.",
+  "verified_raw_state_record_sha256": {
+    "matlab": "eb7d33bcaabad871df54bfd1533e23dc297dbf42a6e8f033c321c7241e1b992c",
+    "fortran": "695916b9e414cf3bdc405c9732d4bca1cc273d605bdb3ae19da303e155f95aed"
+  },
+  "snapshot_record_hashes_verified": true,
+  "artifacts": {
+    "spatial_mf.png": {
+      "source": "migration_work/khn26_multi_matlab_default_fortran32_12h/three_hour/comparison/spatial_mf.png",
+      "sha256": "9a083859eb89e13763286ade5ffb48914d025b8b7f680e7848719d4557e7d898"
+    },
+    "spatial_mf.pdf": {
+      "source": "migration_work/khn26_multi_matlab_default_fortran32_12h/three_hour/comparison/spatial_mf.pdf",
+      "sha256": "307a4a7387ec7fb4d97cfcd1ecc2caa32ceedb16ea592be5b27f7dbd5e22e2bd"
+    },
+    "selected_aces.png": {
+      "source": "migration_work/khn26_multi_matlab_default_fortran32_12h/three_hour/comparison/selected_aces.png",
+      "sha256": "6042e020fd7cbba9f7f356a165a0168d62785e6752066a94f864f8cf5aea1f27"
+    },
+    "selected_aces.pdf": {
+      "source": "migration_work/khn26_multi_matlab_default_fortran32_12h/three_hour/comparison/selected_aces.pdf",
+      "sha256": "298c9025674174f06351932050db2acc027e4393f95c8284577f08f839b4142b"
+    },
+    "state_errors.png": {
+      "source": "migration_work/khn26_multi_matlab_default_fortran32_12h/three_hour/comparison/state_errors.png",
+      "sha256": "ab5c33db904da809fb95a2222220988595f80789c95621f3d2b681145ee9e298"
+    },
+    "state_errors.pdf": {
+      "source": "migration_work/khn26_multi_matlab_default_fortran32_12h/three_hour/comparison/state_errors.pdf",
+      "sha256": "7f1f783c2ce138e63de3f1a2af8d03724a933de275d080f2395bb34f6b40874a"
+    },
+    "mf_20min_snapshots.png": {
+      "source": "migration_work/khn26_multi_matlab_default_fortran32_12h/full/comparison/mf_20min_snapshots.png",
+      "sha256": "4131d43742865dd8694c414e1a0a0f315d3f2134a178fa6c75bb513ac55843b8"
+    },
+    "mf_20min_snapshots.pdf": {
+      "source": "migration_work/khn26_multi_matlab_default_fortran32_12h/full/comparison/mf_20min_snapshots.pdf",
+      "sha256": "a5928262db966b700589b79e440119799381895a6031488f63d5c3b3307bfa09"
+    },
+    "state_results.json": {
+      "source": "migration_work/khn26_multi_matlab_default_fortran32_12h/three_hour_state_results.json",
+      "sha256": "ec5186f8cb861832d6a8b07ece31bd3836bd628aa0fe457212be21ffbcc4fc84"
+    },
+    "snapshot_results.json": {
+      "source": "migration_work/khn26_multi_matlab_default_fortran32_12h/full/comparison/mf_20min_snapshots.json",
+      "sha256": "9fb3680ee9f05a4333c8cb15fe0c89e30853b7d1a5b784d45f3c9ddd4e06032f"
+    },
+    "plot_scope.json": {
+      "source": "migration_work/khn26_multi_matlab_default_fortran32_12h/three_hour/comparison/scope.json",
+      "sha256": "db6d4673ebaeaa72ff77b6c4df67a4fe9657d9ba49e561f293374e3f6670240a"
+    },
+    "source_configuration.json": {
+      "source": "migration_work/khn26_multi_matlab_default_fortran32_12h/configuration.json",
+      "sha256": "c1884ad24fc229457137ab6d2b124285ea5419d4593593cab70a4dad09ce3a09"
+    }
+  },
+  "postprocessing_source_sha256": {
+    "tests/khn26/compare_multi_prefix.py": "e3362e8fd6bb456403d61d97540af38e33b7389f70d2a7574d17bf40966e4c21",
+    "tests/khn26/plot_multi.py": "da1249624c0aec2f1cf230ae8dfa327b56a222fa372f410ae36d28af18c06901",
+    "tests/khn26/plot_multi_snapshots.py": "6426d62dfad664561a573f5b161e5b03fec77c893e923eb34f2b516515df92cd"
+  },
+  "scope": "Versioned copies of completed plots, numerical reports and source configuration. Raw state streams and MF NPZ remain in the preserved local workspace. No new simulation or regeneration of source plots."
+}

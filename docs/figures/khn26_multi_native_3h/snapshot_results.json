@@ -1,0 +1,148 @@
+{
+  "updated_utc": "2026-10-07T15:52:43.449005+00:00",
+  "complete": true,
+  "color_limits": [
+    -1,
+    1
+  ],
+  "panel_height_to_width": [
+    1,
+    5
+  ],
+  "height_km": [
+    0,
+    20
+  ],
+  "x_axis": "ACE column index 1\u2013101 (not physical distance)",
+  "record_interval_seconds": 60,
+  "records": [
+    {
+      "language": "matlab",
+      "time_minutes": 20,
+      "available": true,
+      "mf_sha256": "7eb36d262c7597471964d36138ba11a6de854bd814303df8d0e290c5b77e9a2b",
+      "mf_min": -1.7801418359211874,
+      "mf_max": 7.386872178303506
+    },
+    {
+      "language": "fortran",
+      "time_minutes": 20,
+      "available": true,
+      "mf_sha256": "b75ff9ea773a652595462a14325409b82ab4021bb79023d8861eb26c7ab7a16e",
+      "mf_min": -1.7801418359691525,
+      "mf_max": 7.386872178483609
+    },
+    {
+      "language": "matlab",
+      "time_minutes": 40,
+      "available": true,
+      "mf_sha256": "dc9bd64b39478988882d1b8fc9e1b8f9a4858842459294c650ba58b326543b46",
+      "mf_min": -0.960879315431812,
+      "mf_max": 4.55954362971497
+    },
+    {
+      "language": "fortran",
+      "time_minutes": 40,
+      "available": true,
+      "mf_sha256": "c2f6748dc29a84e57e6d9a534961bbf520ee332e5bd60663a57c628f7da889ae",
+      "mf_min": -0.9608793154459293,
+      "mf_max": 4.559543630139222
+    },
+    {
+      "language": "matlab",
+      "time_minutes": 60,
+      "available": true,
+      "mf_sha256": "772ca88f09cdc5cabbcdf69496b8ced7a821afb5140fbb3219e5e30d03bfc9b8",
+      "mf_min": -0.6396323477858743,
+      "mf_max": 1.8196600706548236
+    },
+    {
+      "language": "fortran",
+      "time_minutes": 60,
+      "available": true,
+      "mf_sha256": "7e3dc324c9d3d671b4aec78742f0f559850808afcadcecc13ab7e4c841385d55",
+      "mf_min": -0.6396323480772138,
+      "mf_max": 1.8196600706829305
+    },
+    {
+      "language": "matlab",
+      "time_minutes": 80,
+      "available": true,
+      "mf_sha256": "a99681d5e089db9d45ea2ce61ffcae0c1dcc84cdd58881dc0af094546226b3c4",
+      "mf_min": -0.43608621803407477,
+      "mf_max": 1.5778636167522184
+    },
+    {
+      "language": "fortran",
+      "time_minutes": 80,
+      "available": true,
+      "mf_sha256": "874dfcb01f6ae9a4fec9d153a6452d14850dbedd0c2d81665697be3acc449d26",
+      "mf_min": -0.4360862180746695,
+      "mf_max": 1.577863616654167
+    },
+    {
+      "language": "matlab",
+      "time_minutes": 100,
+      "available": true,
+      "mf_sha256": "7a4283378cf2d39ec998e941229a4f68a06426fdc5f1608aea6648a35c7806f4",
+      "mf_min": -1.076307115342676,
+      "mf_max": 1.5485381021778217
+    },
+    {
+      "language": "fortran",
+      "time_minutes": 100,
+      "available": true,
+      "mf_sha256": "ff47a76a9a08a08418c8e01517488fc7b78806be929599b6a43d5a1537d0584e",
+      "mf_min": -1.0763071156490498,
+      "mf_max": 1.548538102266924
+    },
+    {
+      "language": "matlab",
+      "time_minutes": 120,
+      "available": true,
+      "mf_sha256": "bc7db2949c4141963f22a5ca98bdc7fde7afe386342a6df311dee67ee14a5b89",
+      "mf_min": -0.6466220237398191,
+      "mf_max": 1.3628391868846488
+    },
+    {
+      "language": "fortran",
+      "time_minutes": 120,
+      "available": true,
+      "mf_sha256": "4690bd0914a3d28c7408e30f7b0ada7718e074eb425113e194cf7f9130e1bd3a",
+      "mf_min": -0.6466220236643277,
+      "mf_max": 1.3628391870328593
+    },
+    {
+      "language": "matlab",
+      "time_minutes": 140,
+      "available": true,
+      "mf_sha256": "56818ce5c0c23e8a08cdf3de010dbce704b286a28062c7e059576fefb5676934",
+      "mf_min": -1.0244704567606637,
+      "mf_max": 2.6262387290740405
+    },
+    {
+      "language": "fortran",
+      "time_minutes": 140,
+      "available": true,
+      "mf_sha256": "f4e8656ed8f8cc85a5caaad7f77f0780ff3456c11db600cc9efbbb0680de0916",
+      "mf_min": -1.024470457253764,
+      "mf_max": 2.6262387297532648
+    },
+    {
+      "language": "matlab",
+      "time_minutes": 160,
+      "available": true,
+      "mf_sha256": "34e1c826191c208693b6bc750bc1c85748fa7c113a863986ce64dc99f6c088ec",
+      "mf_min": -0.8835422256370612,
+      "mf_max": 5.957098474798051
+    },
+    {
+      "language": "fortran",
+      "time_minutes": 160,
+      "available": true,
+      "mf_sha256": "8a4a005f079c0870a53deeca3ab92129c27e23470cc8b4ce4b4a14e316148374",
+      "mf_min": -0.8835422218350156,
+      "mf_max": 5.95709847613336
+    }
+  ]
+}
