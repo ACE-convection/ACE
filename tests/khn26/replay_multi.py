@@ -36,14 +36,26 @@ def frame(source, name, minute):
     return np.frombuffer(raw, '<f8').reshape((width, 401, 3), order='F')[:101].copy()
 
 
-def prepare(work, source):
+def prepare(work, source, gate_records=None):
     work.mkdir(exist_ok=False, parents=True)
     cfg = json.loads((source / 'configuration.json').read_text())
-    gate = Path(cfg['gate_work'])
-    labels = [{'minute': minute, 'seed': name} for minute in MINUTES for name in ('matlab', 'fortran')]
+    gate = Path(cfg.get('gate_work', source))
+    if gate_records is None:
+        labels = [{'minute': minute, 'seed': name} for minute in MINUTES for name in ('matlab', 'fortran')]
+        seeds = [frame(source, label['seed'], label['minute']) for label in labels]
+    else:
+        import multi
+        multi.verify(source)
+        if not gate_records or any(record < 0 or record > 150 for record in gate_records):
+            raise ValueError('Gate records must be between 0 and 150')
+        states = {name: list(multi.state_frames(source, 'gate_native', name, 151))
+                  for name in ('matlab', 'fortran')}
+        labels = [{'minute': record*4/60, 'second': record*4, 'record': record, 'seed': name}
+                  for record in gate_records for name in ('matlab', 'fortran')]
+        seeds = [states[label['seed']][label['record']] for label in labels]
     with (work / 'inputs.bin').open('wb') as stream:
-        for label in labels:
-            stream.write(frame(source, label['seed'], label['minute']).tobytes(order='F'))
+        for seed in seeds:
+            stream.write(seed.tobytes(order='F'))
     original = (ROOT / 'matlab/ace.m').read_text()
     prefix = original.split('%% Time-integration')[0]
     prefix = replace_once(prefix, "dir_ace = fileparts(mfilename('fullpath'));", f"dir_ace = '{ROOT}/matlab';")
@@ -162,6 +174,9 @@ end program
     command=['gfortran',*flags,*map(str,objects),str(build/'ace_module_replay.o'),str(build/'probe.o'),*libs,'-o',str(build/'probe.exe')]
     commands.append(command);subprocess.run(command,cwd=build,check=True)
     paths=[Path(__file__),ROOT/'matlab/ace.m',ROOT/'fortran/src/ace_module.F',work/'inputs.bin',work/'replay_probe.m',work/'ace_module_replay.F',work/'probe.F',*objects]
+    if gate_records is not None:
+        paths.extend([source/'configuration.json',source/'gate_passed.json',
+                      source/'gate_native/matlab_states.bin',source/'gate_native/fortran_states.bin'])
     (work/'configuration.json').write_text(json.dumps({'source':str(source),'labels':labels,'fields':FIELDS,'commands':commands,'sha256':{str(p.resolve()):digest(p) for p in paths},'scope':'Single-step saved-state replays, dt=4 s. Common MATLAB reference Tv removes reference-inversion differences; no production edits or long integration.'},indent=2)+'\n')
 
 
@@ -212,8 +227,9 @@ def run(work):
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('work',type=Path)
     parser.add_argument('--source',type=Path,default=ROOT/'migration_work/khn26_multi_matlab_default_fortran32_12h')
+    parser.add_argument('--gate-records',type=int,nargs='+',help='Saved native ten-minute gate records (0..150), instead of long-run minutes')
     parser.add_argument('--prepare',action='store_true');parser.add_argument('--run',action='store_true');parser.add_argument('--analyze',action='store_true')
     args=parser.parse_args();work=args.work.resolve()
-    if args.prepare:prepare(work,args.source.resolve())
+    if args.prepare:prepare(work,args.source.resolve(),gate_records=args.gate_records)
     if args.run:run(work)
     if args.analyze:analyze(work)

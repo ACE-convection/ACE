@@ -33,7 +33,7 @@ def prepare(work, replay):
                     samples.append([raw[case, 13, k, ace-1], raw[case, 14, k, ace-1], pressure[k]])
                     labels.append({**label, 'SSPRK_source': language, 'ace': ace,
                                    'level': k+1, 'height_m': 50+100*k})
-    common_precip.prepare(work, Path(production['gate_work']),
+    common_precip.prepare(work, Path(production.get('gate_work', source)),
                           sample_data=(samples, labels), provenance=provenance)
     multi.write(work / 'selection.json', {'replay': str(replay),
         'scope': 'Common theta_e/qt/p and fixed MATLAB T/q/ql/qi; no integration or formula changes.',
