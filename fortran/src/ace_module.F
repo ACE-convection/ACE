@@ -507,8 +507,13 @@ do i=1,ncols
   dXdt(i,k,:)=0.
   if (qc<=0.) cycle
   ramp=dqc/qc_ramp*(qc-qc_ramp)
-  ! log(1+exp(ramp)), avoiding overflow without changing the physical sink.
-  dXdt(i,k,2)=-(qc_ramp/dqc/tau_pr)*(max(ramp,0.)+log(1.+exp(-abs(ramp))))
+  ! Follow MATLAB's expression while exp(ramp) is representable.
+  if (ramp<=log(huge(ramp))) then
+    dXdt(i,k,2)=-(qc_ramp/dqc/tau_pr)*log(1.+exp(ramp))
+  else
+    ! Preserve the finite sink for extreme inputs that overflow MATLAB exp.
+    dXdt(i,k,2)=-(qc_ramp/dqc/tau_pr)*(max(ramp,0.)+log(1.+exp(-abs(ramp))))
+  endif
   dql = 1.e-8 * ql(i,k) / qc
   dqi = 1.e-8 * qi(i,k) / qc
   dXdt(i,k,1) = dXdt(i,k,2) * ( theta_e(Ta(i,k),q(i,k),ql(i,k)+dql,qi(i,k)+dqi,p(k)) &
@@ -627,7 +632,7 @@ function theta_e(T,q,ql,qi,p)
 implicit none
 
 real, parameter :: Rd=287.04, Rv=461.5, Cpd=1005.7, Cl=4190., Cvd=719. &
-                  ,Cvv=1410., Cpv=1870., Cpvmcl=Cl-Cpv, EPS=Rd/Rv
+                  ,Cvv=1410., Cpv=1870., Cpvmcl=Cl-Cpv, EPS=0.621971830985916
 real, parameter :: Lv0=2.501e6, Ls=2.834e6, Lf=0.3337e6, T0=273.1636783445389, P0=1.e5
 real, intent(in) :: T,q,ql,qi,p
 integer :: ice
@@ -643,7 +648,7 @@ es = eval_es(T,ice)
 Re = (1-qt)*Rd;
 R = Re + q*Rv;
 
-Cpl = Cpd + qt*(Cl-Cpd);
+Cpl = 1005.7 + qt*3184.3;
 
 chi = Re/Cpl;
 gamma = Rv*q / Cpl;
@@ -659,7 +664,7 @@ implicit none
 
 ! parameters
 real, parameter :: Rd=287.04, Rv=461.5, Cpd=1005.7, Cl=4190., Cvd=719. &
-                  ,Cvv=1410., Cpv=1870., Cpvmcl=Cl-Cpv, EPS=Rd/Rv
+                  ,Cvv=1410., Cpv=1870., Cpvmcl=Cl-Cpv, EPS=0.621971830985916
 real, parameter :: Lv0=2.501e6, Ls=2.834e6, Lf=0.3337e6, T0=273.1636783445389, P0=1.e5 &
                   ,qT0=611.3902114165171, LvoT=9155.566660243245
 real, parameter :: tol=1e-3
@@ -671,16 +676,16 @@ real, intent(out) :: T,q,ql,qi
 ! local variables
 integer :: ice
 real :: Cpl,Re,chi,F0,FT0,F,dFdT,R,e,gamma,dT,qc
-real :: G0,qsat,qsi,qs,dC,HT0,GT0,tmp,G,H,es,esi,dTqs,dTqsi,dGdT,dHdT
+real :: G0,qsat,qsi,qs,dC,HT0,GT0,tmp,G,H,es,esi,dTqs,dTqsi,dGdT,dHdT,lv_over_t
 
-Cpl = Cpd + (Cl-CPd)*qt
+Cpl = 1005.7 + 3184.3*qt
 Re = Rd*(1-qt)
 chi = Re/Cpl
 
 ! Step 1: solve assuming no condensate & check consistency
 R = Re + Rv*qt
 gamma = Rv*qt / Cpl
-e = p*qt / (EPS+ (1-EPS)*qt)
+e = p*qt / (0.621971830985916+0.378028169014084*qt)
 
 F0 = theta_e * (p*Re/R/P0)**chi * e**gamma
 !FT0 = T0 * polysvp1(T0,0)**gamma * exp(qt*Lv(T0)/Cpl/T0)
@@ -694,7 +699,7 @@ do while (abs(dT)>tol)
   ice = 0
   if (F0<FT0) ice = 1 ! ice exist
   !F = T * polysvp1(T,ice)**gamma * exp(qt*Lv(T)/Cpl/T)
-  F = T * eval_es(T,ice) **gamma * exp(qt*Lv(T)/Cpl/T)
+  F = T * eval_es(T,ice) **gamma * exp(qt/Cpl*Lv(T)/T)
   if (ice==0) then
     dFdT = ( 1. - CPVMCL*qt/CPL)/T
   else
@@ -720,10 +725,10 @@ if (q>qsat) then
   dC = 2083.900148084866
   !qsi = qv_sat(T0,p,1) * ( 1. - qt )
   qsi = eval_qs(T0,p,qt,1)
-  HT0 = T0 * (RE+RV*qsi)**chi * exp( (qsi*Lv(T0)-Lf*(qt-qsi))/Cpl/T0 )
+  HT0 = T0 * (RE+RV*qsi)**chi * exp( (qsi*2.500968266240670e6-Lf*(qt-qsi))/Cpl/T0 )
   !qs = qv_sat(T0,p,0) * ( 1. - qt )
   qs = eval_qs(T0,p,qt,0)
-  GT0 =  T0 * (RE+RV*qs)**chi * exp(qs*Lv(T0)/CPL/T0)
+  GT0 = T0 * (RE+RV*qs)**chi * exp(qs*9155.566660243245/CPL)
 
   ! 3 cases: liquid-only, ice-only, co-existing
   if (G0>GT0 .and. G0>HT0) then ! liquid-only
@@ -736,11 +741,12 @@ if (q>qsat) then
       !qs = qv_sat(T,p,0)*(1.-qt)
       qs = eval_qs(T,p,qt,0)
       R = Re + Rv*qs
-      G = T * R**chi *exp(qs*Lv(T)/Cpl/T)
+      lv_over_t = Lv(T)/T
+      G = T * R**chi *exp(qs*lv_over_t/Cpl)
       !es = polysvp1(T,0)
       es = eval_es(T,0)
       dTqs = EPS*p*(1.-qt)/(p-es)**2.*(6743.769/T-4.8451)*es/T
-      dGdT = 1./T + ( (Rv*Re/R+Lv(T)/T)*dTqs - (Lv0-Cpvmcl*273.15)*qs/T**2. )/Cpl
+      dGdT = 1./T + ( (Rv*Re/R+lv_over_t)*dTqs - 1867292.*qs/T**2. )/Cpl
       dGdT = dGdT*G
       dT = -(G-G0)/dGdT
       T = T + dT
@@ -765,12 +771,13 @@ if (q>qsat) then
       qsi = eval_qs(T,p,qt,1)
       R = Re + Rv*qsi
       qi = qt-qsi
-      H = T * R**chi * (T0/T)**(dC*qi/Cpl) * exp((qsi*Lv(T)/T - Lf/T0*qi)/Cpl)
+      lv_over_t = Lv(T)/T
+      H = T * R**chi * (T0/T)**(dC*qi/Cpl) * exp((qsi*lv_over_t - Lf/T0*qi)/Cpl)
       !esi = polysvp1(T,1)
       esi = eval_es(T,1)
       dTqsi = EPS*p*(1.-qt)/(p-esi)**2.*(6111.72784/T+0.15215)*esi/T
-      dHdT = 1./T + ( ( Rv*Re/R + Lv(T)/T + dC*log(T/T0) + Lf/T0 )*dTqsi &
-                     - ( ((Lv0-Cpvmcl*273.15)/T-dC)*qsi + dC*qt )/T )/Cpl
+      dHdT = 1./T + ( ( Rv*Re/R + lv_over_t + dC*log(T/T0) + 1221.611899584641 )*dTqsi &
+                     - ( (1867292./T-dC)*qsi + dC*qt )/T )/Cpl
       dHdT = dHdT*H
       dT = -(H-G0)/dHdT
       T = T + dT
