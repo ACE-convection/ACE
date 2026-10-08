@@ -4,6 +4,11 @@ These checks cover the author-selected 101-ACE 4UNEVEN basis and processed
 Manaus profile 1342. Requirements: licensed MATLAB (tested R2023b), GNU
 Fortran/netCDF-Fortran (`nf-config`), Python NumPy/netCDF4, generated
 `data/input/manaus1342_khn26.nc` and original source data matching its hashes.
+Current native three-hour results and commands are in
+[the comparison workflow](#native-precipitation-and-three-hour-wave-comparison);
+[the script index](scripts.md) distinguishes current tools from historical
+queues and performance utilities.
+
 See [shared input conversion](../../docs/shared_input.md). Runtime files
 are ignored; use a fresh workspace. Test preparation verifies original data
 hashes and compiles real64/real32 separately with bounds/FPE checks.
@@ -397,3 +402,87 @@ explains the masked-case reservoir behavior and sparse-sampling limits.
 Theta_e inventory and vertical KE do not establish total-energy closure.
 The [saved report](single_physical_review.json) contains all 181 samples and
 provenance. No new performance measurement or model run is part of this review.
+
+## Native precipitation and three-hour wave comparison
+
+The corrected native singleACE and dry/native multiACE ten-minute tests
+passed their original limits. Native three-hour singleACE and multiACE
+saved-state comparisons are complete. The latest multiACE target was reduced
+from twelve hours to three hours; neither long-run queue is active.
+
+| Evidence | Record |
+| --- | --- |
+| Ci correction, common-state and short tests | [Constants audit](../../docs/migration/v020_khn26_constants_audit.md), [validation summary](ci_correction_validation.json) |
+| Native singleACE three hours | [Physical review](../../docs/migration/v020_khn26_single_native_physical_review.md) |
+| Native multiACE three hours | [Comparison](../../docs/migration/v020_khn26_multiace_three_hour_comparison.md) |
+| Earlier experiment history | [MultiACE case](../../docs/migration/v020_khn26_multiace_gravity_wave.md), [singleACE precipitation investigation](../../docs/migration/v020_khn26_single_precip_comparison.md) |
+| Script roles and dependencies | [Script index](scripts.md) |
+
+### Inspect existing outputs
+
+Run from the repository root with NumPy, netCDF4 and matplotlib installed.
+These commands read saved outputs and regenerate postprocessing artifacts;
+they do not start model processes. `WORK` denotes the preserved local
+workspace, not a fresh simulation destination.
+
+```sh
+python3 tests/khn26/compare_multi_prefix.py migration_work/khn26_multi_matlab_default_fortran32_12h
+python3 tests/khn26/plot_multi_snapshots.py migration_work/khn26_multi_matlab_default_fortran32_12h
+python3 tests/khn26/plot_single_native.py migration_work/khn26_single_matlab_default_fortran32_3h --output docs/figures/khn26_single_native_3h
+```
+
+The multiACE comparison uses exactly minutes 0–180 at 60-second intervals,
+including Fortran's first three hours from its longer preserved stream.
+Snapshot panels show MATLAB left, Fortran right, eight rows at 20–160 minutes,
+0–20 km, panel height:width 1:5, and MF colors from −1 to +1. Missing live
+records are labeled; `--watch` refreshes until all requested panels exist.
+The singleACE plotter verifies hashes against its completed run report.
+
+Completed trajectories have close cross-implementation agreement; the
+three-hour runs are not certified by the ten-minute numerical thresholds.
+qt agreement and integrated native water removal are not surface rainfall
+or a closed water-budget test. Mean-MF projection and nonlocal pressure
+also require care when interpreting remote wave arrival.
+
+### Reproduce short tests
+
+Use fresh paths. Preparers generate isolated driver copies and compile the
+Fortran binaries. Each language receives 32 distinct physical cores on the
+recorded 160-logical-CPU host. Licensed MATLAB and its license-server access
+are required. The following commands run only the ten-minute gates:
+
+```sh
+python3 tests/khn26/multi.py migration_work/khn26_multi_short --prepare --initial-mf 0
+python3 tests/khn26/multi.py migration_work/khn26_multi_short --run --gate-only
+python3 tests/khn26/single_precip.py migration_work/khn26_single_short --prepare
+python3 tests/khn26/single_precip.py migration_work/khn26_single_short --run --gate-only
+```
+
+`--run --gate-only` is a foreground supervisor. To keep it in the background,
+launch it with persistent logs, for example after preparation:
+
+```sh
+nohup python3 tests/khn26/multi.py migration_work/khn26_multi_short --run --gate-only > migration_work/khn26_multi_short/background.log 2>&1 < /dev/null &
+```
+
+Preserve configuration, logs, raw streams and comparison reports. State,
+all nine SSPRK-stage tendencies and actual native precipitation sinks are
+checked separately, with checked/production Fortran prefix identity.
+The native singleACE case masks dynamics tendencies outside ACE 1 and has
+an initial 0.03 kg m−2 s−1 MF pulse below 1 km. MultiACE enables all columns
+and has zero initial MF. Both use the +1 K bubble at ACE 1 levels 11–51,
+dt=4 s and the full 101-column geometry; these are distinct experiments.
+
+### Long-run launchers
+
+`unrestricted_single.py` reproduces the three-hour native singleACE launch
+with MATLAB defaults and Fortran 32. `unrestricted_multi.py` retains the
+original twelve-hour multiACE launcher; it does not directly select three
+hours. The completed multiACE experiment was intentionally stopped after
+MATLAB saved minute 180, using `stop_multi_at_three_hours.py`.
+
+These launchers expect the frozen corrected gate workspaces recorded in the
+script index. Prepare and launch into fresh destinations; do not restart
+old queues or reuse preserved workspaces. MATLAB has no imposed thread cap
+or CPU binding, Fortran remains 32, and CPU overlap is allowed. Status,
+commands and first-ten-minute reproduction checks remain with each run.
