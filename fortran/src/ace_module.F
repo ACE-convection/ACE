@@ -850,7 +850,8 @@ end function
 function Ci(T)
 implicit none
 
-real, parameter :: T0=273.1636783445389
+! Ice heat-capacity fit is referenced to 0 deg C, as in MATLAB ci(T).
+real, parameter :: T0=273.15
 real, intent(in) :: T
 real :: Ci
 
