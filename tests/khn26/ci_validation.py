@@ -14,7 +14,7 @@ from run import ROOT, digest
 
 def run(work):
     single=ROOT/'migration_work/khn26_single32_native_ci_3h'
-    multiple=ROOT/'migration_work/khn26_multi32_bubble_ci_12h'
+    multiple=ROOT/'migration_work/khn26_multi32_bubble_ci_3h'
     common=ROOT/'migration_work/khn26_common_precip32_ci'
     try:
         for folder in (single,multiple,common):multi.verify(folder)
@@ -48,7 +48,7 @@ def run(work):
                         'short_gate_outcomes':outcomes,'long_runs_started':False})
             return
         # Resume from preserved successful gates without repeating the short runs.
-        for job in [('single_3h','single_precip.py',single,False),('multi_12h','multi.py',multiple,False)]:
+        for job in [('single_3h','single_precip.py',single,False),('multi_3h','multi.py',multiple,False)]:
             if not execute(*job):
                 multi.write(work/'status.json',{'state':'long_run_failed','outcomes':outcomes});return
         multi.write(work/'status.json',{'state':'completed_pending_scientific_review','outcomes':outcomes})

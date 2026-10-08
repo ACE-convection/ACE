@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Resume validated native singleACE or multiACE at MATLAB 96 / Fortran 32 threads.
 
-Wait for the existing short gates; run the prepared duration in the background.
+Wait for the existing short gates; run three hours in the background.
 No performance measurements. Keep numerical validation and source provenance.
 """
 import argparse
@@ -47,6 +47,8 @@ def prepare(work,gate_work):
     work.mkdir(parents=True,exist_ok=False);(work/'full').mkdir();(work/'build').mkdir()
     cpus,topology=placements();(work/'cpu_topology.csv').write_text(topology)
     source=(gate_work/'multi_main.m').read_text()
+    source=replace_once(source,f"tspan = 0:60:{cfg['case']['duration_seconds']};",
+                        f'tspan = 0:60:{multi.LONG_DURATION_SECONDS};')
     (work/'multi_main.m').write_text(source.replace(str(gate_work),str(work)))
     launch=(gate_work/'full_launch.m').read_text().replace(str(gate_work),str(work))
     launch=launch.replace('maxNumCompThreads(32)','maxNumCompThreads(96)').replace('maxNumCompThreads==32','maxNumCompThreads==96')
@@ -58,6 +60,7 @@ def prepare(work,gate_work):
            work/'build/ace_model.exe',gate_work/'configuration.json']
     paths.extend(Path(p) for p in cfg['sha256'])
     case=cfg['case'].copy();case['threads_per_language']={'matlab':96,'fortran':32}
+    case['duration_seconds']=multi.LONG_DURATION_SECONDS
     multi.write(work/'configuration.json',{'case':case,'gate_work':str(gate_work),'gate_file':'gate_passed.json' if case['multiACE'] else 'gate_results.json','cpu_sets':cpus,
           'sha256':{str(p):digest(p) for p in paths},
           'policy':'User requested completion speed, no efficiency observations. MATLAB uses both siblings on 48 physical cores; Fortran uses one CPU on each of 32 other physical cores. No physical-core overlap.',
@@ -112,6 +115,8 @@ def run(work):
     children=[]
     try:
         cfg=multi.verify(work);gate_work=Path(cfg['gate_work']);gate_path=gate_work/cfg['gate_file']
+        if cfg['case']['duration_seconds']!=multi.LONG_DURATION_SECONDS:
+            raise ValueError('Long runs require a fresh three-hour configuration')
         while not gate_path.exists():
             p=gate_work/'status.json'
             state=json.loads(p.read_text()) if p.exists() else {}

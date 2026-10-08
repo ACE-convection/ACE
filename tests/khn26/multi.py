@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Gate multiACE dynamics/precipitation for 10 min, then run 12 h, 32 cores each.
+"""Gate multiACE dynamics/precipitation for 10 min, then run 3 h, 32 cores each.
 
 Isolated production copies; all tendencies enabled, bubble-only forcing.
 Independent 32-core placements have eight physical cores on each NUMA node.
@@ -24,6 +24,7 @@ from run import ROOT, digest
 from trajectory import replace_once
 
 N, Z = 101, 401
+LONG_DURATION_SECONDS = 10800
 STATE_LIMITS = np.array([1e-9,1e-7,1e-11])
 TENDENCY_LIMITS = np.array([1e-9,1e-8,1e-11])
 PRECIPITATION_LIMITS = np.array([1e-7,1e-11])
@@ -50,7 +51,7 @@ def cpu_sets():
              'fortran':[cpu for _,cpus in sorted(nodes.items()) for cpu in sorted(cpus)[8:16]]},topology)
 
 
-def prepare(work,initial_mf,*,single=False,duration=43200):
+def prepare(work,initial_mf,*,single=False,duration=LONG_DURATION_SECONDS):
     input_file=ROOT/'data/input/manaus1342_khn26.nc'
     placements,topology=cpu_sets()
     work.mkdir(parents=True,exist_ok=False)
@@ -196,7 +197,7 @@ fprintf('ACE_MULTI_MATLAB_CAP_FINAL %d\\n',maxNumCompThreads);
           'tendency_gate_limits':TENDENCY_LIMITS.tolist(),'precipitation_gate_limits':PRECIPITATION_LIMITS.tolist(),
           'sha256':{str(p):digest(p) for p in paths},
           'fairness':'32 disjoint physical cores per program, 8 per NUMA node, computational/OpenMP cap 32; shared host and separate runtimes remain.',
-          'limits':'Regression gates are numerical checks, not physical gravity-wave or twelve-hour acceptance criteria.'})
+          'limits':'Regression gates are numerical checks, not physical gravity-wave or three-hour acceptance criteria.'})
     print(json.dumps({'prepared':str(work),'case':case,'cpu_sets':placements},indent=2),flush=True)
 
 
@@ -430,6 +431,8 @@ def thread_evidence(work,tag):
 def run(work,gate_only=False):
     cfg=verify(work)
     try:
+        if not gate_only and cfg['case']['duration_seconds']!=LONG_DURATION_SECONDS:
+            raise ValueError('Long runs require a fresh three-hour configuration')
         if not (work/'gate_passed.json').exists():
             gates={}
             for tag in ('gate_none','gate_native'):
@@ -476,13 +479,14 @@ def run(work,gate_only=False):
                 make_plots(work,tag)
             write(work/'gate_passed.json',{'passed':True,'gates':gates,
                   'configuration_sha256':digest(work/'configuration.json'),'cpu_sets':cfg['cpu_sets']})
-            print('Both ten-minute gates passed; starting native-precipitation twelve-hour runs.',flush=True)
+            print('Both ten-minute gates passed.',flush=True)
         else:
             gate=json.loads((work/'gate_passed.json').read_text())
             if gate['configuration_sha256']!=digest(work/'configuration.json'):raise ValueError('Gate configuration changed')
         if gate_only:
             write(work/'status.json',{'state':'gates_passed','actual_duration_seconds':600,'full_started':False})
             return
+        print('Starting native-precipitation three-hour runs.',flush=True)
         children=[]
         try:
             for name in ('matlab','fortran'):children.append(launch_child(work,'full',name,cfg))
@@ -497,15 +501,15 @@ def run(work,gate_only=False):
         # Independently initialized long run must reproduce its own 10-min gate.
         for name in ('matlab','fortran'):
             gate=list(state_frames(work,'gate_native',name,151))[::15]
-            full=state_frames(work,'full',name,721)
+            full=state_frames(work,'full',name,LONG_DURATION_SECONDS//60+1)
             if any(not np.array_equal(a,b) for a,b in zip(gate,full)):
                 raise ValueError(f'{name}: full prefix differs from ten-minute gate')
         result['exact_gate_prefix_identity_matlab_fortran']=[True,True]
         verify(work);result['provenance_rechecked']=True
         write(work/'full_state_results.json',result)
         make_plots(work,'full')
-        write(work/'status.json',{'state':'completed_pending_scientific_review','saved_states':721,
-              'actual_duration_seconds':43200,'max_abs_error':result['max_abs_error']})
+        write(work/'status.json',{'state':'completed_pending_scientific_review','saved_states':LONG_DURATION_SECONDS//60+1,
+              'actual_duration_seconds':LONG_DURATION_SECONDS,'max_abs_error':result['max_abs_error']})
     except BaseException as exc:
         write(work/'status.json',{'state':'failed','error':str(exc)})
         raise

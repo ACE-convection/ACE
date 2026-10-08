@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Native multiACE twelve hours: default MATLAB and Fortran 32, in parallel.
+"""Native multiACE three hours: default MATLAB and Fortran 32, in parallel.
 
 Use validated bubble-only short gates, no imposed MATLAB thread/CPU controls,
 and no efficiency observations. Preserve state comparison and wave figures.
@@ -21,12 +21,13 @@ import unrestricted_single
 from run import ROOT, digest
 
 
-def prepare(work):
-    gate_work=ROOT/'migration_work/khn26_multi32_bubble_ci_12h'
+def prepare(work,gate_work=None):
+    if gate_work is None:
+        gate_work=ROOT/'migration_work/khn26_multi32_bubble_ci_12h'
     full_multi.prepare(work,gate_work)
     cfg=json.loads((work/'configuration.json').read_text())
-    if not cfg['case']['multiACE'] or cfg['case']['initial_mf_amplitude']!=0 or cfg['case']['duration_seconds']!=43200:
-        raise ValueError('Expected twelve-hour bubble-only multiACE case')
+    if not cfg['case']['multiACE'] or cfg['case']['initial_mf_amplitude']!=0 or cfg['case']['duration_seconds']!=multi.LONG_DURATION_SECONDS:
+        raise ValueError('Expected three-hour bubble-only multiACE case')
     cfg['case']['threads_per_language']={'matlab':'platform_default','fortran':32}
     cfg['cpu_sets']['matlab']=sorted(os.sched_getaffinity(0))
     cfg['policy']='MATLAB has no imposed thread limit or CPU binding; Fortran has 32 threads. Both start together, CPU overlap allowed, no efficiency observations.'
@@ -42,13 +43,15 @@ def prepare(work):
     multi.write(work/'configuration.json',cfg)
     shutil.copyfile(Path(__file__),work/'executed_unrestricted_runner.py')
     multi.verify(work)
-    print(json.dumps({'threads':cfg['case']['threads_per_language'],'duration_seconds':43200,'initial_MF':0,'physics':'native'}))
+    print(json.dumps({'threads':cfg['case']['threads_per_language'],'duration_seconds':multi.LONG_DURATION_SECONDS,'initial_MF':0,'physics':'native'}))
 
 
 def run(work):
     children=[]
     try:
         cfg=multi.verify(work);gate_work=Path(cfg['gate_work']);multi.verify(gate_work)
+        if cfg['case']['duration_seconds']!=multi.LONG_DURATION_SECONDS:
+            raise ValueError('Long runs require a fresh three-hour configuration')
         gate=json.loads((gate_work/'gate_passed.json').read_text())
         if not gate['passed'] or gate['configuration_sha256']!=digest(gate_work/'configuration.json'):
             raise ValueError('Short gate provenance')
@@ -70,7 +73,7 @@ def run(work):
                 'driver_pids':{c['name']:c['process'].pid for c in children},'exit_codes':codes,
                 'threads_per_language':cfg['case']['threads_per_language'],'thread_cpu_unions':affinities,
                 'complete_saved_records':records,'model_seconds':{k:max(0,v-1)*60 for k,v in records.items()},
-                'target_model_seconds':43200,'ten_minute_prefix_passed':checked,'matlab_cpu_binding':False})
+                'target_model_seconds':multi.LONG_DURATION_SECONDS,'ten_minute_prefix_passed':checked,'matlab_cpu_binding':False})
             time.sleep(20)
         if any(c['process'].returncode for c in children):raise RuntimeError('Driver exit failure')
         if not checked:full_multi.prefix_check(work,gate_work)
@@ -78,13 +81,13 @@ def run(work):
         caps=re.findall(r'ACE_MATLAB_DEFAULT_THREADS(?:_FINAL)?\s+(\d+)',m)
         if len(caps)!=2 or not re.search(r'ACE_MULTI_OPENMP_TEAM\s+32\b',f):raise ValueError('Missing thread-policy evidence')
         multi.write(work/'full/exits.json',{c['name']:{'exit_code':c['process'].returncode,'command':c['command']} for c in children})
-        multi.write(work/'status.json',{'state':'comparing_completed_outputs','actual_duration_seconds':43200,'saved_states':721})
+        multi.write(work/'status.json',{'state':'comparing_completed_outputs','actual_duration_seconds':multi.LONG_DURATION_SECONDS,'saved_states':multi.LONG_DURATION_SECONDS//60+1})
         result=multi.compare_states(work,'full',strict=False)
         result['thread_evidence']={'matlab_default_reported_start_end':list(map(int,caps)),'matlab_imposed_limit':False,'fortran_openmp_team':32}
         multi.verify(work);multi.write(work/'full_state_results.json',result)
         multi.make_plots(work,'full')
-        multi.write(work/'status.json',{'state':'completed_pending_scientific_review','actual_duration_seconds':43200,
-            'saved_states':721,'max_abs_error':result['max_abs_error'],'threads_per_language':cfg['case']['threads_per_language']})
+        multi.write(work/'status.json',{'state':'completed_pending_scientific_review','actual_duration_seconds':multi.LONG_DURATION_SECONDS,
+            'saved_states':multi.LONG_DURATION_SECONDS//60+1,'max_abs_error':result['max_abs_error'],'threads_per_language':cfg['case']['threads_per_language']})
     except BaseException as exc:
         for child in children:
             if child['process'].poll() is None:os.killpg(child['process'].pid,signal.SIGTERM)
@@ -98,10 +101,11 @@ def run(work):
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('work',type=Path)
+    parser.add_argument('--gate-work',type=Path,help='Fresh completed multiACE short-gate workspace')
     action=parser.add_mutually_exclusive_group(required=True)
     for name in ('prepare','launch','run'):action.add_argument('--'+name,action='store_true')
     args=parser.parse_args();work=args.work.resolve()
-    if args.prepare:prepare(work)
+    if args.prepare:prepare(work,args.gate_work.resolve() if args.gate_work else None)
     if args.run:run(work)
     if args.launch:
         multi.verify(work)

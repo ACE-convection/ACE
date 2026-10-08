@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""After short gates, run native singleACE 3 h then multiACE 12 h at 96/32."""
+"""After short gates, run native singleACE 3 h then multiACE 3 h at 96/32."""
 import argparse
 import json
 import os
@@ -15,7 +15,7 @@ from run import ROOT, digest
 
 def run(work):
     single=ROOT/'migration_work/khn26_single_matlab96_fortran32_3h'
-    multiple=ROOT/'migration_work/khn26_multi_matlab96_fortran32_12h'
+    multiple=ROOT/'migration_work/khn26_multi_matlab96_fortran32_3h'
     gate_work=ROOT/'migration_work/khn26_multi32_bubble_ci_12h'
     try:
         for folder in (single,multiple):multi.verify(folder)
@@ -23,7 +23,7 @@ def run(work):
             'threads_per_language':{'matlab':96,'fortran':32},'efficiency_observations':False,
             'configuration_sha256':{str(p):digest(p/'configuration.json') for p in (single,multiple)},
             'runner_sha256':digest(Path(__file__)),
-            'policy':'Finish active multiACE short gates, then native singleACE three hours, then native multiACE twelve hours. Sequential runs; no physical-core overlap between languages.'})
+            'policy':'Finish active multiACE short gates, then native singleACE three hours, then native multiACE three hours. Sequential runs; no physical-core overlap between languages.'})
         while not (gate_work/'gate_passed.json').exists():
             state=json.loads((gate_work/'status.json').read_text())
             if state.get('state')=='failed':raise ValueError('MultiACE short gate failed: '+state.get('error','unknown'))
@@ -31,7 +31,7 @@ def run(work):
                   'gate_state':state['state'],'gate_work':str(gate_work),'threads_for_long_runs':{'matlab':96,'fortran':32}})
             time.sleep(20)
         outcomes={}
-        for stage,folder in [('single_3h',single),('multi_12h',multiple)]:
+        for stage,folder in [('single_3h',single),('multi_3h',multiple)]:
             command=[sys.executable,str(ROOT/'tests/khn26/full_multi.py'),str(folder),'--run']
             with (work/(stage+'.log')).open('x') as log:
                 child=subprocess.Popen(command,cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,stdin=subprocess.DEVNULL)

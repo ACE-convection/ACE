@@ -405,6 +405,17 @@ provenance. No new performance measurement or model run is part of this review.
 
 ## Native precipitation and three-hour wave comparison
 
+For source-version scope, fresh aligned ten-minute gates, error-source
+controls and stale runtime labels, see the
+[current development status](../../docs/migration/v020_khn26_status.md).
+The three-hour trajectories below predate the thermodynamic alignment
+in `b1010ea`; they do not validate a three-hour run of that aligned source.
+
+The subsequent [k=2 WENO alignment](../../docs/migration/v020_khn26_weno_matlab_alignment.md)
+also passed fresh dry/native ten-minute multiACE gates. Its
+[result record](weno_matlab_alignment_gate_results.json) includes unchanged
+limits, component checks and comparison with the pre-WENO aligned gate.
+
 The corrected native singleACE and dry/native multiACE ten-minute tests
 passed their original limits. Native three-hour singleACE and multiACE
 saved-state comparisons are complete. The latest multiACE target was reduced
@@ -476,13 +487,30 @@ dt=4 s and the full 101-column geometry; these are distinct experiments.
 ### Long-run launchers
 
 `unrestricted_single.py` reproduces the three-hour native singleACE launch
-with MATLAB defaults and Fortran 32. `unrestricted_multi.py` retains the
-original twelve-hour multiACE launcher; it does not directly select three
-hours. The completed multiACE experiment was intentionally stopped after
-MATLAB saved minute 180, using `stop_multi_at_three_hours.py`.
+with MATLAB defaults and Fortran 32. `unrestricted_multi.py` now launches
+three-hour native multiACE directly. Both long runs save 181 minute-spaced
+states, including the initial state. The common `multi.py` default is also
+three hours; gate-only runs still stop after their ten-minute tests and
+print only the gate completion message.
 
-These launchers expect the frozen corrected gate workspaces recorded in the
-script index. Prepare and launch into fresh destinations; do not restart
-old queues or reuse preserved workspaces. MATLAB has no imposed thread cap
+Both unrestricted launchers accept `--gate-work` during preparation to select
+a fresh completed gate. Their legacy default gate paths are retained for
+traceability; gate names containing `12h` do not select a twelve-hour run.
+Changed source/runner hashes require fresh gates; do not edit old configuration
+hashes to bypass verification. Old long-run configurations with other durations
+are rejected before model processes launch. Prepare and launch into fresh
+destinations; do not restart old queues or reuse preserved workspaces.
+MATLAB has no imposed thread cap
 or CPU binding, Fortran remains 32, and CPU overlap is allowed. Status,
 commands and first-ten-minute reproduction checks remain with each run.
+
+After a fresh matching gate completes, prepare a three-hour destination:
+
+```sh
+python3 tests/khn26/unrestricted_single.py migration_work/khn26_single_3h_run --prepare --gate-work SINGLE_GATE
+python3 tests/khn26/unrestricted_multi.py migration_work/khn26_multi_3h_run --prepare --gate-work MULTI_GATE
+```
+
+Preparation creates drivers/configuration without launching a simulation.
+The original stopped twelve-hour launch and its three-hour comparison remain
+historical evidence; their raw logs, workspace names and results are unchanged.

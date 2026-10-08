@@ -43,6 +43,8 @@ def check_prefix(work):
 
 def run(work,gate_only=False):
     cfg=multi.verify(work)
+    if not gate_only and cfg['case']['duration_seconds']!=multi.LONG_DURATION_SECONDS:
+        raise ValueError('Long runs require a fresh three-hour configuration')
     try:
         if not (work/'gate_results.json').exists():
             multi.monitor(work,'gate_native',[multi.launch_child(work,'gate_native','fortran',cfg,debug=True)])

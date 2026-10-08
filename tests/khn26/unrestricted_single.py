@@ -26,8 +26,9 @@ THREAD_ENV=['OMP_NUM_THREADS','OMP_THREAD_LIMIT','OMP_DYNAMIC','OMP_MAX_ACTIVE_L
     'MATLAB_MAX_NUM_THREADS','MW_NUM_CPUS','MW_NUM_THREADS']
 
 
-def prepare(work):
-    gate_work=ROOT/'migration_work/khn26_single32_native_ci_3h'
+def prepare(work,gate_work=None):
+    if gate_work is None:
+        gate_work=ROOT/'migration_work/khn26_single32_native_ci_3h'
     full_multi.prepare(work,gate_work)
     cfg=json.loads((work/'configuration.json').read_text())
     cfg['case']['threads_per_language']={'matlab':'platform_default','fortran':32}
@@ -68,6 +69,8 @@ def run(work):
     children=[]
     try:
         cfg=multi.verify(work);gate_work=Path(cfg['gate_work'])
+        if cfg['case']['duration_seconds']!=multi.LONG_DURATION_SECONDS:
+            raise ValueError('Long runs require a fresh three-hour configuration')
         gate=json.loads((gate_work/'gate_results.json').read_text())
         if not gate['passed'] or gate['configuration_sha256']!=digest(gate_work/'configuration.json'):
             raise ValueError('Short gate provenance')
@@ -114,10 +117,11 @@ def run(work):
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('work',type=Path)
+    parser.add_argument('--gate-work',type=Path,help='Fresh completed singleACE short-gate workspace')
     action=parser.add_mutually_exclusive_group(required=True)
     for name in ('prepare','launch','run'):action.add_argument('--'+name,action='store_true')
     args=parser.parse_args();work=args.work.resolve()
-    if args.prepare:prepare(work)
+    if args.prepare:prepare(work,args.gate_work.resolve() if args.gate_work else None)
     if args.run:run(work)
     if args.launch:
         multi.verify(work)

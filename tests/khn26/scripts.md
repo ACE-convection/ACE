@@ -22,13 +22,13 @@ For existing outputs and short-test commands, see [README](README.md#native-prec
 
 | Script | Purpose | Local dependencies |
 | --- | --- | --- |
-| `multi.py` | Isolated multiACE preparation, dry/native short gates, provenance and stream comparison | `run.py`, `trajectory.py` |
+| `multi.py` | Isolated multiACE preparation, dry/native short gates, optional three-hour continuation and stream comparison | `run.py`, `trajectory.py` |
 | `single_precip.py` | Native singleACE short gates and optional three-hour continuation | `multi.py`, `run.py` |
 | `common_precip.py` | Native thermodynamics and sinks on byte-identical samples from a saved short run | `multi.py`, `run.py`, `trajectory.py` |
 | `attribute_ci.py` | Attribute the former Ci formula discrepancy using preserved common-state outputs | `run.py`; postprocessing, not a production correction |
 | `full_multi.py` | Validated long-run preparation, frame access and short-prefix checks; its CLI retains 96/32 policy | `multi.py`, `run.py`, `trajectory.py` |
 | `unrestricted_single.py` | Native three-hour singleACE, MATLAB defaults / Fortran 32; exports shared MATLAB launch helper | `full_multi.py`, `multi.py`, `run.py` |
-| `unrestricted_multi.py` | Original native twelve-hour multiACE launcher, MATLAB defaults / Fortran 32 | `full_multi.py`, `multi.py`, `unrestricted_single.py`, `run.py` |
+| `unrestricted_multi.py` | Native three-hour multiACE launcher, MATLAB defaults / Fortran 32 | `full_multi.py`, `multi.py`, `unrestricted_single.py`, `run.py` |
 | `stop_multi_at_three_hours.py` | Preserve raw streams and intentionally stop the original multiACE run at 180 saved minutes | Live status/PIDs; standalone controller |
 
 Some filenames reflect the experiment for which a helper was introduced;
@@ -36,12 +36,15 @@ they are not independent versions. In particular, `full_multi.py` and
 `unrestricted_single.py` are still imported by the current multiACE launcher.
 Their numerical/threading policies must be reviewed before consolidating them.
 
-`unrestricted_single.py` expects the completed gate workspace
+Both unrestricted launchers now prepare three-hour runs and accept
+`--gate-work` to select a fresh completed short test. The legacy default
+for `unrestricted_single.py` is
 `migration_work/khn26_single32_native_ci_3h`.
-`unrestricted_multi.py` expects
+and for `unrestricted_multi.py` is
 `migration_work/khn26_multi32_bubble_ci_12h`.
-They validate the frozen gate/source hashes. Recreating a short test in another
-directory does not automatically substitute it into these launchers.
+They validate the frozen gate/source hashes. Select a newly prepared matching
+gate explicitly when source or runner hashes change. The old gate path's
+`12h` label is preserved history, not the new long-run duration.
 The stop controller requires a running original supervisor and Fortran output
 already beyond minute 180. It intentionally terminates driver processes;
 it is not a normal solver completion or a new three-hour launch interface.
@@ -51,7 +54,7 @@ it is not a normal solver completion or a new three-hour launch interface.
 | Script / group | Status and purpose |
 | --- | --- |
 | `ci_validation.py` | Former fixed-workspace 32/32 gate/long-run queue; superseded and stopped |
-| `full_sequence.py` | Former 96/32 single-three-hour then multi-twelve-hour queue; stopped |
+| `full_sequence.py` | Former 96/32 queue; stopped. Any future prepared sequence now selects three hours for both cases. |
 | `stage_budget.py` | Earlier diagnostic instrumentation; not part of the completed native three-hour comparisons and not required by current launchers |
 | `benchmark_*`, `profile_*`, `serial_timing.py` | Earlier efficiency work; outside the current scientific comparison workflow |
 | `run.py`, `trajectory.py`, `single.py`, `diagnose_single.py`, `plot_single.py`, `review_single.py` | Earlier integration, six-hour and dry singleACE checks; some supply shared helpers |
