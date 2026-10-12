@@ -1,0 +1,95 @@
+{
+  "source_work": "/scratch/peter50504/ACE/migration_work/khn26_p3_three_hour",
+  "precision": "Fortran real64 model states",
+  "input_sha256": "09408f4d0343afd8659df82f8f1cfe5dc59308cff150fb2bcfd569b1b8794d35",
+  "saved_states": 181,
+  "model_duration_seconds": 10800,
+  "field_order": [
+    "MF",
+    "theta",
+    "qv",
+    "qc",
+    "nc",
+    "qr",
+    "nr",
+    "qi",
+    "ni",
+    "qrim",
+    "brim"
+  ],
+  "scope": "Descriptive minute-saved state plots, no scientific acceptance threshold or closed water budget.",
+  "cases": {
+    "singleACE": {
+      "state_sha256": "d46c7f3853c3c36a0a2c8ba08e5a4931829c478f7a7490594d836a004fdb0c2e",
+      "peak_absolute_MF": {
+        "time_minutes": 13,
+        "ACE_column": 1,
+        "height_km": 4.5,
+        "value": 9.25926059823169
+      },
+      "all_saved_values_finite": true,
+      "field_minimum": [
+        -3.230118242850526,
+        296.5873653430524,
+        2.3390416080131745e-06,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "field_maximum": [
+        9.25926059823169,
+        1227.7463788382108,
+        0.01859940728091531,
+        0.004953911766122755,
+        285448813.1860017,
+        0.020381818966205556,
+        418751.69644863333,
+        0.0005366333399054645,
+        602877.263742239,
+        0.0005270145517276721,
+        6.674832019448301e-07
+      ]
+    },
+    "multiACE": {
+      "state_sha256": "c91e1171f9d840ad1254a4f72e0b3b695caf1785254ae205ab1f0e5db3503044",
+      "peak_absolute_MF": {
+        "time_minutes": 22,
+        "ACE_column": 1,
+        "height_km": 6.5,
+        "value": 5.186239073912989
+      },
+      "all_saved_values_finite": true,
+      "field_minimum": [
+        -1.8667221638153462,
+        296.7361984166979,
+        2.2765465202421543e-06,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "field_maximum": [
+        5.186239073912989,
+        1227.7463788382108,
+        0.01859940728091531,
+        0.003691065819607006,
+        259676569.00428665,
+        0.00797224886771374,
+        332736.3847997386,
+        0.00043178511990582015,
+        624178.5481670157,
+        0.00039460208824975226,
+        8.967463623842497e-07
+      ]
+    }
+  }
+}

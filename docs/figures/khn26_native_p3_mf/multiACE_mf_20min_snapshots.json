@@ -1,0 +1,161 @@
+{
+  "case": "multiACE",
+  "left": "Fortran native precipitation real64",
+  "right": "Fortran P3 real64",
+  "native_workspace": "/scratch/peter50504/ACE/migration_work/khn26_multi_weno_three_hour",
+  "p3_workspace": "/scratch/peter50504/ACE/migration_work/khn26_p3_three_hour",
+  "native_state_sha256": "be233ddf6596c96f150be015898a33d69e901969b06cc85124d30d5a5f7559fc",
+  "p3_state_sha256": "c91e1171f9d840ad1254a4f72e0b3b695caf1785254ae205ab1f0e5db3503044",
+  "native_configuration_sha256": "aa5909c880109f39ec35204b36bd600e7162ccc02fc8472299135a4a4d1722c0",
+  "p3_configuration_sha256": "82d775432181cf9db0aff73fd49c801e76363dd1d67edd9921ebb53930f46e36",
+  "input_sha256": "09408f4d0343afd8659df82f8f1cfe5dc59308cff150fb2bcfd569b1b8794d35",
+  "dt_seconds": 4,
+  "bubble_delta_K": 1,
+  "saved_states": 181,
+  "run_duration_seconds": 10800,
+  "snapshot_minutes": [
+    20,
+    40,
+    60,
+    80,
+    100,
+    120,
+    140,
+    160
+  ],
+  "height_km": [
+    0,
+    20
+  ],
+  "color_limits": [
+    -1,
+    1
+  ],
+  "panel_height_to_width": [
+    1,
+    5
+  ],
+  "x_axis": "ACE column index 1\u2013101; unequal physical widths are not represented as distance",
+  "initial_MF_matches": true,
+  "initial_MF_amplitude_native": 0.0,
+  "initial_MF_amplitude_P3": 0,
+  "initial_max_abs_MF_native_P3": [
+    0.0,
+    0.0
+  ],
+  "records": [
+    {
+      "implementation": "Fortran",
+      "time_minutes": 20,
+      "mf_min": -1.7801418358249463,
+      "mf_max": 7.386872178051113,
+      "mf_sha256": "a724222041125d2858bb5bf12739b90665fd1d42e22a11fcce158f69b678bca8"
+    },
+    {
+      "implementation": "Fortran P3",
+      "time_minutes": 20,
+      "mf_min": -1.542091005886042,
+      "mf_max": 4.851072555068159,
+      "mf_sha256": "ffc77149da3ee9ff8ca5a339809ee57b6ae6232c4445f78af3383ac7eec26f25"
+    },
+    {
+      "implementation": "Fortran",
+      "time_minutes": 40,
+      "mf_min": -0.9608793154959292,
+      "mf_max": 4.559543629742589,
+      "mf_sha256": "a359bc2227841c004f92829d4c971913d42de97b23411c35e1e17a2fc37c87e1"
+    },
+    {
+      "implementation": "Fortran P3",
+      "time_minutes": 40,
+      "mf_min": -0.9747364877849976,
+      "mf_max": 1.1364405749931124,
+      "mf_sha256": "01c453520046a93e5ef336be2668bfdd9f23048ca379dc42d9356caa4a9e8e83"
+    },
+    {
+      "implementation": "Fortran",
+      "time_minutes": 60,
+      "mf_min": -0.6396323480722246,
+      "mf_max": 1.8196600704498123,
+      "mf_sha256": "15a790b5307e7ae88e307483192309e8fe623c177ddcb1e1f642b497d35731be"
+    },
+    {
+      "implementation": "Fortran P3",
+      "time_minutes": 60,
+      "mf_min": -0.6494749453029962,
+      "mf_max": 0.9569813225068748,
+      "mf_sha256": "03568a9440658692968c9d69d2d673ce79cba98d219fc698d3ca6e4788099f0d"
+    },
+    {
+      "implementation": "Fortran",
+      "time_minutes": 80,
+      "mf_min": -0.43608621806583625,
+      "mf_max": 1.5778636166006137,
+      "mf_sha256": "8a7ea868234dc7ef8403836ef598217be2de33d6e8ce94c8de38769dd6dc377b"
+    },
+    {
+      "implementation": "Fortran P3",
+      "time_minutes": 80,
+      "mf_min": -0.41995348261705295,
+      "mf_max": 0.6427748239474245,
+      "mf_sha256": "54b000e6bba9fd6b3ca3d0ba31e88946398f44519041cf5809612297aabaa4eb"
+    },
+    {
+      "implementation": "Fortran",
+      "time_minutes": 100,
+      "mf_min": -1.076307115383077,
+      "mf_max": 1.5485381023418319,
+      "mf_sha256": "835366c0b9c0005347decdd9fa09101ae4d7257b1f5d0efe88dee5ec8e432659"
+    },
+    {
+      "implementation": "Fortran P3",
+      "time_minutes": 100,
+      "mf_min": -0.38415477233723005,
+      "mf_max": 0.500480379004916,
+      "mf_sha256": "501512e328ea6059ee05faca3d7c7a1f2661f2826c0a01fb856d39ec7fef5dcc"
+    },
+    {
+      "implementation": "Fortran",
+      "time_minutes": 120,
+      "mf_min": -0.646622023870407,
+      "mf_max": 1.3628391871030716,
+      "mf_sha256": "6f7ba7b1a47f8122ecc57231ed1bf22ac306286f2595cdc31b6d5a7e3d982193"
+    },
+    {
+      "implementation": "Fortran P3",
+      "time_minutes": 120,
+      "mf_min": -0.5380985424189185,
+      "mf_max": 1.2013833408453845,
+      "mf_sha256": "266c63694c1911602a984b0de6cd67ba4e6c2697640db3a423cb4c555a34fcde"
+    },
+    {
+      "implementation": "Fortran",
+      "time_minutes": 140,
+      "mf_min": -1.024470457790155,
+      "mf_max": 2.6262387301995247,
+      "mf_sha256": "277472f8d5781ddbd2e20e63bf90b94ab30939e6ed17ab2831d68ec76d8521ef"
+    },
+    {
+      "implementation": "Fortran P3",
+      "time_minutes": 140,
+      "mf_min": -0.5529513928853046,
+      "mf_max": 1.075183068522369,
+      "mf_sha256": "f3dedca3fb04011c2816a7f1396b40a45c3b19874b679c37434665c72971172d"
+    },
+    {
+      "implementation": "Fortran",
+      "time_minutes": 160,
+      "mf_min": -0.8835422244164788,
+      "mf_max": 5.957098473798853,
+      "mf_sha256": "2f00d6c2bbe1cc0686085749e032e04fd687ef7e458e80de8e985ea2df708666"
+    },
+    {
+      "implementation": "Fortran P3",
+      "time_minutes": 160,
+      "mf_min": -0.6231696133850358,
+      "mf_max": 0.7734276622875723,
+      "mf_sha256": "203835417b3195542b959cfd0ba9cab0e2322d6e832639b71b80e57db69a8e74"
+    }
+  ],
+  "scope": "Descriptive MF-only comparison of preserved runs with different physics; not a precision-error or physics-only attribution test."
+}
