@@ -1,0 +1,75 @@
+{
+  "fortran_known_flux_fixture_passed": true,
+  "partial_minute_does_not_emit": true,
+  "invalid_clock_and_truncated_records_rejected": true,
+  "instrumented_module_compile_count": 4,
+  "matlab_fixture_prepared": true,
+  "matlab_fixture_executed": true,
+  "no_model_integration": true,
+  "matlab_known_flux_fixture_passed": true,
+  "matlab_top_slot_excluded": true,
+  "runner_sha256": "2cbb429e8431eba904db2c9c56ba76f4490b56350cab559d04e7f7fc6511cdfe",
+  "check_script_sha256": "e1ff413d320b1c0c4e9bf724ab02dd50b85a3d9a281a4e145e765eeed5ebd5fa",
+  "fixture_sha256": {
+    "fortran/check.f90": "f19e9c3ebff2a95185db3321883178d05ef6b8fa8b8bcb924fa978044bb5347d",
+    "fortran/precip_accumulation.bin": "fc272ccfd3842a63b998e9bb67d9c82af2df8c85d883d415398405c8e33be1fa",
+    "matlab/check.m": "3d071538b197c367f8ca4823bfc8fc0616575c3929a2ff2979d3c55181f9b29b",
+    "matlab/precip_accumulation.bin": "20acc6db41271d4f88feef1590ea897744983fc69bdd3d6556a5a3810640a169"
+  },
+  "fortran_expected_minute_total_mm": [
+    [
+      0,
+      0
+    ],
+    [
+      1.5,
+      2
+    ],
+    [
+      2,
+      5
+    ]
+  ],
+  "fortran_expected_cumulative_total_mm": [
+    [
+      0,
+      0
+    ],
+    [
+      1.5,
+      2
+    ],
+    [
+      3.5,
+      7
+    ]
+  ],
+  "matlab_expected_minute_total_mm": [
+    [
+      0,
+      0
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      4
+    ]
+  ],
+  "matlab_expected_cumulative_total_mm": [
+    [
+      0,
+      0
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      3,
+      6
+    ]
+  ]
+}
