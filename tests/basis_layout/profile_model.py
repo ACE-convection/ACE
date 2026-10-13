@@ -6,8 +6,11 @@ import json
 from pathlib import Path
 import subprocess
 import time
+import sys
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0,str(ROOT/'tests/khn26'))
+from oop_regression import response_code
 BASE = ROOT / 'migration_work/khn26_single_3h'
 PACKED = ROOT / 'migration_work/khn26_packed_model'
 LABELS = ['initialization', 'tendency_total', 'transport_and_thermodynamics',
@@ -56,6 +59,7 @@ enddo
 end subroutine
 '''
     source = source.replace('\ncontains\n\nsubroutine ace_driver', '\n'+helpers+'\nsubroutine ace_driver', 1)
+    contextual = "type :: ace_response_t" in source
     for slot, start, end in [
         (1, 'if (.not.all(ieee_is_finite(environment_tv))', 'end subroutine ace_initialization'),
         (2, '! initialization\ndo k=1,nz', 'end subroutine ace_tendency'),
@@ -65,6 +69,9 @@ end subroutine
         (9, 'if (first) then\n  allocate(damp(nz))', 'end subroutine ImDamp'),
         (10, 'yi = X\n\ndo while', '\n\ncontains\nsubroutine apply_native_precipitation()'),
         (11, 'allocate(packed_pmb(', 'call move_alloc(packed_pmb,PMB)')]:
+        if contextual:
+            start, end = response_code(start), response_code(end)
+            end = end.replace("end subroutine ace_initialization", "end subroutine ace_initialization_context").replace("end subroutine ace_tendency", "end subroutine ace_tendency_context")
         source = replace(source, start, f'call profile_start({slot})\n'+start)
         if slot == 11:
             source = replace(source, end, end+f'\ncall profile_end({slot})')
@@ -79,8 +86,8 @@ end subroutine
                      '  if (rkstage==1) then\n    call profile_start(4)\n')
     source = replace(source, '    enddo \n  endif\n\n  Tv(',
                      '    enddo \n    call profile_end(4)\n  endif\n\n  Tv(')
-    source = replace(source, 'packed_F=transpose(coarse_F)',
-                     'call profile_start(6)\npacked_F=transpose(coarse_F)\ncall profile_end(6)\ncall profile_start(7)')
+    source = replace(source, response_code('packed_F=transpose(coarse_F)') if contextual else 'packed_F=transpose(coarse_F)',
+                     response_code('call profile_start(6)\npacked_F=transpose(coarse_F)\ncall profile_end(6)\ncall profile_start(7)') if contextual else 'call profile_start(6)\npacked_F=transpose(coarse_F)\ncall profile_end(6)\ncall profile_start(7)')
     source = replace(source, '!$omp end parallel do',
                      '!$omp end parallel do\ncall profile_end(7)')
     return replace(source, '!dXdt(2:ncols,:,:)=0.', 'dXdt(2:ncols,:,:)=0.')
@@ -96,10 +103,13 @@ def run(work, repeats, duration_seconds=4, production=False, output_block=1):
     candidate = source.read_text()
     if output_block != 1:
         from analyze_serial_simd import kernel
-        begin = candidate.index('do i=1,ncols\n  do k=1,coarse_nz+1\n    value=0.')
+        contextual = 'type :: ace_response_t' in candidate
+        anchor = 'do i=1,ncols\n  do k=1,coarse_nz+1\n    value=0.'
+        begin = candidate.index(response_code(anchor) if contextual else anchor)
         end = candidate.index('!$omp end parallel do', begin)
         original_loop = candidate[begin:end]
-        blocked_loop, declaration = kernel(original_loop, output_block)
+        blocked_loop, declaration = kernel(original_loop.replace("response%", ""), output_block)
+        if contextual: blocked_loop = response_code(blocked_loop)
         candidate = replace(candidate, 'real*8 :: partial,value', declaration)
         candidate = replace(candidate, original_loop, blocked_loop)
     module = work/'profile_module.F'; module.write_text(instrument(candidate))

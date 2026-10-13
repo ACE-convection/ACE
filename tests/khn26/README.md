@@ -526,7 +526,13 @@ and error-contract checks plus fresh-process 600 s dry/native comparisons
 using the frozen baseline executable without modifying its workspace.
 
 [OOP-2 results](oop_stage2_results.json) record the completed initialization
-ownership gates. Numerical runtime scope remains GNU real64/OpenMP32; the
+ownership gates. OOP-3a moves response tables, coarse grids/work arrays and
+flags into a private model context, with explicit context propagation and
+compatibility dispatch for old procedural tests. Its isolated observer checks
+that model initialization leaves legacy PMB unallocated. The legacy basis
+capture adapter separately checks its coarse forcing against the frozen
+first RK frame. [OOP-3a results](oop_stage3a_results.json) record those gates.
+Numerical runtime scope remains GNU real64/OpenMP32; the
 real32/serial compatibility matrix certifies compilation and linking only.
 Keep one model initialized once per fresh process until response/cache and
 P3 lifecycle migration is validated. Commands and external data requirements

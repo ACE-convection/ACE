@@ -74,7 +74,8 @@ allocate(Tr(ncols,nz),q(ncols,nz),ql(ncols,nz),qi(ncols,nz),rh4(ncols,nz),b4(nco
 call model%with_legacy_state(run_model)
 
 contains
-subroutine run_model(X,Ref,A,B,forcing,Tv0,input_coarse_z,input_coarse_ze)
+subroutine run_model(X,Ref,A,B,forcing,Tv0,input_coarse_z,input_coarse_ze,response)
+type(ace_response_t), intent(inout) :: response
 real, intent(inout) :: X(:,:,:),forcing(:,:)
 real, intent(in) :: Ref(:,:),A(:),B(:),Tv0(:)
 real(real64), intent(in) :: input_coarse_z(:),input_coarse_ze(:)
@@ -98,7 +99,7 @@ endif
 if (steps>0) then
   do i=1,steps
     te=ts+dt
-    call ace_driver(ncols,nz,n_weno,n_prog,X,Ref,A,B,ts,te,dt,forcing,precipitation_enabled)
+    call ace_driver(ncols,nz,n_weno,n_prog,X,Ref,A,B,ts,te,dt,forcing,precipitation_enabled,response=response)
     if (len_trim(state_output)>0) write(state_unit) real(X,real64)
   enddo
   if (len_trim(state_output)>0) close(state_unit)
@@ -113,7 +114,7 @@ if (io_status/=0) error stop 'Cannot open model output; provide an existing outp
 n=1
 do t=1,intervals
   call write_state(X,Ref,Tv0)
-  call ace_driver(ncols,nz,n_weno,n_prog,X,Ref,A,B,ts,te,dt,forcing,precipitation_enabled)
+  call ace_driver(ncols,nz,n_weno,n_prog,X,Ref,A,B,ts,te,dt,forcing,precipitation_enabled,response=response)
   if (len_trim(state_output)>0) write(state_unit) real(X,real64)
   ts=te; te=ts+dt*real(ndt)
 enddo

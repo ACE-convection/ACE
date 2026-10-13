@@ -97,8 +97,8 @@ def prepare(work,initial_mf,*,single=False,duration=LONG_DURATION_SECONDS):
     if single:module=replace_once(module,'!dXdt(2:ncols,:,:)=0.','dXdt(2:ncols,:,:)=0.')
     module=replace_once(module,'call precip_sinks(ncols,nz,n_prog,Ref(:,7),K1(:,:,1:2))',
                         'call precip_sinks(ncols,nz,n_prog,Ref(:,7),K1(:,:,1:2))\ncall dump_multi_precip(ncols,nz,K1(:,:,1:2))')
-    module=replace_once(module,'end subroutine ace_tendency',
-                        'call dump_multi_tendency(ncols,nz,n_prog,dXdt)\nend subroutine ace_tendency')
+    module=replace_once(module,'end subroutine ace_tendency_context',
+                        'call dump_multi_tendency(ncols,nz,n_prog,dXdt)\nend subroutine ace_tendency_context')
     module=replace_once(module,'end module',"""
 subroutine dump_multi_tendency(ncols,nz,n_prog,tendency)
 integer,intent(in)::ncols,nz,n_prog

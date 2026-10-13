@@ -83,7 +83,8 @@ def run(work, repeats, cpu):
     work.mkdir(parents=True, exist_ok=False)
     (work/'analyze_serial_simd.py').write_bytes(Path(__file__).read_bytes())
     source = ROOT/'fortran/src/ace_module.F'
-    original = source.read_text()
+    # Strip ownership qualifiers only for the isolated standalone kernel.
+    original = source.read_text().replace("response%", "")
     start = original.index('do i=1,ncols\n  do k=1,coarse_nz+1\n    value=0.')
     loop = original[start:original.index('!$omp end parallel do', start)]
     common = ['-ffree-form','-ffree-line-length-none','-fdefault-real-8',

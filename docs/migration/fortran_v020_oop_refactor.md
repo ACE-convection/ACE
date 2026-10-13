@@ -494,3 +494,105 @@ The separate `ACE_FORTRAN` checkout currently has local modifications to
 `makefile` and `src/test.F`; they are outside the committed reference history
 and must remain untouched. They are not included by this decision. The final
 history merge has not been executed during this inspection.
+
+## OOP-3a response ownership (2026-10-13)
+
+The developer authorized OOP-3a after commits `dcfbd47` (OOP-2) and `b6f45a3`
+(history integration plan). This stage transfers the response context only;
+it does not implement OOP-3b integration ownership or the final history merge.
+
+`ace_t` now privately owns an `ace_response_t`. The opaque public context
+has private coarse_nz/coarse_ratio, coarse_z/coarse_ze, coarse_F/dwdt,
+binary64 packed PMB/PMDv/PMD, slab_geometry, zero_ref_buoyancy, Wbar_eq_zero
+and momentum switches. Initial Boolean values match the original module
+SAVE defaults; initialization still assigns flags at the original points.
+Retained input/coarse-grid conversion arrays from OOP-2 are distinct from
+the runtime response grids, preserving their prior lifetime and copy order.
+
+`ace_initialization`, `ace_driver` and the test-exposed `ace_tendency` retain
+their original positional arguments and add a trailing optional opaque
+response argument. Thin dispatch wrappers select either the supplied context
+or a separate `legacy_response` for old procedural test callers. Private
+`*_context` implementations require the context explicitly. The model's
+initialization passes `self%response`; its transitional callback passes that
+same context to the driver and all nine SSPRK tendency stages. The model path
+does not allocate or read the legacy response tables. No pointers, aliases to
+module tables or passive full-table copies are introduced.
+
+The original PMB input allocation, packing transpose, move_alloc lifetime,
+vertical-then-forcing reduction, momentum additions, interpolation branches,
+expression grouping and RK/physics/damping sequence remain intact. OpenMP
+still uses collapse(2), default(none), static scheduling and the same private
+loop/reduction scalars. Its shared list now names the response object instead
+of separate global response fields. Automatic tendency workspace dimensions
+read the same coarse size through the context. No array order or kind changes.
+
+A source audit removes only context qualification, helper/argument plumbing
+and the corresponding OpenMP shared-list spelling, then recovers the three
+pre-stage procedure bodies exactly (apart from trailing whitespace). Numerical
+regression is still required; this audit alone is not equivalence evidence.
+
+Thermal reference_tv/Ta/q/ql/qi, damping first/damp, P3 directory/wrapper/library
+state and the integration clock remain in their OOP-2 owners. The context
+is therefore not a multi-model lifecycle guarantee. Continue using one model,
+initialized once, per fresh process. The callback's previously documented GNU
+executable-stack requirement remains until later driver extraction.
+
+The isolated OOP observer maps original labels/shapes to actual context arrays
+and hooks the private implementations, not the dispatch wrappers. A test-only
+assertion rejects a model path that allocated legacy PMB. Full raw tables are
+still observed once, and all baseline comparison artifacts retain their names.
+The observer remains backward-compatible with frozen pre-context sources.
+
+Single/multiACE adapters target the new tendency implementation and forward
+initialization options with the explicit model context. Legacy basis capture
+writes coarse_F through an isolated module helper, with no production getter.
+Profiler anchors follow the context implementation. Standalone performance
+kernel generators remove ownership qualification from their extracted test
+loop; this does not alter the production kernel or relax their pinned-input
+contracts. No new benchmark or optimized production algorithm is introduced.
+
+Use the same candidate, compatibility, analysis and supplemental commands as
+OOP-2, with a fresh workspace such as `migration_work/fortran_v020_oop_stage3a`.
+The frozen OOP-0 sources/artifacts/executable remain read-only. Record adapter
+checks separately from model acceptance. Stop for review after OOP-3a; do not
+commit or start OOP-3b automatically.
+
+### Completed OOP-3a gates (2026-10-13)
+
+All 24 candidate model commands passed. Plain/observed neutrality,
+production/checked prefix identity and frozen OOP-0 preservation all pass.
+All 195 binary artifacts match exactly, including packed/momentum operator
+arrays, initialization, all nine raw RK tendencies and response/thermal
+observations, native sinks/P3 fluxes, damping, state streams and nine-field
+normal output. The isolated ownership assertion passed for every observed
+model command: legacy PMB remained unallocated. No tolerance was changed.
+
+Postprocessing passed 165 observation-layout/frame-count checks and validated
+18 state streams and normal real32 output. All nine supplemental gates passed:
+default shared/legacy/unused-lookup initialization, four error contracts and
+150-step (600 s) dry/native state streams. Both 151-state trajectories are
+bitwise identical to the versioned-hash-verified frozen executable and contain
+finite values with nonnegative qt. The supplemental runner's exact executed
+source is snapshotted before launch; no interrupted/resumed run was needed.
+
+All four uninstrumented real32/real64 serial/OpenMP compilation/link cases and
+empty public-type clients passed. SingleACE probe/driver and production/checked
+multiACE adapter builds passed. The legacy procedural initialization/tendency
+capture produces coarse_F identical to the frozen first RK frame; profiler
+instrumentation compiled successfully. Legacy initialization also continues
+to reject unavailable PMDv/PMD when the corresponding optional switch enables
+them. These checks add no benchmark, long-experiment, real32/serial runtime
+or multi-instance acceptance.
+
+[Stage-3a results](../../tests/khn26/oop_stage3a_results.json) preserve source,
+input, compiler and command provenance, all comparisons, artifact/executable/
+runner hashes, ownership assertion scope, source-body audit, supplemental
+state validity and adapter/guard evidence. The raw workspace is
+`migration_work/fortran_v020_oop_stage3a`. Current production source matches
+its executed snapshot; input/interpolation/third-party P3 source is unchanged.
+Frozen OOP-0 and completed OOP-2 evidence remains intact.
+
+OOP-3a is complete. OOP-3b integration/cache ownership and the separately
+approved final reference-history integration remain later stages. No commit,
+push, tag, main merge or reference-history merge was performed in OOP-3a.

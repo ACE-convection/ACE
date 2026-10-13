@@ -1,7 +1,7 @@
 ! Export the real coarse forcing from the initial KHN26 singleACE state.
 program capture
 use ace_input
-use ace_module, only: ace_initialization,ace_tendency,coarse_F
+use ace_module, only: ace_initialization,ace_tendency,capture_coarse_forcing
 use iso_fortran_env, only: real64
 implicit none
 integer :: nc,nz,nb,u,header(3),k
@@ -29,6 +29,6 @@ call ace_initialization(nc,nz,nb,cz,ce,trim(input_file),tv,netcdf_input=.true.)
 call ace_tendency(nc,nz,2,3,4._real64,area,perim,x,ref,dx,1)
 open(newunit=u,file=trim(output_file),access='stream',form='unformatted',status='new')
 write(u) nc,nb
-write(u) coarse_F
+call capture_coarse_forcing(u)
 close(u)
 end program

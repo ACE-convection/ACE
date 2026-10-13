@@ -6,10 +6,14 @@ differences, P3 edge-case failures and external-data requirements. Minute
 precipitation accumulation is supplied by the diagnostic runner.
 
 On the OOP refactor branch, `ace_t%initialize` owns the initial model state,
-reference/profile arrays and geometry. CLI parsing stays in `test.F`; its
-existing integration/output path borrows the private arrays through the
-synchronous `with_legacy_state` callback. Response tables, integration thermal
-caches, damping and P3 library state still belong to the procedural module.
+reference/profile arrays, geometry and an `ace_response_t` context containing
+the coarse grids, packed response tables, work arrays and response flags.
+CLI parsing stays in `test.F`; its existing integration/output path borrows
+the private arrays and explicit response context through the synchronous
+`with_legacy_state` callback. Old procedural callers may omit the optional
+response argument and use a separate legacy context. The model path uses its
+own context, without a shared PMB alias or a full-table copy. Integration
+thermal caches, damping and P3 library state still belong to the procedural module.
 Use one model, initialized once, per fresh process until later lifecycle
 stages are validated. The object's initialization scratch is distinct from
 the integration caches and the driver's diagnostic buffers. See the

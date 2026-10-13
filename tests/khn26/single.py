@@ -56,8 +56,8 @@ function X = timeint(""")
   if (self%zm(k)<=1000.) self%X(1,k,1)={case['initial_mf_amplitude']}*sin(4.*atan(1.)*self%zm(k)/1000.)
 enddo
 call set_p3_lookup_directory(trim(p3_directory))""")
-    module=replace_once(module,'self%Tv0,netcdf_input=.true.)',
-                        f"self%Tv0,netcdf_input=.true.,Wbar_eq_zero_input=.{str(mean).lower()}.)")
+    module=replace_once(module,'self%Tv0,netcdf_input=.true.,response=self%response)',
+                        f"self%Tv0,netcdf_input=.true.,Wbar_eq_zero_input=.{str(mean).lower()}.,response=self%response)")
     (work/'ace_module_single.F').write_text(module)
     (work/'single_driver.F').write_text(driver)
     for name,before,after in [('matlab',matlab_original,matlab),('module',module_original,module),('driver',driver_original,driver)]:

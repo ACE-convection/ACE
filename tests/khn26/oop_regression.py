@@ -9,6 +9,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import shlex
 import subprocess
@@ -37,6 +38,25 @@ def replace_once(source, old, new):
     return source.replace(old, new, 1)
 
 
+
+RESPONSE_FIELDS = ("coarse_nz", "coarse_ratio", "coarse_z", "coarse_ze", "coarse_F", "dwdt", "PMB", "PMDv", "PMD",
+                   "slab_geometry", "zero_ref_buoyancy", "Wbar_eq_zero", "turn_off_DHv", "turn_off_DHh")
+
+
+def response_code(source):
+    """Map test hook expressions to context components, preserving literals/comments."""
+    chunks = re.split(r"('(?:[^']|'')*'|\"(?:[^\"]|\"\")*\"|![^\n]*)", source)
+    pattern = r"\b(" + "|".join(RESPONSE_FIELDS) + r")\b"
+    return "".join(c if i % 2 else re.sub(pattern, lambda m: "response%" + m[0], c)
+                   for i, c in enumerate(chunks))
+
+
+def candidate_stage(source):
+    if "type :: ace_response_t" in source:
+        return "OOP-3a"
+    return "OOP-2" if "procedure :: initialize => model_initialize" in source else "OOP-1"
+
+
 def observe(source):
     declarations = """
 interface oop_dump
@@ -45,7 +65,7 @@ end interface
 """
     source = replace_once(source, "\ncontains\n\nsubroutine ace_driver",
                           declarations + "\ncontains\n\nsubroutine ace_driver")
-    source = replace_once(source, "end subroutine ace_initialization", """
+    initialization_hook = """
 call oop_dump('reference_tv', reference_tv)
 call oop_dump('coarse_z', coarse_z)
 call oop_dump('coarse_ze', coarse_ze)
@@ -58,8 +78,12 @@ block
     if (allocated(PMD)) call oop_dump('PMD',PMD)
   endif
 end block
-end subroutine ace_initialization""")
-    source = replace_once(source, "end subroutine ace_tendency", """
+end subroutine ace_initialization"""
+    contextual = "type :: ace_response_t" in source
+    if contextual:
+        initialization_hook = response_code(initialization_hook).replace("end subroutine ace_initialization", "end subroutine ace_initialization_context")
+    source = replace_once(source, "end subroutine ace_initialization_context" if contextual else "end subroutine ace_initialization", initialization_hook)
+    tendency_hook = """
 call oop_dump('tendency',dXdt)
 call oop_dump('rho0B',rho0B)
 call oop_dump('F',F)
@@ -69,7 +93,13 @@ call oop_dump('Ta_stage',Ta)
 call oop_dump('q_stage',q)
 call oop_dump('ql_stage',ql)
 call oop_dump('qi_stage',qi)
-end subroutine ace_tendency""")
+end subroutine ace_tendency"""
+    if contextual:
+        tendency_hook = response_code(tendency_hook).replace("end subroutine ace_tendency", "end subroutine ace_tendency_context")
+    source = replace_once(source, "end subroutine ace_tendency_context" if contextual else "end subroutine ace_tendency", tendency_hook)
+    if contextual:
+        source = replace_once(source, "! Synchronous bridge to the unchanged procedural integration/output path.",
+                              "if (allocated(legacy_response%PMB)) error stop 'Model used legacy response storage'\n! Synchronous bridge to the unchanged procedural integration/output path.")
     source = replace_once(source, "  ! call physics here", "  call oop_dump('before_physics',X)\n  ! call physics here")
     source = replace_once(source, "  ! implicit damping ", "  call oop_dump('after_physics',X)\n  ! implicit damping ")
     source = replace_once(source, "  call ImDamp(ncols,nz,n_prog,X,Ref,dt)",
@@ -283,6 +313,7 @@ def compile_compatibility(work):
     libs = shlex.split(subprocess.check_output(["nf-config", "--flibs"], text=True))
     directory = work/"compatibility"
     directory.mkdir(exist_ok=False)
+    (directory/"executed_runner.py").write_bytes(Path(__file__).read_bytes())
     client = directory/"type_client.f90"
     client.write_text("program type_client\nuse ace_module, only: ace_t\nimplicit none\ntype(ace_t) :: model\nend program\n")
     report = {"cases": {}, "no_model_integration": True}
@@ -446,7 +477,7 @@ def run(work, lookup, candidate_baseline=None):
         preservation = compare_dirs(candidate_baseline/"runs", work/"runs")
         write(work/"baseline_comparison.json", preservation)
         assert preservation["passed"], "Candidate diverged from frozen OOP-0 baseline"
-    result = {"passed": True, "stage": ("OOP-2" if "procedure :: initialize => model_initialize" in originals["ace_module.F"].decode() else "OOP-1") if frozen else "OOP-0", "configuration": config, "comparisons": reports,
+    result = {"passed": True, "stage": candidate_stage(originals["ace_module.F"].decode()) if frozen else "OOP-0", "configuration": config, "comparisons": reports,
               "baseline_preservation": preservation, "artifacts": artifacts,
               "scope": "GNU real64 OpenMP 32; default 0.25 K bubble; dt=4; initialization, ten-step prefix, 60 s interval outputs; no three-hour rerun."}
     write(work/"results.json", result)
