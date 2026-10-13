@@ -8,15 +8,25 @@ precipitation accumulation is supplied by the diagnostic runner.
 On the OOP refactor branch, `ace_t%initialize` owns the initial model state,
 reference/profile arrays, geometry and an `ace_response_t` context containing
 the coarse grids, packed response tables, work arrays and response flags.
-CLI parsing stays in `test.F`; its existing integration/output path borrows
-the private arrays and explicit response context through the synchronous
-`with_legacy_state` callback. Old procedural callers may omit the optional
-response argument and use a separate legacy context. The model path uses its
-own context, without a shared PMB alias or a full-table copy. Integration
-thermal caches, damping and P3 library state still belong to the procedural module.
+`ace_t%integrate(te)` uses the object's dt, persistent clock, precipitation
+option and private thermal cache (reference_tv/Ta/q/ql/qi). RK workspace stays
+automatic; cache allocation, stage-one refresh, later-stage reuse and post-RK
+native refresh retain the v0.20 sequence. Full-dt target overshoot is preserved.
+The interval driver explicitly passes `reset_clock_to_target=.true.` to
+preserve its historical `ts=te` assignment, including fractional-dt rounding;
+standalone calls retain the accumulated clock.
+
+CLI parsing and output scheduling stay in `test.F`. Validation/serialization
+borrow the private arrays through the synchronous `with_legacy_state` callback;
+integration occurs after callbacks return. Procedural integration/tendency
+must not be invoked inside a model callback: old procedural interfaces use a
+separate legacy thermal cache, with an optional response argument for existing
+test callers. The model uses its own contexts without shared aliases or full
+state/table copies. Damping and P3 wrapper/library state remain process-wide.
 Use one model, initialized once, per fresh process until later lifecycle
-stages are validated. The object's initialization scratch is distinct from
-the integration caches and the driver's diagnostic buffers. See the
+stages are validated. Initialization scratch, integration caches and driver
+diagnostic buffers remain distinct. Internal output callbacks still require
+an executable stack under the validated GNU toolchain. See the
 [staged OOP plan](../docs/migration/fortran_v020_oop_refactor.md).
 
 `src/test.F` defaults to `../data/input/manaus1342_khn26.nc`. Shared slab

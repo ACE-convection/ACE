@@ -95,8 +95,11 @@ def prepare(work,initial_mf,*,single=False,duration=LONG_DURATION_SECONDS):
     module=replace_once(original,'\ncontains\n\nsubroutine ace_driver',
                         '\ninteger,save::multi_tendency_unit=0,multi_precip_unit=0\n\ncontains\n\nsubroutine ace_driver')
     if single:module=replace_once(module,'!dXdt(2:ncols,:,:)=0.','dXdt(2:ncols,:,:)=0.')
-    module=replace_once(module,'call precip_sinks(ncols,nz,n_prog,Ref(:,7),K1(:,:,1:2))',
-                        'call precip_sinks(ncols,nz,n_prog,Ref(:,7),K1(:,:,1:2))\ncall dump_multi_precip(ncols,nz,K1(:,:,1:2))')
+    sink_call = ('call precip_sinks_context(thermal,ncols,nz,n_prog,Ref(:,7),K1(:,:,1:2))'
+                 if 'type :: ace_thermal_t' in module else
+                 'call precip_sinks(ncols,nz,n_prog,Ref(:,7),K1(:,:,1:2))')
+    module=replace_once(module,sink_call,
+                        sink_call+'\ncall dump_multi_precip(ncols,nz,K1(:,:,1:2))')
     module=replace_once(module,'end subroutine ace_tendency_context',
                         'call dump_multi_tendency(ncols,nz,n_prog,dXdt)\nend subroutine ace_tendency_context')
     module=replace_once(module,'end module',"""

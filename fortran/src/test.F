@@ -71,21 +71,9 @@ call model%initialize(shared_input,input_file,p3_directory,n_weno,physics,dt,int
                       ncols,nz,ncoarse,n_prog,khn26_case,precipitation_enabled)
 allocate(Xout(ncols+1,nz,11))
 allocate(Tr(ncols,nz),q(ncols,nz),ql(ncols,nz),qi(ncols,nz),rh4(ncols,nz),b4(ncols,nz))
-call model%with_legacy_state(run_model)
-
-contains
-subroutine run_model(X,Ref,A,B,forcing,Tv0,input_coarse_z,input_coarse_ze,response)
-type(ace_response_t), intent(inout) :: response
-real, intent(inout) :: X(:,:,:),forcing(:,:)
-real, intent(in) :: Ref(:,:),A(:),B(:),Tv0(:)
-real(real64), intent(in) :: input_coarse_z(:),input_coarse_ze(:)
 
 if (len_trim(validation_file)>0) then
-  open(30,file=trim(validation_file),access='stream',form='unformatted',status='replace')
-  write(30) ncols,nz,n_prog,ncoarse
-  write(30) real(X,real64),real(Ref,real64),real(A,real64),real(B,real64),real(Tv0,real64), &
-            input_coarse_z,input_coarse_ze
-  close(30)
+  call model%with_legacy_state(validate_model)
   stop
 endif
 
@@ -94,13 +82,14 @@ if (steps==0 .and. abs(dt*ndt-60.)>64*epsilon(dt)*60.) error stop 'dt must divid
 if (len_trim(state_output)>0) then
   open(newunit=state_unit,file=trim(state_output),access='stream',form='unformatted',status='new')
   write(state_unit) ncols,nz,n_prog
-  write(state_unit) real(X,real64),real(Tv0,real64)
+  call model%with_legacy_state(write_initial_state)
 endif
 if (steps>0) then
   do i=1,steps
     te=ts+dt
-    call ace_driver(ncols,nz,n_weno,n_prog,X,Ref,A,B,ts,te,dt,forcing,precipitation_enabled,response=response)
-    if (len_trim(state_output)>0) write(state_unit) real(X,real64)
+    call model%integrate(te)
+    if (len_trim(state_output)>0) call model%with_legacy_state(write_saved_state)
+    ts=te
   enddo
   if (len_trim(state_output)>0) close(state_unit)
   stop
@@ -113,18 +102,56 @@ open(10,file=trim(output_file),access='direct',form='unformatted',status='new',r
 if (io_status/=0) error stop 'Cannot open model output; provide an existing output directory'
 n=1
 do t=1,intervals
-  call write_state(X,Ref,Tv0)
-  call ace_driver(ncols,nz,n_weno,n_prog,X,Ref,A,B,ts,te,dt,forcing,precipitation_enabled,response=response)
-  if (len_trim(state_output)>0) write(state_unit) real(X,real64)
+  call model%with_legacy_state(write_model_state)
+  call model%integrate(te,reset_clock_to_target=.true.)
+  if (len_trim(state_output)>0) call model%with_legacy_state(write_saved_state)
   ts=te; te=ts+dt*real(ndt)
 enddo
-call write_state(X,Ref,Tv0)
+call model%with_legacy_state(write_model_state)
 close(10)
 if (len_trim(state_output)>0) close(state_unit)
 call cpu_time(finish)
 write(*,*) 'time cost =',finish-start
 
-end subroutine run_model
+contains
+subroutine validate_model(X,Ref,A,B,forcing,Tv0,input_coarse_z,input_coarse_ze,response)
+type(ace_response_t), intent(inout) :: response
+real, intent(inout) :: X(:,:,:),forcing(:,:)
+real, intent(in) :: Ref(:,:),A(:),B(:),Tv0(:)
+real(real64), intent(in) :: input_coarse_z(:),input_coarse_ze(:)
+if (len_trim(validation_file)>0) then
+  open(30,file=trim(validation_file),access='stream',form='unformatted',status='replace')
+  write(30) ncols,nz,n_prog,ncoarse
+  write(30) real(X,real64),real(Ref,real64),real(A,real64),real(B,real64),real(Tv0,real64), &
+            input_coarse_z,input_coarse_ze
+  close(30)
+endif
+
+end subroutine validate_model
+
+subroutine write_initial_state(X,Ref,A,B,forcing,Tv0,input_coarse_z,input_coarse_ze,response)
+type(ace_response_t), intent(inout) :: response
+real, intent(inout) :: X(:,:,:),forcing(:,:)
+real, intent(in) :: Ref(:,:),A(:),B(:),Tv0(:)
+real(real64), intent(in) :: input_coarse_z(:),input_coarse_ze(:)
+write(state_unit) real(X,real64),real(Tv0,real64)
+end subroutine write_initial_state
+
+subroutine write_saved_state(X,Ref,A,B,forcing,Tv0,input_coarse_z,input_coarse_ze,response)
+type(ace_response_t), intent(inout) :: response
+real, intent(inout) :: X(:,:,:),forcing(:,:)
+real, intent(in) :: Ref(:,:),A(:),B(:),Tv0(:)
+real(real64), intent(in) :: input_coarse_z(:),input_coarse_ze(:)
+write(state_unit) real(X,real64)
+end subroutine write_saved_state
+
+subroutine write_model_state(X,Ref,A,B,forcing,Tv0,input_coarse_z,input_coarse_ze,response)
+type(ace_response_t), intent(inout) :: response
+real, intent(inout) :: X(:,:,:),forcing(:,:)
+real, intent(in) :: Ref(:,:),A(:),B(:),Tv0(:)
+real(real64), intent(in) :: input_coarse_z(:),input_coarse_ze(:)
+call write_state(X,Ref,Tv0)
+end subroutine write_model_state
 
 subroutine write_state(X,Ref,Tv0)
 real, intent(in) :: X(:,:,:),Ref(:,:),Tv0(:)

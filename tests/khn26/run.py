@@ -61,6 +61,11 @@ Ta(1,:)=t_in;q(1,:)=q_in;ql(1,:)=ql_in;qi(1,:)=qi_in
 end subroutine
 
 subroutine ace_driver''', 1)
+    if "type :: ace_thermal_t" in module:
+        from oop_regression import thermal_code
+        begin = access.index("subroutine set_probe_thermodynamics(")
+        end = access.index("end subroutine", begin)
+        access = access[:begin] + thermal_code(access[begin:end], "legacy_thermal%") + access[end:]
     (work / 'ace_module_probe.F').write_text(access)
     include = subprocess.check_output(['nf-config', '--fflags'], text=True).split()
     libs = subprocess.check_output(['nf-config', '--flibs'], text=True).split()

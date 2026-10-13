@@ -21,11 +21,19 @@ type :: ace_response_t
   logical :: turn_off_DHv=.true., turn_off_DHh=.true.
 end type ace_response_t
 
-! OOP-3a: the model owns state and response; integration remains procedural.
+! Integration cache lifetime follows the original initialization/RK sequence.
+type :: ace_thermal_t
+  private
+  real, allocatable :: reference_tv(:), Ta(:,:), q(:,:), ql(:,:), qi(:,:)
+end type ace_thermal_t
+
+! OOP-3b: the model owns state, response, thermal cache and integration clock.
 ! Components retain the existing model real kind and layouts.
 type :: ace_t
   private
   type(ace_response_t) :: response
+  type(ace_thermal_t) :: thermal
+  logical :: precipitation_enabled
   integer :: ncols, nz, n_prog, n_weno
   real :: dt, t
   real, allocatable :: X(:,:,:), Ref(:,:), A(:), B(:), forcing(:,:)
@@ -34,6 +42,7 @@ type :: ace_t
   real(real64), allocatable :: input_profile(:,:),diameters(:),input_area(:),input_perimeter(:)
   real(real64), allocatable :: input_coarse_z(:),input_coarse_ze(:),tmp(:)
 contains
+  procedure :: integrate => model_integrate
   procedure :: initialize => model_initialize
   procedure :: with_legacy_state => model_with_legacy_state
 end type ace_t
@@ -51,11 +60,10 @@ real, parameter :: qc_ramp = 0.5e-3 ! kg/kg; ramping for precip when qc>qc_ramp
 real, parameter :: dqc = 20 ! kg/kg; transition for a smooth onset of precip ramp function
 real, parameter :: tau_pr = 5*60 ! sec; relaxation timescale for precip
 
-! Used only by callers of the old procedural interfaces without a context.
+! Compatibility storage for the old procedural interfaces; never used by ace_t.
 type(ace_response_t), save :: legacy_response
-real, allocatable, save :: reference_tv(:)
+type(ace_thermal_t), save :: legacy_thermal
 character(1024), save :: p3_lookup_directory="./input_data/"
-real, dimension(:,:), allocatable, save :: Ta, q, ql, qi
 
 contains
 
@@ -72,18 +80,19 @@ real, dimension(ncols,nz), intent(in) :: B_forcing
 logical, intent(in), optional :: precipitation_input
 
 type(ace_response_t), intent(inout), optional :: response
-! Compatibility callers retain one legacy context; model callers pass their own.
+! Procedural callers use the legacy thermal cache and optional response context.
 if (present(response)) then
-  call ace_driver_context(response,ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input)
+  call ace_driver_context(response,legacy_thermal,ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input)
 else
-  call ace_driver_context(legacy_response,ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input)
+  call ace_driver_context(legacy_response,legacy_thermal,ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input)
 endif
 end subroutine ace_driver
 
 
-subroutine ace_driver_context(response,ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input)
+subroutine ace_driver_context(response,thermal,ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input)
 implicit none
 type(ace_response_t), intent(inout) :: response
+type(ace_thermal_t), intent(inout) :: thermal
 
 ! input/output variables
 integer, intent(in) :: ncols,nz,n_weno,n_prog
@@ -106,37 +115,37 @@ yi = X
 
 do while ( t < te)
   ! update ace tendency
-  call ace_tendency_context(response,ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,K1,1)
+  call ace_tendency_context(response,thermal,ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,K1,1)
   yi(1:ncols,:,:) = X(1:ncols,:,:) + K1 * dt / 6.
 
-  call ace_tendency_context(response,ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,K2,2)
+  call ace_tendency_context(response,thermal,ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,K2,2)
   yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
 
-  call ace_tendency_context(response,ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,3)
+  call ace_tendency_context(response,thermal,ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,3)
   K2 = K2 + tmp
   yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
 
-  call ace_tendency_context(response,ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,4)
+  call ace_tendency_context(response,thermal,ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,4)
   K2 = K2 + tmp
   yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
 
-  call ace_tendency_context(response,ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,5)
+  call ace_tendency_context(response,thermal,ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,5)
   K2 = K2 + tmp
   yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
 
-  call ace_tendency_context(response,ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,6)
+  call ace_tendency_context(response,thermal,ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,6)
   K2 = ( K2 + tmp ) / 15.
   yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt 
 
-  call ace_tendency_context(response,ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,7)
+  call ace_tendency_context(response,thermal,ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,7)
   K1 = K1 + tmp 
   yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt 
 
-  call ace_tendency_context(response,ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,8)
+  call ace_tendency_context(response,thermal,ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,8)
   K1 = K1 + tmp 
   yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt 
 
-  call ace_tendency_context(response,ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,9)
+  call ace_tendency_context(response,thermal,ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,9)
   K1 = K1 + tmp
 
   yi = X
@@ -193,10 +202,10 @@ subroutine apply_native_precipitation()
 integer :: ii,kk
 do kk=1,nz
   do ii=1,ncols
-    call inv_theta_e(X(ii,kk,2),X(ii,kk,3),Ref(kk,7),Ta(ii,kk),q(ii,kk),ql(ii,kk),qi(ii,kk))
+    call inv_theta_e(X(ii,kk,2),X(ii,kk,3),Ref(kk,7),thermal%Ta(ii,kk),thermal%q(ii,kk),thermal%ql(ii,kk),thermal%qi(ii,kk))
   enddo
 enddo
-call precip_sinks(ncols,nz,n_prog,Ref(:,7),K1(:,:,1:2))
+call precip_sinks_context(thermal,ncols,nz,n_prog,Ref(:,7),K1(:,:,1:2))
 X(1:ncols,:,2:3)=X(1:ncols,:,2:3)+K1(:,:,1:2)*dt
 end subroutine
 endsubroutine ace_driver_context
@@ -215,23 +224,24 @@ logical, intent(in), optional :: netcdf_input
 logical, intent(in), optional :: turn_off_DHv_input,turn_off_DHh_input,zero_ref_buoyancy_input,Wbar_eq_zero_input
 
 type(ace_response_t), intent(inout), optional :: response
-! Compatibility callers retain one legacy context; model callers pass their own.
+! Procedural callers use the legacy thermal cache and optional response context.
 if (present(response)) then
-  call ace_initialization_context(response,ncols,nz,nz_presolve,z_presolve,ze_presolve,fname,environment_tv,netcdf_input, &
+  call ace_initialization_context(response,legacy_thermal,ncols,nz,nz_presolve,z_presolve,ze_presolve,fname,environment_tv,netcdf_input, &
                               turn_off_DHv_input,turn_off_DHh_input,zero_ref_buoyancy_input,Wbar_eq_zero_input)
 else
-  call ace_initialization_context(legacy_response,ncols,nz,nz_presolve,z_presolve,ze_presolve,fname,environment_tv,netcdf_input, &
+  call ace_initialization_context(legacy_response,legacy_thermal,ncols,nz,nz_presolve,z_presolve,ze_presolve,fname,environment_tv,netcdf_input, &
                               turn_off_DHv_input,turn_off_DHh_input,zero_ref_buoyancy_input,Wbar_eq_zero_input)
 endif
 end subroutine ace_initialization
 
 
-subroutine ace_initialization_context(response,ncols,nz,nz_presolve,z_presolve,ze_presolve,fname,environment_tv,netcdf_input, &
+subroutine ace_initialization_context(response,thermal,ncols,nz,nz_presolve,z_presolve,ze_presolve,fname,environment_tv,netcdf_input, &
                               turn_off_DHv_input,turn_off_DHh_input,zero_ref_buoyancy_input,Wbar_eq_zero_input)
 use ace_input, only: read_case_basis, read_case_metadata, basis_available
 use, intrinsic :: ieee_arithmetic, only: ieee_is_finite
 implicit none
 type(ace_response_t), intent(inout) :: response
+type(ace_thermal_t), intent(inout) :: thermal
 
 ! input variables
 integer, intent(in) :: ncols, nz, nz_presolve
@@ -250,8 +260,8 @@ character(64) :: geometry
 
 if (.not.all(ieee_is_finite(environment_tv)) .or. any(environment_tv<=0.)) &
   error stop 'Invalid environmental density temperature'
-allocate(reference_tv(nz))
-reference_tv=environment_tv
+allocate(thermal%reference_tv(nz))
+thermal%reference_tv=environment_tv
 response%slab_geometry=.false.
 response%turn_off_DHv=.true.; response%turn_off_DHh=.true.
 if (present(turn_off_DHv_input)) response%turn_off_DHv=turn_off_DHv_input
@@ -266,7 +276,7 @@ allocate(response%coarse_z(response%coarse_nz),response%coarse_ze(response%coars
 allocate(response%coarse_F(ncols,response%coarse_nz))
 allocate(response%PMB(ncols,ncols,response%coarse_nz,response%coarse_nz+1))
 allocate(response%dwdt(ncols,response%coarse_nz+1))
-allocate(Ta(ncols,nz),q(ncols,nz),ql(ncols,nz),qi(ncols,nz))
+allocate(thermal%Ta(ncols,nz),thermal%q(ncols,nz),thermal%ql(ncols,nz),thermal%qi(ncols,nz))
 
 
 if (shared) then
@@ -332,18 +342,19 @@ real, dimension(ncols+1,nz,n_prog), intent(in) :: X
 real, dimension(ncols,nz,n_prog), intent(out) :: dXdt
 
 type(ace_response_t), intent(inout), optional :: response
-! Compatibility callers retain one legacy context; model callers pass their own.
+! Procedural callers use the legacy thermal cache and optional response context.
 if (present(response)) then
-  call ace_tendency_context(response,ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,dXdt,rkstage)
+  call ace_tendency_context(response,legacy_thermal,ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,dXdt,rkstage)
 else
-  call ace_tendency_context(legacy_response,ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,dXdt,rkstage)
+  call ace_tendency_context(legacy_response,legacy_thermal,ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,dXdt,rkstage)
 endif
 end subroutine ace_tendency
 
 
-subroutine ace_tendency_context(response,ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,dXdt,rkstage)
+subroutine ace_tendency_context(response,thermal,ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,dXdt,rkstage)
 implicit none
 type(ace_response_t), intent(inout) :: response
+type(ace_thermal_t), intent(inout) :: thermal
 
 ! input/output variables
 integer, intent(in) :: ncols, nz, n_weno, n_prog, rkstage
@@ -469,18 +480,18 @@ do i=1,ncols
   if (rkstage==1) then
     do k=1,nz
       if (n_prog==3) then
-        call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Ta(i,k),q(i,k),ql(i,k),qi(i,k))
+        call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),thermal%Ta(i,k),thermal%q(i,k),thermal%ql(i,k),thermal%qi(i,k))
       elseif (n_prog==11) then
-        Ta(i,:) = X(i,:,2) * Ref(:,8)
-        q(i,:)  = X(i,:,3)
-        ql(i,:) = X(i,:,4) + X(i,:,6)
-        qi(i,:) = X(i,:,8)
+        thermal%Ta(i,:) = X(i,:,2) * Ref(:,8)
+        thermal%q(i,:)  = X(i,:,3)
+        thermal%ql(i,:) = X(i,:,4) + X(i,:,6)
+        thermal%qi(i,:) = X(i,:,8)
       endif
     enddo 
   endif
 
-  Tv(1:nz) = Ta(i,1:nz) * ( 1. + 0.607789855072462 * q(i,1:nz) - ql(i,1:nz) - qi(i,1:nz) )
-  rho0B(i,:) = g * Ref(:,1) * (Tv-reference_tv) / reference_tv
+  Tv(1:nz) = thermal%Ta(i,1:nz) * ( 1. + 0.607789855072462 * thermal%q(i,1:nz) - thermal%ql(i,1:nz) - thermal%qi(i,1:nz) )
+  rho0B(i,:) = g * Ref(:,1) * (Tv-thermal%reference_tv) / thermal%reference_tv
 enddo
 
 ! MATLAB S20 removes the area-weighted mean buoyancy before nonlocal response.
@@ -585,6 +596,15 @@ end subroutine ImDamp
 
 subroutine precip_sinks(ncols,nz,n_prog,p,dXdt)
 implicit none
+integer, intent(in) :: ncols,nz,n_prog
+real, intent(in) :: p(nz)
+real, intent(inout) :: dXdt(ncols,nz,n_prog-1)
+call precip_sinks_context(legacy_thermal,ncols,nz,n_prog,p,dXdt)
+end subroutine precip_sinks
+
+subroutine precip_sinks_context(thermal,ncols,nz,n_prog,p,dXdt)
+implicit none
+type(ace_thermal_t), intent(in) :: thermal
 
 ! input/output variables
 integer, intent(in) :: ncols,nz,n_prog
@@ -598,7 +618,7 @@ real :: qc, dql, dqi, ramp
 
 do k=1,nz
 do i=1,ncols
-  qc = ql(i,k) + qi(i,k)
+  qc = thermal%ql(i,k) + thermal%qi(i,k)
   dXdt(i,k,:)=0.
   if (qc<=0.) cycle
   ramp=dqc/qc_ramp*(qc-qc_ramp)
@@ -609,14 +629,14 @@ do i=1,ncols
     ! Preserve the finite sink for extreme inputs that overflow MATLAB exp.
     dXdt(i,k,2)=-(qc_ramp/dqc/tau_pr)*(max(ramp,0.)+log(1.+exp(-abs(ramp))))
   endif
-  dql = 1.e-8 * ql(i,k) / qc
-  dqi = 1.e-8 * qi(i,k) / qc
-  dXdt(i,k,1) = dXdt(i,k,2) * ( theta_e(Ta(i,k),q(i,k),ql(i,k)+dql,qi(i,k)+dqi,p(k)) &
-                              - theta_e(Ta(i,k),q(i,k),ql(i,k),qi(i,k),p(k)) ) / 1.e-8
+  dql = 1.e-8 * thermal%ql(i,k) / qc
+  dqi = 1.e-8 * thermal%qi(i,k) / qc
+  dXdt(i,k,1) = dXdt(i,k,2) * ( theta_e(thermal%Ta(i,k),thermal%q(i,k),thermal%ql(i,k)+dql,thermal%qi(i,k)+dqi,p(k)) &
+                              - theta_e(thermal%Ta(i,k),thermal%q(i,k),thermal%ql(i,k),thermal%qi(i,k),p(k)) ) / 1.e-8
 enddo
 enddo
 
-end subroutine precip_sinks
+end subroutine precip_sinks_context
 
 
 subroutine set_p3_lookup_directory(directory)
@@ -1314,7 +1334,7 @@ integer :: i,k,record_length,io_status
 real :: dz,dum1
 real(real64) :: input_lx,input_ly,input_dz
 character(64) :: geometry
-! Transitional singleton: thermal, damping and P3 caches remain in ace_module.
+! Damping and P3 caches remain process-wide until their lifecycle stages.
 ! As before, initialize one model once in a fresh process.
 if (shared_input) then
   call read_case_metadata(trim(input_file),nz,ncols,ncoarse,geometry)
@@ -1419,14 +1439,28 @@ else
 endif
 call set_p3_lookup_directory(trim(p3_directory))
 if (shared_input) then
-  call ace_initialization(ncols,nz,ncoarse,self%coarse_z,self%coarse_ze,trim(input_file),self%Tv0,netcdf_input=.true.,response=self%response)
+  call ace_initialization_context(self%response,self%thermal,ncols,nz,ncoarse,self%coarse_z,self%coarse_ze,trim(input_file),self%Tv0,netcdf_input=.true.)
 else
-  call ace_initialization(ncols,nz,ncoarse,self%coarse_z,self%coarse_ze,'./input_data/PMB.dat',self%Tv0,response=self%response)
+  call ace_initialization_context(self%response,self%thermal,ncols,nz,ncoarse,self%coarse_z,self%coarse_ze,'./input_data/PMB.dat',self%Tv0)
 endif
 
 self%ncols=ncols; self%nz=nz; self%n_prog=n_prog; self%n_weno=n_weno
 self%dt=dt; self%t=0.
+self%precipitation_enabled=precipitation_enabled
 end subroutine model_initialize
+
+subroutine model_integrate(self,te,reset_clock_to_target)
+class(ace_t), intent(inout) :: self
+real, intent(in) :: te
+logical, intent(in), optional :: reset_clock_to_target
+call ace_driver_context(self%response,self%thermal,self%ncols,self%nz,self%n_weno,self%n_prog, &
+                        self%X,self%Ref,self%A,self%B,self%t,te,self%dt,self%forcing,self%precipitation_enabled)
+! Preserve the historical interval driver's explicit ts=te assignment.
+! Standalone integration retains its full-dt clock, including target overshoot.
+if (present(reset_clock_to_target)) then
+  if (reset_clock_to_target) self%t=te
+endif
+end subroutine model_integrate
 
 subroutine model_with_legacy_state(self,action)
 class(ace_t), intent(inout) :: self
@@ -1440,8 +1474,8 @@ interface
     real(real64), intent(in) :: input_coarse_z(:),input_coarse_ze(:)
   end subroutine action
 end interface
-! Synchronous bridge to the unchanged procedural integration/output path.
-! No pointers or state copies escape; this is not an integration method.
+! Synchronous bridge for validation/serialization until output extraction.
+! Integration calls occur outside the callback; no pointers or state copies escape.
 call action(self%X,self%Ref,self%A,self%B,self%forcing,self%Tv0,self%input_coarse_z,self%input_coarse_ze,self%response)
 end subroutine model_with_legacy_state
 

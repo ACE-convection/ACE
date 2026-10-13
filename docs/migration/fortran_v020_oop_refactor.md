@@ -596,3 +596,134 @@ Frozen OOP-0 and completed OOP-2 evidence remains intact.
 OOP-3a is complete. OOP-3b integration/cache ownership and the separately
 approved final reference-history integration remain later stages. No commit,
 push, tag, main merge or reference-history merge was performed in OOP-3a.
+
+## OOP-3b integration ownership (2026-10-13)
+
+The developer authorized this stage by accepting the proposed OOP-3b next
+step after OOP-3a commit `1250f98`. This approval covers integration/cache
+ownership and its gates; later diagnose/output/cache stages and the final
+reference-history integration remain separate review boundaries.
+
+`ace_t` owns a private `ace_thermal_t` (reference_tv/Ta/q/ql/qi), the resolved
+precipitation option, dt and persistent t. `model%integrate(te)` calls the
+private driver implementation with its own state, response and thermal
+contexts. All nine tendency calls and the internal post-RK native helper use
+that explicit thermal context. The RK arrays remain automatic with unchanged
+shapes and kinds. Cache allocation occurs at the original basis-init points;
+initialization-only model Tr/q/ql/qi scratch remains distinct. Stage one still
+refreshes thermal fields, stages two through nine reuse them, and native
+physics still recomputes them after SSPRK/clipping. No numerical expression,
+reduction, interpolation, boundary policy or physics/damping order is changed.
+
+Old procedural driver/initialization/tendency signatures remain available,
+including their optional response argument. They always use a separate
+legacy thermal context. The old private precip_sinks entry is retained for
+actual isolated component probes and dispatches to the same numerical body
+with that legacy cache. The model initialization directly selects its own
+contexts; no model path allocates or uses legacy response/thermal storage.
+A model callback must not call the procedural integrator/tendency: its cache
+is now distinct. Existing procedural test callers initialize their own
+compatibility path as before.
+
+`test.F` invokes integrate outside validation/serialization callbacks, so
+callback array arguments do not overlap a live whole-object integration call.
+Its ts/te variables schedule output targets; the model clock advances by the
+original full-dt loop. Interval calls explicitly select the optional
+`reset_clock_to_target=.true.` to preserve the old caller's `ts=te` assignment.
+Standalone calls omit that option and retain accumulated time/overshoot. This
+matters even for accepted minute-dividing fractional dt: accumulated rounding
+can alter subsequent step counts if the interval reset is omitted. Initial/final writes, steps/interval cadence, state and
+nine-field output layouts, freshness checks and CLI errors are preserved.
+The callback bridge remains only for validation/serialization until OOP-4.
+Its GNU executable-stack requirement remains. Damping SAVE first/damp and
+P3 wrapper options/clock/library state are unchanged, so one initialized model
+per fresh process remains the supported scope.
+
+Observers qualify thermal fields only in isolated snapshots, retain every
+frozen artifact label and assert that both legacy contexts stay unallocated
+on the model path. Single/multiACE and common-thermodynamic/component probes
+follow the new ownership sites without changing their experiment formulas.
+The old frozen-input timing harness remains pinned to its historical source;
+its source-hash rejection is retained rather than claiming new performance
+acceptance.
+
+Reproduce using fresh candidate workspaces and the pinned OOP-0 artifacts:
+
+```bash
+python3 tests/khn26/oop_regression.py NEW_WORKSPACE --candidate-baseline migration_work/fortran_v020_oop_stage0
+python3 tests/khn26/oop_regression.py NEW_WORKSPACE --compile-compatibility
+python3 tests/khn26/oop_regression.py NEW_WORKSPACE --analyze-existing
+python3 tests/khn26/oop_initialization_contract.py NEW_WORKSPACE
+python3 tests/khn26/oop_integration_contract.py NEW_WORKSPACE
+```
+
+The integration-contract runner uses only isolated test helpers to inspect
+the private clock/cache. With dt=6, each none/native/P3 fresh process advances
+to nonaligned targets 1 and 7 (preserving clocks 6 and 12), intersperses past,
+repeated and aligned no-op targets, then reaches 18, explicitly resets a
+full-dt step to target 19, and continues to 25. It verifies exact no-op
+state/cache preservation and five-step identity against the hash-verified
+frozen executable. A three-interval native replay with dt=60/13 additionally
+checks state and normal-output byte identity, exercising the old interval
+clock assignment under fractional rounding. No public clock getter is added.
+
+The first `migration_work/fortran_v020_oop_stage3b` snapshot captured a cache
+forwarding defect: all nine driver tendency calls selected legacy_thermal,
+which the model intentionally leaves unallocated. Its dry-prefix SIGSEGV and
+checked integration-contract failure are preserved with the executed source.
+The calls were corrected to forward the driver's explicit thermal argument.
+A second snapshot, `migration_work/fortran_v020_oop_stage3b_verified`, correctly
+forwarded caches, but was superseded during review when the missing historical
+interval clock reset was identified. Its partial runs were stopped and retained.
+Final acceptance runs in `migration_work/fortran_v020_oop_stage3b_acceptance`;
+source hashes must match the executed snapshot before collecting evidence.
+The completed evidence below uses only the final acceptance snapshot. No
+automatic commit, next stage, push, tag or history merge is authorized.
+
+### Completed OOP-3b gates (2026-10-13)
+
+All 24 candidate model commands passed: plain/observed neutrality,
+checked/production prefix identity and frozen OOP-0 preservation. All 195
+binary artifacts match exactly, including response/momentum tables,
+initialization, all nine raw RK tendencies and thermal/response observations,
+native sinks, P3 fluxes, damping, state streams and nine-field normal output.
+The isolated ownership assertions passed for every observed model command:
+legacy PMB and all legacy thermal arrays remained unallocated. No numerical
+tolerance was changed.
+
+Postprocessing passed 165 observation-layout/frame checks and validated 18
+saved-state streams plus normal real32 output. All nine supplemental gates
+passed, including default shared/legacy/unused-lookup initialization, four
+error contracts and 600 s dry/native comparisons. Each 151-state trajectory
+is bitwise identical to the versioned-hash-verified frozen executable, finite
+and nonnegative in qt. The three none/native/P3 clock/cache tests passed:
+full-dt overshoot, no-op cache/state identity, persistent time and explicit
+interval reset all retain baseline behavior. The native dt=60/13 three-minute
+CLI replay preserves both state-stream and normal-output bytes exactly.
+
+All four uninstrumented real32/real64 serial/OpenMP compilation/link cases
+and empty public-type clients passed. SingleACE component/driver and
+production/checked multiACE adapters built successfully; disabled-operator
+guards passed. The common-thermodynamic legacy-cache adapter and profiler
+instrumentation compiled. Legacy initialization/tendency coarse forcing
+matches the frozen first RK frame. Separate fresh-process checked procedural
+driver clients for none/native/P3 reproduce all ten saved steps exactly
+from hash-verified frozen initial arrays, without rerunning the baseline.
+These adapter checks add no long-experiment or performance acceptance.
+
+[Stage-3b results](../../tests/khn26/oop_stage3b_results.json) record source,
+input, compiler and command provenance, artifact/executable/runner hashes,
+all paired comparisons, ownership assertions, clock/cache/fractional-dt
+contracts and compatibility/adapter evidence. Removing only thermal cache
+qualification and argument plumbing recovers the prior driver,
+initialization, tendency and sink implementation bodies exactly; damping and
+P3 wrapper bodies are unchanged. This source audit supplements the numerical
+gates. Current production source matches the executed acceptance snapshot;
+input/interpolation/third-party P3 source is unchanged. Frozen OOP-0 and
+completed OOP-2/OOP-3a evidence remain intact.
+
+OOP-3b is complete. OOP-4a diagnose is the next separate approval boundary.
+Damping/P3 state still requires one initialized model per fresh process;
+real32/serial evidence remains compilation/linking only. The remaining
+output callbacks still require an executable stack with this GNU toolchain.
+No commit, push, tag, main merge or reference-history merge was performed.

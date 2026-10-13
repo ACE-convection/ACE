@@ -51,7 +51,17 @@ def response_code(source):
                    for i, c in enumerate(chunks))
 
 
+def thermal_code(source, prefix="thermal%"):
+    """Qualify cache expressions without changing labels or numerical formulas."""
+    chunks = re.split(r"('(?:[^']|'')*'|\"(?:[^\"]|\"\")*\"|![^\n]*)", source)
+    return "".join(c if i % 2 else re.sub(r"\b(reference_tv|Ta|q|ql|qi)\b",
+                                         lambda m: prefix + m[0], c)
+                   for i, c in enumerate(chunks))
+
+
 def candidate_stage(source):
+    if "procedure :: integrate => model_integrate" in source:
+        return "OOP-3b"
     if "type :: ace_response_t" in source:
         return "OOP-3a"
     return "OOP-2" if "procedure :: initialize => model_initialize" in source else "OOP-1"
@@ -79,7 +89,10 @@ block
   endif
 end block
 end subroutine ace_initialization"""
+    thermal_owned = "type :: ace_thermal_t" in source
     contextual = "type :: ace_response_t" in source
+    if thermal_owned:
+        initialization_hook = thermal_code(initialization_hook)
     if contextual:
         initialization_hook = response_code(initialization_hook).replace("end subroutine ace_initialization", "end subroutine ace_initialization_context")
     source = replace_once(source, "end subroutine ace_initialization_context" if contextual else "end subroutine ace_initialization", initialization_hook)
@@ -94,18 +107,30 @@ call oop_dump('q_stage',q)
 call oop_dump('ql_stage',ql)
 call oop_dump('qi_stage',qi)
 end subroutine ace_tendency"""
+    if thermal_owned:
+        tendency_hook = thermal_code(tendency_hook)
     if contextual:
         tendency_hook = response_code(tendency_hook).replace("end subroutine ace_tendency", "end subroutine ace_tendency_context")
     source = replace_once(source, "end subroutine ace_tendency_context" if contextual else "end subroutine ace_tendency", tendency_hook)
-    if contextual:
+    ownership_guard = "if (allocated(legacy_response%PMB)) error stop 'Model used legacy response storage'\n"
+    if thermal_owned:
+        ownership_guard += "if (allocated(legacy_thermal%reference_tv) .or. allocated(legacy_thermal%Ta) .or. &\n" \
+                           "    allocated(legacy_thermal%q) .or. allocated(legacy_thermal%ql) .or. &\n" \
+                           "    allocated(legacy_thermal%qi)) error stop 'Model used legacy thermal storage'\n"
+        source = replace_once(source, "! Synchronous bridge for validation/serialization until output extraction.",
+                              ownership_guard + "! Synchronous bridge for validation/serialization until output extraction.")
+        source = replace_once(source, "logical, intent(in), optional :: reset_clock_to_target\ncall ace_driver_context(self%response",
+                              "logical, intent(in), optional :: reset_clock_to_target\n" + ownership_guard + "call ace_driver_context(self%response")
+    elif contextual:
         source = replace_once(source, "! Synchronous bridge to the unchanged procedural integration/output path.",
-                              "if (allocated(legacy_response%PMB)) error stop 'Model used legacy response storage'\n! Synchronous bridge to the unchanged procedural integration/output path.")
+                              ownership_guard + "! Synchronous bridge to the unchanged procedural integration/output path.")
     source = replace_once(source, "  ! call physics here", "  call oop_dump('before_physics',X)\n  ! call physics here")
     source = replace_once(source, "  ! implicit damping ", "  call oop_dump('after_physics',X)\n  ! implicit damping ")
     source = replace_once(source, "  call ImDamp(ncols,nz,n_prog,X,Ref,dt)",
                           "  call ImDamp(ncols,nz,n_prog,X,Ref,dt)\n  call oop_dump('after_damping',X)")
-    source = replace_once(source, "end subroutine precip_sinks",
-                          "call oop_dump('native_sinks',dXdt)\nend subroutine precip_sinks")
+    sink_end = "end subroutine precip_sinks_context" if thermal_owned else "end subroutine precip_sinks"
+    source = replace_once(source, sink_end,
+                          "call oop_dump('native_sinks',dXdt)\n" + sink_end)
     source = replace_once(source, "end subroutine ImDamp",
                           "call oop_dump('damp',damp)\nend subroutine ImDamp")
     source = replace_once(source, "itt = itt + 1", """
@@ -394,6 +419,9 @@ def run(work, lookup, candidate_baseline=None):
         for key in ("input_sha256", "lookup_sha256", "compiler", "netcdf_flags", "netcdf_libraries",
                     "threads", "default_bubble_K", "dt_seconds", "prefix_steps", "short_output_seconds"):
             assert config[key] == frozen["configuration"][key], f"Baseline configuration changed: {key}"
+    if frozen:
+        for name, data in originals.items():
+            assert (ROOT/"fortran/src"/name).read_bytes() == data, f"Source changed during snapshot preparation: {name}"
     commands, builds = [], {}
     def execute(cmd, cwd, log, env=None):
         commands.append({"argv": cmd, "cwd": str(cwd), "log": str(log)})

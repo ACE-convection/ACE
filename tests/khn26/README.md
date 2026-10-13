@@ -537,3 +537,22 @@ real32/serial compatibility matrix certifies compilation and linking only.
 Keep one model initialized once per fresh process until response/cache and
 P3 lifecycle migration is validated. Commands and external data requirements
 are listed in the OOP plan.
+
+OOP-3b adds `ace_t%integrate(te)`, persistent object time/options and an explicit
+private thermal context. The isolated observer checks that both legacy
+response and thermal storage stay unallocated throughout the model path.
+`oop_integration_contract.py WORKSPACE` checks persistent time, existing
+full-dt overshoot, repeated/past/aligned no-op targets and exact cache/state
+preservation; five none/native/P3 steps match the frozen executable, including
+an explicit interval clock reset. A fractional-dt three-minute CLI replay
+also preserves state and normal-output bytes. Helpers
+are inserted only into a separate test build, with no production getters.
+Validation and serialization callbacks return before integration starts.
+
+[OOP-3b results](oop_stage3b_results.json) record complete integration/cache
+ownership acceptance: 195 bitwise-identical frozen artifacts, 165 observation
+layouts, 18 valid state streams, nine supplemental gates, clock/cache and
+fractional-dt contracts, four compilation/link variants and adapter checks.
+Checked legacy procedural clients also reproduce none/native/P3 ten-step
+streams from frozen initial arrays. Damping/P3 lifecycle remains a later
+stage; retain the single-model/fresh-process restriction.
