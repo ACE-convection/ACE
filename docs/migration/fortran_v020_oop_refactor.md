@@ -302,3 +302,71 @@ operator tables, all raw traces and state/output streams.
 The release production tree is unchanged. There is no real32/serial runtime
 acceptance, no three-hour rerun and no OOP source implementation in this stage.
 Stage 0 is complete; await separate approval for OOP-1.
+
+## OOP-1 passive declaration (2026-10-12)
+
+The developer authorized OOP-1 after committing OOP-0 as `1289498`.
+`ace_module.F` now exports a concrete `ace_t` with private dimensions
+ncols/nz/n_prog/n_weno, dt/t and allocatable X/Ref/A/B/forcing components.
+There are no method bindings, scalar default changes, allocations, pointer
+aliases or live model instances. The current model state still belongs to
+the original procedural driver/module. These passive components have no
+assigned scalar values yet and must not be read before a future approved
+initialization stage. No P3/state/cache ownership has moved.
+
+The production diff is ten added declaration/comment lines in ace_module.F.
+Removing that declaration block exactly recovers the release source; test.F,
+ace_input.F, ace_interpolation.F and microphy_p3.F are unchanged.
+
+The regression tool has an explicit `--candidate-baseline` mode. It snapshots
+current source, verifies the OOP-0 artifact hashes and matching compiler/input/
+lookup/grid/dt/thread settings, then runs only the candidate in fresh builds
+and processes. It checks candidate observational neutrality and compares
+all numerical artifacts against the frozen stage-0 workspace. The frozen
+baseline is neither rerun nor rewritten. Preserve test/build snapshots and
+separate executed-tool hashes when postprocessing helpers are updated.
+
+A separate compilation matrix uses the uninstrumented candidate snapshot,
+building/linking the full executable with default real32 and real64 in both
+serial and OpenMP modes. A minimal external client declares an unused ace_t
+with private components, verifying that the new public type can be imported
+and linked; running that empty client does not integrate the model. All four
+compatibility cases passed. This adds no real32 scientific/runtime acceptance.
+
+Reproduction (fresh nonexistent candidate workspace; pinned stage-0 artifacts
+must exist):
+
+```bash
+python3 tests/khn26/oop_regression.py NEW_WORKSPACE --candidate-baseline FROZEN_OOP0_WORKSPACE
+python3 tests/khn26/oop_regression.py NEW_WORKSPACE --compile-compatibility
+python3 tests/khn26/oop_regression.py NEW_WORKSPACE --analyze-existing
+```
+
+Numerical evidence is recorded after the candidate matrix finishes. No
+OOP-2 initialization extraction, automatic commit, push or tag is part of
+this stage.
+
+### Completed OOP-1 gates
+
+All 24 candidate model commands completed successfully. Candidate original/
+observed initialization, production/checked ten-step state streams and
+one-minute state/normal outputs are bitwise identical. All 195 candidate
+binary artifacts also exactly match the hash-verified frozen OOP-0 artifacts,
+including operator tables and raw RK response/tendency/thermal/sink/flux/
+damping observations. No tolerance was changed and no divergence was found.
+
+Postprocessing passed 165 observation-layout/frame-count checks and validated
+18 saved-state streams and all normal output values. Native qt and P3 water/
+number/riming fields remain nonnegative; P3 qrim<=qi. The four serial/OpenMP,
+real32/real64 compilation/link cases and empty public-type clients passed.
+Numerical runtime evidence remains GNU real64/OpenMP32; compilation success
+is not real32 or serial scientific acceptance. The 150-step gates apply when
+integration/cache behavior is migrated in the later approved stages; this
+passive declaration is checked against the fixed OOP-0 short matrix.
+
+[Stage-1 results](../../tests/khn26/oop_stage1_results.json) preserve all gates,
+source/input/build provenance, compatibility commands, state diagnostics,
+artifact/executable hashes and tool provenance. The full candidate workspace
+is `migration_work/fortran_v020_oop_stage1`; the stage-0 workspace is unchanged.
+The developer clarified that OOP-1 should be committed after completion;
+OOP-2 still awaits a separate instruction.

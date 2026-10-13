@@ -4,6 +4,16 @@ implicit none
 
 private
 public :: weno, weno_vec, inv_theta_e, pchip, theta_e, ace_driver, ace_initialization, eval_qs, set_p3_lookup_directory
+public :: ace_t
+
+! OOP-1: passive declaration only; the validated procedural path still owns
+! all live state. Components use the existing model real kind and layouts.
+type :: ace_t
+  private
+  integer :: ncols, nz, n_prog, n_weno
+  real :: dt, t
+  real, allocatable :: X(:,:,:), Ref(:,:), A(:), B(:), forcing(:,:)
+end type ace_t
 
 ! defien operator for grid interface
 

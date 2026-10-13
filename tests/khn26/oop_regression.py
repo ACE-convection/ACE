@@ -277,7 +277,45 @@ def analyze_existing(work):
     return evidence
 
 
-def run(work, lookup):
+def compile_compatibility(work):
+    """Compile uninstrumented source in both kinds, serial/OpenMP; no model run."""
+    includes = shlex.split(subprocess.check_output(["nf-config", "--fflags"], text=True))
+    libs = shlex.split(subprocess.check_output(["nf-config", "--flibs"], text=True))
+    directory = work/"compatibility"
+    directory.mkdir(exist_ok=False)
+    client = directory/"type_client.f90"
+    client.write_text("program type_client\nuse ace_module, only: ace_t\nimplicit none\ntype(ace_t) :: model\nend program\n")
+    report = {"cases": {}, "no_model_integration": True}
+    for precision in (64,32):
+        for omp in (False,True):
+            name = f"real{precision}_"+("openmp" if omp else "serial")
+            build = directory/name
+            build.mkdir()
+            flags = ["-cpp","-O2","-ffree-form","-ffree-line-length-none"]
+            if precision == 64: flags += ["-fdefault-real-8","-fdefault-double-8"]
+            if omp: flags += ["-fopenmp"]
+            commands = []
+            def execute(command,label):
+                commands.append(command)
+                with (build/(label+".log")).open("w") as log:
+                    subprocess.run(command,cwd=build,stdout=log,stderr=subprocess.STDOUT,check=True)
+            print(f"Compatibility build {name}",flush=True)
+            for source in FILES:
+                execute(["gfortran",*flags,*includes,"-c",str(work/"sources/plain"/source)],source)
+            execute(["gfortran",*flags,*[n.replace(".F",".o") for n in FILES],*libs,"-o","ace_model.exe"],"model_link")
+            execute(["gfortran",*flags,*includes,str(client),
+                     *[n.replace(".F",".o") for n in FILES if n != "test.F"],*libs,"-o","type_client.exe"],"type_client_link")
+            execute([str(build/"type_client.exe")],"type_client_run")
+            report["cases"][name] = {"passed":True,"commands":commands,
+                                    "model_executable_sha256":sha(build/"ace_model.exe"),
+                                    "type_client_executable_sha256":sha(build/"type_client.exe")}
+            write(directory/"results.json",report)
+    report["passed"] = True
+    write(directory/"results.json",report)
+    return report
+
+
+def run(work, lookup, candidate_baseline=None):
     work.mkdir(parents=True, exist_ok=False)
     input_file = ROOT/"data/input/manaus1342_khn26.nc"
     table = lookup/"p3_lookupTable_1.dat-v6.4-2momI"
@@ -288,8 +326,19 @@ def run(work, lookup):
     originals = {}
     for name in FILES:
         data = subprocess.check_output(["git", "show", f"{BASELINE}:fortran/src/{name}"], cwd=ROOT)
-        assert data == (ROOT/"fortran/src"/name).read_bytes(), f"Current production differs: {name}"
+        if candidate_baseline is None:
+            assert data == (ROOT/"fortran/src"/name).read_bytes(), f"Current production differs: {name}"
+        else:
+            data = (ROOT/"fortran/src"/name).read_bytes()
         originals[name] = data
+    frozen = None
+    if candidate_baseline is not None:
+        frozen = json.loads((candidate_baseline/"results.json").read_text())
+        assert frozen["passed"] and frozen["stage"] == "OOP-0"
+        assert frozen["configuration"]["baseline_commit"] == BASELINE
+        for path, evidence in frozen["artifacts"].items():
+            actual = candidate_baseline/path
+            assert actual.stat().st_size == evidence["bytes"] and sha(actual) == evidence["sha256"], path
     sources = {}
     for variant in ("plain", "observed"):
         source = work/"sources"/variant
@@ -307,8 +356,13 @@ def run(work, lookup):
               "lookup_sha256": TABLE_HASH, "compiler": subprocess.check_output(["gfortran", "--version"], text=True),
               "netcdf_flags": includes, "netcdf_libraries": libs, "threads": 32,
               "default_bubble_K": .25, "dt_seconds": 4, "prefix_steps": 10, "short_output_seconds": 60,
-              "no_production_source_edit": True, "no_v024_features": True}
+              "no_production_source_edit": candidate_baseline is None, "no_v024_features": True,
+              "candidate_baseline_workspace": str(candidate_baseline) if candidate_baseline else None}
     write(work/"configuration.json", config)
+    if frozen:
+        for key in ("input_sha256", "lookup_sha256", "compiler", "netcdf_flags", "netcdf_libraries",
+                    "threads", "default_bubble_K", "dt_seconds", "prefix_steps", "short_output_seconds"):
+            assert config[key] == frozen["configuration"][key], f"Baseline configuration changed: {key}"
     commands, builds = [], {}
     def execute(cmd, cwd, log, env=None):
         commands.append({"argv": cmd, "cwd": str(cwd), "log": str(log)})
@@ -387,8 +441,14 @@ def run(work, lookup):
     artifacts = {}
     for path in (work/"runs").rglob("*.bin"):
         artifacts[str(path.relative_to(work))] = {"sha256": sha(path), "bytes": path.stat().st_size}
-    result = {"passed": True, "stage": "OOP-0", "configuration": config, "comparisons": reports,
-              "artifacts": artifacts, "scope": "GNU real64 OpenMP 32; default 0.25 K bubble; dt=4; initialization, ten-step prefix, 60 s interval outputs; no OOP source implemented and no three-hour rerun."}
+    preservation = None
+    if frozen:
+        preservation = compare_dirs(candidate_baseline/"runs", work/"runs")
+        write(work/"baseline_comparison.json", preservation)
+        assert preservation["passed"], "Candidate diverged from frozen OOP-0 baseline"
+    result = {"passed": True, "stage": "OOP-1" if frozen else "OOP-0", "configuration": config, "comparisons": reports,
+              "baseline_preservation": preservation, "artifacts": artifacts,
+              "scope": "GNU real64 OpenMP 32; default 0.25 K bubble; dt=4; initialization, ten-step prefix, 60 s interval outputs; no three-hour rerun."}
     write(work/"results.json", result)
     write(work/"status.json", {"state": "completed", "passed": True})
     print("PASS: observational hooks preserve all baseline outputs", flush=True)
@@ -401,8 +461,14 @@ def main():
     parser.add_argument("--lookup-directory", type=Path, default=Path("/scratch/peter50504/ACE_FORTRAN/input_data"))
     parser.add_argument("--compare", type=Path, help="Compare workspaces' *.bin files without running models")
     parser.add_argument("--analyze-existing", action="store_true", help="Validate recorded observation layouts and saved-state invariants without integration")
+    parser.add_argument("--candidate-baseline", type=Path, help="Build current source and require exact preservation of a frozen OOP-0 workspace; never reruns the baseline")
+    parser.add_argument("--compile-compatibility", action="store_true", help="Compile serial/OpenMP real64/real32 from an existing source snapshot and run only an empty ace_t client")
     args = parser.parse_args()
-    if args.analyze_existing:
+    if sum(bool(x) for x in (args.candidate_baseline,args.compare,args.analyze_existing,args.compile_compatibility)) > 1:
+        parser.error("Choose one execution or postprocessing mode")
+    if args.compile_compatibility:
+        compile_compatibility(args.work.resolve())
+    elif args.analyze_existing:
         if args.compare: parser.error("Choose analysis or comparison")
         evidence = analyze_existing(args.work.resolve())
         print(f"PASS: {len(evidence['observation_layouts'])} observation layouts and {len(evidence['state_validity'])} state streams")
@@ -414,7 +480,7 @@ def main():
     else:
         work = args.work.resolve()
         try:
-            run(work, args.lookup_directory.resolve())
+            run(work, args.lookup_directory.resolve(), args.candidate_baseline.resolve() if args.candidate_baseline else None)
         except Exception as exc:
             if work.exists(): write(work/"failure.json", {"type": type(exc).__name__, "message": str(exc)})
             raise
