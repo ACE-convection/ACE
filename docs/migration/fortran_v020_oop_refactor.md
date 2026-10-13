@@ -727,3 +727,97 @@ Damping/P3 state still requires one initialized model per fresh process;
 real32/serial evidence remains compilation/linking only. The remaining
 output callbacks still require an executable stack with this GNU toolchain.
 No commit, push, tag, main merge or reference-history merge was performed.
+
+## OOP-4a observational diagnose (2026-10-13)
+
+The developer authorized OOP-4a after OOP-3b commit `14039c3`. This stage
+extracts the existing `test.F` diagnostic calculation only. OOP-4b output
+ownership, later lifecycle stages and history integration remain separate
+review boundaries.
+
+`ace_t%diagnose()` owns a private `ace_diagnostics_t` with model-kind
+Tr/q/ql/qi and explicit real(kind=4) Xout/rh4/b4. Buffers are allocated on the
+first diagnosis and completely refreshed on every call. They are distinct
+from both initialization scratch and the integrator's thermal context. The
+calculation retains the original zero fill, state conversion, vertical-then-
+column loop order, native inversion/P3 phase combination, saturation branch,
+RH and buoyancy expressions. Gravity retains the identical model-kind
+constant already defined in `ace_module`. No physics, integrator, response,
+damping or P3 statements are changed.
+
+The optional `diagnose(Xout,rh4,b4)` arguments copy the diagnostic real32
+buffers into the existing serializer. Required shapes are (ncols+1,nz,11),
+(ncols,nz), and (ncols,nz); any argument may be omitted. No aliases escape.
+`test.F` retains output allocation, unit 10, record sizing/bookkeeping,
+fresh-file checks and the nine-field write. Its `write_state()` calls diagnose
+at exactly the previous initial/interval/final cadence. Normal diagnostic
+output no longer uses a whole-model callback; validation and saved-state
+callbacks remain. OOP-4b will move serialization and record ownership.
+
+`oop_diagnose_contract.py` inserts private-access helpers only in an isolated
+checked build. Its independent oracle is extracted verbatim from the
+hash-pinned OOP-0 `test.F`; removing only component qualifications from the
+new numerical body must recover that oracle exactly. Runtime comparisons
+cover complete Xout (including ghost/unused fields), RH, buoyancy and full-
+precision thermal/phase diagnostics; no-argument, all-output and one-output
+calls; poisoned diagnostic buffers and repeated refresh; and state, clock,
+thermal cache and response work-array byte preservation. At initialization,
+uninitialized thermal/response work arrays are seeded only in the test helper
+so preservation checks read defined values. Five integrated steps with
+interspersed diagnoses must match the frozen executable, independently
+checking that those test seeds and diagnoses do not alter integration.
+
+Reproduce in a fresh workspace without modifying frozen baseline artifacts:
+
+```bash
+python3 tests/khn26/oop_regression.py NEW_WORKSPACE --candidate-baseline migration_work/fortran_v020_oop_stage0
+python3 tests/khn26/oop_regression.py NEW_WORKSPACE --compile-compatibility
+python3 tests/khn26/oop_regression.py NEW_WORKSPACE --analyze-existing
+python3 tests/khn26/oop_diagnose_contract.py NEW_WORKSPACE
+python3 tests/khn26/oop_integration_contract.py NEW_WORKSPACE
+python3 tests/khn26/oop_initialization_contract.py NEW_WORKSPACE
+```
+
+Acceptance evidence was collected in
+`migration_work/fortran_v020_oop_stage4a`. Stop for review after these gates;
+no automatic commit or next stage is authorized.
+
+
+### Completed OOP-4a gates (2026-10-13)
+
+All 24 candidate model commands passed. All 195 artifacts match frozen OOP-0
+exactly, including initialization, response tables, nine RK frames, cache and
+physics/damping observations, state streams and nine-field normal output.
+Postprocessing passed 165 observation-layout/frame checks and validated 18
+state streams and normal real32 output. Observed model paths kept all legacy
+response/thermal contexts unallocated. No tolerance was changed.
+
+All three none/native/P3 diagnostic contracts passed: six checkpoints with
+three diagnoses each; complete full-precision phase/thermal fields and real32
+output match the independent frozen writer; repeated/poisoned-buffer refresh
+and optional copies are exact; X/reference/forcing/clock/integrator cache and
+response work arrays remain byte-identical across diagnoses. Five steps with
+interspersed diagnoses match the hash-verified frozen executable exactly.
+
+All existing integration clock/cache contracts passed, including full-dt
+overshoot, no-op targets, explicit interval reset and fractional-dt three-
+minute native state/output replay. All nine supplemental initialization/error
+contracts passed. Dry/native 600 s comparisons each retain 151 bitwise-
+identical, finite saved states with nonnegative qt. All four real32/real64
+serial/OpenMP uninstrumented compilation/link cases and empty type clients
+passed; numerical runtime acceptance remains GNU real64/OpenMP32.
+
+[Stage-4a results](../../tests/khn26/oop_stage4a_results.json) record executed
+source/input/compiler/runner/executable hashes, commands, paired comparisons,
+diagnostic oracle and isolated-helper provenance. Removing the diagnostic
+type/component/binding/method additions recovers the OOP-3b module exactly.
+Reversing the driver diagnostic extraction recovers the prior driver exactly,
+including serialization and cadence. Input/interpolation/third-party P3
+source is unchanged. Current source matches the executed acceptance snapshot;
+frozen OOP-0 and prior stage evidence remain intact. No new adapter experiment,
+performance or long scientific experiment acceptance is claimed.
+
+OOP-4a is complete. OOP-4b output ownership is the next separate approval
+boundary. Damping/P3 state still requires one initialized model per fresh
+process; validation/saved-state callbacks still require the GNU executable
+stack. No commit, push, tag, main merge or reference-history merge was performed.

@@ -27,12 +27,20 @@ type :: ace_thermal_t
   real, allocatable :: reference_tv(:), Ta(:,:), q(:,:), ql(:,:), qi(:,:)
 end type ace_thermal_t
 
-! OOP-3b: the model owns state, response, thermal cache and integration clock.
+! Observational diagnostics are separate from initialization and RK caches.
+type :: ace_diagnostics_t
+  private
+  real, allocatable :: Tr(:,:), q(:,:), ql(:,:), qi(:,:)
+  real(kind=4), allocatable :: Xout(:,:,:), rh4(:,:), b4(:,:)
+end type ace_diagnostics_t
+
+! OOP-4a: the model also owns observational diagnostic buffers.
 ! Components retain the existing model real kind and layouts.
 type :: ace_t
   private
   type(ace_response_t) :: response
   type(ace_thermal_t) :: thermal
+  type(ace_diagnostics_t) :: diagnostics
   logical :: precipitation_enabled
   integer :: ncols, nz, n_prog, n_weno
   real :: dt, t
@@ -42,6 +50,7 @@ type :: ace_t
   real(real64), allocatable :: input_profile(:,:),diameters(:),input_area(:),input_perimeter(:)
   real(real64), allocatable :: input_coarse_z(:),input_coarse_ze(:),tmp(:)
 contains
+  procedure :: diagnose => model_diagnose
   procedure :: integrate => model_integrate
   procedure :: initialize => model_initialize
   procedure :: with_legacy_state => model_with_legacy_state
@@ -1461,6 +1470,39 @@ if (present(reset_clock_to_target)) then
   if (reset_clock_to_target) self%t=te
 endif
 end subroutine model_integrate
+
+subroutine model_diagnose(self,Xout,rh4,b4)
+class(ace_t), intent(inout) :: self
+! Optional copies serve the existing serializer until OOP-4b. No aliases escape.
+real(kind=4), intent(out), optional :: Xout(:,:,:),rh4(:,:),b4(:,:)
+integer :: i,k
+real :: dum1
+if (.not.allocated(self%diagnostics%Xout)) then
+  allocate(self%diagnostics%Xout(self%ncols+1,self%nz,11))
+  allocate(self%diagnostics%Tr(self%ncols,self%nz),self%diagnostics%q(self%ncols,self%nz), &
+           self%diagnostics%ql(self%ncols,self%nz),self%diagnostics%qi(self%ncols,self%nz), &
+           self%diagnostics%rh4(self%ncols,self%nz),self%diagnostics%b4(self%ncols,self%nz))
+endif
+self%diagnostics%Xout=0.
+self%diagnostics%Xout(:,:,1:self%n_prog)=self%X
+do k=1,self%nz
+  do i=1,self%ncols
+    if (self%n_prog==3) then
+      call inv_theta_e(self%X(i,k,2),self%X(i,k,3),self%Ref(k,7),self%diagnostics%Tr(i,k),self%diagnostics%q(i,k),self%diagnostics%ql(i,k),self%diagnostics%qi(i,k))
+      self%diagnostics%Xout(i,k,4)=self%diagnostics%ql(i,k); self%diagnostics%Xout(i,k,8)=self%diagnostics%qi(i,k)
+    else
+      self%diagnostics%Tr(i,k)=self%X(i,k,2)*self%Ref(k,8)
+      self%diagnostics%q(i,k)=self%X(i,k,3); self%diagnostics%ql(i,k)=self%X(i,k,4)+self%X(i,k,6); self%diagnostics%qi(i,k)=self%X(i,k,8)
+    endif
+    self%diagnostics%rh4(i,k)=self%diagnostics%q(i,k)/eval_qs(self%diagnostics%Tr(i,k),self%Ref(k,7),self%diagnostics%q(i,k)+self%diagnostics%ql(i,k)+self%diagnostics%qi(i,k),merge(1,0,self%diagnostics%Tr(i,k)<273.1636783445389))
+    dum1=self%diagnostics%Tr(i,k)*(1.+0.607789855072462*self%diagnostics%q(i,k)-self%diagnostics%ql(i,k)-self%diagnostics%qi(i,k))
+    self%diagnostics%b4(i,k)=g*(dum1-self%Tv0(k))/self%Tv0(k)
+  enddo
+enddo
+if (present(Xout)) Xout=self%diagnostics%Xout
+if (present(rh4)) rh4=self%diagnostics%rh4
+if (present(b4)) b4=self%diagnostics%b4
+end subroutine model_diagnose
 
 subroutine model_with_legacy_state(self,action)
 class(ace_t), intent(inout) :: self

@@ -556,3 +556,23 @@ fractional-dt contracts, four compilation/link variants and adapter checks.
 Checked legacy procedural clients also reproduce none/native/P3 ten-step
 streams from frozen initial arrays. Damping/P3 lifecycle remains a later
 stage; retain the single-model/fresh-process restriction.
+
+OOP-4a adds observational `ace_t%diagnose()` with separate full-precision
+thermal/phase and real32 output buffers. Optional Xout/rh4/b4 copies feed the
+existing serializer at its original cadence. `oop_diagnose_contract.py
+WORKSPACE` extracts its oracle from the hash-pinned frozen writer, verifies
+all diagnostic fields exactly, checks repeated/poisoned-buffer refresh and
+state/cache/clock/response preservation, and compares five steps with
+interspersed diagnoses against the frozen executable. It uses six checkpoints
+and three diagnoses per checkpoint in fresh none/native/P3 processes. Public
+state remains private; helpers exist only in the isolated checked build.
+Output unit/record ownership remains in `test.F` until OOP-4b.
+
+
+[OOP-4a results](oop_stage4a_results.json) record 195 bitwise-identical frozen
+artifacts, 165 observation layouts, 18 valid state streams, all three
+observational diagnosis contracts, integration clock/cache/fractional-dt
+contracts, nine supplemental gates and four compilation/link variants.
+The numerical diagnostic body differs from the frozen writer only by
+component qualification; removing diagnostic additions recovers the OOP-3b
+module exactly. Existing serialization and cadence remain unchanged.

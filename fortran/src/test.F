@@ -10,12 +10,10 @@ character(16) :: physics
 character(1024) :: state_output
 ! P3 prognostics: MF, th, qv, qc, nc, qr, nr, qi, ni, qrim, brim.
 ! Shared theta_e/qt profiles are input metadata, converted once before integration.
-real, parameter :: g=9.80665
-integer :: i,k,n,t,ncols,nz,ncoarse,ndt,argument,parse_status,record_length,io_status
+integer :: i,n,t,ncols,nz,ncoarse,ndt,argument,parse_status,record_length,io_status
 integer :: intervals
-real :: ts,te,dt,start,finish,dum1
+real :: ts,te,dt,start,finish
 type(ace_t) :: model
-real, allocatable :: Tr(:,:),q(:,:),ql(:,:),qi(:,:)
 real(kind=4), allocatable :: Xout(:,:,:),rh4(:,:),b4(:,:)
 logical :: shared_input
 character(1024) :: input_file,output_file,validation_file,arg,p3_directory
@@ -70,7 +68,7 @@ enddo
 call model%initialize(shared_input,input_file,p3_directory,n_weno,physics,dt,intervals,intervals_set, &
                       ncols,nz,ncoarse,n_prog,khn26_case,precipitation_enabled)
 allocate(Xout(ncols+1,nz,11))
-allocate(Tr(ncols,nz),q(ncols,nz),ql(ncols,nz),qi(ncols,nz),rh4(ncols,nz),b4(ncols,nz))
+allocate(rh4(ncols,nz),b4(ncols,nz))
 
 if (len_trim(validation_file)>0) then
   call model%with_legacy_state(validate_model)
@@ -102,12 +100,12 @@ open(10,file=trim(output_file),access='direct',form='unformatted',status='new',r
 if (io_status/=0) error stop 'Cannot open model output; provide an existing output directory'
 n=1
 do t=1,intervals
-  call model%with_legacy_state(write_model_state)
+  call write_state()
   call model%integrate(te,reset_clock_to_target=.true.)
   if (len_trim(state_output)>0) call model%with_legacy_state(write_saved_state)
   ts=te; te=ts+dt*real(ndt)
 enddo
-call model%with_legacy_state(write_model_state)
+call write_state()
 close(10)
 if (len_trim(state_output)>0) close(state_unit)
 call cpu_time(finish)
@@ -145,32 +143,8 @@ real(real64), intent(in) :: input_coarse_z(:),input_coarse_ze(:)
 write(state_unit) real(X,real64)
 end subroutine write_saved_state
 
-subroutine write_model_state(X,Ref,A,B,forcing,Tv0,input_coarse_z,input_coarse_ze,response)
-type(ace_response_t), intent(inout) :: response
-real, intent(inout) :: X(:,:,:),forcing(:,:)
-real, intent(in) :: Ref(:,:),A(:),B(:),Tv0(:)
-real(real64), intent(in) :: input_coarse_z(:),input_coarse_ze(:)
-call write_state(X,Ref,Tv0)
-end subroutine write_model_state
-
-subroutine write_state(X,Ref,Tv0)
-real, intent(in) :: X(:,:,:),Ref(:,:),Tv0(:)
-Xout=0.
-Xout(:,:,1:n_prog)=X
-do k=1,nz
-  do i=1,ncols
-    if (n_prog==3) then
-      call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Tr(i,k),q(i,k),ql(i,k),qi(i,k))
-      Xout(i,k,4)=ql(i,k); Xout(i,k,8)=qi(i,k)
-    else
-      Tr(i,k)=X(i,k,2)*Ref(k,8)
-      q(i,k)=X(i,k,3); ql(i,k)=X(i,k,4)+X(i,k,6); qi(i,k)=X(i,k,8)
-    endif
-    rh4(i,k)=q(i,k)/eval_qs(Tr(i,k),Ref(k,7),q(i,k)+ql(i,k)+qi(i,k),merge(1,0,Tr(i,k)<273.1636783445389))
-    dum1=Tr(i,k)*(1.+0.607789855072462*q(i,k)-ql(i,k)-qi(i,k))
-    b4(i,k)=g*(dum1-Tv0(k))/Tv0(k)
-  enddo
-enddo
+subroutine write_state()
+call model%diagnose(Xout,rh4,b4)
 write(10,rec=n) Xout(1:ncols,:,1:3),Xout(1:ncols,:,4),Xout(1:ncols,:,6), &
                  Xout(1:ncols,:,8),Xout(1:ncols,:,10),rh4,b4
 n=n+1

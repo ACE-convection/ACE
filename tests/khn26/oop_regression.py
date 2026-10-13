@@ -60,6 +60,8 @@ def thermal_code(source, prefix="thermal%"):
 
 
 def candidate_stage(source):
+    if "procedure :: diagnose => model_diagnose" in source:
+        return "OOP-4a"
     if "procedure :: integrate => model_integrate" in source:
         return "OOP-3b"
     if "type :: ace_response_t" in source:
