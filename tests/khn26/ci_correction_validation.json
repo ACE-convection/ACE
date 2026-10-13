@@ -1,0 +1,271 @@
+{
+  "scope": "Previously completed validation of the authorized Ci correction; no new model run or performance measurement.",
+  "production_source_sha256": "1d09586a50e2f73866a70e6ab75b21828a2a97268ddb3d80d4ff5f02ae0a44c0",
+  "matlab_ci_sha256": "dba544e76ce1e74136daff7fd988670f68000c8835732344d5ac6c20697389ce",
+  "common_state": {
+    "before": {
+      "workspace": "migration_work/khn26_common_precip32",
+      "results_sha256": "f3e99cc082dd267d373a108df08df33c4f3d051655d27bc9778cfcc836bd5625",
+      "samples": 19248,
+      "byte_identical_inputs": true,
+      "finite_outputs": true,
+      "field_order": [
+        "T",
+        "q",
+        "ql",
+        "qi",
+        "theta_e_base",
+        "theta_e_perturbed",
+        "theta_e_condensate_derivative",
+        "theta_e_sink",
+        "qt_sink"
+      ],
+      "max_abs_error": {
+        "fortran_outputs": [
+          1.1368683772161603e-13,
+          1.6479873021779667e-16,
+          1.6479873021779667e-16,
+          4.5102810375396984e-17,
+          3.204552228908142e-06,
+          3.204566382919438e-06,
+          0.013318413039087318,
+          8.596926451102938e-09,
+          5.488773498207866e-19
+        ],
+        "fortran_fixed_thermo": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          3.204552228908142e-06,
+          3.204566382919438e-06,
+          0.013318413039087318,
+          8.596926451102938e-09,
+          1.0587911840678754e-22
+        ]
+      },
+      "artifacts_sha256": {
+        "fortran_fixed_thermo.bin": "f52af2029cedbad51c845f937e6a35d753f9c42166675d7b3454549da3da2dbf",
+        "fortran_outputs.bin": "0ab8d457e1e41e345b905906bc165540e773ae0b24bdaedcb76fca29cc985446",
+        "inputs.bin": "7d624ff7a7c46e50bb6a25a0fae0ce61c2e3c684172f428da7e9753f788af880",
+        "matlab_outputs.bin": "939b860742125db3aaac0fbf4bec4a78c1b8f47f9ba0ffea299121d00d9bca8f",
+        "common_thermo.bin": "019a582104a1da53a92af06e8634fb2467e3285a412350d2cd0e3d302e46f5ae",
+        "fortran_inputs_echo.bin": "7d624ff7a7c46e50bb6a25a0fae0ce61c2e3c684172f428da7e9753f788af880",
+        "matlab_inputs_echo.bin": "7d624ff7a7c46e50bb6a25a0fae0ce61c2e3c684172f428da7e9753f788af880"
+      }
+    },
+    "after": {
+      "workspace": "migration_work/khn26_common_precip32_ci",
+      "results_sha256": "37e11a601414da0925aedb38de38a63c53b4cf9ce55a88bd9cd035193ca37e31",
+      "samples": 19248,
+      "byte_identical_inputs": true,
+      "finite_outputs": true,
+      "field_order": [
+        "T",
+        "q",
+        "ql",
+        "qi",
+        "theta_e_base",
+        "theta_e_perturbed",
+        "theta_e_condensate_derivative",
+        "theta_e_sink",
+        "qt_sink"
+      ],
+      "max_abs_error": {
+        "fortran_outputs": [
+          1.1368683772161603e-13,
+          1.6479873021779667e-16,
+          1.6479873021779667e-16,
+          4.5102810375396984e-17,
+          5.684341886080801e-13,
+          5.684341886080801e-13,
+          1.7053025658242404e-05,
+          1.5790595567222176e-10,
+          5.488773498207866e-19
+        ],
+        "fortran_fixed_thermo": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          2.2737367544323206e-13,
+          2.2737367544323206e-13,
+          1.7053025658242404e-05,
+          1.5790595567222176e-10,
+          1.0587911840678754e-22
+        ]
+      },
+      "artifacts_sha256": {
+        "fortran_fixed_thermo.bin": "3f26c03e9c83b7cce75291f3fd1be4c69ebe4bc928ec41f298024021e50125e6",
+        "fortran_inputs_echo.bin": "7d624ff7a7c46e50bb6a25a0fae0ce61c2e3c684172f428da7e9753f788af880",
+        "common_thermo.bin": "019a582104a1da53a92af06e8634fb2467e3285a412350d2cd0e3d302e46f5ae",
+        "fortran_outputs.bin": "57d98cb9166ff68dc31a8f5cabeed129eae80e612ac3fd7b5b8203c51f38ee94",
+        "inputs.bin": "7d624ff7a7c46e50bb6a25a0fae0ce61c2e3c684172f428da7e9753f788af880",
+        "matlab_outputs.bin": "939b860742125db3aaac0fbf4bec4a78c1b8f47f9ba0ffea299121d00d9bca8f",
+        "matlab_inputs_echo.bin": "7d624ff7a7c46e50bb6a25a0fae0ce61c2e3c684172f428da7e9753f788af880"
+      }
+    }
+  },
+  "ten_minute_gates": {
+    "single_native": {
+      "workspace": "migration_work/khn26_single32_native_ci_3h",
+      "gate_report_sha256": "cd15ec9a40d1bf28434578d574172bfd773896ff025506f79cd5b81273fda1b8",
+      "configuration_sha256": "d527e3894ec3807f2aa1541471a8f47d95fadd2af98bcac0098cb5820972b4c4",
+      "duration_seconds": 600,
+      "state_field_order": [
+        "MF",
+        "theta_e",
+        "qt"
+      ],
+      "tendency_field_order": [
+        "MF",
+        "theta_e",
+        "qt"
+      ],
+      "precipitation_field_order": [
+        "theta_e_sink",
+        "qt_sink"
+      ],
+      "limits": {
+        "state_gate_limits": [
+          1e-09,
+          1e-07,
+          1e-11
+        ],
+        "tendency_gate_limits": [
+          1e-09,
+          1e-08,
+          1e-11
+        ],
+        "precipitation_gate_limits": [
+          1e-07,
+          1e-11
+        ]
+      },
+      "results": {
+        "passed": true,
+        "checked_production_ten_step_byte_identity": true,
+        "thread_evidence": {
+          "matlab_cap_start_end": [
+            32,
+            32
+          ],
+          "fortran_openmp_team": 32,
+          "scope": "Computational cap/team and CPU affinity; background threads may exist and not all model sections are parallel."
+        },
+        "state_max_abs_error": [
+          2.714770630518615e-10,
+          3.2766251933935564e-09,
+          1.4713924523235278e-13
+        ],
+        "tendency_max_abs_error": [
+          3.418900579310602e-12,
+          3.8799941037837016e-10,
+          7.154576444365433e-15
+        ],
+        "precipitation_max_abs_error": [
+          3.849231437064171e-10,
+          2.0024265448906342e-15
+        ],
+        "configuration_sha256": "d527e3894ec3807f2aa1541471a8f47d95fadd2af98bcac0098cb5820972b4c4"
+      }
+    },
+    "multi": {
+      "workspace": "migration_work/khn26_multi32_bubble_ci_12h",
+      "gate_report_sha256": "b208ee13954be5151b48016e1cfecdaad6a008cfaaf84b956aee60745559e989",
+      "configuration_sha256": "6668264f4256360c233888af7d593ddc38c28a198e55ad65febe0de542611117",
+      "duration_seconds": 600,
+      "state_field_order": [
+        "MF",
+        "theta_e",
+        "qt"
+      ],
+      "tendency_field_order": [
+        "MF",
+        "theta_e",
+        "qt"
+      ],
+      "precipitation_field_order": [
+        "theta_e_sink",
+        "qt_sink"
+      ],
+      "limits": {
+        "state_gate_limits": [
+          1e-09,
+          1e-07,
+          1e-11
+        ],
+        "tendency_gate_limits": [
+          1e-09,
+          1e-08,
+          1e-11
+        ],
+        "precipitation_gate_limits": [
+          1e-07,
+          1e-11
+        ]
+      },
+      "results": {
+        "gate_none": {
+          "passed": true,
+          "actual_duration_seconds": 600,
+          "checked_production_ten_step_byte_identity": true,
+          "thread_evidence": {
+            "matlab_cap_start_end": [
+              32,
+              32
+            ],
+            "fortran_openmp_team": 32,
+            "scope": "Computational cap/team and CPU affinity; background threads may exist and not all model sections are parallel."
+          },
+          "state_max_abs_error": [
+            7.283063041541027e-14,
+            2.2737367544323206e-12,
+            1.734723475976807e-16
+          ],
+          "tendency_max_abs_error": [
+            8.520744873563579e-16,
+            3.17358986312577e-14,
+            2.126052697608294e-18
+          ]
+        },
+        "gate_native": {
+          "passed": true,
+          "actual_duration_seconds": 600,
+          "checked_production_ten_step_byte_identity": true,
+          "thread_evidence": {
+            "matlab_cap_start_end": [
+              32,
+              32
+            ],
+            "fortran_openmp_team": 32,
+            "scope": "Computational cap/team and CPU affinity; background threads may exist and not all model sections are parallel."
+          },
+          "state_max_abs_error": [
+            1.211875044759836e-10,
+            1.9578578758228105e-09,
+            1.2363547685634302e-13
+          ],
+          "tendency_max_abs_error": [
+            1.2236184288028085e-12,
+            1.5749500661965676e-10,
+            3.081394053762107e-15
+          ],
+          "precipitation": {
+            "field_order": [
+              "theta_e_sink",
+              "qt_sink"
+            ],
+            "max_abs_error": [
+              2.2178637702416348e-10,
+              1.0724868597920302e-15
+            ],
+            "finite_sinks": true,
+            "nonnegative_water_removal": true,
+            "passed": true
+          }
+        }
+      }
+    }
+  }
+}

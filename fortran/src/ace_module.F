@@ -1,9 +1,9 @@
 module ace_module
-use ace_input, only: read_case_pmb
+use ace_interpolation, only: interp1, pchip
 implicit none
 
 private
-public :: weno, weno_vec, inv_theta_e, pchip, theta_e, ace_driver, ace_initialization, eval_qs
+public :: weno, weno_vec, inv_theta_e, pchip, theta_e, ace_driver, ace_initialization, eval_qs, set_p3_lookup_directory
 
 ! defien operator for grid interface
 
@@ -18,90 +18,146 @@ real, parameter :: qc_ramp = 0.5e-3 ! kg/kg; ramping for precip when qc>qc_ramp
 real, parameter :: dqc = 20 ! kg/kg; transition for a smooth onset of precip ramp function
 real, parameter :: tau_pr = 5*60 ! sec; relaxation timescale for precip
 
-integer :: coarse_nz
+integer :: coarse_nz, coarse_ratio
 real, dimension(:), allocatable :: coarse_z, coarse_ze
 real, dimension(:,:), allocatable :: coarse_F
 real, dimension(:,:), allocatable :: dwdt
-real*8, dimension(:,:,:,:), allocatable :: PMB
-real, dimension(:,:), allocatable, save :: T, q, ql, qi
-! Fixed environmental density temperature, supplied with the input density.
-real, dimension(:), allocatable, save :: reference_tv
+! PMB(source level, forcing ACE, response edge, response ACE).
+! Momentum operators retain their input layout.
+real*8, dimension(:,:,:,:), allocatable :: PMB, PMDv, PMD
+! Slab defaults follow MATLAB S20; momentum coefficients retain their source units.
+logical, save :: slab_geometry=.false., zero_ref_buoyancy=.false., Wbar_eq_zero=.false.
+logical, save :: turn_off_DHv=.true., turn_off_DHh=.true.
+real, allocatable, save :: reference_tv(:)
+character(1024), save :: p3_lookup_directory="./input_data/"
+real, dimension(:,:), allocatable, save :: Ta, q, ql, qi
 
 contains
 
-subroutine ace_driver(ncols,nz,n_weno,X,A,B,t,te,dt,B_forcing)
+subroutine ace_driver(ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input)
 implicit none
 
 ! input/output variables
-integer, intent(in) :: ncols,nz,n_weno
+integer, intent(in) :: ncols,nz,n_weno,n_prog
 real, dimension(ncols), intent(in) :: A, B
-real, dimension(ncols+1,nz,10), intent(inout) :: X
+real, dimension(nz,8), intent(in) :: Ref
+real, dimension(ncols+1,nz,n_prog), intent(inout) :: X
 real, intent(inout) :: t
 real, intent(in) :: te,dt
 real, dimension(ncols,nz), intent(in) :: B_forcing
+logical, intent(in), optional :: precipitation_input
 
 ! local variables
-real, dimension(ncols+1,nz,10) :: yi
-real, dimension(ncols,nz,3) :: K1,K2,tmp
+real, dimension(ncols+1,nz,n_prog) :: yi
+real, dimension(ncols,nz,n_prog) :: K1,K2,tmp
+real :: dum1
+real :: mean_mf(nz)
+integer :: i,k
 
 yi = X
 
 do while ( t < te)
   ! update ace tendency
-  call ace_tendency(ncols,nz,n_weno,A,B,X,K1,1)
-  yi(1:ncols,:,1:3) = X(1:ncols,:,1:3) + K1 * dt / 6.
+  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,K1,1)
+  yi(1:ncols,:,:) = X(1:ncols,:,:) + K1 * dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,A,B,yi,K2,2)
-  yi(1:ncols,:,1:3) = X(1:ncols,:,1:3) + ( K1 + K2 ) * dt / 6.
+  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,K2,2)
+  yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,A,B,yi,tmp,3)
+  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,3)
   K2 = K2 + tmp
-  yi(1:ncols,:,1:3) = X(1:ncols,:,1:3) + ( K1 + K2 ) * dt / 6.
+  yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,A,B,yi,tmp,4)
+  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,4)
   K2 = K2 + tmp
-  yi(1:ncols,:,1:3) = X(1:ncols,:,1:3) + ( K1 + K2 ) * dt / 6.
+  yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,A,B,yi,tmp,5)
+  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,5)
   K2 = K2 + tmp
-  yi(1:ncols,:,1:3) = X(1:ncols,:,1:3) + ( K1 + K2 ) * dt / 6.
+  yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,A,B,yi,tmp,6)
+  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,6)
   K2 = ( K2 + tmp ) / 15.
-  yi(1:ncols,:,1:3) = X(1:ncols,:,1:3) + ( K1 / 6. + K2 ) * dt 
+  yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt 
 
-  call ace_tendency(ncols,nz,n_weno,A,B,yi,tmp,7)
+  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,7)
   K1 = K1 + tmp 
-  yi(1:ncols,:,1:3) = X(1:ncols,:,1:3) + ( K1 / 6. + K2 ) * dt 
+  yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt 
 
-  call ace_tendency(ncols,nz,n_weno,A,B,yi,tmp,8)
+  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,8)
   K1 = K1 + tmp 
-  yi(1:ncols,:,1:3) = X(1:ncols,:,1:3) + ( K1 / 6. + K2 ) * dt 
+  yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt 
 
-  call ace_tendency(ncols,nz,n_weno,A,B,yi,tmp,9)
+  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,9)
   K1 = K1 + tmp
 
-  X(1:ncols,:,1:3) = X(1:ncols,:,1:3) + ( K1 / 6. + K2 ) * dt
+  yi = X
+  X(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt
+  
+  ! Match S20's end-of-SSPRK area-mean MF removal before physics/damping.
+  if (Wbar_eq_zero) then
+    do k=1,nz
+      mean_mf(k)=sum(X(1:ncols,k,1)*(A/sum(A)))
+    enddo
+    do i=1,ncols
+      X(i,:,1)=X(i,:,1)-mean_mf
+    enddo
+  endif
 
   ! call physics here
-  call precip_sinks(ncols,nz,X(1:ncols,1:nz,10),K1(:,:,1),K1(:,:,2)) ! simplified precipitation
-  X(1:ncols,:,1:2) = X(1:ncols,:,1:2) +  K1(:,:,1:2) * dt
+  if (n_prog==3) then
+    ! KHN26 clips total water after SSPRK and recomputes physics from that state.
+    X(1:ncols,:,3)=max(X(1:ncols,:,3),0.)
+    if (.not.present(precipitation_input)) then
+      call apply_native_precipitation()
+    elseif (precipitation_input) then
+      call apply_native_precipitation()
+    endif
+  elseif (n_prog==11) then
+    call p3_wrapper_ace(ncols,nz,n_prog,dt,yi,X,Ref)
+  else
+    write(*,*) "No suitable microphysics scheme"
+    stop
+  endif
 
-  ! Non-negative qt, once after precipitation
-  where ( X(1:ncols,:,2) < 0. ) X(1:ncols,:,2) = 0.
+  ! NaN check
+  do k=1,nz
+  do i=1,ncols
+    if (X(i,k,2)/=X(i,k,2)) then
+      write(*,*) i,k,Ref(k,7)
+      write(*,*) yi(i,k,2:n_prog)
+      write(*,*) X(i,k,2:n_prog)
+      stop "check 2"
+    endif    
+  enddo
+  enddo
 
   ! implicit damping 
-  call ImDamp(ncols,nz,X,dt)
+  call ImDamp(ncols,nz,n_prog,X,Ref,dt)
 
 
   t = t + dt
 enddo
 
 
+contains
+subroutine apply_native_precipitation()
+integer :: ii,kk
+do kk=1,nz
+  do ii=1,ncols
+    call inv_theta_e(X(ii,kk,2),X(ii,kk,3),Ref(kk,7),Ta(ii,kk),q(ii,kk),ql(ii,kk),qi(ii,kk))
+  enddo
+enddo
+call precip_sinks(ncols,nz,n_prog,Ref(:,7),K1(:,:,1:2))
+X(1:ncols,:,2:3)=X(1:ncols,:,2:3)+K1(:,:,1:2)*dt
+end subroutine
 endsubroutine ace_driver
 
 
-subroutine ace_initialization(ncols,nz,nz_presolve,z_presolve,ze_presolve,fname,environment_tv,netcdf_input)
+subroutine ace_initialization(ncols,nz,nz_presolve,z_presolve,ze_presolve,fname,environment_tv,netcdf_input, &
+                              turn_off_DHv_input,turn_off_DHh_input,zero_ref_buoyancy_input,Wbar_eq_zero_input)
+use ace_input, only: read_case_basis, read_case_metadata, basis_available
+use, intrinsic :: ieee_arithmetic, only: ieee_is_finite
 implicit none
 
 ! input variables
@@ -109,64 +165,111 @@ integer, intent(in) :: ncols, nz, nz_presolve
 real, dimension(nz_presolve) :: z_presolve
 real, dimension(nz_presolve+1) :: ze_presolve
 character(*), intent(in) :: fname
-real, dimension(nz), intent(in) :: environment_tv
+real, intent(in) :: environment_tv(nz)
 logical, intent(in), optional :: netcdf_input
+logical, intent(in), optional :: turn_off_DHv_input,turn_off_DHh_input,zero_ref_buoyancy_input,Wbar_eq_zero_input
 
 ! local variables
-integer :: i,j,k,n,record_length
-logical :: read_netcdf
+integer :: i,j,k,n,record_length,input_nz,input_cols,input_coarse
+logical :: shared
+real*8, allocatable :: packed_pmb(:,:,:,:)
+character(64) :: geometry
 
-coarse_nz=nz_presolve
+if (.not.all(ieee_is_finite(environment_tv)) .or. any(environment_tv<=0.)) &
+  error stop 'Invalid environmental density temperature'
 allocate(reference_tv(nz))
 reference_tv=environment_tv
+slab_geometry=.false.
+turn_off_DHv=.true.; turn_off_DHh=.true.
+if (present(turn_off_DHv_input)) turn_off_DHv=turn_off_DHv_input
+if (present(turn_off_DHh_input)) turn_off_DHh=turn_off_DHh_input
+coarse_nz=nz_presolve
+if (coarse_nz<1) error stop 'Invalid coarse basis size'
+if (mod(nz-1,coarse_nz)/=0) error stop 'Fine grid does not partition into coarse layers'
+coarse_ratio=(nz-1)/coarse_nz
+shared=.false.
+if (present(netcdf_input)) shared=netcdf_input
 allocate(coarse_z(coarse_nz),coarse_ze(coarse_nz+1))
 allocate(coarse_F(ncols,coarse_nz))
 allocate(PMB(ncols,ncols,coarse_nz,coarse_nz+1))
 allocate(dwdt(ncols,coarse_nz+1))
-allocate(T(ncols,nz),q(ncols,nz),ql(ncols,nz),qi(ncols,nz))
+allocate(Ta(ncols,nz),q(ncols,nz),ql(ncols,nz),qi(ncols,nz))
 
 
-read_netcdf=.false.
-if (present(netcdf_input)) read_netcdf=netcdf_input
-if (read_netcdf) then
-  call read_case_pmb(fname,PMB)
+if (shared) then
+  call read_case_metadata(fname,input_nz,input_cols,input_coarse,geometry)
+  if (input_nz/=nz .or. input_cols/=ncols .or. input_coarse/=coarse_nz) &
+    error stop 'Basis metadata disagrees with initialized model'
+  call read_case_basis(fname,'PMB',PMB)
+  slab_geometry=trim(geometry)=='slab'
+  if (slab_geometry) then
+    allocate(PMDv(ncols,ncols,coarse_nz,coarse_nz+1),PMD(ncols,ncols,coarse_nz,coarse_nz+1))
+    if (.not.turn_off_DHv .and. .not.basis_available(fname,'PMDv')) &
+      error stop 'Cannot activate unavailable PMDv'
+    if (.not.turn_off_DHh .and. .not.basis_available(fname,'PMD')) &
+      error stop 'Cannot activate unavailable PMD'
+    call read_case_basis(fname,'PMDv',PMDv)
+    call read_case_basis(fname,'PMD',PMD)
+  endif
 else
-inquire(iolength=record_length) PMB(1,1,1,:)
-open(10,file=trim(fname),access="direct",recl=record_length)
-n=1
-do k=1,ncols
-do j=1,ncols
-  do i=1,coarse_nz
-    read(10,rec=n) PMB(k,j,i,:)
-    n=n+1
+  inquire(iolength=record_length) PMB(1,1,1,:)
+  open(10,file=trim(fname),access="direct",recl=record_length)
+  n=1
+  do k=1,ncols
+    do j=1,ncols
+      do i=1,coarse_nz
+        read(10,rec=n) PMB(k,j,i,:)
+        n=n+1
+      enddo
+    enddo
   enddo
-enddo
-enddo
-close(10)
+  close(10)
 endif
 
+! Pack once; release the input layout before time integration.
+allocate(packed_pmb(coarse_nz,ncols,coarse_nz+1,ncols))
+do i=1,ncols
+  do k=1,coarse_nz+1
+    packed_pmb(:,:,k,i)=transpose(PMB(i,:,:,k))
+  enddo
+enddo
+call move_alloc(packed_pmb,PMB)
+
+Wbar_eq_zero=slab_geometry
+if (present(Wbar_eq_zero_input)) Wbar_eq_zero=Wbar_eq_zero_input
+zero_ref_buoyancy=slab_geometry
+if (present(zero_ref_buoyancy_input)) zero_ref_buoyancy=zero_ref_buoyancy_input
+if ((.not.turn_off_DHv .or. .not.turn_off_DHh) .and. .not.slab_geometry) &
+  error stop 'Momentum response requires schema 2 slab operators'
 coarse_z = z_presolve
 coarse_ze = ze_presolve
 
 end subroutine ace_initialization
 
 
-subroutine ace_tendency(ncols,nz,n_weno,A,B,X,dXdt,rkstage)
+subroutine ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,dXdt,rkstage)
 implicit none
 
 ! input/output variables
-integer, intent(in) :: ncols, nz, n_weno, rkstage
-real, dimension(ncols), intent(in) :: A, B ! ACE area and ACE outer perimeter [km^2, km]
-real, dimension(ncols+1,nz,10), intent(in) :: X ! theta_e, qt, MF, rhoc, rhoz, z, zm, dz, dzm, p
-real, dimension(ncols,nz,3), intent(out) :: dXdt 
+integer, intent(in) :: ncols, nz, n_weno, n_prog, rkstage
+real, intent(in) :: dt
+real, dimension(ncols), intent(in) :: A, B ! ACE area/perimeter in SI [m^2, m]
+real, dimension(nz,8), intent(in) :: Ref ! reference varaibles: rhoc, rhoz, z, zm, dz, dzm, p, pi
+! n_prog=3: MF/theta_e/qt; n_prog=11: MF/theta/qv/qc/nc/qr/nr/qi/ni/qrim/brim.
+real, dimension(ncols+1,nz,n_prog), intent(in) :: X
+real, dimension(ncols,nz,n_prog), intent(out) :: dXdt 
 
 ! local variables
-integer :: i,n,k,ks,ke
-real :: MF_max, MF_min, MF_abs
+integer :: i,j,l,n,k,ks,ke,outer
+real :: dum1,dum2
+real*8 :: partial,value
+real :: packed_F(coarse_nz,ncols)
 real, dimension(ncols,nz,2) :: eps_tur
-real, dimension(nz) :: rho0B, Tv
+real, dimension(nz) :: Tv, mean_rho0B
+real, dimension(ncols,nz) :: rho0B, FH, dz2FH, DHh
+real, dimension(ncols,coarse_nz) :: coarse_DHv, coarse_DHh
 real, dimension(ncols,nz,3) :: dXdz
-real, dimension(ncols,nz,2) :: Ci, rho0wC
+real, dimension(ncols,nz,2:n_prog) :: Ci, rho0wC
 real, dimension(ncols+1,nz) :: mfc, Wc
 real, dimension(ncols,nz) ::Wi, Admfdz, ioflow, F
 
@@ -181,52 +284,61 @@ enddo
 dXdt = 0.
 mfc = 0.
 Wc = 0.
+FH = 0.; dz2FH = 0.; DHh = 0.
 
 ! Compute tracer values Ci(zi) at interface points from C(zc=zi+dz/2)
 do i=1,ncols
-  do n=1,2
-    call weno_vec(n_weno,nz,X(i,:,n),X(i,:,3),rho0wC(i,:,n))
-    rho0wC(i,:,n) = X(i,:,3) * rho0wC(i,:,n)
+  do n=2,n_prog
+    call weno_vec(n_weno,nz,X(i,:,n),X(i,:,1),rho0wC(i,:,n))
+    rho0wC(i,:,n) = X(i,:,1) * rho0wC(i,:,n)
     rho0wC(i,1,n) = 0. ! set surface fluxes to zero
   enddo
 
   ! Vertical velocity w(zi) (mass flux already at zi)
-  Wi(i,:) = X(i,:,3) / X(i,:,5)
+  Wi(i,:) = X(i,:,1) / Ref(:,2)
 
   ! Vertical mass flux & velocity at zc=zi+dz/2
-  call weno_up3(nz,X(i,:,3),mfc(i,:))
-  Wc(i,:) = mfc(i,:) / X(i,:,4)
+  call weno_up3(nz,X(i,:,1),mfc(i,:))
+  Wc(i,:) = mfc(i,:) / Ref(:,1)
 
   ! Admfdz = (ACE area)*dmfdz for dynamic inflow/outflow at zc=zi+dz/2
   Admfdz(i,nz) = 0.
-  Admfdz(i,1:nz-1) = A(i) * ( X(i,2:nz,3) - X(i,1:nz-1,3) ) / X(i,2:nz,9)
+  Admfdz(i,1:nz-1) = A(i) * ( X(i,2:nz,1) - X(i,1:nz-1,1) ) / Ref(2:nz,6)
 
   ! ioflow = -Bi*rho_0*u_n (minus h. mass flux * lateral boundary length)
   ioflow(i,:) = sum(Admfdz(1:i,:),1)
 enddo
+! MATLAB S20 uses the outermost ACE itself for outer momentum exchange.
+! Annular input keeps its existing zero-MF environment.
+if (slab_geometry) then
+  mfc(ncols+1,:)=mfc(ncols,:)
+  Wc(ncols+1,:)=Wc(ncols,:)
+endif
 
 do i=1,ncols
-  do n=1,2
+  outer=i+1
+  if (slab_geometry) outer=min(outer,ncols)
+  do n=2,n_prog
     dXdt(i,1:nz  ,n) = 0.
-    dXdt(i,1:nz-1,n) = - ( rho0wC(i,2:nz,n) - rho0wC(i,1:nz-1,n) ) / X(i,1:nz-1,8) / X(i,1:nz-1,4)  ! vertical flux convergence
+    dXdt(i,1:nz-1,n) = - ( rho0wC(i,2:nz,n) - rho0wC(i,1:nz-1,n) ) / Ref(1:nz-1,5) / Ref(1:nz-1,1)  ! vertical flux convergence
 
-    dXdt(i,1:nz-1,n) = dXdt(i,1:nz-1,n) - eps_tur(i,1:nz-1,1) * ( X(i,1:nz-1,n) - X(i+1,1:nz-1,n) )  ! interact outer
+    dXdt(i,1:nz-1,n) = dXdt(i,1:nz-1,n) - eps_tur(i,1:nz-1,1) * ( X(i,1:nz-1,n) - X(outer,1:nz-1,n) )  ! interact outer
     if (i>1) &
     dXdt(i,1:nz-1,n) = dXdt(i,1:nz-1,n) - eps_tur(i,1:nz-1,2) * ( X(i,1:nz-1,n) - X(i-1,1:nz-1,n) )  ! interact inner
 
     dXdt(i,1:nz-1,n) = dXdt(i,1:nz-1,n) + 0.5 * &
-                       ( ( ioflow(i  ,1:nz-1) + abs(ioflow(i  ,1:nz-1)) ) * X(i+1,1:nz-1,n) &
+                       ( ( ioflow(i  ,1:nz-1) + abs(ioflow(i  ,1:nz-1)) ) * X(outer,1:nz-1,n) &
                        + ( ioflow(i  ,1:nz-1) - abs(ioflow(i  ,1:nz-1)) ) * X(i  ,1:nz-1,n) ) &
-                        / A(i) / X(i,1:nz-1,4)  ! inflow from outer
+                        / A(i) / Ref(1:nz-1,1)  ! inflow from outer
     if (i>1) &
     dXdt(i,1:nz-1,n) = dXdt(i,1:nz-1,n) - 0.5 * &
                        ( ( ioflow(i-1,1:nz-1) + abs(ioflow(i-1,1:nz-1)) ) * X(i  ,1:nz-1,n) &
                        + ( ioflow(i-1,1:nz-1) - abs(ioflow(i-1,1:nz-1)) ) * X(i-1,1:nz-1,n) ) &
-                        / A(i) / X(i,1:nz-1,4)  ! inflow from inner
+                        / A(i) / Ref(1:nz-1,1)  ! inflow from inner
   enddo
 
   F(i,1:nz  ) = 0.
-  F(i,1:nz-1) = - ( X(i,2:nz,3) * Wi(i,2:nz) - X(i,1:nz-1,3) * Wi(i,1:nz-1) ) / X(i,1:nz-1,8)  ! vertical flux convergence
+  F(i,1:nz-1) = - ( X(i,2:nz,1) * Wi(i,2:nz) - X(i,1:nz-1,1) * Wi(i,1:nz-1) ) / Ref(1:nz-1,5)  ! vertical flux convergence
   F(i,1:nz-1) = F(i,1:nz-1) - eps_tur(i,1,1) * ( mfc(i,1:nz-1) - mfc(i+1,1:nz-1) )  ! interact outer
   if (i>1) &
   F(i,1:nz-1) = F(i,1:nz-1) - eps_tur(i,1,2) * ( mfc(i,1:nz-1) - mfc(i-1,1:nz-1) )  ! interact inner
@@ -238,27 +350,99 @@ do i=1,ncols
                      ( ( ioflow(i-1,1:nz-1) + abs(ioflow(i-1,1:nz-1)) ) * Wc(i  ,1:nz-1) &
                      + ( ioflow(i-1,1:nz-1) - abs(ioflow(i-1,1:nz-1)) ) * Wc(i-1,1:nz-1) ) / A(i)  ! inflow from inner
 
-  if (rkstage==1) then
-    do k=1,nz
-      call inv_theta_e(X(i,k,1),X(i,k,2),X(i,k,10),T(i,k),q(i,k),ql(i,k),qi(i,k))
+  if (.not.turn_off_DHv) then
+    FH(i,1:nz-1) = -eps_tur(i,1,1)*(mfc(i,1:nz-1)-mfc(i+1,1:nz-1))
+    if (i>1) FH(i,1:nz-1)=FH(i,1:nz-1)-eps_tur(i,1,2)*(mfc(i,1:nz-1)-mfc(i-1,1:nz-1))
+    FH(i,1:nz-1)=FH(i,1:nz-1)+0.5*( &
+      (ioflow(i,1:nz-1)+abs(ioflow(i,1:nz-1)))*Wc(i+1,1:nz-1) &
+      +(ioflow(i,1:nz-1)-abs(ioflow(i,1:nz-1)))*Wc(i,1:nz-1))/A(i)
+    if (i>1) FH(i,1:nz-1)=FH(i,1:nz-1)-0.5*( &
+      (ioflow(i-1,1:nz-1)+abs(ioflow(i-1,1:nz-1)))*Wc(i,1:nz-1) &
+      +(ioflow(i-1,1:nz-1)-abs(ioflow(i-1,1:nz-1)))*Wc(i-1,1:nz-1))/A(i)
+    ! MATLAB lower ghost=-FH(1), upper ghost=0; uniform shared input dz.
+    dz2FH(i,1)=(-3.*FH(i,1)+FH(i,2))/Ref(1,5)**2
+    do k=2,nz-1
+      dz2FH(i,k)=(FH(i,k-1)-2.*FH(i,k)+FH(i,k+1))/Ref(k,5)**2
     enddo
   endif
-  
-  Tv(1:nz) = T(i,1:nz) * ( 1. + 0.607789855072462 * q(i,1:nz) - ql(i,1:nz) - qi(i,1:nz) )
-  rho0B(1:nz) = g * X(i,:,4) * ( Tv(1:nz) - reference_tv(1:nz) ) / reference_tv(1:nz)
-  
-  F(i,1:nz) = F(i,1:nz) + rho0B(1:nz)
+  if (.not.turn_off_DHh) then
+    DHh(i,1:nz-1)=ioflow(i,1:nz-1)**2
+    if (i>1) DHh(i,1:nz-1)=DHh(i,1:nz-1)-ioflow(i-1,1:nz-1)**2
+    DHh(i,1:nz-1)=DHh(i,1:nz-1)/Ref(1:nz-1,1)/A(i)
+  endif
 
-  !call pchip(nz,X(i,1:nz,7),F(i,1:nz),coarse_nz,coarse_z,coarse_F(i,1:coarse_nz),.True.)
-  coarse_F(i,:) = sum(reshape(F(i,1:nz),(/4,nz/4/)),1)/4.
+  if (rkstage==1) then
+    do k=1,nz
+      if (n_prog==3) then
+        call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Ta(i,k),q(i,k),ql(i,k),qi(i,k))
+      elseif (n_prog==11) then
+        Ta(i,:) = X(i,:,2) * Ref(:,8)
+        q(i,:)  = X(i,:,3)
+        ql(i,:) = X(i,:,4) + X(i,:,6)
+        qi(i,:) = X(i,:,8)
+      endif
+    enddo 
+  endif
+
+  Tv(1:nz) = Ta(i,1:nz) * ( 1. + 0.607789855072462 * q(i,1:nz) - ql(i,1:nz) - qi(i,1:nz) )
+  rho0B(i,:) = g * Ref(:,1) * (Tv-reference_tv) / reference_tv
 enddo
+
+! MATLAB S20 removes the area-weighted mean buoyancy before nonlocal response.
+if (zero_ref_buoyancy) then
+  do k=1,nz
+    mean_rho0B(k)=sum(rho0B(:,k)*(A/sum(A)))
+  enddo
+  do i=1,ncols
+    rho0B(i,:)=rho0B(i,:)-mean_rho0B
+  enddo
+endif
+
+do i=1,ncols
+  F(i,:)=F(i,:)+rho0B(i,:)
+  coarse_F(i,:)=sum(reshape(F(i,1:nz-1),[coarse_ratio,coarse_nz]),1)/real(coarse_ratio)
+  if (.not.turn_off_DHv) &
+    coarse_DHv(i,:)=-sum(reshape(dz2FH(i,1:nz-1),[coarse_ratio,coarse_nz]),1)/real(coarse_ratio)
+  if (.not.turn_off_DHh) &
+    coarse_DHh(i,:)=sum(reshape(DHh(i,1:nz-1),[coarse_ratio,coarse_nz]),1)/real(coarse_ratio)
+enddo
+
+packed_F=transpose(coarse_F)
+! Each output keeps the legacy vertical-then-forcing reduction order.
+! Without -fopenmp these directives leave the same serial kernel.
+!$omp parallel do collapse(2) default(none) schedule(static) &
+!$omp shared(ncols,coarse_nz,PMB,packed_F,dwdt) private(i,k,j,l,partial,value)
+do i=1,ncols
+  do k=1,coarse_nz+1
+    value=0.
+    do j=1,ncols
+      partial=0.
+      do l=1,coarse_nz
+        partial=partial+PMB(l,j,k,i)*packed_F(l,j)
+      enddo
+      value=value+partial
+    enddo
+    dwdt(i,k)=value
+  enddo
+enddo
+!$omp end parallel do
 
 do i=1,ncols
   do k=1,coarse_nz+1
-    dwdt(i,k) = sum( sum( PMB(i,:,:,k) * coarse_F(:,:) , 2 ), 1 )  
+    if (.not.turn_off_DHv) dwdt(i,k)=dwdt(i,k)+sum(sum(PMDv(i,:,:,k)*coarse_DHv,2),1)
+    if (.not.turn_off_DHh) dwdt(i,k)=dwdt(i,k)+sum(sum(PMD(i,:,:,k)*coarse_DHh,2),1)
   enddo
 
-  call pchip(coarse_nz+1,coarse_ze,dwdt(i,1:coarse_nz+1),nz,X(i,1:nz,7),dXdt(i,1:nz,3),.True.)
+  if (slab_geometry) then
+    if (coarse_ratio==1) then
+      ! Schema 2 basis edges coincide with MF levels, as in S20's direct branch.
+      dXdt(i,:,1)=dwdt(i,:)
+    else
+      call interp1(coarse_nz+1,coarse_ze,dwdt(i,:),nz,Ref(:,4),dXdt(i,:,1),'makima',extrap=.true.)
+    endif
+  else
+    call interp1(coarse_nz+1,coarse_ze,dwdt(i,:),nz,Ref(:,4),dXdt(i,:,1),'pchip',extrap=.true.)
+  endif
 enddo  
 
 ! single ACE
@@ -271,106 +455,184 @@ dXdt(:,nz-10:nz,:)=0.
 end subroutine ace_tendency
 
  
-subroutine ImDamp(ncols,nz,X,dt)
+subroutine ImDamp(ncols,nz,n_prog,X,Ref,dt)
 implicit none
 
 ! input/output variables
-integer, intent(in) :: ncols,nz
+integer, intent(in) :: ncols,nz,n_prog
 real, intent(in) :: dt
-real, dimension(ncols+1,nz,10), intent(inout) :: X
+real, dimension(ncols+1,nz,n_prog), intent(inout) :: X
+real, dimension(nz,7), intent(in) :: Ref
 
 ! local variable
-integer :: i,j,k
-real, dimension(:,:), allocatable, save :: damp
+integer :: i,k,n
+real, dimension(:), allocatable, save :: damp
 logical, save :: first = .True.
 
 if (first) then
-  allocate(damp(ncols,nz))
-  do i=1,ncols
-    do k=1,nz
-      damp(i,k) = dt * exp( ( X(i,k,6) - X(i,nz,6) ) / SLD ) / SLTau
-    enddo
+  allocate(damp(nz))
+  do k=1,nz
+    damp(k) = dt * exp( ( Ref(k,3) - Ref(nz,3) ) / SLD ) / SLTau
   enddo
   first = .False.
 endif
 
 do k=1,nz
   do i=1,ncols
-    X(i,k,1) = ( X(i,k,1) + damp(i,k) * X(ncols+1,k,1) / X(i,k,4) ) / ( 1. + damp(i,k) / X(i,k,4) )
-    X(i,k,2) = ( X(i,k,2) + damp(i,k) * X(ncols+1,k,2) / X(i,k,4) ) / ( 1. + damp(i,k) / X(i,k,4) )
-    X(i,k,3) = X(i,k,3) / ( 1. + damp(i,k) / X(i,k,5) )
+    X(i,k,1) = X(i,k,1) / ( 1. + damp(k) / Ref(k,2) )
+    do n=2,n_prog
+      X(i,k,n) = ( X(i,k,n) + damp(k) * X(ncols+1,k,n) / Ref(k,1) ) / ( 1. + damp(k) / Ref(k,1) )
+    enddo
   enddo
 enddo
 
 end subroutine ImDamp
 
-subroutine precip_sinks(ncols,nz,p,dthe,dqt)
+subroutine precip_sinks(ncols,nz,n_prog,p,dXdt)
 implicit none
 
 ! input/output variables
-integer, intent(in) :: ncols,nz
-real, dimension(ncols,nz), intent(in) :: p
-real, dimension(ncols,nz), intent(inout) :: dthe, dqt
+integer, intent(in) :: ncols,nz,n_prog
+real, dimension(nz), intent(in) :: p
+real, dimension(ncols,nz,n_prog-1), intent(inout) :: dXdt
 
 ! local variables
 integer :: i,k
-real :: qc, ramp_argument, ramp, tail, one_plus_tail
+real :: qc, dql, dqi, ramp
 
 
 do k=1,nz
 do i=1,ncols
   qc = ql(i,k) + qi(i,k)
-  if ( qc <= 0. ) then
-    dqt(i,k) = 0.
-    dthe(i,k) = 0.
-    cycle
-  endif
-  ! Same softplus ramp, with a nonpositive exponential argument in either branch.
-  ramp_argument = dqc / qc_ramp * ( qc - qc_ramp )
-  tail = exp(-abs(ramp_argument))
-  one_plus_tail = 1. + tail
-  ! Accurate log(1+tail) when adding a small tail rounds toward one.
-  if (one_plus_tail == 1.) then
-    ramp = tail
+  dXdt(i,k,:)=0.
+  if (qc<=0.) cycle
+  ramp=dqc/qc_ramp*(qc-qc_ramp)
+  ! Follow MATLAB's expression while exp(ramp) is representable.
+  if (ramp<=log(huge(ramp))) then
+    dXdt(i,k,2)=-(qc_ramp/dqc/tau_pr)*log(1.+exp(ramp))
   else
-    ramp = log(one_plus_tail) * tail / (one_plus_tail - 1.)
+    ! Preserve the finite sink for extreme inputs that overflow MATLAB exp.
+    dXdt(i,k,2)=-(qc_ramp/dqc/tau_pr)*(max(ramp,0.)+log(1.+exp(-abs(ramp))))
   endif
-  ramp = max(ramp_argument,0.) + ramp
-  dqt(i,k) = - ( qc_ramp / dqc / tau_pr ) * ramp
-  ! Fixed T, vapor and liquid/ice ratio: derivative of the existing theta_e.
-  ! Avoid subtracting nearly equal theta_e values with a 1.e-8 kg/kg increment.
-  dthe(i,k) = dqt(i,k) * condensate_theta_e_derivative(T(i,k),q(i,k),ql(i,k),qi(i,k),p(i,k))
+  dql = 1.e-8 * ql(i,k) / qc
+  dqi = 1.e-8 * qi(i,k) / qc
+  dXdt(i,k,1) = dXdt(i,k,2) * ( theta_e(Ta(i,k),q(i,k),ql(i,k)+dql,qi(i,k)+dqi,p(k)) &
+                              - theta_e(Ta(i,k),q(i,k),ql(i,k),qi(i,k),p(k)) ) / 1.e-8
 enddo
 enddo
 
 end subroutine precip_sinks
 
-function condensate_theta_e_derivative(T,q,ql,qi,p) result(derivative)
+
+subroutine set_p3_lookup_directory(directory)
+character(*), intent(in) :: directory
+if (len_trim(directory)==0 .or. len_trim(directory)>len(p3_lookup_directory)) &
+  error stop 'Invalid P3 lookup directory'
+p3_lookup_directory=directory
+end subroutine
+
+subroutine p3_wrapper_ace(ncols,nz,n_prog,dt,X_old,X,Ref)
+use microphy_p3
 implicit none
-real, intent(in) :: T,q,ql,qi,p
-real, parameter :: Rd=287.04, Rv=461.5, Cpd=1005.7, Cl=4190.
-real, parameter :: Lf=0.3337e6, T0=273.1636783445389, P0=1.e5
-real :: derivative, qt, Re, R, Cpl, the, ice_fraction
-qt = q + ql + qi
-Re = (1.-qt)*Rd
-R = Re + q*Rv
-Cpl = Cpd + qt*(Cl-Cpd)
-the = theta_e(T,q,ql,qi,p)
-ice_fraction = qi/(ql+qi)
-! Write theta_e = T*exp(U/Cpl). Along dql+dqi=dqc,
-! dU/dqc = -Rd*log(P0*R/(p*Re))
-!           + (qi/qc)*((Cl-Ci(T0))*log(T0/T)-Lf/T0).
-! Terms from R and vapor pressure cancel at fixed vapor.
-derivative = the/Cpl * ( -Rd*log(P0*R/p/Re) &
-    + ice_fraction*((Cl-Ci(T0))*log(T0/T)-Lf/T0) &
-    - (Cl-Cpd)*log(the/T) )
-end function condensate_theta_e_derivative
+
+! input/output variables
+integer, intent(in) :: ncols, nz, n_prog
+real, intent(in) :: dt
+real, dimension(nz,8), intent(in) :: Ref ! reference varaibles: rhoc, rhoz, z, zm, dz, dzm, p, pi
+real, dimension(ncols+1,nz,n_prog), intent(in) :: X_old 
+real, dimension(ncols+1,nz,n_prog), intent(inout) :: X ! mf, th, qv, qc, nc, qr, nr, qi, ni, qrim, brim
+
+! local variables
+integer, save :: itt = 1
+logical, save :: first = .True.
+integer, parameter :: nCat = 1 ,&                ! the number of ice categories
+                      n_diag_2d = 1 ,&           ! size of 2d diagnostic array
+                      n_diag_3d = 1              ! size of 3d diagnostic array
+logical, parameter :: log_predictNc = .True.  ,& ! predict cloud droplet number or not
+                      typeDiags_ON  = .False. ,& ! diagnose ice types or not
+                      debug_on      = .False. ,& ! debug mode
+                      scpf_on       = .False. ,& ! cloud fraction version not used
+                      trplMomI      = .False. ,& ! triple moment ice
+                      liqfrac       = .False. ,& ! liquid fraction ice
+                      abort_on_err  = .False.  ,& ! program aborts when encountering error
+                      dowr          = .True.     ! print message or not
+real, parameter :: scpf_pfrac    = 0. ,&   ! dummy variable (not used), set to 0
+                   scpf_resfact  = 0. ,&   ! dummy variable (not used), set to 0
+                   clbfact_dep   = 1. ,&   ! calibration for deposition
+                   clbfact_sub   = 1.      ! calibration for sublimation
+character(3), parameter :: model = "ACE"
+integer :: i,j,k,stat
+real, dimension(ncols,nz) :: qc,nc,qr,nr,th_old,th,qv_old,qv, &
+                             qitot,qirim,qiliq,ni,birim,zi,ssat,w,p,dz, &
+                             diag_ze,diag_effc,diag_effi,diag_vmi,diag_di,diag_rhoi,cldfrac
+real, dimension(ncols,n_diag_2d) :: diag_2d
+real, dimension(ncols,nz,n_diag_3d) :: diag_3d
+real, dimension(ncols) :: precip_liq,precip_sol
+
+if (first) then
+  call p3_init(trim(p3_lookup_directory),ncat,trplMomI,liqfrac,trim(model),stat,abort_on_err,dowr)
+  if (stat/=0) stop "Failure of p3 initialization"
+  first = .False.
+endif
+
+th_old = X_old(1:ncols,:,2)
+qv_old = X_old(1:ncols,:,3)
+
+th    = X(1:ncols,:,2)
+qv    = X(1:ncols,:,3)
+qc    = X(1:ncols,:,4)
+nc    = X(1:ncols,:,5)
+qr    = X(1:ncols,:,6)
+nr    = X(1:ncols,:,7)
+qitot = X(1:ncols,:,8)
+ni    = X(1:ncols,:,9)
+qirim = X(1:ncols,:,10)
+birim = X(1:ncols,:,11)
+
+do k=1,nz
+  dz(:,k)   = Ref(k,5)
+  p(:,k)    = Ref(k,7)
+enddo
+
+zi    = 0.
+ssat  = 0.
+w     = 0.
+qiliq = 0.
+
+call p3_main(qc,nc,qr,nr,th_old,th,qv_old,qv,dt, &
+             qitot,qirim,qiliq,ni,birim,zi,ssat,w, &
+             p,dz,itt,precip_liq,precip_sol, &
+             1,ncols,1,nz,nCat, &
+             diag_ze,diag_effc,diag_effi,diag_vmi,diag_di,diag_rhoi, &
+             n_diag_2d,diag_2d,n_diag_3d,diag_3d,log_predictNc,trim(model), &
+             clbfact_dep,clbfact_sub, &
+             debug_on,scpf_on,scpf_pfrac,scpf_resfact,cldfrac,     &
+             trplMomI,liqfrac)
+
+
+if (global_status == -1) stop "p3 stop"
+
+X(1:ncols,:,2)  = th
+X(1:ncols,:,3)  = qv
+X(1:ncols,:,4)  = qc
+X(1:ncols,:,5)  = nc
+X(1:ncols,:,6)  = qr
+X(1:ncols,:,7)  = nr
+X(1:ncols,:,8)  = qitot
+X(1:ncols,:,9)  = ni
+X(1:ncols,:,10) = qirim
+X(1:ncols,:,11) = birim
+
+itt = itt + 1
+
+end subroutine p3_wrapper_ace
+
 
 function theta_e(T,q,ql,qi,p)
 implicit none
 
 real, parameter :: Rd=287.04, Rv=461.5, Cpd=1005.7, Cl=4190., Cvd=719. &
-                  ,Cvv=1410., Cpv=1870., Cpvmcl=Cl-Cpv, EPS=Rd/Rv
+                  ,Cvv=1410., Cpv=1870., Cpvmcl=Cl-Cpv, EPS=0.621971830985916
 real, parameter :: Lv0=2.501e6, Ls=2.834e6, Lf=0.3337e6, T0=273.1636783445389, P0=1.e5
 real, intent(in) :: T,q,ql,qi,p
 integer :: ice
@@ -386,7 +648,7 @@ es = eval_es(T,ice)
 Re = (1-qt)*Rd;
 R = Re + q*Rv;
 
-Cpl = Cpd + qt*(Cl-Cpd);
+Cpl = 1005.7 + qt*3184.3;
 
 chi = Re/Cpl;
 gamma = Rv*q / Cpl;
@@ -396,18 +658,13 @@ theta_e = T * (P0*R/p/Re)**chi * (es/e)**gamma * (T0/T)**gammi * exp( (q*Lv(T)/T
 
 end function theta_e
 
-
-
-
-
  
 subroutine inv_theta_e(theta_e,qt,p,T,q,ql,qi)
-use, intrinsic :: ieee_arithmetic, only: ieee_is_nan, ieee_is_finite
 implicit none
 
 ! parameters
 real, parameter :: Rd=287.04, Rv=461.5, Cpd=1005.7, Cl=4190., Cvd=719. &
-                  ,Cvv=1410., Cpv=1870., Cpvmcl=Cl-Cpv, EPS=Rd/Rv
+                  ,Cvv=1410., Cpv=1870., Cpvmcl=Cl-Cpv, EPS=0.621971830985916
 real, parameter :: Lv0=2.501e6, Ls=2.834e6, Lf=0.3337e6, T0=273.1636783445389, P0=1.e5 &
                   ,qT0=611.3902114165171, LvoT=9155.566660243245
 real, parameter :: tol=1e-3
@@ -419,18 +676,16 @@ real, intent(out) :: T,q,ql,qi
 ! local variables
 integer :: ice
 real :: Cpl,Re,chi,F0,FT0,F,dFdT,R,e,gamma,dT,qc
-real :: G0,qsat,qsi,qs,dC,HT0,GT0,tmp,G,H,es,esi,dTqs,dTqsi,dGdT,dHdT
-real :: sat_roundoff,sat_slope
+real :: G0,qsat,qsi,qs,dC,HT0,GT0,tmp,G,H,es,esi,dTqs,dTqsi,dGdT,dHdT,lv_over_t
 
-Cpl = Cpd + (Cl-CPd)*qt
+Cpl = 1005.7 + 3184.3*qt
 Re = Rd*(1-qt)
 chi = Re/Cpl
 
 ! Step 1: solve assuming no condensate & check consistency
 R = Re + Rv*qt
 gamma = Rv*qt / Cpl
-!e = p*qt / (EPS+ (1-EPS)*qt)
-e = p*qt / (0.621971830985916 + 0.378028169014084*qt)
+e = p*qt / (0.621971830985916+0.378028169014084*qt)
 
 F0 = theta_e * (p*Re/R/P0)**chi * e**gamma
 !FT0 = T0 * polysvp1(T0,0)**gamma * exp(qt*Lv(T0)/Cpl/T0)
@@ -440,19 +695,14 @@ T = T0
 if (F0>=FT0) T = 400.
 
 dT = 9999.
-!do while (abs(dT)>tol)
-!  ice = 0
-!  if (F0<FT0) ice = 1 ! ice exist
-do while (abs(dT)>tol .and. .not.ieee_is_nan(T))
-  ice = 1
-  if (F0>=FT0) ice = 0
+do while (abs(dT)>tol)
+  ice = 0
+  if (F0<FT0) ice = 1 ! ice exist
   !F = T * polysvp1(T,ice)**gamma * exp(qt*Lv(T)/Cpl/T)
-!  F = T * eval_es(T,ice) **gamma * exp(qt*Lv(T)/Cpl/T)
   F = T * eval_es(T,ice) **gamma * exp(qt/Cpl*Lv(T)/T)
   if (ice==0) then
     dFdT = ( 1. - CPVMCL*qt/CPL)/T
   else
-    !dFdT = ( 1. + 300708.*qt/CPL/T )/T
     dFdT = ( 1. - 300708.*qt/CPL/T )/T
   endif
   dFdT = dFdT*F
@@ -464,44 +714,26 @@ ql = 0.
 qi = 0.
 
 
-!ice = 0
-!if (T<T0) ice = 1
-ice = 1
-if (T>=T0) ice = 0
+ice = 0
+if (T<T0) ice = 1
 !qsat = qv_sat(T,p,ice)*(1.-qt)
 qsat = eval_qs(T,p,qt,ice)
 
-!if (q>qsat) then
-! Roundoff band for the no-condensate saturation check only.
-sat_roundoff = 0.
-if (ieee_is_finite(T) .and. T>0. .and. ieee_is_finite(qsat)) then
-  es = eval_es(T,ice)
-  if (ice==0) then
-    sat_slope = 0.621971830985916*p*(1.-qt)/(p-es)**2 * (6743.769/T-4.8451)*es/T
-  else
-    sat_slope = 0.621971830985916*p*(1.-qt)/(p-es)**2 * (6111.72784/T+0.15215)*es/T
-  endif
-  sat_roundoff = 8*epsilon(T)*(max(abs(q),abs(qsat)) + abs(T*sat_slope))
-endif
-!if (ieee_is_nan(T) .or. q>qsat) then
-if (ieee_is_nan(T) .or. q-qsat>sat_roundoff) then
+if (q>qsat) then
   ! Step 2: determine condensate type(s) by comparing G(T0) & H(T0) to G0
   G0 = theta_e * (p*Re/P0)**chi
   dC = 2083.900148084866
   !qsi = qv_sat(T0,p,1) * ( 1. - qt )
   qsi = eval_qs(T0,p,qt,1)
-  HT0 = T0 * (RE+RV*qsi)**chi * exp( (qsi*Lv(T0)-Lf*(qt-qsi))/Cpl/T0 )
+  HT0 = T0 * (RE+RV*qsi)**chi * exp( (qsi*2.500968266240670e6-Lf*(qt-qsi))/Cpl/T0 )
   !qs = qv_sat(T0,p,0) * ( 1. - qt )
   qs = eval_qs(T0,p,qt,0)
-!  GT0 =  T0 * (RE+RV*qs)**chi * exp(qs*Lv(T0)/CPL/T0)
-  GT0 =  T0 * (RE+RV*qs)**chi * exp(qs*LvoT/CPL)
+  GT0 = T0 * (RE+RV*qs)**chi * exp(qs*9155.566660243245/CPL)
 
   ! 3 cases: liquid-only, ice-only, co-existing
   if (G0>GT0 .and. G0>HT0) then ! liquid-only
     ! estimate initial T
-    !tmp = log(qt*p) - log(610.78*EPS)
-    tmp = log(p*qt) - 5.939876353793538
-    !T = 237.3*tmp/(17.27-tmp) + T0
+    tmp = log(qt*p) - 5.939876353793538
     T = 237.3*tmp/(17.27-tmp) + 273.15
 
     dT = 9999.
@@ -509,14 +741,12 @@ if (ieee_is_nan(T) .or. q-qsat>sat_roundoff) then
       !qs = qv_sat(T,p,0)*(1.-qt)
       qs = eval_qs(T,p,qt,0)
       R = Re + Rv*qs
-!      G = T * R**chi *exp(qs*Lv(T)/Cpl/T)
-      G = T * R**chi *exp(qs*(Lv(T)/T)/Cpl)
+      lv_over_t = Lv(T)/T
+      G = T * R**chi *exp(qs*lv_over_t/Cpl)
       !es = polysvp1(T,0)
       es = eval_es(T,0)
-      !dTqs = (1.-qt)* EPS/Rv * p * Lv(T) * es / ( ( p-es )*T )**2.
-      dTqs = 0.621971830985916*p*(1.-qt)/(p-es)**2 * (6743.769/T-4.8451)*es/T
-      !dGdT = 1./T + ( (Rv*Re/R+Lv(T)/T)*dTqs - (Lv0-Cpvmcl*273.15)*qs/T**2. )/Cpl
-      dGdT = 1./T + ( (Rv*Re/R+Lv(T)/T)*dTqs - (Lv0+Cpvmcl*273.15)*qs/T**2. )/Cpl
+      dTqs = EPS*p*(1.-qt)/(p-es)**2.*(6743.769/T-4.8451)*es/T
+      dGdT = 1./T + ( (Rv*Re/R+lv_over_t)*dTqs - 1867292.*qs/T**2. )/Cpl
       dGdT = dGdT*G
       dT = -(G-G0)/dGdT
       T = T + dT
@@ -532,9 +762,7 @@ if (ieee_is_nan(T) .or. q-qsat>sat_roundoff) then
 
   elseif (G0<GT0 .and. G0<HT0) then ! ice-only
     ! estimate initial T
-    !tmp = log(qt*p) - log(610.78*EPS)
-    tmp = log(p*qt) - 5.939876353793538
-    !T = 265.5*tmp/(21.875-tmp) + T0
+    tmp = log(qt*p) - 5.939876353793538
     T = 265.5*tmp/(21.875-tmp) + 273.16
 
     dT = 9999.
@@ -543,15 +771,13 @@ if (ieee_is_nan(T) .or. q-qsat>sat_roundoff) then
       qsi = eval_qs(T,p,qt,1)
       R = Re + Rv*qsi
       qi = qt-qsi
-      H = T * R**chi * (T0/T)**(dC*qi/Cpl) * exp((qsi*Lv(T)/T - Lf/T0*qi)/Cpl)
+      lv_over_t = Lv(T)/T
+      H = T * R**chi * (T0/T)**(dC*qi/Cpl) * exp((qsi*lv_over_t - Lf/T0*qi)/Cpl)
       !esi = polysvp1(T,1)
       esi = eval_es(T,1)
-      !dTqsi = (1.-qt)* EPS*LS/RV * p * esi / ( ( p-esi )*T )**2.
-      dTqsi = 0.621971830985916*p*(1.-qt)/(p-esi)**2 * (6111.72784/T+0.15215)*esi/T
-      !dHdT = 1./T + ( ( Rv*Re/R + Lv(T)/T + dC*log(T/T0) + Lf/T0 )*dTqsi &
-      !- ( ((Lv0-Cpvmcl*273.15)/T-dC)*qsi + dC*qt )/T )/Cpl
-      dHdT = 1./T + ( ( Rv*Re/R + Lv(T)/T + dC*log(T/T0) + Lf/T0 )*dTqsi &
-                     - ( ((Lv0+Cpvmcl*273.15)/T-dC)*qsi + dC*qt )/T )/Cpl
+      dTqsi = EPS*p*(1.-qt)/(p-esi)**2.*(6111.72784/T+0.15215)*esi/T
+      dHdT = 1./T + ( ( Rv*Re/R + lv_over_t + dC*log(T/T0) + 1221.611899584641 )*dTqsi &
+                     - ( (1867292./T-dC)*qsi + dC*qt )/T )/Cpl
       dHdT = dHdT*H
       dT = -(H-G0)/dHdT
       T = T + dT
@@ -631,7 +857,7 @@ end function
 function Ci(T)
 implicit none
 
-!real, parameter :: T0=273.1636783445389
+! Ice heat-capacity fit is referenced to 0 deg C, as in MATLAB ci(T).
 real, parameter :: T0=273.15
 real, intent(in) :: T
 real :: Ci
@@ -639,104 +865,6 @@ real :: Ci
 Ci = 2106 + 7.3*(T - T0)
 
 end function
-
-
-! interpolation scheme
-subroutine pchip(n,x,y,n_i,x_i,y_i,extrap)
-implicit none
-
-! input/output variables
-integer, intent(in) :: n, n_i
-real, dimension(n), intent(in) :: x, y  ! input should be monotonic increase.
-real, dimension(n_i), intent(in) :: x_i
-real, dimension(n_i), intent(out) :: y_i
-logical, intent(in) :: extrap
-
-! local variables
-integer :: i, j
-real :: dxs,w1,w2,dmax,dmin
-real :: a,b,c,h
-real, dimension(n) :: d, m, dx
-
-! calculate slope
-d = 0.
-do i=1,n-1
-  dx(i) = x(i+1) - x(i)
-  d(i) = ( y(i+1) - y(i) ) / dx(i)
-enddo
-
-! calculate for interior points
-m=0.
-do i=2,n-1
-  if ( d(i-1)*d(i) > 0. ) then
-    dxs = dx(i-1) + dx(i)
-    w1 = ( dx(i-1) + dxs ) / ( 3. * dxs )
-    w2 = ( dxs + dx(i) ) / ( 3. * dxs )
-    dmax = max(abs(d(i-1)),abs(d(i)))
-    dmin = min(abs(d(i-1)),abs(d(i)))
-    m(i) = dmin / ( w1 * d(i-1) / dmax + w2 * d(i) / dmax )
-  endif
-enddo
-
-! calculate for end points
-m(1) = (( 2. * dx(1) + dx(2) ) * d(1) - dx(1) * d(2) ) / ( dx(1) + dx(2) )
-if ( m(1)*d(1) <= 0. ) m(1) = 0.
-if ( d(1)*d(2) <= 0. .and. abs(m(1)) > abs(3.*d(1)) ) m(1) = 3. * d(1)
-
-m(n) = (( 2. * dx(n-1) + dx(n-2) ) * d(n-1) - dx(n-1) * d(n-2) ) / ( dx(n-1) + dx(n-2) )
-if ( m(n)*d(n-1) <= 0. ) m(n) = 0.
-if ( d(n-1)*d(n-2) <= 0. .and. abs(m(n)) > abs(3.*d(n-1)) ) m(n) = 3. * d(n-1)
-
-! piecewise cubic Hermite interpolation
-do i=1,n_i
-  if ( x_i(i)<x(1) ) then
-    if (extrap) then
-      j=1
-      h = x(j+1) - x(j)
-      a = ( ( m(j+1) - d(j) ) / h - ( d(j) - m(j) ) / h ) / h
-      b = 2. * ( d(j) - m(j) ) / h - ( m(j+1) - d(j) ) / h
-      c = m(j)
-
-      h = x_i(i) - x(j)
-      y_i(i) = a * h**3. + b * h**2. + c * h + y(j)
-    else
-      y_i(i) = y(1)
-    endif
-    goto 987
-  endif
-
-  if ( x_i(i)>=x(n) ) then
-    if (extrap) then
-      j=n-1
-      h = x(j+1) - x(j)
-      a = ( ( m(j+1) - d(j) ) / h - ( d(j) - m(j) ) / h ) / h
-      b = 2. * ( d(j) - m(j) ) / h - ( m(j+1) - d(j) ) / h
-      c = m(j)
-
-      h = x_i(i) - x(j)
-      y_i(i) = a * h**3. + b * h**2. + c * h + y(j)
-    else
-      y_i(i) = y(n)
-    endif
-    goto 987
-  endif
-
-  do j=1,n-1
-    if ( x(j)<=x_i(i) .and. x_i(i)<x(j+1) ) then
-      h = x(j+1) - x(j)
-      a = ( ( m(j+1) - d(j) ) / h - ( d(j) - m(j) ) / h ) / h
-      b = 2. * ( d(j) - m(j) ) / h - ( m(j+1) - d(j) ) / h 
-      c = m(j)
-
-      h = x_i(i) - x(j)
-      y_i(i) = a * h**3. + b * h**2. + c * h + y(j)
-      goto 987
-    endif
-  enddo  
-  987 continue
-enddo
-
-end subroutine pchip
 
 
 ! WENO vec scheme
@@ -753,37 +881,33 @@ real, dimension(n), intent(out) :: v_weno  ! estimated values
 ! local variables
 integer, parameter :: p=2
 real, parameter :: eps=1.e-10
-integer :: i 
+integer :: i,ip,im,imm
 real, dimension(k+1,n) :: beta, alpha, w
-real, dimension(k+1) :: d
+real, dimension(k+1) :: d,weights
 
+v_weno=0.
 if (k==2) then
 
-d = (/ 0., 2./3., 1./3. /)
+! Match MATLAB reconstruction_weno_vec's written weights and grouping.
+d = (/ 0., 0.666666666666667, 0.333333333333333 /)
 
-do i=k+1,n-k+1
-  beta(:,i) = (/ v(i+1)-v(i), v(i)-v(i-1), v(i-1)-v(i-2) /) ** 2.
-  alpha(:,i) = 0.5 * ( ( d(1:k+1) + sign(1.,c(i)) * d(1:k+1) ) &
-                     + ( d(k+1:1:-1) - sign(1.,c(i)) * d(k+1:1:-1) ) ) &
-                    / (eps + beta(:,i)) ** p
+do i=1,n
+  ip=modulo(i,n)+1; im=modulo(i-2,n)+1; imm=modulo(i-3,n)+1
+  beta(:,i) = (/ v(ip)-v(i), v(i)-v(im), v(im)-v(imm) /) ** 2.
+  weights=d
+  if (c(i)<0.) weights=d(3:1:-1)
+  alpha(:,i) = weights / (eps + beta(:,i)) ** p
   w(:,i) = alpha(:,i) / sum(alpha(:,i),1)
 
-  v_weno(i) = w(1,i) * ( 1.5*v(i  )-0.5*v(i+1)) &
-             +w(2,i) * ( 0.5*v(i-1)+0.5*v(i  )) &
-             +w(3,i) * (-0.5*v(i-2)+1.5*v(i-1))
+  v_weno(i) = w(1,i) * ( 1.5*v(i)-0.5*v(ip)) &
+             +w(2,i) * ( 0.5*(v(im)+v(i)) ) &
+             +w(3,i) * (-0.5*v(imm)+1.5*v(im))
 enddo
 
-! surface BC modification (reduced order)
+! MATLAB retains the circular reconstruction for negative flow at level 2.
+! Positive/zero flow uses the first scalar value; surface flux is zeroed later.
 i=k
-if (c(i)>=0.) then
-  v_weno(i) = v(i-1) 
-else
-  beta(1:k,i) = (/ v(i+1)-v(i), v(i)-v(i-1) /) ** 2.
-  alpha(1:k,i) = d(k+1:2:-1) / (eps + beta(1:k,i)) ** p
-  w(1:k,i) = alpha(1:k,i) / sum(alpha(1:k,i),1)
-  v_weno(i) = w(1,i) * ( 1.5*v(i  )-0.5*v(i+1)) &
-             +w(2,i) * ( 0.5*v(i-1)+0.5*v(i  )) 
-endif
+if (c(i)>=0.) v_weno(i) = v(i-1)
 
 elseif (k==3) then
 
@@ -859,12 +983,17 @@ c_up3 = 0.
 
 do i=2,n-2
   up3 = 7. * ( c(i) + c(i+1) ) - c(i-1) - c(i+2)
-  c_up3(i) =  up3 + sign(1.,up3) * ( 3. * ( c(i) - c(i+1) ) + c(i+2) - c(i-1) )
+  c_up3(i) =  up3 + merge(sign(1.,up3),0.,up3/=0.) * ( 3. * ( c(i) - c(i+1) ) + c(i+2) - c(i-1) )
+enddo
+
+do i=n-1,n
+  up3=7.*(c(i)+c(modulo(i,n)+1))-c(i-1)-c(modulo(i+1,n)+1)
+  c_up3(i)=up3+merge(sign(1.,up3),0.,up3/=0.)*(3.*(c(i)-c(modulo(i,n)+1))+c(modulo(i+1,n)+1)-c(i-1))
 enddo
 
 ! surface BC modification
 up3 = 8. * c(2) - c(3) 
-c_up3(1) = up3 + sign(1.,up3) * ( c(3) - 2. * c(2) )
+c_up3(1) = up3 + merge(sign(1.,up3),0.,up3/=0.) * ( c(3) - 2. * c(2) )
 
 c_up3 = c_up3 / 12.
 

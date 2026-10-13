@@ -1,0 +1,51 @@
+function probe(work,input_file)
+root='__ROOT__'; addpath(fullfile(root,'matlab')); addpath(fullfile(root,'matlab/util_thermodynamics'));addpath(fullfile(root,'matlab/util_timeint'));addpath(fullfile(root,'matlab/util_weno'));
+setenv('ACE_INPUT_FILE',input_file); setenv('ACE_VALIDATE_INPUT',fullfile(work,'matlab_initialization.mat')); setenv('ACE_OUTPUT_FILE',fullfile(work,'smoke.nc'));setenv('ACE_STEPS','1');
+run(fullfile(root,'matlab/ace.m'));
+ace=model;
+initial=X0; state=X0;
+for mode={'none','native'}
+ ace.precip_enabled=strcmp(mode{1},'native');
+ X=timeint(@ssprk93,[0,6],initial,6,ace);
+ fid=fopen(fullfile(work,['matlab_' mode{1} '.bin']),'w');
+ for step=1:2
+  v=permute(X(:,[3,1,2],:,step),[3,1,2]);fwrite(fid,v(:),'double');
+ end
+ fwrite(fid,ace.Tv_zc,'double');fclose(fid);
+end
+% A deterministic nonzero-MF state exercises transport signs, uneven widths and boundaries.
+state(:,3,:)=reshape(1e-3*sin((1:401)'/13).*((1:101)/101),[401,1,101]);state([1,end-10:end],3,:)=0;
+[dTH,dQt,rho0B]=microrad(state(:,1:2,:),ace.p_zc,ace.rho_zc,ace.Tv_zc,ace.theta_e_diag,ace);
+dTH(:)=0;dQt(:)=0;
+tendency=expFun(state,dTH,dQt,rho0B,ace);
+y=ssprk93(@expFun,state,dTH,dQt,rho0B,6,1,ace.Ai,ace);
+y=ImDamp(y,ace.theta_e_zc,ace.qt_zc,ace.Nzm,ace.damp);
+fid=fopen(fullfile(work,'matlab_transport.bin'),'w');
+for v={state,tendency,y}
+ a=permute(v{1}(:,[3,1,2],:),[3,1,2]);fwrite(fid,a(:),'double');
+end
+fclose(fid);
+% Independent forward/inverse coverage: profile, perturbed profile, liquid/ice/mixed states.
+inputs=[];outputs=[];
+for k=1:401
+ inputs(end+1,:)=[initial(k,1,1),initial(k,2,1),ace.p_zc(k)];
+end
+for v=[300,290,260,250,273.1636783445389]
+ p=80000;qt=0.012;[T,q,ql,qi]=inv_T_from_theta_e(eval_theta_e(v,0.004,0.004,0.004,p),qt,p);
+ inputs(end+1,:)=[eval_theta_e(v,0.004,0.004,0.004,p),qt,p];
+end
+for i=1:size(inputs,1)
+ [T,q,ql,qi]=inv_T_from_theta_e(inputs(i,1),inputs(i,2),inputs(i,3));outputs(end+1,:)=[real(T),real(q),real(ql),real(qi)];
+end
+fid=fopen(fullfile(work,'thermo_input.bin'),'w');fwrite(fid,size(inputs,1),'int32');fwrite(fid,inputs,'double');fclose(fid);
+fid=fopen(fullfile(work,'matlab_thermo.bin'),'w');fwrite(fid,outputs,'double');fclose(fid);
+T=[300;300;300;300;260;260;273.1636783445389;300];
+q=ones(8,1)*0.008;ql=[0;1e-8;0.5e-3;3e-3;0;0;2e-3;20e-3];qi=[0;0;0;0;0.5e-3;3e-3;2e-3;0];p=ones(8,1)*80000;
+[dTH,dQt]=PRECIP_SINKS(T,q,ql,qi,p,0.5e-3,20,300);
+fd=zeros(8,1);v=(ql+qi)>0;qc=ql(v)+qi(v);
+fd(v)=(eval_theta_e(T(v),q(v),ql(v)+1e-8*ql(v)./qc,qi(v)+1e-8*qi(v)./qc,p(v))-eval_theta_e(T(v),q(v),ql(v),qi(v),p(v)))/1e-8;
+fid=fopen(fullfile(work,'matlab_precip_fd.bin'),'w');fwrite(fid,fd,'double');fclose(fid);
+fid=fopen(fullfile(work,'precip_input.bin'),'w');fwrite(fid,[T,q,ql,qi,p],'double');fclose(fid);
+fid=fopen(fullfile(work,'matlab_precip.bin'),'w');fwrite(fid,[dTH,dQt],'double');fclose(fid);
+disp('MATLAB KHN26 initialization/native/physics-off/transport/thermodynamic probes completed');
+end

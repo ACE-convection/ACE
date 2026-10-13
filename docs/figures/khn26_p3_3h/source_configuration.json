@@ -1,0 +1,55 @@
+{
+  "case": {
+    "input": "/scratch/peter50504/ACE/data/input/manaus1342_khn26.nc",
+    "input_sha256": "09408f4d0343afd8659df82f8f1cfe5dc59308cff150fb2bcfd569b1b8794d35",
+    "lookup_directory": "/scratch/peter50504/ACE_FORTRAN/input_data",
+    "lookup_table_sha256": "57d2e839b4bbc52fa15892ac47d04a76c0854577a5df34dae264e55bdad4baf3",
+    "field_order": [
+      "MF",
+      "theta",
+      "qv",
+      "qc",
+      "nc",
+      "qr",
+      "nr",
+      "qi",
+      "ni",
+      "qrim",
+      "brim"
+    ],
+    "dt_seconds": 4,
+    "bubble_delta_K": 1,
+    "initial_MF": 0,
+    "ncols": 101,
+    "nz": 401,
+    "threads": 32
+  },
+  "duration_seconds": 10800,
+  "output_interval_seconds": 60,
+  "expected_saved_states": 181,
+  "smoke_workspace": "/scratch/peter50504/ACE/migration_work/khn26_p3_smoke",
+  "smoke_configuration_sha256": "787c91aa5b00d2a5bb69950b24f491f16691c08d628f683ef1f78b0379285699",
+  "multi_executable_source": "/scratch/peter50504/ACE/migration_work/khn26_p3_smoke/production_build/ace_model.exe",
+  "single_definition": "Only ACE 1 dynamics tendency active; full 101-column basis, mean-MF projection, physics and damping retained.",
+  "source_sha256": {
+    "microphy_p3.F": "8ab448e72a43230543b6d0911a195141ba7dc1264cdd0f532b21b49d9a9d1b11",
+    "ace_input.F": "41a9c009d579372ee34ddb046fba8093eee0f926003ccaf828a7186d0fe5a987",
+    "ace_interpolation.F": "5b4b3b83a9be9f5c3b886850f45d67c632c9005d4b75c054bdc6ce9de0e1862e",
+    "ace_module.F": "d026834539ed441406dafeb58761c244f242cc0f17861e9b18708d5d0818d2c6",
+    "test.F": "22bba49ae1ef96b0399624d1dd9ecb9d2ab6aeb043bc390fb883a52bd576f218"
+  },
+  "single_source_sha256": {
+    "microphy_p3.F": "8ab448e72a43230543b6d0911a195141ba7dc1264cdd0f532b21b49d9a9d1b11",
+    "ace_input.F": "41a9c009d579372ee34ddb046fba8093eee0f926003ccaf828a7186d0fe5a987",
+    "ace_interpolation.F": "5b4b3b83a9be9f5c3b886850f45d67c632c9005d4b75c054bdc6ce9de0e1862e",
+    "ace_module.F": "6ab6cf33afb08d60bc2ea75b8ed90c86df7d7412bd7e66dc95794e5e3009e0e6",
+    "test.F": "a5c37128072a0d4235d87594dfbe9d21595fa9613dc97c8ed11caf025afcde3b"
+  },
+  "executable_sha256": {
+    "/scratch/peter50504/ACE/migration_work/khn26_p3_three_hour/singleACE/debug/ace_model.exe": "0884de115af06815954ae50711e53d25460ef2cc46698803bd07f0a7e1c2ab50",
+    "/scratch/peter50504/ACE/migration_work/khn26_p3_three_hour/singleACE/build/ace_model.exe": "0a3bab9727d0034eb7be866b5c17d33a3457631a6df9c977eb9027e0552daeac",
+    "/scratch/peter50504/ACE/migration_work/khn26_p3_three_hour/multiACE/build/ace_model.exe": "b33ecdcc562996472b458a4a3d2d228078667d8f8deed240065fbe57222c4f96"
+  },
+  "runner_sha256": "2d9b8ac9bd69011bbaa8dd8eeb25009697477823a46bf8f79fac00f4e35d91b1",
+  "state_reader_sha256": "76ec9f56ebc863159e6a76f7cda00059679fb1ef85d88e456956451189437f61"
+}

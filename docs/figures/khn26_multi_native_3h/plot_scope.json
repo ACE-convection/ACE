@@ -1,0 +1,18 @@
+{
+  "tag": "three_hour",
+  "actual_duration_seconds": 10800,
+  "saved_states": 181,
+  "selected_ACE_one_based": [
+    1,
+    2,
+    10,
+    50,
+    100
+  ],
+  "selected_heights_km": [
+    1.0,
+    5.0,
+    10.0
+  ],
+  "scope": "Descriptive MF response; nonlocal pressure and mean-MF projection can cause immediate remote response. Phase/arrival interpretation needs review."
+}

@@ -1,0 +1,730 @@
+{
+  "date": "2026-10-04",
+  "branch": "migration/v020-preparation",
+  "base_commit": "c7d9183f1f5acb77e8f3c2c8ad2a1f129bd872c5",
+  "committed": false,
+  "input": {
+    "path": "data/input/manaus1342_khn26.nc",
+    "sha256": "09408f4d0343afd8659df82f8f1cfe5dc59308cff150fb2bcfd569b1b8794d35",
+    "profile_index": 1342,
+    "basis_aces": 101,
+    "fine_levels": 401,
+    "coarse_layers": 200
+  },
+  "tools": {
+    "matlab": "R2023b",
+    "gfortran": "GNU Fortran (conda-forge gcc 11.2.0-16) 11.2.0",
+    "netcdf_fortran": "4.6.2"
+  },
+  "prepared_configuration": {
+    "input": "/scratch/peter50504/ACE/data/input/manaus1342_khn26.nc",
+    "input_sha256": "09408f4d0343afd8659df82f8f1cfe5dc59308cff150fb2bcfd569b1b8794d35",
+    "sources": {
+      "matlab/ace.m": "861aae19dcae83c7680a9b5af89d8acefeb2f0575fe2a1ac215ce60bf210d3dc",
+      "matlab/read_shared_input.m": "93a5e26a9359182993cc1332469f02ef65bf7f7270676f10b4acfae3133d561c",
+      "fortran/src/ace_module.F": "9ef91dd0eea02cc8a94d55bb04258876cb5b39acad4db5d3caee4845d80ad917",
+      "fortran/src/test.F": "46337748ba758e493a743ab72f34db212277923b5afab1923954d627970c6931",
+      "fortran/src/ace_input.F": "41a9c009d579372ee34ddb046fba8093eee0f926003ccaf828a7186d0fe5a987",
+      "fortran/src/ace_interpolation.F": "6802c7c6cf31d1b5ecdb9eff55b2dec8e3f03f08ce21a0d0e3e78026b996e57a",
+      "fortran/src/microphy_p3.F": "8ab448e72a43230543b6d0911a195141ba7dc1264cdd0f532b21b49d9a9d1b11",
+      "docs/migration/khn26_sources.tar.gz": "72faa10c1d01f2979e0171711d61ba39db596c677cf14094ef0f9ad8db0314dd",
+      "tests/khn26/run.py": "8c9d67aab9dd530ac242b139b09f0b08f937547fff65ceae2f3a8fb19d492a85",
+      "tests/khn26/components.f90": "1322c4d430714c02a82e68a04822e7027fc69286a873595c8da77ad7b4f7e69b",
+      "tests/khn26/matlab_probe.txt": "0c794f395bad59e891bd551237cc939a9a485cfb614ec693235bc25958f9af07",
+      "matlab/util_thermodynamics/IMPORT_CONSTANTS.m": "9fde477680e8eea17fc2f5f2aca61ef95d556fbc4c4f7f676cc53f6d3d82ba89",
+      "matlab/util_thermodynamics/IMPORT_CONSTANTS_NOGLOBAL.m": "68056228f1419b0d3708c72682d0e6fee0bcdc1f5f3a1d09c1ea822113297499",
+      "matlab/util_thermodynamics/NOTE.m": "d8b2a2c3dab6cdcb343cb18974af1bce8d4f7a60c36d1e98bd1aeb736748b9fc",
+      "matlab/util_thermodynamics/ci.m": "dba544e76ce1e74136daff7fd988670f68000c8835732344d5ac6c20697389ce",
+      "matlab/util_thermodynamics/eval_B.m": "4260dae12c5e40d915ce2ac348b85d3358d9470dd9ad17bf3771a0e803647e6b",
+      "matlab/util_thermodynamics/eval_Tv.m": "d86992e3f9ef64bbf038424876b9c2c3b2a6ec1d2f23f673a553bca014213690",
+      "matlab/util_thermodynamics/eval_dTes.m": "dccd232253f4422bdb334a7089c5065459c0207def6cde54714fa1fa97bcf116",
+      "matlab/util_thermodynamics/eval_dTqs.m": "35e4585653c828cb6bede2d25914c66d71b59c7894ad4e877180ffd57c57a74a",
+      "matlab/util_thermodynamics/eval_dTqsi.m": "5ce3913522b068b98badfdd279ab0fa1ad0ed9a7ce751e5fd4ef2b688a734de6",
+      "matlab/util_thermodynamics/eval_dTqsscl.m": "4e025fb26f0deb388b8c7551fdd5ca5160d4aa7c2f13d0dd230c3177851cedde",
+      "matlab/util_thermodynamics/eval_es.m": "a6d89db08505d726edae0b520d69360da23aed5dd4079697797302cdaab6ec2c",
+      "matlab/util_thermodynamics/eval_esi.m": "13e7d32f678a1b8e9a0f97e326dbaf94027a3e09b808f424e3b02c427f1813db",
+      "matlab/util_thermodynamics/eval_esscl.m": "7fa1acdff3547765addb2f6295b0d0cfaff96436356c4dfefdb2d0caeb981724",
+      "matlab/util_thermodynamics/eval_h.m": "6a6bc3c9990469ae0296dfac8f234dfcbccb3851aa3faa6bececb536f271497b",
+      "matlab/util_thermodynamics/eval_q.m": "19fc7e2235e52c12948b3b10654a90ea45b9391a7b1821a3a39d2683ca02be8c",
+      "matlab/util_thermodynamics/eval_q2.m": "f0986c79fc1b362ca92e188977b04d073a31b9bb3e27b96fc5b35968539f1f11",
+      "matlab/util_thermodynamics/eval_qs.m": "09f7e3c707ed1eaacb9baba896cc8ab9cb16e742fa7dc823273b8cc2c71fe402",
+      "matlab/util_thermodynamics/eval_qs2.m": "6c1f03213c04a6e98dd515d5ce98ebcba6a2cd8f62e99ebd750599af8978671d",
+      "matlab/util_thermodynamics/eval_qsat.m": "1aff97bbd0e4b66c33e817aa99741056ccf95ab30840c787a6a4a81b0a516310",
+      "matlab/util_thermodynamics/eval_qsat2.m": "16a75d060676e65e16d4fdee2067716db779a2f6d9dbd3ac6b278051091e4a3d",
+      "matlab/util_thermodynamics/eval_qsi.m": "5a92de14d0b02b6394a2f186aafc8cf75530d322db4582ce52045c4f9b30f270",
+      "matlab/util_thermodynamics/eval_qsi2.m": "3c7b3674ea2e00c004aa526c3a0c79cf6c2f039d2b989d98a15ef3f2cc12161e",
+      "matlab/util_thermodynamics/eval_qsscl.m": "1b47aa01ca8ec7e9ee2368d4f83d601767c7fe793766ee475cdc18cd7e60cf82",
+      "matlab/util_thermodynamics/eval_rho.m": "b22b7816d5199e9f025304b57719f7ab68367e5222ac351224ba7ee8a2f2c91a",
+      "matlab/util_thermodynamics/eval_theta.m": "c69e40c66320d5d1b0d62365db0897cbdc87a9c523c0aecd211945780811d71b",
+      "matlab/util_thermodynamics/eval_theta_e.m": "631d04f3cac84824255fb4404068081bab52bb163efe37800559c223988a9843",
+      "matlab/util_thermodynamics/eval_theta_es.m": "39ff2e6d87d2bc4ad2f0b33922e524b2998e64939bec58e908b76fce8ef32b79",
+      "matlab/util_thermodynamics/eval_theta_il.m": "f5f98373a466be1d84199ce7d882fe98faae7c96a4dd6aa9d614e2f2dbf0931b",
+      "matlab/util_thermodynamics/eval_theta_l.m": "6628625f218e53e004623b44871ad6984a13b6308264d123193464143292c90d",
+      "matlab/util_thermodynamics/eval_theta_v.m": "f531d0ca252a777616935340b23079911faa5f79ef890e2de9371cf094413274",
+      "matlab/util_thermodynamics/gputest_invTq.m": "c2918e5cb0aa97278730069c6f4edf4b2a09c1bb56eb0411882fa2a73d1c219f",
+      "matlab/util_thermodynamics/inv_T_from_h.m": "73621892b81e2179d9cda710b56de9bb5d6a8883c36b71d432ce25d6b584faed",
+      "matlab/util_thermodynamics/inv_T_from_theta_e.m": "e001fe0db37d6bff77b3e0b15ac8491fb84a2c3774c07622854d97062bcce440",
+      "matlab/util_thermodynamics/inv_T_from_theta_e_nogpu.m": "0b57c816e4dee65cef71a3bd61535c28f926b506dfe1f11f8e05a7832f187eed",
+      "matlab/util_thermodynamics/inv_T_from_theta_il.m": "6d0faaf7ee84460e6a1e10d7ea40dcf175e51f0462d4fa0c01a89698d0e8c05b",
+      "matlab/util_thermodynamics/lv.m": "c389332e53409f9a3f01adc2641fd140e0e59f4c4ad88ad49914724b7021a2d1"
+    },
+    "commands": [
+      [
+        "gfortran",
+        "-cpp",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-O2",
+        "-g",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/fortran/src/ace_input.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-O2",
+        "-g",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/fortran/src/ace_interpolation.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-O2",
+        "-g",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/fortran/src/microphy_p3.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-O2",
+        "-g",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/fortran/src/ace_module.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-O2",
+        "-g",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/fortran/src/test.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-O2",
+        "-g",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "ace_input.o",
+        "ace_interpolation.o",
+        "microphy_p3.o",
+        "ace_module.o",
+        "test.o",
+        "-L/home/peter50504/miniconda3/lib",
+        "-lnetcdff",
+        "-lnetcdf",
+        "-o",
+        "ace_model.exe"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-O2",
+        "-g",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/migration_work/khn26_alignment/ace_module_probe.F",
+        "-o",
+        "ace_module_probe.o"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-O2",
+        "-g",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "/scratch/peter50504/ACE/tests/khn26/components.f90",
+        "ace_module_probe.o",
+        "ace_input.o",
+        "ace_interpolation.o",
+        "microphy_p3.o",
+        "-L/home/peter50504/miniconda3/lib",
+        "-lnetcdff",
+        "-lnetcdf",
+        "-o",
+        "components.exe"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-O2",
+        "-g",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/fortran/src/ace_input.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-O2",
+        "-g",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/fortran/src/ace_interpolation.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-O2",
+        "-g",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/fortran/src/microphy_p3.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-O2",
+        "-g",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/fortran/src/ace_module.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-O2",
+        "-g",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/fortran/src/test.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-O2",
+        "-g",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "ace_input.o",
+        "ace_interpolation.o",
+        "microphy_p3.o",
+        "ace_module.o",
+        "test.o",
+        "-L/home/peter50504/miniconda3/lib",
+        "-lnetcdff",
+        "-lnetcdf",
+        "-o",
+        "ace_model.exe"
+      ]
+    ],
+    "precision_scope": "real64 numerical comparison; real32 compile compatibility"
+  },
+  "current_source_sha256": {
+    "matlab/ace.m": "2dd437b0398be53a4575171570ad37a9f4543a06e32ae1e9025ddc99424442e4",
+    "matlab/read_shared_input.m": "93a5e26a9359182993cc1332469f02ef65bf7f7270676f10b4acfae3133d561c",
+    "fortran/src/ace_module.F": "9ef91dd0eea02cc8a94d55bb04258876cb5b39acad4db5d3caee4845d80ad917",
+    "fortran/src/test.F": "22bba49ae1ef96b0399624d1dd9ecb9d2ab6aeb043bc390fb883a52bd576f218",
+    "fortran/src/ace_input.F": "41a9c009d579372ee34ddb046fba8093eee0f926003ccaf828a7186d0fe5a987",
+    "fortran/src/ace_interpolation.F": "6802c7c6cf31d1b5ecdb9eff55b2dec8e3f03f08ce21a0d0e3e78026b996e57a",
+    "fortran/src/microphy_p3.F": "8ab448e72a43230543b6d0911a195141ba7dc1264cdd0f532b21b49d9a9d1b11",
+    "docs/migration/khn26_sources.tar.gz": "72faa10c1d01f2979e0171711d61ba39db596c677cf14094ef0f9ad8db0314dd",
+    "tests/khn26/run.py": "87e719ea0e76e226cb2fc30a8d0588ac13b74248698ab1be85ff63eb61cb5b47",
+    "tests/khn26/components.f90": "1322c4d430714c02a82e68a04822e7027fc69286a873595c8da77ad7b4f7e69b",
+    "tests/khn26/matlab_probe.txt": "0c794f395bad59e891bd551237cc939a9a485cfb614ec693235bc25958f9af07",
+    "matlab/util_thermodynamics/IMPORT_CONSTANTS.m": "9fde477680e8eea17fc2f5f2aca61ef95d556fbc4c4f7f676cc53f6d3d82ba89",
+    "matlab/util_thermodynamics/IMPORT_CONSTANTS_NOGLOBAL.m": "68056228f1419b0d3708c72682d0e6fee0bcdc1f5f3a1d09c1ea822113297499",
+    "matlab/util_thermodynamics/NOTE.m": "d8b2a2c3dab6cdcb343cb18974af1bce8d4f7a60c36d1e98bd1aeb736748b9fc",
+    "matlab/util_thermodynamics/ci.m": "dba544e76ce1e74136daff7fd988670f68000c8835732344d5ac6c20697389ce",
+    "matlab/util_thermodynamics/eval_B.m": "4260dae12c5e40d915ce2ac348b85d3358d9470dd9ad17bf3771a0e803647e6b",
+    "matlab/util_thermodynamics/eval_Tv.m": "d86992e3f9ef64bbf038424876b9c2c3b2a6ec1d2f23f673a553bca014213690",
+    "matlab/util_thermodynamics/eval_dTes.m": "dccd232253f4422bdb334a7089c5065459c0207def6cde54714fa1fa97bcf116",
+    "matlab/util_thermodynamics/eval_dTqs.m": "35e4585653c828cb6bede2d25914c66d71b59c7894ad4e877180ffd57c57a74a",
+    "matlab/util_thermodynamics/eval_dTqsi.m": "5ce3913522b068b98badfdd279ab0fa1ad0ed9a7ce751e5fd4ef2b688a734de6",
+    "matlab/util_thermodynamics/eval_dTqsscl.m": "4e025fb26f0deb388b8c7551fdd5ca5160d4aa7c2f13d0dd230c3177851cedde",
+    "matlab/util_thermodynamics/eval_es.m": "a6d89db08505d726edae0b520d69360da23aed5dd4079697797302cdaab6ec2c",
+    "matlab/util_thermodynamics/eval_esi.m": "13e7d32f678a1b8e9a0f97e326dbaf94027a3e09b808f424e3b02c427f1813db",
+    "matlab/util_thermodynamics/eval_esscl.m": "7fa1acdff3547765addb2f6295b0d0cfaff96436356c4dfefdb2d0caeb981724",
+    "matlab/util_thermodynamics/eval_h.m": "6a6bc3c9990469ae0296dfac8f234dfcbccb3851aa3faa6bececb536f271497b",
+    "matlab/util_thermodynamics/eval_q.m": "19fc7e2235e52c12948b3b10654a90ea45b9391a7b1821a3a39d2683ca02be8c",
+    "matlab/util_thermodynamics/eval_q2.m": "f0986c79fc1b362ca92e188977b04d073a31b9bb3e27b96fc5b35968539f1f11",
+    "matlab/util_thermodynamics/eval_qs.m": "09f7e3c707ed1eaacb9baba896cc8ab9cb16e742fa7dc823273b8cc2c71fe402",
+    "matlab/util_thermodynamics/eval_qs2.m": "6c1f03213c04a6e98dd515d5ce98ebcba6a2cd8f62e99ebd750599af8978671d",
+    "matlab/util_thermodynamics/eval_qsat.m": "1aff97bbd0e4b66c33e817aa99741056ccf95ab30840c787a6a4a81b0a516310",
+    "matlab/util_thermodynamics/eval_qsat2.m": "16a75d060676e65e16d4fdee2067716db779a2f6d9dbd3ac6b278051091e4a3d",
+    "matlab/util_thermodynamics/eval_qsi.m": "5a92de14d0b02b6394a2f186aafc8cf75530d322db4582ce52045c4f9b30f270",
+    "matlab/util_thermodynamics/eval_qsi2.m": "3c7b3674ea2e00c004aa526c3a0c79cf6c2f039d2b989d98a15ef3f2cc12161e",
+    "matlab/util_thermodynamics/eval_qsscl.m": "1b47aa01ca8ec7e9ee2368d4f83d601767c7fe793766ee475cdc18cd7e60cf82",
+    "matlab/util_thermodynamics/eval_rho.m": "b22b7816d5199e9f025304b57719f7ab68367e5222ac351224ba7ee8a2f2c91a",
+    "matlab/util_thermodynamics/eval_theta.m": "c69e40c66320d5d1b0d62365db0897cbdc87a9c523c0aecd211945780811d71b",
+    "matlab/util_thermodynamics/eval_theta_e.m": "631d04f3cac84824255fb4404068081bab52bb163efe37800559c223988a9843",
+    "matlab/util_thermodynamics/eval_theta_es.m": "39ff2e6d87d2bc4ad2f0b33922e524b2998e64939bec58e908b76fce8ef32b79",
+    "matlab/util_thermodynamics/eval_theta_il.m": "f5f98373a466be1d84199ce7d882fe98faae7c96a4dd6aa9d614e2f2dbf0931b",
+    "matlab/util_thermodynamics/eval_theta_l.m": "6628625f218e53e004623b44871ad6984a13b6308264d123193464143292c90d",
+    "matlab/util_thermodynamics/eval_theta_v.m": "f531d0ca252a777616935340b23079911faa5f79ef890e2de9371cf094413274",
+    "matlab/util_thermodynamics/gputest_invTq.m": "c2918e5cb0aa97278730069c6f4edf4b2a09c1bb56eb0411882fa2a73d1c219f",
+    "matlab/util_thermodynamics/inv_T_from_h.m": "73621892b81e2179d9cda710b56de9bb5d6a8883c36b71d432ce25d6b584faed",
+    "matlab/util_thermodynamics/inv_T_from_theta_e.m": "e001fe0db37d6bff77b3e0b15ac8491fb84a2c3774c07622854d97062bcce440",
+    "matlab/util_thermodynamics/inv_T_from_theta_e_nogpu.m": "0b57c816e4dee65cef71a3bd61535c28f926b506dfe1f11f8e05a7832f187eed",
+    "matlab/util_thermodynamics/inv_T_from_theta_il.m": "6d0faaf7ee84460e6a1e10d7ea40dcf175e51f0462d4fa0c01a89698d0e8c05b",
+    "matlab/util_thermodynamics/lv.m": "c389332e53409f9a3f01adc2641fd140e0e59f4c4ad88ad49914724b7021a2d1",
+    "tests/khn26/guard.f90": "8b4ab0e842cb769591c7a343da76e163120e0349e0df74f000d3594d46fce70a",
+    "tools/input/create_khn26_shared_input.py": "6d0db314c5c013716c75f6e68e92e968a41e19cc75382e92bfc80d2f375f8021"
+  },
+  "changes_after_preparation": {
+    "matlab/ace.m": {
+      "prepared_sha256": "861aae19dcae83c7680a9b5af89d8acefeb2f0575fe2a1ac215ce60bf210d3dc",
+      "current_sha256": "2dd437b0398be53a4575171570ad37a9f4543a06e32ae1e9025ddc99424442e4"
+    },
+    "fortran/src/test.F": {
+      "prepared_sha256": "46337748ba758e493a743ab72f34db212277923b5afab1923954d627970c6931",
+      "current_sha256": "22bba49ae1ef96b0399624d1dd9ecb9d2ab6aeb043bc390fb883a52bd576f218"
+    },
+    "tests/khn26/run.py": {
+      "prepared_sha256": "8c9d67aab9dd530ac242b139b09f0b08f937547fff65ceae2f3a8fb19d492a85",
+      "current_sha256": "87e719ea0e76e226cb2fc30a8d0588ac13b74248698ab1be85ff63eb61cb5b47"
+    }
+  },
+  "after_preparation_explanation": "MATLAB output freshness/provenance and changed-line whitespace; Fortran explicit-interval/default-output/fresh-output handling recompiled at both precisions; supplemental guard/smoke comparisons added to runner. Numerical Fortran module unchanged; MATLAB local numerical functions match prepared probe after stripping trailing whitespace. Production smoke runs cover final driver behavior for --steps and MATLAB NC output.",
+  "numerical_results": {
+    "none_initial": {
+      "max_abs_error": [
+        0.0,
+        3.979039320256561e-13,
+        1.0234868508263162e-16
+      ],
+      "absolute_limits": [
+        1e-14,
+        1e-09,
+        1e-12
+      ]
+    },
+    "none_step": {
+      "max_abs_error": [
+        6.661338147750939e-16,
+        4.547473508864641e-13,
+        1.0234868508263162e-16
+      ],
+      "absolute_limits": [
+        1e-10,
+        1e-08,
+        1e-12
+      ]
+    },
+    "none_reference_tv": {
+      "max_abs_error": 1.1368683772161603e-13,
+      "absolute_limit": 1e-09
+    },
+    "native_initial": {
+      "max_abs_error": [
+        0.0,
+        3.979039320256561e-13,
+        1.0234868508263162e-16
+      ],
+      "absolute_limits": [
+        1e-14,
+        1e-09,
+        1e-12
+      ]
+    },
+    "native_step": {
+      "max_abs_error": [
+        6.661338147750939e-16,
+        4.547473508864641e-13,
+        1.0234868508263162e-16
+      ],
+      "absolute_limits": [
+        1e-10,
+        1e-08,
+        1e-12
+      ]
+    },
+    "native_reference_tv": {
+      "max_abs_error": 1.1368683772161603e-13,
+      "absolute_limit": 1e-09
+    },
+    "archived_original_vs_shared": {
+      "exact_equality": true
+    },
+    "transport_initial": {
+      "max_abs_error": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "absolute_limits": [
+        1e-10,
+        1e-08,
+        1e-12
+      ]
+    },
+    "transport_tendency": {
+      "max_abs_error": [
+        1.1882855810441129e-16,
+        5.6250143432023947e-14,
+        4.774900085962352e-22
+      ],
+      "absolute_limits": [
+        1e-10,
+        1e-08,
+        1e-12
+      ]
+    },
+    "transport_step": {
+      "max_abs_error": [
+        7.147060721024445e-16,
+        4.547473508864641e-13,
+        2.168404344971009e-19
+      ],
+      "absolute_limits": [
+        1e-10,
+        1e-08,
+        1e-12
+      ]
+    },
+    "thermodynamic_inversion": {
+      "max_abs_error": [
+        5.684341886080802e-14,
+        1.9949319973733282e-17,
+        0.0,
+        1.9949319973733282e-17
+      ],
+      "absolute_limits": [
+        1e-07,
+        1e-12,
+        1e-12,
+        1e-12
+      ]
+    },
+    "native_precipitation": {
+      "max_abs_error": [
+        1.1558161835175523e-08,
+        8.751331620284555e-24
+      ],
+      "absolute_limits": [
+        1e-07,
+        1e-15
+      ]
+    },
+    "historical_precipitation_nonfinite_rows": [
+      7
+    ],
+    "scope": "Actual 101-ACE basis; initialization, 6 s steps, nonzero transport, 406 inversions, 8 precipitation states. No full 6 h or P3 acceptance."
+  },
+  "native_smoke": {
+    "duration_seconds": 60,
+    "dt_seconds": 6,
+    "physics": "native",
+    "field_order": [
+      "MF",
+      "theta_e",
+      "qt"
+    ],
+    "max_abs_error_each_state": [
+      [
+        0.0,
+        3.979039320256561e-13,
+        1.0234868508263162e-16
+      ],
+      [
+        6.661338147750939e-16,
+        4.547473508864641e-13,
+        1.0234868508263162e-16
+      ],
+      [
+        1.429202752531808e-15,
+        4.547473508864641e-13,
+        1.0234868508263162e-16
+      ],
+      [
+        2.248201624865942e-15,
+        4.547473508864641e-13,
+        1.0234868508263162e-16
+      ],
+      [
+        3.0531133177191805e-15,
+        5.684341886080801e-13,
+        1.0234868508263162e-16
+      ],
+      [
+        3.83026943495679e-15,
+        6.821210263296962e-13,
+        1.0234868508263162e-16
+      ],
+      [
+        4.9404924595819466e-15,
+        6.821210263296962e-13,
+        1.0234868508263162e-16
+      ],
+      [
+        5.9396931817445875e-15,
+        7.958078640513122e-13,
+        1.0234868508263162e-16
+      ],
+      [
+        6.439293542825908e-15,
+        9.094947017729282e-13,
+        1.0234868508263162e-16
+      ],
+      [
+        8.826273045769994e-15,
+        1.0231815394945443e-12,
+        1.0061396160665481e-16
+      ],
+      [
+        9.992007221626409e-15,
+        1.1368683772161603e-12,
+        1.0061396160665481e-16
+      ]
+    ],
+    "absolute_limits": [
+      1e-09,
+      1e-07,
+      1e-11
+    ],
+    "finite_states": true,
+    "nonnegative_qt": true,
+    "max_abs_error_over_all_states": [
+      9.992007221626409e-15,
+      1.1368683772161603e-12,
+      1.0234868508263162e-16
+    ]
+  },
+  "disabled_operator_guards": {
+    "PMDv_rejected": true,
+    "PMD_rejected": true
+  },
+  "precision_scope": "real64 numerical checks; real32 compile/link only",
+  "not_validated": [
+    "full six-hour trajectory and budgets",
+    "normal Fortran nine-field interval output runtime",
+    "P3 evolution and modified P3 initialization mapping",
+    "real32 numerical behavior",
+    "nondefault momentum, WENO order or MF diffusion",
+    "theta_il/plume scientific findings",
+    "Intel compiler behavior"
+  ],
+  "workspace": "migration_work/khn26_alignment",
+  "artifacts": {
+    "configuration.json": {
+      "sha256": "2bb02878a74d298f1749b49d14713b9443a345b8c2b38f2417310ae6823bd967",
+      "bytes": 11768
+    },
+    "probe.m": {
+      "sha256": "c541a6fe4ef2943ab306b2f13c749a77df330b9f70bbe39f0505751b0cdb4d14",
+      "bytes": 34814
+    },
+    "original_main.m": {
+      "sha256": "043c08c0ccf1ff03f204316f788a6626fb75bf8b38b83630bce533b525dd6130",
+      "bytes": 49227
+    },
+    "ace_module_probe.F": {
+      "sha256": "effbc5037fc9d723ff420dae6ce149ff87d8cc00a7a6255b6708f3ca81e4d7b5",
+      "bytes": 37131
+    },
+    "matlab_initialization.mat": {
+      "sha256": "218eb6594db70631cf2e93106fbc39f958f60c431349974afc005bd4bdfeb5f8",
+      "bytes": 2224206061
+    },
+    "matlab_none.bin": {
+      "sha256": "a810f32ede2cc54672b32cab80d177b72e18b1007130b87592f886b894866526",
+      "bytes": 1947256
+    },
+    "matlab_native.bin": {
+      "sha256": "6d1ccf45655fdab27c3e899a95f1436bc667767336057026787fc0341c9da292",
+      "bytes": 1947256
+    },
+    "original_native.bin": {
+      "sha256": "6d1ccf45655fdab27c3e899a95f1436bc667767336057026787fc0341c9da292",
+      "bytes": 1947256
+    },
+    "fortran_none.bin": {
+      "sha256": "38c9a3541efba8f6b1cfb9a6b9bb7a7f7faff92e962a32739bc757b171a21c7c",
+      "bytes": 1966516
+    },
+    "fortran_native.bin": {
+      "sha256": "b10f00cef4605f83fae32ac0e0581742f4972b9d6706c709d69a9a9e0fafac3c",
+      "bytes": 1966516
+    },
+    "matlab_transport.bin": {
+      "sha256": "2c139c0a6ef60fc57042e6931b5d154e419b80bba0415a9df8aa85c99d02c877",
+      "bytes": 2916072
+    },
+    "fortran_transport.bin": {
+      "sha256": "9a871a4fe167d93386e0c284b19f5af23cc42c80681b2a6c1dbf84f85a642592",
+      "bytes": 2916072
+    },
+    "matlab_thermo.bin": {
+      "sha256": "739a78390dd39c5f03ec15331c3fbf00af39c87a2cd1d3160836feff0787c4a4",
+      "bytes": 12992
+    },
+    "fortran_thermo.bin": {
+      "sha256": "ec941058e3ee516bc562ead6b88f1bb86ce1b20376af2395dac9273b27227005",
+      "bytes": 12992
+    },
+    "matlab_precip.bin": {
+      "sha256": "f8422c7ffa480d1a1eeddcbfadab407c81711eda547601ffd722d993978aa82c",
+      "bytes": 128
+    },
+    "matlab_precip_fd.bin": {
+      "sha256": "315a374064e4050cad4135b4370054e9d7337b7db31dfe8276ff9bbcca75aabf",
+      "bytes": 64
+    },
+    "fortran_precip.bin": {
+      "sha256": "466792e025a0468ef9ef1d8c613d181fc306cfb9a5e2ca5bf4bf3e0f533f27a3",
+      "bytes": 128
+    },
+    "thermo_input.bin": {
+      "sha256": "1a41d04d840db01c1e56ea12740eaf1aa328837884e37b33791efcb6996fa4dc",
+      "bytes": 9748
+    },
+    "precip_input.bin": {
+      "sha256": "8c114f8a6af035202cfb8700ff9c4eaa6bd39e7fcbd51600e79b01f5a55e3fa2",
+      "bytes": 320
+    },
+    "smoke60.nc": {
+      "sha256": "431bf7708e3f096d4dfb6fb15f109a41effbb21b38f82b1d897b1260b4f2f940",
+      "bytes": 32185821
+    },
+    "matlab_smoke60.bin": {
+      "sha256": "f6c42b4401540fcc7bc7b877251a22be96c10362b72514654fd076f7397d5eaa",
+      "bytes": 10692264
+    },
+    "fortran_smoke60.bin": {
+      "sha256": "436dae93ed1639d892ab7b7ee7f8d24b30d0b05956ad126fc4db3a193ab938a6",
+      "bytes": 10801348
+    },
+    "results.json": {
+      "sha256": "0822d5ae726345e242dfde78f1d402e31d73fb318847ba768ae226674f5fe2d3",
+      "bytes": 2309
+    },
+    "smoke_results.json": {
+      "sha256": "1b7d5c591c025f40c6667e908cfd89fa71af0556047029c09c5e0889b75e3389",
+      "bytes": 1362
+    },
+    "guard_results.json": {
+      "sha256": "ce4c5c0512ed739972acc1739a52216974f180a593ccdaab6f6d1c0e6aeffe15",
+      "bytes": 52
+    },
+    "PMDv_guard.log": {
+      "sha256": "074d93e007b1381c98c7ce5c80a5cf1e59a577ca425c71ae642343d29c84a102",
+      "bytes": 326
+    },
+    "PMD_guard.log": {
+      "sha256": "f4866a1f45a0b440ec3fcec7677683441a4a4e7b376847ef91812cfa81b79f7c",
+      "bytes": 325
+    },
+    "build64/ace_model.exe": {
+      "sha256": "a2970b5c362dcba0c7c486e8ddd78c2bb40d05edbc47f0d027c2f50dde92db39",
+      "bytes": 1343184
+    },
+    "build32/ace_model.exe": {
+      "sha256": "e767a40d52a1c95f159f943d0a75d44eed84ad142e7f71cd11f2543f516e37a0",
+      "bytes": 1332920
+    },
+    "build64/components.exe": {
+      "sha256": "5c2150e250f9bb650a1edbabf6a34d7622b5bd4987edf36784191855a572ef47",
+      "bytes": 1253624
+    }
+  }
+}

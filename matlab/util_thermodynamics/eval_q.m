@@ -13,9 +13,9 @@ function q = eval_q(e, p, qt)
   Returns:
     double: specific humidity.
 %}  
-  if nargin==2 %assuming condensate-free
-    q = 0.621971830985916 * e ./ ( p-e*(1-0.621971830985916) );
-  else %given qt (suitable for plume computations)
+  % % if nargin==2 %assuming condensate-free
+  % %   q = 0.621971830985916 * e ./ ( p-e*(1-0.621971830985916) );
+  % % else %given qt (suitable for plume computations)
     q = 0.621971830985916 * e .* (1-qt) ./ (p-e);
-  end
+  % % end
   

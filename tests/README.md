@@ -1,5 +1,19 @@
 # ACE reference tests
 
+Current v0.20 sources follow the author-selected KHN26 reference with a
+retained Fortran P3 option. Use [KHN26 tests](khn26/README.md) for actual
+Manaus1342/4UNEVEN initialization, components and short-run checks.
+
+The historical runners below were written for v0.18 and have not been
+adapted or run against KHN26. Use a separate checkout
+of `v0.18.0` to reproduce the accepted cases. The
+[KHN26 integration record](../docs/migration/v020_khn26_integration.md)
+tracks the new source and validation scope.
+
+For the independently runnable v0.20 interp1 comparison (PCHIP/MAKIMA,
+MATLAB versus production Fortran real64, without basis/model integration), see
+[interpolation tests](interpolation/README.md). The recorded checks pass.
+
 For default-real32 Fortran precipitation checks and their real64 comparison,
 see [precision tests](precision/README.md). These retain the frozen v0.18
 reference cases and document the subsequent precipitation evaluation change.
@@ -20,7 +34,7 @@ the existing single-ACE tendency mask, initial 0.03 kg m-2 s-1 MF pulse,
 the original MATLAB `T_zm`/`p_mf` convention and supplies the same
 theta_e/qt/MF input to both implementations.
 
-Initial v0.20/v0.24 comparisons must use this same sounding, bubble,
+For the frozen Manus cross-version comparison, use this same sounding, bubble,
 physics switches, timing, geometry and output coordinates. Record the tested
 revision, tool versions and any version-specific adapter. The current runner
 operates on `matlab/` and `fortran/`; adapters for later

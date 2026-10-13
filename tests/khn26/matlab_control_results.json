@@ -1,0 +1,128 @@
+{
+  "duration_seconds": 60,
+  "steps": 15,
+  "integration_wall_seconds": 28.4075,
+  "wall_seconds_per_step": 1.8938333333333333,
+  "process_wall_seconds": 52.544838477973826,
+  "binary_identical_to_three_hour_prefix": true,
+  "provenance_rechecked": true,
+  "state_sha256": "b6062a7f41efc7349cdf73dc47e9d23f72b850aa84df258edb2706858905c18a",
+  "configuration": {
+    "case": {
+      "duration_seconds": 10800,
+      "dt_seconds": 4.0,
+      "bubble_delta_K": 1.0,
+      "physics": "none",
+      "mean_mf_zero": true,
+      "initial_mf_amplitude": 0.03,
+      "input": "/scratch/peter50504/ACE/data/input/manaus1342_khn26.nc",
+      "input_sha256": "09408f4d0343afd8659df82f8f1cfe5dc59308cff150fb2bcfd569b1b8794d35",
+      "active_ace_one_based": 1,
+      "full_basis_columns": 101,
+      "profile_index": 1342,
+      "bubble_levels_one_based": [
+        11,
+        51
+      ],
+      "output_interval_seconds": 60,
+      "policy": "Mask dynamics tendencies in ACEs 2..101; physics and damping retain driver behavior.",
+      "basis_policy": "Complete geometry and PMB retained; PMDv/PMD disabled.",
+      "compiled_commands": [
+        [
+          "gfortran",
+          "-cpp",
+          "-ffree-form",
+          "-ffree-line-length-none",
+          "-O2",
+          "-g",
+          "-fcheck=all,no-array-temps",
+          "-ffpe-trap=invalid,zero,overflow",
+          "-fbacktrace",
+          "-fdefault-real-8",
+          "-fdefault-double-8",
+          "-I/home/peter50504/miniconda3/include",
+          "-I/home/peter50504/miniconda3/include",
+          "-c",
+          "/scratch/peter50504/ACE/migration_work/khn26_single_3h/ace_module_single.F",
+          "-o",
+          "ace_module.o"
+        ],
+        [
+          "gfortran",
+          "-cpp",
+          "-ffree-form",
+          "-ffree-line-length-none",
+          "-O2",
+          "-g",
+          "-fcheck=all,no-array-temps",
+          "-ffpe-trap=invalid,zero,overflow",
+          "-fbacktrace",
+          "-fdefault-real-8",
+          "-fdefault-double-8",
+          "-I/home/peter50504/miniconda3/include",
+          "-I/home/peter50504/miniconda3/include",
+          "-c",
+          "/scratch/peter50504/ACE/migration_work/khn26_single_3h/single_driver.F",
+          "-o",
+          "test.o"
+        ],
+        [
+          "gfortran",
+          "-cpp",
+          "-ffree-form",
+          "-ffree-line-length-none",
+          "-O2",
+          "-g",
+          "-fcheck=all,no-array-temps",
+          "-ffpe-trap=invalid,zero,overflow",
+          "-fbacktrace",
+          "-fdefault-real-8",
+          "-fdefault-double-8",
+          "test.o",
+          "ace_module.o",
+          "/scratch/peter50504/ACE/migration_work/khn26_single_3h/build64/ace_input.o",
+          "/scratch/peter50504/ACE/migration_work/khn26_single_3h/build64/ace_interpolation.o",
+          "/scratch/peter50504/ACE/migration_work/khn26_single_3h/build64/microphy_p3.o",
+          "-L/home/peter50504/miniconda3/lib",
+          "-lnetcdff",
+          "-lnetcdf",
+          "-o",
+          "ace_model.exe"
+        ]
+      ],
+      "generated_sha256": {
+        "single_main.m": "94a854eef7b27508ec85215bbd0e70823e9162bd7c7d7280f6b9b870b07b919c",
+        "ace_module_single.F": "b4db355d9c02f110513e91c897090b5c96c33018cf2c395925bc6530aaa13342",
+        "single_driver.F": "2089204c5ba51014fa01f195056226dbf249853c0a4282242043dbf84b2a5729"
+      },
+      "not_frozen_manus_reference": "Manaus/KHN26 basis and grid; no byte comparison to v0.18 Manus."
+    },
+    "duration_seconds": 60,
+    "steps": 15,
+    "dt_seconds": 4,
+    "control": true,
+    "command": [
+      "matlab",
+      "-batch",
+      "run('/scratch/peter50504/ACE/migration_work/khn26_matlab_control_1min/full_launch.m')"
+    ],
+    "sha256": {
+      "/scratch/peter50504/ACE/data/input/manaus1342_khn26.nc": "09408f4d0343afd8659df82f8f1cfe5dc59308cff150fb2bcfd569b1b8794d35",
+      "/scratch/peter50504/ACE/migration_work/khn26_single_3h/single_main.m": "94a854eef7b27508ec85215bbd0e70823e9162bd7c7d7280f6b9b870b07b919c",
+      "/scratch/peter50504/ACE/migration_work/khn26_matlab_control_1min/single_main.m": "e99b18fc2412b949809b83556d31540affb2451bb457e9789eee9c30d8b579cf",
+      "/scratch/peter50504/ACE/migration_work/khn26_matlab_control_1min/full_launch.m": "588a48e58aefde1ef7316d42fc11ecd7edea74685d005bbde481329cfc3c8256",
+      "/scratch/peter50504/ACE/matlab/util_timeint/ssprk93.m": "b23650cbd13f1854deb9970282f0c6b4edbe4e0a660a6f2421b51d1da8042ae0",
+      "/scratch/peter50504/ACE/migration_work/khn26_single_3h/full_matlab_states.bin": "78e1e79cf5997825be1731ab8ce9c5d5bcd02e7cfee86947e12863a766c8a381",
+      "/scratch/peter50504/ACE/migration_work/khn26_serial_profile_1min/profile_results.json": "d2324ff7e78c7b6d48b08695bfe45239dbde2f4d2f265ca7d9c746dd57e66279",
+      "/scratch/peter50504/ACE/tests/khn26/profile_matlab.py": "927ca6bb1cdfc8d4135de9cc91496d95f746d59a601020ad3b6220c51c94251b"
+    },
+    "environment": {
+      "OMP_NUM_THREADS": null,
+      "MKL_NUM_THREADS": null,
+      "OPENBLAS_NUM_THREADS": null,
+      "MATLAB_PREFDIR": "/tmp/ace-khn26-alignment-prefs"
+    },
+    "settings": "Frozen three-hour batch/default settings; no thread setter or CPU pinning."
+  },
+  "scope": "Original MATLAB timeint tic/toc; no section timers. One cold evolving minute on shared hardware."
+}

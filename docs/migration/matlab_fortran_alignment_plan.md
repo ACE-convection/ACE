@@ -1,6 +1,6 @@
 # Unified ACE development roadmap
 
-Updated 2026-10-02 after local release `v0.18.0` at `2b62c29`.
+Updated 2026-10-04 after final release `v0.18.0` at `d7d25b1`.
 This document owns the forward development sequence. Accepted results and
 limitations belong in the [release record](../releases/v0.18.0.md);
 historical evidence is indexed in [migration records](README.md).
@@ -15,12 +15,13 @@ historical evidence is indexed in [migration records](README.md).
 | Accept physical evolution for this milestone | Manus singleACE 3 h and outer-pulse multiACE 12 h, with native precipitation; developer acceptance recorded in the release |
 | Normalize current source roots | [Path map and manifest](v018_normalization.md), recovery commit `c9ae729` |
 | Verify behavior after normalization | GNU build/default input checks and three full reruns; all saved numerical values exactly reproduced within each implementation |
-| Merge and tag locally | `main` merge `2b62c29`, annotated `v0.18.0`; no GitHub push |
+| Accept tested single precision | Stable precipitation evaluation, singleACE/multiACE figures and matched real64 control; physical evolution accepted on 2026-10-04 |
+| Publish final v0.18 | `main` merge `d7d25b1`, annotated `v0.18.0`, both pushed; developer reports GitHub Release published |
 
 Broader phase, budget and compiler questions remain documented limitations,
 not unfinished release gates for this accepted v0.18 milestone. The original
 pre-release plan is recoverable at
-`v0.18.0:docs/migration/matlab_fortran_alignment_plan.md`.
+`2b62c29:docs/migration/matlab_fortran_alignment_plan.md`.
 
 ## Repository philosophy and development sequence
 
@@ -43,7 +44,7 @@ marker meanings; snapshot names do not certify model execution.
 | Milestone | Direction and evidence needed |
 | --- | --- |
 | v0.19, if needed | Use S19 and standalone artifacts as comparison evidence; do not infer missing parent edges or require a separate release from import order. |
-| v0.20.0 | Joint publication/reproducibility release. Packaged MATLAB S20 is the scientific reference. Recover the intended 2D basis and builder inputs, review driver/library contracts, then establish a reference run and a matched Fortran comparison. |
+| v0.20.0 | Joint publication/reproducibility release. Author-selected November 2025 KHN26 is the scientific reference; packaged S20 remains historical comparison evidence. Recover the intended 2D basis and builder inputs, review driver/library contracts, then establish a reference run and a matched Fortran comparison. |
 | v0.24 | Joint active development using S24 p87/GF87 formulation evidence. Recover kernel inputs and fingerprint logs; review CPU/GPU behavior separately. Missing v0.21–v0.23 source history is not reconstructed by interpolation. |
 
 For v0.20 input/API blockers, start with the
@@ -51,6 +52,46 @@ For v0.20 input/API blockers, start with the
 [standalone readiness](matlab_validation_readiness.md).
 For v0.24, use the [p87 input/reference checklist](matlab_p87_validation_gate.md).
 The old S24 layout proposal is historical evidence only.
+
+## v0.20 preparation started (2026-10-04)
+
+The developer authorized moving on after publishing v0.18. Development starts
+from `d7d25b1` on `migration/v020-preparation`. The accepted real32 trajectory
+differences and existing scientific limitations do not reopen v0.18 release
+gates.
+
+1. Inspect the packaged MATLAB S20 reference and its own utility collection,
+   recoverable at `c9ae729:matlab/history/snapshots/ACE_V020/`. Keep the
+   standalone v0.20 driver distinct; its utility pairing is a migration
+   convention, not proof of historical runtime compatibility.
+2. Identify the intended 2D basis, builder prerequisites and sounding data.
+   Review grid dimensions, operator orientation and input contracts before
+   generating or substituting inputs. The older readiness reports describe
+   missing data at their review dates; check current availability separately.
+3. Recover the intended historical Fortran P3 interface and identify its P3
+   source version, lookup data, build dependencies and attribution. The old
+   audit refers to commit `381402d`, which does not resolve as an object in
+   the current unified checkout. It has now been located in the separate
+   `ACE_FORTRAN` repository at historical v0.20 `88e4af5`; see the
+   [source and input inventory](v020_preparation.md).
+4. Present a small source-migration proposal covering state variables,
+   thermodynamic formulation and shared dynamics. Review scientific changes
+   before replacing active source or public interfaces, as required by
+   `AGENTS.md`.
+5. Establish the MATLAB S20 dynamics reference and matched Fortran comparison,
+   then validate Fortran-only P3 coupling separately from shared dynamics.
+   Check precision and build compatibility for the selected P3 version.
+
+The initial preparation changed documentation and the development branch
+only. The developer subsequently authorized source integration on this
+branch before testing. The [integration record](v020_source_integration.md)
+records active S20/Fortran v0.20 source promotion and imported P3 ancestry;
+The [shared-input adapter](v020_shared_input_adapter.md) now reconnects both
+drivers to NetCDF and extends input to three operators. Basis confirmation,
+input-file generation and model validation remain deferred. The adapter
+record includes successful reader readback checks and Fortran builds.
+MATLAB is the dynamics reference; P3 is Fortran-only physics rather than a
+required MATLAB implementation.
 
 ## Fixed initial runtime comparison
 
@@ -77,3 +118,27 @@ Large historical MAT/NC data use Git LFS. Retain hashes, source provenance and
 conversion/readback evidence. The completed [LFS migration](matlab_data_lfs_migration.md)
 and its commit map are preservation records, not commands to rewrite history
 again. Historical binary contracts remain references for legacy input reads.
+
+## KHN26 release reference confirmed (2026-10-04)
+
+The developer relayed author confirmation of June/November 2025 v0.20
+versions and selected November KHN26 for publication. The [complete source
+review and Fortran alignment plan](v020_khn26_review.md) supersede the
+packaged-S20 final-reference choice above. The selected input is the
+4UNEVEN basis (actual 101 ACEs) and processed Manaus profile 1342, six hours,
+dt=6 s. A shared input is prepared by direct copy; no raw-sounding
+preprocessing should be repeated. Review source promotion and scientific
+alignment in separate small changes before model validation/release.
+
+The authorized KHN26 source promotion and shared adapters are implemented.
+[Integration evidence](v020_khn26_integration.md) covers exact MATLAB
+original/shared initialization and one-step agreement, real64 Fortran
+components and a short native run. Full six-hour trajectory/budget review,
+P3 and real32 numerical validation remain the next milestones.
+
+For subsequent completed three-hour comparisons, PMB/interpolation work,
+the `b1010ea` thermodynamic alignment, fresh ten-minute gates and remaining
+evidence gaps, use [current KHN26 development status](v020_khn26_status.md).
+The old six-hour `running` record is stale and does not establish completion
+or a currently active process. Aligned-source three-hour validation remains
+pending; no v0.20 release acceptance follows from the short gates.

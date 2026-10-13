@@ -13,11 +13,21 @@ ACE currently has two implementations with different roles:
 
 The two implementations share the same core model formulation, but they are not necessarily identical in all physical parameterizations. A major goal of this repository is to maintain consistency between the shared components of the MATLAB and Fortran implementations and to provide systematic tests for their numerical agreement.
 
-The developer accepted the current MATLAB/Fortran v0.18 alignment on
-2026-10-02 using the Manus singleACE and twelve-hour multiACE comparisons.
-The [v0.18.0 release record](docs/releases/v0.18.0.md) defines the accepted
-scope and retained limitations. Current sources are directly under
-[`matlab/`](matlab/README.md) and [`fortran/`](fortran/README.md).
+The accepted `v0.20.0` release contains the author-selected November 2025
+KHN26 MATLAB implementation, aligned Fortran native dynamics and the
+Fortran-only P3 5.3.1 integration. The developer accepted the observed
+three-hour evolution and precipitation differences on 2026-10-12.
+[Release notes](docs/releases/v0.20.0-notes.md) define the tested GNU real64
+scope, known differences and unresolved issues. The dt=6 s, six-hour driver
+defaults are distinct from the tested dt=4 s, +1 K, three-hour cases.
+
+Current sources are directly under [`matlab/`](matlab/README.md) and
+[`fortran/`](fortran/README.md). The shared KHN26 NetCDF input supplies the
+101-ACE slab basis; PMDv/PMD are disabled placeholders. Minute precipitation
+accumulation is available through the diagnostic runner, rather than as a
+new production-driver default. P3 requires external lookup data.
+The previous [v0.18.0 release](docs/releases/v0.18.0.md) remains available
+for its accepted Manus and mixed-precision configuration.
 
 Developers running the accepted cases should start with the
 [test instructions](tests/README.md) and [shared-input instructions](docs/shared_input.md).
@@ -52,7 +62,7 @@ former staging paths to the source roots and records historical recovery.
 Migration-only `active/` and `history/` source copies leave the current tree;
 Git preserves their commits, imported ancestry and provenance. The unified
 `v0.18.0` tag identifies both implementations in one normalized repository
-state. Future `v0.20.0` likewise identifies both implementations; MATLAB and
+state. `v0.20.0` likewise identifies both implementations; MATLAB and
 Fortran advance together in one ACE history.
 
 Git commits, branches and tags preserve historical versions after migration-only
@@ -65,10 +75,12 @@ Refactoring and repository restructuring remain separate from scientific changes
 
 ## P3 microphysics
 
-Integration of the **Predicted Particle Properties (P3) microphysics scheme**
-developed by Morrison, Milbrandt, and collaborators is planned for ACE v0.20.
-The current v0.18 Fortran implementation uses native simplified precipitation
-and does not include an integrated P3 scheme.
+The **Predicted Particle Properties (P3) microphysics scheme** developed by
+Morrison, Milbrandt, and collaborators is included in ACE v0.20.0 for Fortran.
+The historical P3 5.3.1 module and ACE wrapper completed the documented
+three-hour cases. Known dry/warm edge-case failures remain unresolved;
+see the release notes for the accepted scope and external lookup dependency.
+The v0.18 Fortran implementation uses native simplified precipitation.
 
 The current upstream P3 source code is maintained separately at the
 [P3-microphysics repository](https://github.com/P3-microphysics/P3-microphysics).

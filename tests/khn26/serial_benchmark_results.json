@@ -1,0 +1,42 @@
+{
+  "simulated_seconds": 900,
+  "dt_seconds": 4.0,
+  "steps": 225,
+  "saved_states": 16,
+  "integration_wall_seconds": {
+    "fortran": 921.3665819140002,
+    "matlab": 413.0898
+  },
+  "wall_seconds_per_step": {
+    "fortran": 4.094962586284446,
+    "matlab": 1.8359546666666668
+  },
+  "process_wall_seconds": {
+    "fortran": null,
+    "matlab": 440.3171561449999
+  },
+  "matlab_over_fortran_ratio": 0.44834467421410945,
+  "matlab_natural_thread_cap": 80,
+  "three_hour_prefix_binary_identical": {
+    "matlab": true,
+    "fortran": true
+  },
+  "max_abs_error_MF_theta_e_qt": [
+    7.061018436615996e-14,
+    1.1368683772161603e-12,
+    3.885780586188048e-16
+  ],
+  "finite_saved_states": true,
+  "nonnegative_saved_qt": true,
+  "exit_codes": {
+    "fortran": 0,
+    "matlab": 0
+  },
+  "timing_scope": "Fortran: ace_driver wall timers; MATLAB: original timeint tic/toc including loop/reporting. Initialization and postprocessing excluded; process wall separately recorded.",
+  "limitation": "One evolving 225-step run per language, sequential on shared hardware; no isolated-host or repeated-run speed guarantee.",
+  "artifacts_sha256": {
+    "full_matlab_states.bin": "5091a88937bebab64871f0eafe754c6a48d915612364cf5f1866b661775b5720",
+    "full_fortran_states.bin": "8f7f30707ec89800378a04408ad12a01065ce76cee80d86298cc2367002fd05e",
+    "full_matlab.nc": "9d17f2d1ff4a52f028f442ecd73b024d19a1c3ef91d45f486fc7e784e17118a8"
+  }
+}

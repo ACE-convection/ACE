@@ -1,0 +1,513 @@
+{
+  "order": [
+    [
+      "control_before",
+      1
+    ],
+    [
+      "outputs4",
+      4
+    ],
+    [
+      "outputs8",
+      8
+    ],
+    [
+      "control_after",
+      1
+    ]
+  ],
+  "runs": [
+    {
+      "name": "control_before",
+      "output_block": 1,
+      "report_path": "/scratch/peter50504/ACE/migration_work/khn26_blocked_model_1min/control_before/profile_results.json",
+      "report_sha256": "ea44ffb19377f4395225f14804bb49ceda20f6dca00f728f62e39f5acd0ce2e0",
+      "state_sha256": "bb3c107edd10874d8d6af694d1f3c6c9803db7ad66b6978502201ac03f9ee74b",
+      "integration_seconds": 61.873760629,
+      "seconds_per_step": 4.124917375266667,
+      "PMB_ms_per_call": 449.1918134222222,
+      "PMB_percent_of_driver": 98.00744967742891,
+      "initialization_seconds": 37.075217586,
+      "process_wall_seconds": 99.04235897399485,
+      "sections": {
+        "initialization": {
+          "wall_seconds": 37.075217586,
+          "calls": 1,
+          "wall_seconds_per_call": 37.075217586
+        },
+        "tendency_total": {
+          "wall_seconds": 61.83333984099997,
+          "calls": 135,
+          "wall_seconds_per_step": 4.122222656066665,
+          "percent_of_driver": 99.93467216540724,
+          "wall_seconds_per_call": 0.45802473956296275
+        },
+        "transport_and_thermodynamics": {
+          "wall_seconds": 0.9285482840000006,
+          "calls": 135,
+          "wall_seconds_per_step": 0.06190321893333337,
+          "percent_of_driver": 1.5007141550158072,
+          "wall_seconds_per_call": 0.006878135437037041
+        },
+        "thermodynamics_nested": {
+          "wall_seconds": 0.19195576399999978,
+          "calls": 1515,
+          "wall_seconds_per_step": 0.01279705093333332,
+          "percent_of_driver": 0.3102377519139039,
+          "wall_seconds_per_call": 0.0001267034745874586
+        },
+        "mean_buoyancy_and_coarsening": {
+          "wall_seconds": 0.04466389799999998,
+          "calls": 135,
+          "wall_seconds_per_step": 0.0029775931999999985,
+          "percent_of_driver": 0.07218552346900049,
+          "wall_seconds_per_call": 0.00033084368888888874
+        },
+        "forcing_pack": {
+          "wall_seconds": 0.0014771710000000004,
+          "calls": 135,
+          "wall_seconds_per_step": 9.84780666666667e-05,
+          "percent_of_driver": 0.0023873948907958504,
+          "wall_seconds_per_call": 1.094200740740741e-05
+        },
+        "PMB_contraction": {
+          "wall_seconds": 60.640894812,
+          "calls": 135,
+          "wall_seconds_per_step": 4.0427263208,
+          "percent_of_driver": 98.00744967742891,
+          "wall_seconds_per_call": 0.4491918134222222
+        },
+        "momentum_interpolation_mask": {
+          "wall_seconds": 0.21772056400000006,
+          "calls": 135,
+          "wall_seconds_per_step": 0.014514704266666671,
+          "percent_of_driver": 0.35187866679943686,
+          "wall_seconds_per_call": 0.001612744918518519
+        },
+        "damping": {
+          "wall_seconds": 0.0038116120000000002,
+          "calls": 15,
+          "wall_seconds_per_step": 0.0002541074666666667,
+          "percent_of_driver": 0.0061603044024667085,
+          "wall_seconds_per_call": 0.0002541074666666667
+        },
+        "driver_total": {
+          "wall_seconds": 61.873760629,
+          "calls": 1,
+          "wall_seconds_per_step": 4.124917375266667,
+          "percent_of_driver": 100.00000000000001,
+          "wall_seconds_per_call": 61.873760629
+        },
+        "initial_PMB_pack": {
+          "wall_seconds": 4.54773877,
+          "calls": 1,
+          "wall_seconds_per_call": 4.54773877
+        },
+        "transport_excluding_thermodynamics": {
+          "wall_seconds": 0.7365925200000008,
+          "wall_seconds_per_step": 0.04910616800000005,
+          "percent_of_driver": 1.1904764031019033
+        },
+        "other_driver_and_timer_overhead": {
+          "wall_seconds": 0.036644288000005076,
+          "wall_seconds_per_step": 0.002442952533333672,
+          "percent_of_driver": 0.05922427799358624
+        }
+      },
+      "flags": [
+        "-cpp",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-O2",
+        "-fdefault-real-8",
+        "-fdefault-double-8"
+      ],
+      "speedup_vs_mean_controls": 1.001726113095669
+    },
+    {
+      "name": "outputs4",
+      "output_block": 4,
+      "report_path": "/scratch/peter50504/ACE/migration_work/khn26_blocked_model_1min/outputs4/profile_results.json",
+      "report_sha256": "f1b0549279e1518e4fad70e5b4dfe7481478b4c84edaa932b2bd8e6e2c8825a8",
+      "state_sha256": "bb3c107edd10874d8d6af694d1f3c6c9803db7ad66b6978502201ac03f9ee74b",
+      "integration_seconds": 35.91708091,
+      "seconds_per_step": 2.3944720606666667,
+      "PMB_ms_per_call": 256.62287274074055,
+      "PMB_percent_of_driver": 96.45574457125326,
+      "initialization_seconds": 37.076985748,
+      "process_wall_seconds": 73.08744089107495,
+      "sections": {
+        "initialization": {
+          "wall_seconds": 37.076985748,
+          "calls": 1,
+          "wall_seconds_per_call": 37.076985748
+        },
+        "tendency_total": {
+          "wall_seconds": 35.87427425999999,
+          "calls": 135,
+          "wall_seconds_per_step": 2.3916182839999993,
+          "percent_of_driver": 99.88081812631914,
+          "wall_seconds_per_call": 0.2657353648888888
+        },
+        "transport_and_thermodynamics": {
+          "wall_seconds": 0.96056468,
+          "calls": 135,
+          "wall_seconds_per_step": 0.06403764533333332,
+          "percent_of_driver": 2.6743951781798625,
+          "wall_seconds_per_call": 0.007115293925925925
+        },
+        "thermodynamics_nested": {
+          "wall_seconds": 0.19262770199999976,
+          "calls": 1515,
+          "wall_seconds_per_step": 0.012841846799999983,
+          "percent_of_driver": 0.5363122423080005,
+          "wall_seconds_per_call": 0.00012714699801980183
+        },
+        "mean_buoyancy_and_coarsening": {
+          "wall_seconds": 0.044939173000000006,
+          "calls": 135,
+          "wall_seconds_per_step": 0.002995944866666667,
+          "percent_of_driver": 0.12511922422818075,
+          "wall_seconds_per_call": 0.000332882762962963
+        },
+        "forcing_pack": {
+          "wall_seconds": 0.0012922450000000005,
+          "calls": 135,
+          "wall_seconds_per_step": 8.61496666666667e-05,
+          "percent_of_driver": 0.003597856416110405,
+          "wall_seconds_per_call": 9.572185185185189e-06
+        },
+        "PMB_contraction": {
+          "wall_seconds": 34.64408781999997,
+          "calls": 135,
+          "wall_seconds_per_step": 2.3096058546666645,
+          "percent_of_driver": 96.45574457125326,
+          "wall_seconds_per_call": 0.2566228727407405
+        },
+        "momentum_interpolation_mask": {
+          "wall_seconds": 0.2233606750000001,
+          "calls": 135,
+          "wall_seconds_per_step": 0.014890711666666672,
+          "percent_of_driver": 0.6218786976583395,
+          "wall_seconds_per_call": 0.0016545235185185191
+        },
+        "damping": {
+          "wall_seconds": 0.0038021319999999997,
+          "calls": 15,
+          "wall_seconds_per_step": 0.00025347546666666665,
+          "percent_of_driver": 0.010585860275024225,
+          "wall_seconds_per_call": 0.00025347546666666665
+        },
+        "driver_total": {
+          "wall_seconds": 35.91708091,
+          "calls": 1,
+          "wall_seconds_per_step": 2.3944720606666667,
+          "percent_of_driver": 100.0,
+          "wall_seconds_per_call": 35.91708091
+        },
+        "initial_PMB_pack": {
+          "wall_seconds": 4.549495721,
+          "calls": 1,
+          "wall_seconds_per_call": 4.549495721
+        },
+        "transport_excluding_thermodynamics": {
+          "wall_seconds": 0.7679369780000002,
+          "wall_seconds_per_step": 0.05119579853333334,
+          "percent_of_driver": 2.138082935871862
+        },
+        "other_driver_and_timer_overhead": {
+          "wall_seconds": 0.03903418500003397,
+          "wall_seconds_per_step": 0.002602279000002265,
+          "percent_of_driver": 0.10867861198922239
+        }
+      },
+      "flags": [
+        "-cpp",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-O2",
+        "-fdefault-real-8",
+        "-fdefault-double-8"
+      ],
+      "speedup_vs_mean_controls": 1.7256569901326093
+    },
+    {
+      "name": "outputs8",
+      "output_block": 8,
+      "report_path": "/scratch/peter50504/ACE/migration_work/khn26_blocked_model_1min/outputs8/profile_results.json",
+      "report_sha256": "5db09a8f5bfa1c0c3edbc7431d6db08e3e525c1596f53aad541f7b9a1a080a0d",
+      "state_sha256": "bb3c107edd10874d8d6af694d1f3c6c9803db7ad66b6978502201ac03f9ee74b",
+      "integration_seconds": 35.991811338,
+      "seconds_per_step": 2.3994540892,
+      "PMB_ms_per_call": 256.52104894814795,
+      "PMB_percent_of_driver": 96.21727921050035,
+      "initialization_seconds": 37.030405135,
+      "process_wall_seconds": 73.11660052789375,
+      "sections": {
+        "initialization": {
+          "wall_seconds": 37.030405135,
+          "calls": 1,
+          "wall_seconds_per_call": 37.030405135
+        },
+        "tendency_total": {
+          "wall_seconds": 35.945553957000016,
+          "calls": 135,
+          "wall_seconds_per_step": 2.396370263800001,
+          "percent_of_driver": 99.87147804103111,
+          "wall_seconds_per_call": 0.26626336264444456
+        },
+        "transport_and_thermodynamics": {
+          "wall_seconds": 1.0381279810000001,
+          "calls": 135,
+          "wall_seconds_per_step": 0.06920853206666668,
+          "percent_of_driver": 2.884344917378329,
+          "wall_seconds_per_call": 0.007689836896296297
+        },
+        "thermodynamics_nested": {
+          "wall_seconds": 0.19219916900000023,
+          "calls": 1515,
+          "wall_seconds_per_step": 0.012813277933333348,
+          "percent_of_driver": 0.5340080475390723,
+          "wall_seconds_per_call": 0.00012686413795379552
+        },
+        "mean_buoyancy_and_coarsening": {
+          "wall_seconds": 0.045796493,
+          "calls": 135,
+          "wall_seconds_per_step": 0.0030530995333333333,
+          "percent_of_driver": 0.1272414232502054,
+          "wall_seconds_per_call": 0.0003392332814814815
+        },
+        "forcing_pack": {
+          "wall_seconds": 0.0012412220000000002,
+          "calls": 135,
+          "wall_seconds_per_step": 8.274813333333335e-05,
+          "percent_of_driver": 0.0034486233225209297,
+          "wall_seconds_per_call": 9.194237037037038e-06
+        },
+        "PMB_contraction": {
+          "wall_seconds": 34.63034160799998,
+          "calls": 135,
+          "wall_seconds_per_step": 2.3086894405333322,
+          "percent_of_driver": 96.21727921050035,
+          "wall_seconds_per_call": 0.256521048948148
+        },
+        "momentum_interpolation_mask": {
+          "wall_seconds": 0.230017329,
+          "calls": 135,
+          "wall_seconds_per_step": 0.0153344886,
+          "percent_of_driver": 0.6390823924917297,
+          "wall_seconds_per_call": 0.0017038320666666665
+        },
+        "damping": {
+          "wall_seconds": 0.0038049869999999997,
+          "calls": 15,
+          "wall_seconds_per_step": 0.0002536658,
+          "percent_of_driver": 0.010571813027878125,
+          "wall_seconds_per_call": 0.0002536658
+        },
+        "driver_total": {
+          "wall_seconds": 35.991811338,
+          "calls": 1,
+          "wall_seconds_per_step": 2.3994540892,
+          "percent_of_driver": 100.0,
+          "wall_seconds_per_call": 35.991811338
+        },
+        "initial_PMB_pack": {
+          "wall_seconds": 4.543651209,
+          "calls": 1,
+          "wall_seconds_per_call": 4.543651209
+        },
+        "transport_excluding_thermodynamics": {
+          "wall_seconds": 0.8459288119999999,
+          "wall_seconds_per_step": 0.05639525413333333,
+          "percent_of_driver": 2.350336869839257
+        },
+        "other_driver_and_timer_overhead": {
+          "wall_seconds": 0.042481718000018986,
+          "wall_seconds_per_step": 0.0028321145333345993,
+          "percent_of_driver": 0.11803162002898969
+        }
+      },
+      "flags": [
+        "-cpp",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-O2",
+        "-fdefault-real-8",
+        "-fdefault-double-8"
+      ],
+      "speedup_vs_mean_controls": 1.722073978312428
+    },
+    {
+      "name": "control_after",
+      "output_block": 1,
+      "report_path": "/scratch/peter50504/ACE/migration_work/khn26_blocked_model_1min/control_after/profile_results.json",
+      "report_sha256": "5d7fc2976c4f57aa6adab4ff0b2709ab0bab9a46932bc97ad24caaf5126a9dda",
+      "state_sha256": "bb3c107edd10874d8d6af694d1f3c6c9803db7ad66b6978502201ac03f9ee74b",
+      "integration_seconds": 62.087362846,
+      "seconds_per_step": 4.139157523066666,
+      "PMB_ms_per_call": 450.75107876296266,
+      "PMB_percent_of_driver": 98.00930953362328,
+      "initialization_seconds": 37.075064257,
+      "process_wall_seconds": 99.25665712705813,
+      "sections": {
+        "initialization": {
+          "wall_seconds": 37.075064257,
+          "calls": 1,
+          "wall_seconds_per_call": 37.075064257
+        },
+        "tendency_total": {
+          "wall_seconds": 62.046643900999996,
+          "calls": 135,
+          "wall_seconds_per_step": 4.136442926733333,
+          "percent_of_driver": 99.93441669426193,
+          "wall_seconds_per_call": 0.459604769637037
+        },
+        "transport_and_thermodynamics": {
+          "wall_seconds": 0.930089912,
+          "calls": 135,
+          "wall_seconds_per_step": 0.06200599413333333,
+          "percent_of_driver": 1.4980341721180406,
+          "wall_seconds_per_call": 0.006889554903703704
+        },
+        "thermodynamics_nested": {
+          "wall_seconds": 0.19247129199999974,
+          "calls": 1515,
+          "wall_seconds_per_step": 0.01283141946666665,
+          "percent_of_driver": 0.31000075245167186,
+          "wall_seconds_per_call": 0.0001270437570957094
+        },
+        "mean_buoyancy_and_coarsening": {
+          "wall_seconds": 0.04502506799999997,
+          "calls": 135,
+          "wall_seconds_per_step": 0.003001671199999998,
+          "percent_of_driver": 0.07251889263146682,
+          "wall_seconds_per_call": 0.00033351902222222195
+        },
+        "forcing_pack": {
+          "wall_seconds": 0.0014114849999999999,
+          "calls": 135,
+          "wall_seconds_per_step": 9.4099e-05,
+          "percent_of_driver": 0.0022733853320538243,
+          "wall_seconds_per_call": 1.0455444444444444e-05
+        },
+        "PMB_contraction": {
+          "wall_seconds": 60.85139563299996,
+          "calls": 135,
+          "wall_seconds_per_step": 4.056759708866664,
+          "percent_of_driver": 98.00930953362328,
+          "wall_seconds_per_call": 0.45075107876296266
+        },
+        "momentum_interpolation_mask": {
+          "wall_seconds": 0.218689097,
+          "calls": 135,
+          "wall_seconds_per_step": 0.014579273133333332,
+          "percent_of_driver": 0.352228033170665,
+          "wall_seconds_per_call": 0.001619919237037037
+        },
+        "damping": {
+          "wall_seconds": 0.0037967469999999996,
+          "calls": 15,
+          "wall_seconds_per_step": 0.00025311646666666663,
+          "percent_of_driver": 0.006115168733156471,
+          "wall_seconds_per_call": 0.00025311646666666663
+        },
+        "driver_total": {
+          "wall_seconds": 62.087362846,
+          "calls": 1,
+          "wall_seconds_per_step": 4.139157523066666,
+          "percent_of_driver": 100.0,
+          "wall_seconds_per_call": 62.087362846
+        },
+        "initial_PMB_pack": {
+          "wall_seconds": 4.54599071,
+          "calls": 1,
+          "wall_seconds_per_call": 4.54599071
+        },
+        "transport_excluding_thermodynamics": {
+          "wall_seconds": 0.7376186200000003,
+          "wall_seconds_per_step": 0.049174574666666686,
+          "percent_of_driver": 1.1880334196663689
+        },
+        "other_driver_and_timer_overhead": {
+          "wall_seconds": 0.036954904000040756,
+          "wall_seconds_per_step": 0.0024636602666693835,
+          "percent_of_driver": 0.05952081439133244
+        }
+      },
+      "flags": [
+        "-cpp",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-O2",
+        "-fdefault-real-8",
+        "-fdefault-double-8"
+      ],
+      "speedup_vs_mean_controls": 0.9982798253363587
+    }
+  ],
+  "comparison": [
+    {
+      "section": "nonlocal_response_interpolation_assembly",
+      "matlab_ms_per_step": 1559.1510333333335,
+      "control_before_ms_per_step": 4060.3170963333337,
+      "outputs4_ms_per_step": 2327.5786608666644,
+      "outputs8_ms_per_step": 2327.159776799999,
+      "control_after_ms_per_step": 4074.4347521999966
+    },
+    {
+      "section": "transport_and_other_buoyancy_setup",
+      "matlab_ms_per_step": 143.44083333333336,
+      "control_before_ms_per_step": 49.10616800000005,
+      "outputs4_ms_per_step": 51.195798533333345,
+      "outputs8_ms_per_step": 56.39525413333333,
+      "control_after_ms_per_step": 49.174574666666686
+    },
+    {
+      "section": "thermodynamic_inversions",
+      "matlab_ms_per_step": 187.33596666666668,
+      "control_before_ms_per_step": 12.797050933333319,
+      "outputs4_ms_per_step": 12.841846799999983,
+      "outputs8_ms_per_step": 12.813277933333348,
+      "control_after_ms_per_step": 12.83141946666665
+    },
+    {
+      "section": "damping",
+      "matlab_ms_per_step": 0.6554000000000001,
+      "control_before_ms_per_step": 0.25410746666666667,
+      "outputs4_ms_per_step": 0.25347546666666665,
+      "outputs8_ms_per_step": 0.2536658,
+      "control_after_ms_per_step": 0.25311646666666665
+    },
+    {
+      "section": "other_driver_timer_overhead",
+      "matlab_ms_per_step": 11.975333333332898,
+      "control_before_ms_per_step": 2.442952533333672,
+      "outputs4_ms_per_step": 2.602279000002265,
+      "outputs8_ms_per_step": 2.8321145333345994,
+      "control_after_ms_per_step": 2.4636602666693834
+    }
+  ],
+  "baseline_mean_seconds_per_step": 4.132037449166667,
+  "matlab_seconds_per_step": 1.9025585666666667,
+  "matlab_control": {
+    "median_seconds_per_step": 2.0363416666666665,
+    "range_seconds_per_step": [
+      1.7895221333333333,
+      2.2719171333333334
+    ]
+  },
+  "matlab_source_report": "/scratch/peter50504/ACE/tests/khn26/low_perturbation_comparison.json",
+  "matlab_source_report_sha256": "ce8254df005c6b139e6bfb7e7ba1a3245517d3d766df4ca14a72554fdbf9b588",
+  "duration_seconds_each": 60,
+  "steps_each": 15,
+  "dt_seconds": 4,
+  "binary_identity_all_runs": true,
+  "source_sha256": {
+    "/scratch/peter50504/ACE/tests/basis_layout/test_blocked_model.py": "5d54ccb52e78df81ddb814c5ffe024c52ea748b31c7b7bc2d0784182631af696",
+    "/scratch/peter50504/ACE/tests/basis_layout/profile_model.py": "7e0517d3fd43d20dfc150eb4c56a3f65b2e5852823399c2f7129e201e4f7069e",
+    "/scratch/peter50504/ACE/tests/basis_layout/analyze_serial_simd.py": "0c6ad3d7ed3825aafc30684702a8a2ae83e3fe8db5e1aa50073aee1521b564c9"
+  },
+  "limits": "Sequential fresh-process one-minute Fortran samples on a shared host, with controls before/after; one candidate sample per width. No affinity pinning; identical original O2 serial flags/dependencies for every build. MATLAB section averages are the previously measured two unsplit samples at default settings, not newly rerun or equal CPU budgets. Exact state identity covers all exported prognostic fields at 0 and 60 seconds; intermediate steps are not exported. No long-run or hardware portability acceptance."
+}

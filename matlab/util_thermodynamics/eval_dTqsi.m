@@ -17,8 +17,8 @@ function dTqsi = eval_dTqsi(T,p,qt)
   % With es from Eq. (4.4.15) in Emanual (1994)
   %   accurate within <1e-3 rel. error for -30<=T<=0-deg-C
   % Rel. error increases exponentially with T
-  if nargin==2 %assuming condensate-free
-    dTqsi = 0.621971830985916.*p./( p-esi*(1-0.621971830985916) ).^2 .* (6111.72784./T+0.15215).*esi./T;
-	else %given qt (suitable for plume computations)
+  % % if nargin==2 %assuming condensate-free
+  % %   dTqsi = 0.621971830985916.*p./( p-esi*(1-0.621971830985916) ).^2 .* (6111.72784./T+0.15215).*esi./T;
+	% % else %given qt (suitable for plume computations)
     dTqsi = 0.621971830985916.*p.*(1-qt)./(p-esi).^2 .* (6111.72784./T+0.15215).*esi./T;
-  end
+  % % end

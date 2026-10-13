@@ -1,17 +1,35 @@
 # ACE migration records
 
-Updated 2026-10-02. The migration and v0.18 source-root normalization are
+Updated 2026-10-04. The migration and v0.18 source-root normalization are
 complete. Local `main` contains the accepted release, and annotated tag
-`v0.18.0` identifies `2b62c291b3ab4e3da7a822559d341e3183bc302b`.
-The release has not been pushed to GitHub. Later documentation changes do
-not move that tag.
+`v0.18.0` identifies `d7d25b10c1bbad99543ed579a11196673d531c17`.
+The final release includes the accepted single-precision precipitation work;
+`main` and the tag have been pushed, and the developer reports GitHub Release
+published. The original normalization release commit `2b62c29` remains in
+ancestry. v0.20 preparation is now tracked in the roadmap.
+
+## v0.20.0 acceptance (2026-10-12)
+
+The developer accepted the KHN26 three-hour results and native/P3 differences
+and authorized release and merge into `main`.
+[Release notes](../releases/v0.20.0-notes.md) define the current scope,
+completed evidence and known limitations. Earlier preparation and review
+records remain historical; their pending-release language does not override
+this acceptance.
 
 ## Start here
 
 | Purpose | Authoritative document |
 | --- | --- |
 | Accepted v0.18 scope, results and retained limitations | [Release record](../releases/v0.18.0.md) |
+| Current KHN26 progress, source-version scope and stale runtime statuses | [KHN26 development status](v020_khn26_status.md) |
+| Author-selected KHN26 v0.20 source review, input and Fortran alignment | [KHN26 review](v020_khn26_review.md) |
+| Active KHN26 drivers, numerical changes and validation scope | [KHN26 integration](v020_khn26_integration.md) |
 | Current development sequence and joint MATLAB/Fortran milestones | [Roadmap](matlab_fortran_alignment_plan.md) |
+| v0.20 source, basis inputs and historical P3 findings | [Preparation inventory](v020_preparation.md) |
+| Reviewable v0.20 code-only merge candidate and interface effects | [Source merge proposal](v020_source_merge_plan.md) |
+| Integrated v0.20 source state and deferred code/validation work | [Integration record](v020_source_integration.md) |
+| Current shared NetCDF adapters, three operators and deferred validation | [Input adapter record](v020_shared_input_adapter.md) |
 | Run the fixed Manus reference cases | [Test instructions](../../tests/README.md) |
 | Shared NetCDF schema and current input usage | [Shared input](../shared_input.md) |
 | Source promotion, retired paths and recovery | [Normalization record](v018_normalization.md) and [per-file manifest](v018_normalization_manifest.json) |
@@ -47,11 +65,11 @@ is inferred from an import order, matching filename or snapshot label.
 ## Recover earlier records and source trees
 
 The complete documentation before this consolidation is preserved at
-`v0.18.0`. Historical source trees before normalization are preserved at
+`2b62c29`. Historical source trees before normalization are preserved at
 `c9ae729`; follow the normalization manifest for exact paths.
 
 ```bash
-git show v0.18.0:docs/migration/matlab_fortran_alignment_plan.md
+git show 2b62c29:docs/migration/matlab_fortran_alignment_plan.md
 git show c9ae729:matlab/history/snapshots/ACE_V020/ACE_V020_2D88ACEs.m
 ```
 
@@ -64,7 +82,7 @@ source change or release-tag replacement is part of documentation cleanup.
 The roadmap now states completed v0.18 work and later joint milestones.
 Import, alignment and input records retain summaries, verified anchors and
 links to their primary evidence; obsolete staging recipes and duplicated
-pre-release gates remain recoverable from `v0.18.0`. The
+pre-release gates remain recoverable from `2b62c29`. The
 [handoff](../v018_developer_handoff.md) uses current source roots and test
 entry points.
 
@@ -72,6 +90,8 @@ The redundant `matlab_s20_active_stage.md` page was removed: its copy counts
 and staging commit are retained in the utility inventory, and its dependency,
 input and no-runtime-proof findings in the driver dependency map. Recover
 its original text with
-`git show v0.18.0:docs/migration/matlab_s20_active_stage.md`.
+`git show 2b62c29:docs/migration/matlab_s20_active_stage.md`.
 File identities, lineage/variant evidence, scientific reports, data manifests,
 commit maps and the normalization manifest remain preserved.
+
+- [v0.20 reference buoyancy and momentum alignment](v020_dynamics_alignment.md) — scientific changes, disabled momentum defaults and remaining dynamics differences.

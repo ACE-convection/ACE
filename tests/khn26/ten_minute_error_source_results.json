@@ -1,0 +1,2966 @@
+{
+  "scope": "Local error-source controls on selected gate steps; no unique causal proof for full history.",
+  "replay": {
+    "samples": 12,
+    "results": [
+      {
+        "minute": 0.0,
+        "second": 0,
+        "record": 0,
+        "seed": "matlab",
+        "components": [
+          {
+            "field": "theta_e_vertical_flux",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "qt_vertical_flux",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "mfc",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "wc",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "area_dMF_dz",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "horizontal_flow",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "local_MF_forcing",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "raw_buoyancy",
+            "max_abs_error": 3.2107502527866578e-15,
+            "ACE": 2,
+            "level": 37,
+            "boundary_max_abs_error": 3.2107502527866578e-15
+          },
+          {
+            "field": "adjusted_buoyancy",
+            "max_abs_error": 3.184952301893418e-15,
+            "ACE": 1,
+            "level": 37,
+            "boundary_max_abs_error": 1.485356976305141e-17
+          },
+          {
+            "field": "MF_tendency",
+            "max_abs_error": 7.632783294297951e-17,
+            "ACE": 1,
+            "level": 38,
+            "boundary_max_abs_error": 4.0657581468206416e-20
+          },
+          {
+            "field": "theta_e_tendency",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "qt_tendency",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "SSPRK_MF",
+            "max_abs_error": 3.3306690738754696e-16,
+            "ACE": 1,
+            "level": 39,
+            "boundary_max_abs_error": 1.6919193608190256e-19
+          },
+          {
+            "field": "SSPRK_theta_e",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "SSPRK_qt",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "physics_MF",
+            "max_abs_error": 3.3306690738754696e-16,
+            "ACE": 1,
+            "level": 39,
+            "boundary_max_abs_error": 1.6919193608190256e-19
+          },
+          {
+            "field": "physics_theta_e",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "physics_qt",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "damped_MF",
+            "max_abs_error": 3.3306690738754696e-16,
+            "ACE": 1,
+            "level": 39,
+            "boundary_max_abs_error": 1.6918531863700213e-19
+          },
+          {
+            "field": "damped_theta_e",
+            "max_abs_error": 4.547473508864641e-13,
+            "ACE": 9,
+            "level": 388,
+            "boundary_max_abs_error": 4.547473508864641e-13
+          },
+          {
+            "field": "damped_qt",
+            "max_abs_error": 8.470329472543003e-22,
+            "ACE": 1,
+            "level": 359,
+            "boundary_max_abs_error": 8.470329472543003e-22
+          }
+        ]
+      },
+      {
+        "minute": 0.0,
+        "second": 0,
+        "record": 0,
+        "seed": "fortran",
+        "components": [
+          {
+            "field": "theta_e_vertical_flux",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "qt_vertical_flux",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "mfc",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "wc",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "area_dMF_dz",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "horizontal_flow",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "local_MF_forcing",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "raw_buoyancy",
+            "max_abs_error": 3.2107502527866578e-15,
+            "ACE": 2,
+            "level": 37,
+            "boundary_max_abs_error": 3.2107502527866578e-15
+          },
+          {
+            "field": "adjusted_buoyancy",
+            "max_abs_error": 3.1988300897012323e-15,
+            "ACE": 1,
+            "level": 37,
+            "boundary_max_abs_error": 1.4880674817363548e-17
+          },
+          {
+            "field": "MF_tendency",
+            "max_abs_error": 8.673617379884035e-17,
+            "ACE": 1,
+            "level": 39,
+            "boundary_max_abs_error": 5.421010862427522e-20
+          },
+          {
+            "field": "theta_e_tendency",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "qt_tendency",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "SSPRK_MF",
+            "max_abs_error": 3.608224830031759e-16,
+            "ACE": 1,
+            "level": 39,
+            "boundary_max_abs_error": 1.897436519910888e-19
+          },
+          {
+            "field": "SSPRK_theta_e",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "SSPRK_qt",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "physics_MF",
+            "max_abs_error": 3.608224830031759e-16,
+            "ACE": 1,
+            "level": 39,
+            "boundary_max_abs_error": 1.897436519910888e-19
+          },
+          {
+            "field": "physics_theta_e",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "physics_qt",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "damped_MF",
+            "max_abs_error": 3.608224830031759e-16,
+            "ACE": 1,
+            "level": 39,
+            "boundary_max_abs_error": 1.897295899206754e-19
+          },
+          {
+            "field": "damped_theta_e",
+            "max_abs_error": 4.547473508864641e-13,
+            "ACE": 9,
+            "level": 388,
+            "boundary_max_abs_error": 4.547473508864641e-13
+          },
+          {
+            "field": "damped_qt",
+            "max_abs_error": 8.470329472543003e-22,
+            "ACE": 1,
+            "level": 359,
+            "boundary_max_abs_error": 8.470329472543003e-22
+          }
+        ]
+      },
+      {
+        "minute": 7.666666666666667,
+        "second": 460,
+        "record": 115,
+        "seed": "matlab",
+        "components": [
+          {
+            "field": "theta_e_vertical_flux",
+            "max_abs_error": 6.821210263296962e-13,
+            "ACE": 1,
+            "level": 44,
+            "boundary_max_abs_error": 8.673617379884035e-19
+          },
+          {
+            "field": "qt_vertical_flux",
+            "max_abs_error": 2.0816681711721685e-17,
+            "ACE": 1,
+            "level": 43,
+            "boundary_max_abs_error": 1.0587911840678754e-22
+          },
+          {
+            "field": "mfc",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "wc",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "area_dMF_dz",
+            "max_abs_error": 1.8189894035458565e-12,
+            "ACE": 1,
+            "level": 12,
+            "boundary_max_abs_error": 2.220446049250313e-16
+          },
+          {
+            "field": "horizontal_flow",
+            "max_abs_error": 1.829647544582258e-12,
+            "ACE": 48,
+            "level": 13,
+            "boundary_max_abs_error": 1.8230972287369696e-12
+          },
+          {
+            "field": "local_MF_forcing",
+            "max_abs_error": 1.734723475976807e-18,
+            "ACE": 1,
+            "level": 19,
+            "boundary_max_abs_error": 4.064211383698653e-27
+          },
+          {
+            "field": "raw_buoyancy",
+            "max_abs_error": 5.897741196620995e-15,
+            "ACE": 63,
+            "level": 10,
+            "boundary_max_abs_error": 3.8519853480211406e-15
+          },
+          {
+            "field": "adjusted_buoyancy",
+            "max_abs_error": 5.8160128189183036e-15,
+            "ACE": 91,
+            "level": 12,
+            "boundary_max_abs_error": 3.7556898780169434e-15
+          },
+          {
+            "field": "MF_tendency",
+            "max_abs_error": 2.236970429552132e-16,
+            "ACE": 91,
+            "level": 16,
+            "boundary_max_abs_error": 1.216957646308671e-16
+          },
+          {
+            "field": "theta_e_tendency",
+            "max_abs_error": 9.043113480267095e-15,
+            "ACE": 1,
+            "level": 44,
+            "boundary_max_abs_error": 2.0349966557784566e-19
+          },
+          {
+            "field": "qt_tendency",
+            "max_abs_error": 1.9481757786848908e-19,
+            "ACE": 1,
+            "level": 49,
+            "boundary_max_abs_error": 2.3070584271986787e-24
+          },
+          {
+            "field": "SSPRK_MF",
+            "max_abs_error": 8.92727833659828e-16,
+            "ACE": 91,
+            "level": 16,
+            "boundary_max_abs_error": 4.854877333888797e-16
+          },
+          {
+            "field": "SSPRK_theta_e",
+            "max_abs_error": 1.1368683772161603e-13,
+            "ACE": 45,
+            "level": 365,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "SSPRK_qt",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 1,
+            "level": 11,
+            "boundary_max_abs_error": 6.776263578034403e-21
+          },
+          {
+            "field": "physics_MF",
+            "max_abs_error": 8.92727833659828e-16,
+            "ACE": 91,
+            "level": 16,
+            "boundary_max_abs_error": 4.854877333888797e-16
+          },
+          {
+            "field": "physics_theta_e",
+            "max_abs_error": 2.7978330763289705e-10,
+            "ACE": 1,
+            "level": 50,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "physics_qt",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 1,
+            "level": 11,
+            "boundary_max_abs_error": 6.776263578034403e-21
+          },
+          {
+            "field": "damped_MF",
+            "max_abs_error": 8.926956464078324e-16,
+            "ACE": 91,
+            "level": 16,
+            "boundary_max_abs_error": 4.85464122345475e-16
+          },
+          {
+            "field": "damped_theta_e",
+            "max_abs_error": 2.7972646421403624e-10,
+            "ACE": 1,
+            "level": 50,
+            "boundary_max_abs_error": 4.547473508864641e-13
+          },
+          {
+            "field": "damped_qt",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 1,
+            "level": 11,
+            "boundary_max_abs_error": 6.776263578034403e-21
+          }
+        ]
+      },
+      {
+        "minute": 7.666666666666667,
+        "second": 460,
+        "record": 115,
+        "seed": "fortran",
+        "components": [
+          {
+            "field": "theta_e_vertical_flux",
+            "max_abs_error": 4.547473508864641e-13,
+            "ACE": 1,
+            "level": 46,
+            "boundary_max_abs_error": 8.673617379884035e-19
+          },
+          {
+            "field": "qt_vertical_flux",
+            "max_abs_error": 1.3877787807814457e-17,
+            "ACE": 1,
+            "level": 25,
+            "boundary_max_abs_error": 5.293955920339377e-23
+          },
+          {
+            "field": "mfc",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "wc",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "area_dMF_dz",
+            "max_abs_error": 1.8189894035458565e-12,
+            "ACE": 1,
+            "level": 11,
+            "boundary_max_abs_error": 2.220446049250313e-16
+          },
+          {
+            "field": "horizontal_flow",
+            "max_abs_error": 2.2737367544323206e-12,
+            "ACE": 2,
+            "level": 11,
+            "boundary_max_abs_error": 2.2517014565837795e-12
+          },
+          {
+            "field": "local_MF_forcing",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 1,
+            "level": 13,
+            "boundary_max_abs_error": 2.6253290925755273e-27
+          },
+          {
+            "field": "raw_buoyancy",
+            "max_abs_error": 6.9735883734267645e-15,
+            "ACE": 4,
+            "level": 27,
+            "boundary_max_abs_error": 3.8519853480211406e-15
+          },
+          {
+            "field": "adjusted_buoyancy",
+            "max_abs_error": 6.95450641519102e-15,
+            "ACE": 4,
+            "level": 27,
+            "boundary_max_abs_error": 3.755676325489787e-15
+          },
+          {
+            "field": "MF_tendency",
+            "max_abs_error": 1.968006672864686e-16,
+            "ACE": 46,
+            "level": 37,
+            "boundary_max_abs_error": 1.8998610193735055e-16
+          },
+          {
+            "field": "theta_e_tendency",
+            "max_abs_error": 6.164773552752578e-15,
+            "ACE": 1,
+            "level": 46,
+            "boundary_max_abs_error": 1.827473583701153e-19
+          },
+          {
+            "field": "qt_tendency",
+            "max_abs_error": 2.930733997499879e-19,
+            "ACE": 1,
+            "level": 50,
+            "boundary_max_abs_error": 1.050131637030211e-24
+          },
+          {
+            "field": "SSPRK_MF",
+            "max_abs_error": 8.881784197001252e-16,
+            "ACE": 1,
+            "level": 27,
+            "boundary_max_abs_error": 7.635563679947313e-16
+          },
+          {
+            "field": "SSPRK_theta_e",
+            "max_abs_error": 1.1368683772161603e-13,
+            "ACE": 24,
+            "level": 277,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "SSPRK_qt",
+            "max_abs_error": 1.734723475976807e-18,
+            "ACE": 1,
+            "level": 28,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "physics_MF",
+            "max_abs_error": 8.881784197001252e-16,
+            "ACE": 1,
+            "level": 27,
+            "boundary_max_abs_error": 7.635563679947313e-16
+          },
+          {
+            "field": "physics_theta_e",
+            "max_abs_error": 2.6068391889566556e-10,
+            "ACE": 1,
+            "level": 45,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "physics_qt",
+            "max_abs_error": 1.734723475976807e-18,
+            "ACE": 1,
+            "level": 28,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "damped_MF",
+            "max_abs_error": 8.881784197001252e-16,
+            "ACE": 1,
+            "level": 27,
+            "boundary_max_abs_error": 7.63519310303289e-16
+          },
+          {
+            "field": "damped_theta_e",
+            "max_abs_error": 2.6062707547680475e-10,
+            "ACE": 1,
+            "level": 45,
+            "boundary_max_abs_error": 4.547473508864641e-13
+          },
+          {
+            "field": "damped_qt",
+            "max_abs_error": 1.734723475976807e-18,
+            "ACE": 1,
+            "level": 28,
+            "boundary_max_abs_error": 8.470329472543003e-22
+          }
+        ]
+      },
+      {
+        "minute": 7.733333333333333,
+        "second": 464,
+        "record": 116,
+        "seed": "matlab",
+        "components": [
+          {
+            "field": "theta_e_vertical_flux",
+            "max_abs_error": 4.547473508864641e-13,
+            "ACE": 1,
+            "level": 41,
+            "boundary_max_abs_error": 8.673617379884035e-19
+          },
+          {
+            "field": "qt_vertical_flux",
+            "max_abs_error": 2.0816681711721685e-17,
+            "ACE": 1,
+            "level": 38,
+            "boundary_max_abs_error": 5.293955920339377e-23
+          },
+          {
+            "field": "mfc",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "wc",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "area_dMF_dz",
+            "max_abs_error": 1.8189894035458565e-12,
+            "ACE": 1,
+            "level": 12,
+            "boundary_max_abs_error": 2.220446049250313e-16
+          },
+          {
+            "field": "horizontal_flow",
+            "max_abs_error": 2.3874235921539366e-12,
+            "ACE": 4,
+            "level": 12,
+            "boundary_max_abs_error": 2.353672812205332e-12
+          },
+          {
+            "field": "local_MF_forcing",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 1,
+            "level": 14,
+            "boundary_max_abs_error": 4.165185579566942e-27
+          },
+          {
+            "field": "raw_buoyancy",
+            "max_abs_error": 7.620538440428655e-15,
+            "ACE": 25,
+            "level": 15,
+            "boundary_max_abs_error": 4.290979118680432e-15
+          },
+          {
+            "field": "adjusted_buoyancy",
+            "max_abs_error": 7.334817432244622e-15,
+            "ACE": 25,
+            "level": 15,
+            "boundary_max_abs_error": 4.333894896603463e-15
+          },
+          {
+            "field": "MF_tendency",
+            "max_abs_error": 2.1588016383271053e-16,
+            "ACE": 37,
+            "level": 17,
+            "boundary_max_abs_error": 1.2504390223726736e-16
+          },
+          {
+            "field": "theta_e_tendency",
+            "max_abs_error": 8.61116733474887e-15,
+            "ACE": 1,
+            "level": 40,
+            "boundary_max_abs_error": 1.5426587551868945e-19
+          },
+          {
+            "field": "qt_tendency",
+            "max_abs_error": 2.600391148070702e-19,
+            "ACE": 1,
+            "level": 38,
+            "boundary_max_abs_error": 2.5332406259436473e-24
+          },
+          {
+            "field": "SSPRK_MF",
+            "max_abs_error": 8.881784197001252e-16,
+            "ACE": 1,
+            "level": 29,
+            "boundary_max_abs_error": 4.987170115964526e-16
+          },
+          {
+            "field": "SSPRK_theta_e",
+            "max_abs_error": 2.2737367544323206e-13,
+            "ACE": 82,
+            "level": 366,
+            "boundary_max_abs_error": 2.2737367544323206e-13
+          },
+          {
+            "field": "SSPRK_qt",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 12,
+            "level": 13,
+            "boundary_max_abs_error": 4.336808689942018e-19
+          },
+          {
+            "field": "physics_MF",
+            "max_abs_error": 8.881784197001252e-16,
+            "ACE": 1,
+            "level": 29,
+            "boundary_max_abs_error": 4.987170115964526e-16
+          },
+          {
+            "field": "physics_theta_e",
+            "max_abs_error": 2.381170816079248e-10,
+            "ACE": 1,
+            "level": 37,
+            "boundary_max_abs_error": 2.2737367544323206e-13
+          },
+          {
+            "field": "physics_qt",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 1,
+            "level": 16,
+            "boundary_max_abs_error": 4.336808689942018e-19
+          },
+          {
+            "field": "damped_MF",
+            "max_abs_error": 8.881784197001252e-16,
+            "ACE": 1,
+            "level": 29,
+            "boundary_max_abs_error": 4.98676777531458e-16
+          },
+          {
+            "field": "damped_theta_e",
+            "max_abs_error": 2.3806023818906397e-10,
+            "ACE": 1,
+            "level": 37,
+            "boundary_max_abs_error": 4.547473508864641e-13
+          },
+          {
+            "field": "damped_qt",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 1,
+            "level": 16,
+            "boundary_max_abs_error": 4.336808689942018e-19
+          }
+        ]
+      },
+      {
+        "minute": 7.733333333333333,
+        "second": 464,
+        "record": 116,
+        "seed": "fortran",
+        "components": [
+          {
+            "field": "theta_e_vertical_flux",
+            "max_abs_error": 4.547473508864641e-13,
+            "ACE": 1,
+            "level": 29,
+            "boundary_max_abs_error": 8.673617379884035e-19
+          },
+          {
+            "field": "qt_vertical_flux",
+            "max_abs_error": 1.3877787807814457e-17,
+            "ACE": 1,
+            "level": 21,
+            "boundary_max_abs_error": 5.293955920339377e-23
+          },
+          {
+            "field": "mfc",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "wc",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "area_dMF_dz",
+            "max_abs_error": 1.8189894035458565e-12,
+            "ACE": 1,
+            "level": 12,
+            "boundary_max_abs_error": 2.220446049250313e-16
+          },
+          {
+            "field": "horizontal_flow",
+            "max_abs_error": 1.8189894035458565e-12,
+            "ACE": 1,
+            "level": 12,
+            "boundary_max_abs_error": 1.1979445213583517e-12
+          },
+          {
+            "field": "local_MF_forcing",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 1,
+            "level": 13,
+            "boundary_max_abs_error": 5.061331567898012e-27
+          },
+          {
+            "field": "raw_buoyancy",
+            "max_abs_error": 6.43646868132937e-15,
+            "ACE": 77,
+            "level": 1,
+            "boundary_max_abs_error": 4.290979118680432e-15
+          },
+          {
+            "field": "adjusted_buoyancy",
+            "max_abs_error": 6.329165707155693e-15,
+            "ACE": 77,
+            "level": 1,
+            "boundary_max_abs_error": 4.39826940059479e-15
+          },
+          {
+            "field": "MF_tendency",
+            "max_abs_error": 2.0022526119688715e-16,
+            "ACE": 40,
+            "level": 13,
+            "boundary_max_abs_error": 1.2547926724598871e-16
+          },
+          {
+            "field": "theta_e_tendency",
+            "max_abs_error": 8.864436962241484e-15,
+            "ACE": 1,
+            "level": 60,
+            "boundary_max_abs_error": 1.5543054582116411e-19
+          },
+          {
+            "field": "qt_tendency",
+            "max_abs_error": 2.0498197323554068e-19,
+            "ACE": 1,
+            "level": 51,
+            "boundary_max_abs_error": 2.8563580527221737e-24
+          },
+          {
+            "field": "SSPRK_MF",
+            "max_abs_error": 8.881784197001252e-16,
+            "ACE": 1,
+            "level": 42,
+            "boundary_max_abs_error": 5.026596323285662e-16
+          },
+          {
+            "field": "SSPRK_theta_e",
+            "max_abs_error": 1.1368683772161603e-13,
+            "ACE": 18,
+            "level": 338,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "SSPRK_qt",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 1,
+            "level": 23,
+            "boundary_max_abs_error": 2.168404344971009e-19
+          },
+          {
+            "field": "physics_MF",
+            "max_abs_error": 8.881784197001252e-16,
+            "ACE": 1,
+            "level": 42,
+            "boundary_max_abs_error": 5.026596323285662e-16
+          },
+          {
+            "field": "physics_theta_e",
+            "max_abs_error": 1.4205170373315923e-10,
+            "ACE": 1,
+            "level": 51,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "physics_qt",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 1,
+            "level": 23,
+            "boundary_max_abs_error": 2.168404344971009e-19
+          },
+          {
+            "field": "damped_MF",
+            "max_abs_error": 8.881784197001252e-16,
+            "ACE": 1,
+            "level": 42,
+            "boundary_max_abs_error": 5.026190806262164e-16
+          },
+          {
+            "field": "damped_theta_e",
+            "max_abs_error": 1.4199486031429842e-10,
+            "ACE": 1,
+            "level": 51,
+            "boundary_max_abs_error": 4.547473508864641e-13
+          },
+          {
+            "field": "damped_qt",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 1,
+            "level": 23,
+            "boundary_max_abs_error": 2.168404344971009e-19
+          }
+        ]
+      },
+      {
+        "minute": 8.866666666666667,
+        "second": 532,
+        "record": 133,
+        "seed": "matlab",
+        "components": [
+          {
+            "field": "theta_e_vertical_flux",
+            "max_abs_error": 4.547473508864641e-13,
+            "ACE": 1,
+            "level": 40,
+            "boundary_max_abs_error": 8.673617379884035e-19
+          },
+          {
+            "field": "qt_vertical_flux",
+            "max_abs_error": 2.0816681711721685e-17,
+            "ACE": 1,
+            "level": 53,
+            "boundary_max_abs_error": 5.293955920339377e-23
+          },
+          {
+            "field": "mfc",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "wc",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "area_dMF_dz",
+            "max_abs_error": 1.8189894035458565e-12,
+            "ACE": 1,
+            "level": 11,
+            "boundary_max_abs_error": 1.1102230246251565e-16
+          },
+          {
+            "field": "horizontal_flow",
+            "max_abs_error": 2.3305801732931286e-12,
+            "ACE": 5,
+            "level": 11,
+            "boundary_max_abs_error": 2.290180147439128e-12
+          },
+          {
+            "field": "local_MF_forcing",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 1,
+            "level": 15,
+            "boundary_max_abs_error": 9.188651824014346e-27
+          },
+          {
+            "field": "raw_buoyancy",
+            "max_abs_error": 6.156955438649421e-15,
+            "ACE": 26,
+            "level": 5,
+            "boundary_max_abs_error": 5.777978035266601e-15
+          },
+          {
+            "field": "adjusted_buoyancy",
+            "max_abs_error": 6.0338561404249536e-15,
+            "ACE": 26,
+            "level": 5,
+            "boundary_max_abs_error": 5.758726286629601e-15
+          },
+          {
+            "field": "MF_tendency",
+            "max_abs_error": 2.259817323506969e-16,
+            "ACE": 84,
+            "level": 13,
+            "boundary_max_abs_error": 1.506227868125487e-16
+          },
+          {
+            "field": "theta_e_tendency",
+            "max_abs_error": 8.61116733474887e-15,
+            "ACE": 1,
+            "level": 40,
+            "boundary_max_abs_error": 2.7232109254225756e-19
+          },
+          {
+            "field": "qt_tendency",
+            "max_abs_error": 2.981555974335137e-19,
+            "ACE": 1,
+            "level": 52,
+            "boundary_max_abs_error": 2.833739832847677e-24
+          },
+          {
+            "field": "SSPRK_MF",
+            "max_abs_error": 9.044249351449363e-16,
+            "ACE": 84,
+            "level": 13,
+            "boundary_max_abs_error": 6.007839523450038e-16
+          },
+          {
+            "field": "SSPRK_theta_e",
+            "max_abs_error": 2.2737367544323206e-13,
+            "ACE": 100,
+            "level": 385,
+            "boundary_max_abs_error": 2.2737367544323206e-13
+          },
+          {
+            "field": "SSPRK_qt",
+            "max_abs_error": 1.734723475976807e-18,
+            "ACE": 1,
+            "level": 26,
+            "boundary_max_abs_error": 6.776263578034403e-21
+          },
+          {
+            "field": "physics_MF",
+            "max_abs_error": 9.044249351449363e-16,
+            "ACE": 84,
+            "level": 13,
+            "boundary_max_abs_error": 6.007839523450038e-16
+          },
+          {
+            "field": "physics_theta_e",
+            "max_abs_error": 3.2321167964255437e-10,
+            "ACE": 1,
+            "level": 50,
+            "boundary_max_abs_error": 2.2737367544323206e-13
+          },
+          {
+            "field": "physics_qt",
+            "max_abs_error": 1.734723475976807e-18,
+            "ACE": 1,
+            "level": 18,
+            "boundary_max_abs_error": 6.776263578034403e-21
+          },
+          {
+            "field": "damped_MF",
+            "max_abs_error": 9.043945478379536e-16,
+            "ACE": 84,
+            "level": 13,
+            "boundary_max_abs_error": 6.00762670642204e-16
+          },
+          {
+            "field": "damped_theta_e",
+            "max_abs_error": 3.2315483622369356e-10,
+            "ACE": 1,
+            "level": 50,
+            "boundary_max_abs_error": 4.547473508864641e-13
+          },
+          {
+            "field": "damped_qt",
+            "max_abs_error": 1.734723475976807e-18,
+            "ACE": 1,
+            "level": 18,
+            "boundary_max_abs_error": 6.776263578034403e-21
+          }
+        ]
+      },
+      {
+        "minute": 8.866666666666667,
+        "second": 532,
+        "record": 133,
+        "seed": "fortran",
+        "components": [
+          {
+            "field": "theta_e_vertical_flux",
+            "max_abs_error": 2.2737367544323206e-13,
+            "ACE": 1,
+            "level": 16,
+            "boundary_max_abs_error": 8.673617379884035e-19
+          },
+          {
+            "field": "qt_vertical_flux",
+            "max_abs_error": 1.3877787807814457e-17,
+            "ACE": 1,
+            "level": 16,
+            "boundary_max_abs_error": 5.293955920339377e-23
+          },
+          {
+            "field": "mfc",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "wc",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "area_dMF_dz",
+            "max_abs_error": 9.094947017729282e-13,
+            "ACE": 1,
+            "level": 10,
+            "boundary_max_abs_error": 2.220446049250313e-16
+          },
+          {
+            "field": "horizontal_flow",
+            "max_abs_error": 2.2737367544323206e-12,
+            "ACE": 3,
+            "level": 16,
+            "boundary_max_abs_error": 1.93345339738471e-12
+          },
+          {
+            "field": "local_MF_forcing",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 1,
+            "level": 14,
+            "boundary_max_abs_error": 9.844984097158227e-27
+          },
+          {
+            "field": "raw_buoyancy",
+            "max_abs_error": 6.217237701479436e-15,
+            "ACE": 92,
+            "level": 4,
+            "boundary_max_abs_error": 2.1454895560314934e-15
+          },
+          {
+            "field": "adjusted_buoyancy",
+            "max_abs_error": 6.1239753638151276e-15,
+            "ACE": 92,
+            "level": 4,
+            "boundary_max_abs_error": 2.165673510749061e-15
+          },
+          {
+            "field": "MF_tendency",
+            "max_abs_error": 2.147324499056126e-16,
+            "ACE": 78,
+            "level": 15,
+            "boundary_max_abs_error": 1.2569968937253817e-16
+          },
+          {
+            "field": "theta_e_tendency",
+            "max_abs_error": 5.3013149425851225e-15,
+            "ACE": 1,
+            "level": 31,
+            "boundary_max_abs_error": 2.6893296075324036e-19
+          },
+          {
+            "field": "qt_tendency",
+            "max_abs_error": 2.541098841762901e-19,
+            "ACE": 1,
+            "level": 36,
+            "boundary_max_abs_error": 1.990403348955723e-24
+          },
+          {
+            "field": "SSPRK_MF",
+            "max_abs_error": 8.881784197001252e-16,
+            "ACE": 1,
+            "level": 45,
+            "boundary_max_abs_error": 4.982734839694466e-16
+          },
+          {
+            "field": "SSPRK_theta_e",
+            "max_abs_error": 2.2737367544323206e-13,
+            "ACE": 53,
+            "level": 386,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "SSPRK_qt",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 1,
+            "level": 15,
+            "boundary_max_abs_error": 2.168404344971009e-19
+          },
+          {
+            "field": "physics_MF",
+            "max_abs_error": 8.881784197001252e-16,
+            "ACE": 1,
+            "level": 45,
+            "boundary_max_abs_error": 4.982734839694466e-16
+          },
+          {
+            "field": "physics_theta_e",
+            "max_abs_error": 2.992237568832934e-10,
+            "ACE": 1,
+            "level": 57,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "physics_qt",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 1,
+            "level": 15,
+            "boundary_max_abs_error": 2.168404344971009e-19
+          },
+          {
+            "field": "damped_MF",
+            "max_abs_error": 8.881784197001252e-16,
+            "ACE": 1,
+            "level": 45,
+            "boundary_max_abs_error": 4.982343086956361e-16
+          },
+          {
+            "field": "damped_theta_e",
+            "max_abs_error": 2.992237568832934e-10,
+            "ACE": 1,
+            "level": 57,
+            "boundary_max_abs_error": 4.547473508864641e-13
+          },
+          {
+            "field": "damped_qt",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 1,
+            "level": 15,
+            "boundary_max_abs_error": 2.168404344971009e-19
+          }
+        ]
+      },
+      {
+        "minute": 9.666666666666666,
+        "second": 580,
+        "record": 145,
+        "seed": "matlab",
+        "components": [
+          {
+            "field": "theta_e_vertical_flux",
+            "max_abs_error": 4.547473508864641e-13,
+            "ACE": 1,
+            "level": 40,
+            "boundary_max_abs_error": 8.673617379884035e-19
+          },
+          {
+            "field": "qt_vertical_flux",
+            "max_abs_error": 1.3877787807814457e-17,
+            "ACE": 1,
+            "level": 16,
+            "boundary_max_abs_error": 5.293955920339377e-23
+          },
+          {
+            "field": "mfc",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "wc",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "area_dMF_dz",
+            "max_abs_error": 1.8189894035458565e-12,
+            "ACE": 1,
+            "level": 13,
+            "boundary_max_abs_error": 1.1102230246251565e-16
+          },
+          {
+            "field": "horizontal_flow",
+            "max_abs_error": 2.0463630789890885e-12,
+            "ACE": 4,
+            "level": 4,
+            "boundary_max_abs_error": 1.7844337119043985e-12
+          },
+          {
+            "field": "local_MF_forcing",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 1,
+            "level": 15,
+            "boundary_max_abs_error": 1.3227619658745926e-26
+          },
+          {
+            "field": "raw_buoyancy",
+            "max_abs_error": 6.350849560353862e-15,
+            "ACE": 84,
+            "level": 2,
+            "boundary_max_abs_error": 4.144825112261474e-15
+          },
+          {
+            "field": "adjusted_buoyancy",
+            "max_abs_error": 6.223825301703359e-15,
+            "ACE": 84,
+            "level": 2,
+            "boundary_max_abs_error": 4.186289241149034e-15
+          },
+          {
+            "field": "MF_tendency",
+            "max_abs_error": 2.6355723968371134e-16,
+            "ACE": 86,
+            "level": 35,
+            "boundary_max_abs_error": 1.3837638446114603e-16
+          },
+          {
+            "field": "theta_e_tendency",
+            "max_abs_error": 1.1721119951360603e-14,
+            "ACE": 1,
+            "level": 41,
+            "boundary_max_abs_error": 2.3674570875757694e-19
+          },
+          {
+            "field": "qt_tendency",
+            "max_abs_error": 3.3203691532368573e-19,
+            "ACE": 1,
+            "level": 34,
+            "boundary_max_abs_error": 2.3345234084748535e-24
+          },
+          {
+            "field": "SSPRK_MF",
+            "max_abs_error": 1.056581275108489e-15,
+            "ACE": 86,
+            "level": 35,
+            "boundary_max_abs_error": 5.530458107124618e-16
+          },
+          {
+            "field": "SSPRK_theta_e",
+            "max_abs_error": 2.2737367544323206e-13,
+            "ACE": 29,
+            "level": 377,
+            "boundary_max_abs_error": 2.2737367544323206e-13
+          },
+          {
+            "field": "SSPRK_qt",
+            "max_abs_error": 1.734723475976807e-18,
+            "ACE": 1,
+            "level": 26,
+            "boundary_max_abs_error": 5.421010862427522e-20
+          },
+          {
+            "field": "physics_MF",
+            "max_abs_error": 1.056581275108489e-15,
+            "ACE": 86,
+            "level": 35,
+            "boundary_max_abs_error": 5.530458107124618e-16
+          },
+          {
+            "field": "physics_theta_e",
+            "max_abs_error": 3.1099034458748065e-10,
+            "ACE": 1,
+            "level": 61,
+            "boundary_max_abs_error": 2.2737367544323206e-13
+          },
+          {
+            "field": "physics_qt",
+            "max_abs_error": 1.734723475976807e-18,
+            "ACE": 1,
+            "level": 26,
+            "boundary_max_abs_error": 5.421010862427522e-20
+          },
+          {
+            "field": "damped_MF",
+            "max_abs_error": 1.0565177476374449e-15,
+            "ACE": 86,
+            "level": 35,
+            "boundary_max_abs_error": 5.530159528010711e-16
+          },
+          {
+            "field": "damped_theta_e",
+            "max_abs_error": 3.1099034458748065e-10,
+            "ACE": 1,
+            "level": 61,
+            "boundary_max_abs_error": 4.547473508864641e-13
+          },
+          {
+            "field": "damped_qt",
+            "max_abs_error": 1.734723475976807e-18,
+            "ACE": 1,
+            "level": 26,
+            "boundary_max_abs_error": 5.421010862427522e-20
+          }
+        ]
+      },
+      {
+        "minute": 9.666666666666666,
+        "second": 580,
+        "record": 145,
+        "seed": "fortran",
+        "components": [
+          {
+            "field": "theta_e_vertical_flux",
+            "max_abs_error": 4.547473508864641e-13,
+            "ACE": 1,
+            "level": 27,
+            "boundary_max_abs_error": 8.673617379884035e-19
+          },
+          {
+            "field": "qt_vertical_flux",
+            "max_abs_error": 1.3877787807814457e-17,
+            "ACE": 1,
+            "level": 19,
+            "boundary_max_abs_error": 2.6469779601696886e-23
+          },
+          {
+            "field": "mfc",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "wc",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "area_dMF_dz",
+            "max_abs_error": 1.8189894035458565e-12,
+            "ACE": 1,
+            "level": 12,
+            "boundary_max_abs_error": 1.1102230246251565e-16
+          },
+          {
+            "field": "horizontal_flow",
+            "max_abs_error": 1.8189894035458565e-12,
+            "ACE": 1,
+            "level": 12,
+            "boundary_max_abs_error": 1.5867307467942737e-12
+          },
+          {
+            "field": "local_MF_forcing",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 1,
+            "level": 16,
+            "boundary_max_abs_error": 1.241982609179961e-26
+          },
+          {
+            "field": "raw_buoyancy",
+            "max_abs_error": 6.350849560353862e-15,
+            "ACE": 84,
+            "level": 2,
+            "boundary_max_abs_error": 3.9865463399865996e-15
+          },
+          {
+            "field": "adjusted_buoyancy",
+            "max_abs_error": 6.2449943491211385e-15,
+            "ACE": 84,
+            "level": 2,
+            "boundary_max_abs_error": 3.996497956789552e-15
+          },
+          {
+            "field": "MF_tendency",
+            "max_abs_error": 1.6311865360180757e-16,
+            "ACE": 47,
+            "level": 19,
+            "boundary_max_abs_error": 1.169803322135024e-16
+          },
+          {
+            "field": "theta_e_tendency",
+            "max_abs_error": 6.224187831804784e-15,
+            "ACE": 1,
+            "level": 46,
+            "boundary_max_abs_error": 2.3589867581032264e-19
+          },
+          {
+            "field": "qt_tendency",
+            "max_abs_error": 2.286988957586611e-19,
+            "ACE": 1,
+            "level": 25,
+            "boundary_max_abs_error": 1.3667867152731668e-24
+          },
+          {
+            "field": "SSPRK_MF",
+            "max_abs_error": 8.881784197001252e-16,
+            "ACE": 1,
+            "level": 56,
+            "boundary_max_abs_error": 4.651674129842491e-16
+          },
+          {
+            "field": "SSPRK_theta_e",
+            "max_abs_error": 1.1368683772161603e-13,
+            "ACE": 23,
+            "level": 296,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "SSPRK_qt",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 1,
+            "level": 15,
+            "boundary_max_abs_error": 1.0842021724855044e-19
+          },
+          {
+            "field": "physics_MF",
+            "max_abs_error": 8.881784197001252e-16,
+            "ACE": 1,
+            "level": 56,
+            "boundary_max_abs_error": 4.651674129842491e-16
+          },
+          {
+            "field": "physics_theta_e",
+            "max_abs_error": 3.3594460546737537e-10,
+            "ACE": 1,
+            "level": 54,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "physics_qt",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 1,
+            "level": 15,
+            "boundary_max_abs_error": 1.0842021724855044e-19
+          },
+          {
+            "field": "damped_MF",
+            "max_abs_error": 8.881784197001252e-16,
+            "ACE": 1,
+            "level": 56,
+            "boundary_max_abs_error": 4.651424255123051e-16
+          },
+          {
+            "field": "damped_theta_e",
+            "max_abs_error": 3.3594460546737537e-10,
+            "ACE": 1,
+            "level": 54,
+            "boundary_max_abs_error": 4.547473508864641e-13
+          },
+          {
+            "field": "damped_qt",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 1,
+            "level": 15,
+            "boundary_max_abs_error": 1.0842021724855044e-19
+          }
+        ]
+      },
+      {
+        "minute": 9.933333333333334,
+        "second": 596,
+        "record": 149,
+        "seed": "matlab",
+        "components": [
+          {
+            "field": "theta_e_vertical_flux",
+            "max_abs_error": 6.821210263296962e-13,
+            "ACE": 1,
+            "level": 49,
+            "boundary_max_abs_error": 1.3010426069826053e-18
+          },
+          {
+            "field": "qt_vertical_flux",
+            "max_abs_error": 1.3877787807814457e-17,
+            "ACE": 1,
+            "level": 30,
+            "boundary_max_abs_error": 2.6469779601696886e-23
+          },
+          {
+            "field": "mfc",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "wc",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "area_dMF_dz",
+            "max_abs_error": 1.8189894035458565e-12,
+            "ACE": 1,
+            "level": 11,
+            "boundary_max_abs_error": 1.1102230246251565e-16
+          },
+          {
+            "field": "horizontal_flow",
+            "max_abs_error": 2.2737367544323206e-12,
+            "ACE": 3,
+            "level": 11,
+            "boundary_max_abs_error": 2.212674488077937e-12
+          },
+          {
+            "field": "local_MF_forcing",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 1,
+            "level": 16,
+            "boundary_max_abs_error": 1.1182892192413063e-26
+          },
+          {
+            "field": "raw_buoyancy",
+            "max_abs_error": 6.4254157550180935e-15,
+            "ACE": 1,
+            "level": 37,
+            "boundary_max_abs_error": 4.234120615962778e-15
+          },
+          {
+            "field": "adjusted_buoyancy",
+            "max_abs_error": 6.404599073306372e-15,
+            "ACE": 1,
+            "level": 37,
+            "boundary_max_abs_error": 4.241182058328796e-15
+          },
+          {
+            "field": "MF_tendency",
+            "max_abs_error": 1.951563910473908e-16,
+            "ACE": 1,
+            "level": 38,
+            "boundary_max_abs_error": 1.7379760824942636e-16
+          },
+          {
+            "field": "theta_e_tendency",
+            "max_abs_error": 1.590221010427939e-14,
+            "ACE": 1,
+            "level": 49,
+            "boundary_max_abs_error": 4.197048253645058e-19
+          },
+          {
+            "field": "qt_tendency",
+            "max_abs_error": 3.202843331805323e-19,
+            "ACE": 1,
+            "level": 30,
+            "boundary_max_abs_error": 1.234308570293971e-24
+          },
+          {
+            "field": "SSPRK_MF",
+            "max_abs_error": 8.881784197001252e-16,
+            "ACE": 1,
+            "level": 26,
+            "boundary_max_abs_error": 6.9635891494844275e-16
+          },
+          {
+            "field": "SSPRK_theta_e",
+            "max_abs_error": 2.2737367544323206e-13,
+            "ACE": 42,
+            "level": 374,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "SSPRK_qt",
+            "max_abs_error": 1.734723475976807e-18,
+            "ACE": 1,
+            "level": 28,
+            "boundary_max_abs_error": 8.673617379884035e-19
+          },
+          {
+            "field": "physics_MF",
+            "max_abs_error": 8.881784197001252e-16,
+            "ACE": 1,
+            "level": 26,
+            "boundary_max_abs_error": 6.9635891494844275e-16
+          },
+          {
+            "field": "physics_theta_e",
+            "max_abs_error": 3.5862512959283777e-10,
+            "ACE": 1,
+            "level": 51,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "physics_qt",
+            "max_abs_error": 1.734723475976807e-18,
+            "ACE": 1,
+            "level": 18,
+            "boundary_max_abs_error": 8.673617379884035e-19
+          },
+          {
+            "field": "damped_MF",
+            "max_abs_error": 8.881784197001252e-16,
+            "ACE": 1,
+            "level": 26,
+            "boundary_max_abs_error": 6.962911523126624e-16
+          },
+          {
+            "field": "damped_theta_e",
+            "max_abs_error": 3.5862512959283777e-10,
+            "ACE": 1,
+            "level": 51,
+            "boundary_max_abs_error": 3.410605131648481e-13
+          },
+          {
+            "field": "damped_qt",
+            "max_abs_error": 1.734723475976807e-18,
+            "ACE": 1,
+            "level": 18,
+            "boundary_max_abs_error": 8.673617379884035e-19
+          }
+        ]
+      },
+      {
+        "minute": 9.933333333333334,
+        "second": 596,
+        "record": 149,
+        "seed": "fortran",
+        "components": [
+          {
+            "field": "theta_e_vertical_flux",
+            "max_abs_error": 6.821210263296962e-13,
+            "ACE": 1,
+            "level": 42,
+            "boundary_max_abs_error": 1.3010426069826053e-18
+          },
+          {
+            "field": "qt_vertical_flux",
+            "max_abs_error": 2.0816681711721685e-17,
+            "ACE": 1,
+            "level": 38,
+            "boundary_max_abs_error": 5.293955920339377e-23
+          },
+          {
+            "field": "mfc",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "wc",
+            "max_abs_error": 0.0,
+            "ACE": 1,
+            "level": 1,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "area_dMF_dz",
+            "max_abs_error": 1.8189894035458565e-12,
+            "ACE": 1,
+            "level": 13,
+            "boundary_max_abs_error": 2.220446049250313e-16
+          },
+          {
+            "field": "horizontal_flow",
+            "max_abs_error": 2.7284841053187847e-12,
+            "ACE": 2,
+            "level": 13,
+            "boundary_max_abs_error": 2.3374635560458046e-12
+          },
+          {
+            "field": "local_MF_forcing",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 1,
+            "level": 16,
+            "boundary_max_abs_error": 1.570148745751902e-26
+          },
+          {
+            "field": "raw_buoyancy",
+            "max_abs_error": 7.703970907800518e-15,
+            "ACE": 24,
+            "level": 13,
+            "boundary_max_abs_error": 4.234120615962778e-15
+          },
+          {
+            "field": "adjusted_buoyancy",
+            "max_abs_error": 7.626942155093686e-15,
+            "ACE": 24,
+            "level": 13,
+            "boundary_max_abs_error": 4.227087430086485e-15
+          },
+          {
+            "field": "MF_tendency",
+            "max_abs_error": 2.1233803086597065e-16,
+            "ACE": 29,
+            "level": 43,
+            "boundary_max_abs_error": 1.8388068845354155e-16
+          },
+          {
+            "field": "theta_e_tendency",
+            "max_abs_error": 8.785940724953534e-15,
+            "ACE": 1,
+            "level": 42,
+            "boundary_max_abs_error": 4.0996394647108136e-19
+          },
+          {
+            "field": "qt_tendency",
+            "max_abs_error": 2.608861477543245e-19,
+            "ACE": 1,
+            "level": 38,
+            "boundary_max_abs_error": 1.7319094075329017e-24
+          },
+          {
+            "field": "SSPRK_MF",
+            "max_abs_error": 8.881784197001252e-16,
+            "ACE": 1,
+            "level": 31,
+            "boundary_max_abs_error": 7.35706983480194e-16
+          },
+          {
+            "field": "SSPRK_theta_e",
+            "max_abs_error": 1.1368683772161603e-13,
+            "ACE": 12,
+            "level": 292,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "SSPRK_qt",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 11,
+            "level": 12,
+            "boundary_max_abs_error": 8.673617379884035e-19
+          },
+          {
+            "field": "physics_MF",
+            "max_abs_error": 8.881784197001252e-16,
+            "ACE": 1,
+            "level": 31,
+            "boundary_max_abs_error": 7.35706983480194e-16
+          },
+          {
+            "field": "physics_theta_e",
+            "max_abs_error": 1.8121681932825595e-10,
+            "ACE": 1,
+            "level": 52,
+            "boundary_max_abs_error": 0.0
+          },
+          {
+            "field": "physics_qt",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 11,
+            "level": 12,
+            "boundary_max_abs_error": 8.673617379884035e-19
+          },
+          {
+            "field": "damped_MF",
+            "max_abs_error": 8.881784197001252e-16,
+            "ACE": 1,
+            "level": 31,
+            "boundary_max_abs_error": 7.356349856796774e-16
+          },
+          {
+            "field": "damped_theta_e",
+            "max_abs_error": 1.8121681932825595e-10,
+            "ACE": 1,
+            "level": 52,
+            "boundary_max_abs_error": 2.2737367544323206e-13
+          },
+          {
+            "field": "damped_qt",
+            "max_abs_error": 3.469446951953614e-18,
+            "ACE": 11,
+            "level": 12,
+            "boundary_max_abs_error": 8.673617379884035e-19
+          }
+        ]
+      }
+    ],
+    "input_difference_decomposition": [
+      {
+        "minute": 0.0,
+        "field_order": [
+          "MF",
+          "theta_e",
+          "qt"
+        ],
+        "steps": {
+          "SSPRK": {
+            "same_seed_implementation_difference": [
+              3.3306690738754696e-16,
+              0.0,
+              0.0
+            ],
+            "different_seed_same_fortran_difference": [
+              2.636779683484747e-16,
+              3.410605131648481e-13,
+              7.632783294297951e-17
+            ],
+            "independent_seed_output_difference": [
+              2.220446049250313e-16,
+              3.410605131648481e-13,
+              7.632783294297951e-17
+            ]
+          },
+          "physics": {
+            "same_seed_implementation_difference": [
+              3.3306690738754696e-16,
+              0.0,
+              0.0
+            ],
+            "different_seed_same_fortran_difference": [
+              2.636779683484747e-16,
+              3.410605131648481e-13,
+              7.632783294297951e-17
+            ],
+            "independent_seed_output_difference": [
+              2.220446049250313e-16,
+              3.410605131648481e-13,
+              7.632783294297951e-17
+            ]
+          },
+          "damped": {
+            "same_seed_implementation_difference": [
+              3.3306690738754696e-16,
+              4.547473508864641e-13,
+              8.470329472543003e-22
+            ],
+            "different_seed_same_fortran_difference": [
+              2.636779683484747e-16,
+              3.410605131648481e-13,
+              7.632783294297951e-17
+            ],
+            "independent_seed_output_difference": [
+              2.220446049250313e-16,
+              4.547473508864641e-13,
+              7.632783294297951e-17
+            ]
+          }
+        }
+      },
+      {
+        "minute": 7.666666666666667,
+        "field_order": [
+          "MF",
+          "theta_e",
+          "qt"
+        ],
+        "steps": {
+          "SSPRK": {
+            "same_seed_implementation_difference": [
+              8.92727833659828e-16,
+              1.1368683772161603e-13,
+              3.469446951953614e-18
+            ],
+            "different_seed_same_fortran_difference": [
+              4.654499008438506e-11,
+              2.0265247258066665e-09,
+              6.628551874054978e-14
+            ],
+            "independent_seed_output_difference": [
+              4.654499008438506e-11,
+              2.0265247258066665e-09,
+              6.628551874054978e-14
+            ]
+          },
+          "physics": {
+            "same_seed_implementation_difference": [
+              8.92727833659828e-16,
+              2.7978330763289705e-10,
+              3.469446951953614e-18
+            ],
+            "different_seed_same_fortran_difference": [
+              4.654499008438506e-11,
+              2.137767296517268e-09,
+              7.167356985693374e-14
+            ],
+            "independent_seed_output_difference": [
+              4.654499008438506e-11,
+              2.137767296517268e-09,
+              7.167356985693374e-14
+            ]
+          },
+          "damped": {
+            "same_seed_implementation_difference": [
+              8.926956464078324e-16,
+              2.7972646421403624e-10,
+              3.469446951953614e-18
+            ],
+            "different_seed_same_fortran_difference": [
+              4.654232554912596e-11,
+              2.1376536096795462e-09,
+              7.166836568650581e-14
+            ],
+            "independent_seed_output_difference": [
+              4.654232554912596e-11,
+              2.1376536096795462e-09,
+              7.166836568650581e-14
+            ]
+          }
+        }
+      },
+      {
+        "minute": 7.733333333333333,
+        "field_order": [
+          "MF",
+          "theta_e",
+          "qt"
+        ],
+        "steps": {
+          "SSPRK": {
+            "same_seed_implementation_difference": [
+              8.881784197001252e-16,
+              2.2737367544323206e-13,
+              3.469446951953614e-18
+            ],
+            "different_seed_same_fortran_difference": [
+              4.952216414721988e-11,
+              2.087119810312288e-09,
+              6.568183497090985e-14
+            ],
+            "independent_seed_output_difference": [
+              4.952216414721988e-11,
+              2.087119810312288e-09,
+              6.568183497090985e-14
+            ]
+          },
+          "physics": {
+            "same_seed_implementation_difference": [
+              8.881784197001252e-16,
+              2.381170816079248e-10,
+              3.469446951953614e-18
+            ],
+            "different_seed_same_fortran_difference": [
+              4.952216414721988e-11,
+              2.0857555682596285e-09,
+              7.127111401050712e-14
+            ],
+            "independent_seed_output_difference": [
+              4.952216414721988e-11,
+              2.0857555682596285e-09,
+              7.127111401050712e-14
+            ]
+          },
+          "damped": {
+            "same_seed_implementation_difference": [
+              8.881784197001252e-16,
+              2.3806023818906397e-10,
+              3.469446951953614e-18
+            ],
+            "different_seed_same_fortran_difference": [
+              4.951949961196078e-11,
+              2.085641881421907e-09,
+              7.126764456355517e-14
+            ],
+            "independent_seed_output_difference": [
+              4.951949961196078e-11,
+              2.085641881421907e-09,
+              7.126764456355517e-14
+            ]
+          }
+        }
+      },
+      {
+        "minute": 8.866666666666667,
+        "field_order": [
+          "MF",
+          "theta_e",
+          "qt"
+        ],
+        "steps": {
+          "SSPRK": {
+            "same_seed_implementation_difference": [
+              9.044249351449363e-16,
+              2.2737367544323206e-13,
+              1.734723475976807e-18
+            ],
+            "different_seed_same_fortran_difference": [
+              8.879297297426092e-11,
+              1.2013288142043166e-09,
+              1.171597541205216e-13
+            ],
+            "independent_seed_output_difference": [
+              8.879386115268062e-11,
+              1.2012719707854558e-09,
+              1.171597541205216e-13
+            ]
+          },
+          "physics": {
+            "same_seed_implementation_difference": [
+              9.044249351449363e-16,
+              3.2321167964255437e-10,
+              1.734723475976807e-18
+            ],
+            "different_seed_same_fortran_difference": [
+              8.879297297426092e-11,
+              1.4701981854159385e-09,
+              1.1843304115188857e-13
+            ],
+            "independent_seed_output_difference": [
+              8.879386115268062e-11,
+              1.4701413419970777e-09,
+              1.1843304115188857e-13
+            ]
+          },
+          "damped": {
+            "same_seed_implementation_difference": [
+              9.043945478379536e-16,
+              3.2315483622369356e-10,
+              1.734723475976807e-18
+            ],
+            "different_seed_same_fortran_difference": [
+              8.878764390374272e-11,
+              1.4701413419970777e-09,
+              1.1842610225798467e-13
+            ],
+            "independent_seed_output_difference": [
+              8.878853208216242e-11,
+              1.4700844985782169e-09,
+              1.1842610225798467e-13
+            ]
+          }
+        }
+      },
+      {
+        "minute": 9.666666666666666,
+        "field_order": [
+          "MF",
+          "theta_e",
+          "qt"
+        ],
+        "steps": {
+          "SSPRK": {
+            "same_seed_implementation_difference": [
+              1.056581275108489e-15,
+              2.2737367544323206e-13,
+              1.734723475976807e-18
+            ],
+            "different_seed_same_fortran_difference": [
+              1.3990852920642283e-10,
+              1.5267005437635817e-09,
+              1.5404344466674047e-13
+            ],
+            "independent_seed_output_difference": [
+              1.3990852920642283e-10,
+              1.5267005437635817e-09,
+              1.5404344466674047e-13
+            ]
+          },
+          "physics": {
+            "same_seed_implementation_difference": [
+              1.056581275108489e-15,
+              3.1099034458748065e-10,
+              1.734723475976807e-18
+            ],
+            "different_seed_same_fortran_difference": [
+              1.3990852920642283e-10,
+              1.7995489542954601e-09,
+              1.5378323614534395e-13
+            ],
+            "independent_seed_output_difference": [
+              1.3990852920642283e-10,
+              1.7995489542954601e-09,
+              1.5378150142186797e-13
+            ]
+          },
+          "damped": {
+            "same_seed_implementation_difference": [
+              1.0565177476374449e-15,
+              3.1099034458748065e-10,
+              1.734723475976807e-18
+            ],
+            "different_seed_same_fortran_difference": [
+              1.3990142377906523e-10,
+              1.7994352674577385e-09,
+              1.5377456252796406e-13
+            ],
+            "independent_seed_output_difference": [
+              1.3990142377906523e-10,
+              1.7994352674577385e-09,
+              1.537728278044881e-13
+            ]
+          }
+        }
+      },
+      {
+        "minute": 9.933333333333334,
+        "field_order": [
+          "MF",
+          "theta_e",
+          "qt"
+        ],
+        "steps": {
+          "SSPRK": {
+            "same_seed_implementation_difference": [
+              8.881784197001252e-16,
+              2.2737367544323206e-13,
+              1.734723475976807e-18
+            ],
+            "different_seed_same_fortran_difference": [
+              1.638031932316153e-10,
+              1.6652847989462316e-09,
+              1.6106734002097056e-13
+            ],
+            "independent_seed_output_difference": [
+              1.638031932316153e-10,
+              1.6652847989462316e-09,
+              1.6106734002097056e-13
+            ]
+          },
+          "physics": {
+            "same_seed_implementation_difference": [
+              8.881784197001252e-16,
+              3.5862512959283777e-10,
+              1.734723475976807e-18
+            ],
+            "different_seed_same_fortran_difference": [
+              1.638031932316153e-10,
+              1.5259615793183912e-09,
+              1.6081407039347795e-13
+            ],
+            "independent_seed_output_difference": [
+              1.638031932316153e-10,
+              1.5259615793183912e-09,
+              1.6081407039347795e-13
+            ]
+          },
+          "damped": {
+            "same_seed_implementation_difference": [
+              8.881784197001252e-16,
+              3.5862512959283777e-10,
+              1.734723475976807e-18
+            ],
+            "different_seed_same_fortran_difference": [
+              1.637943114474183e-10,
+              1.5258478924806695e-09,
+              1.6080366205262209e-13
+            ],
+            "independent_seed_output_difference": [
+              1.637943114474183e-10,
+              1.5258478924806695e-09,
+              1.6080366205262209e-13
+            ]
+          }
+        }
+      }
+    ],
+    "scope": "Single-step saved-state replays, dt=4 s. Common MATLAB reference Tv removes reference-inversion differences; no production edits or long integration.",
+    "analysis_source_sha256": "c0826ab3fc81e4b843e39ff6bea5a39035921dd1219263b12d16825f796e731a",
+    "diagnostic_unit_conversion": "MATLAB area_dMF_dz and horizontal_flow multiplied by 1e6 to convert area from km^2 to m^2. Raw output bytes are preserved.",
+    "artifacts_sha256": {
+      "inputs.bin": "828304ac4838283bdb4f70d9561cb048136c507132034064733d5ad42e045119",
+      "reference_tv.bin": "92c86b02214896723f4560cbe351ac4d3cc708a15d81b9d7e578e9ca6f0d3dc0",
+      "matlab_outputs.bin": "7f8d8642bf5ef50818db520e43df86529fd5aeec3b31c538496b3f20ff2117e1",
+      "fortran_outputs.bin": "c204332f7946f3dc71645fcf09a0223319452725f89e27af44c3137f0008a6be"
+    }
+  },
+  "common_thermodynamics": {
+    "samples": 14616,
+    "field_order": [
+      "T",
+      "q",
+      "ql",
+      "qi",
+      "theta_e_base",
+      "theta_e_perturbed",
+      "theta_e_condensate_derivative",
+      "theta_e_sink",
+      "qt_sink"
+    ],
+    "byte_identical_inputs": true,
+    "finite_outputs": true,
+    "comparisons": {
+      "fortran_outputs": {
+        "max_abs_error": [
+          1.1368683772161603e-13,
+          1.1796119636642288e-16,
+          1.1796119636642288e-16,
+          3.382710778154774e-17,
+          4.547473508864641e-13,
+          4.547473508864641e-13,
+          1.7053025658242404e-05,
+          8.965893088727639e-11,
+          3.5157161266973803e-19
+        ],
+        "rms_error": [
+          1.4983245224173704e-14,
+          5.347430092803633e-18,
+          5.119631697403066e-18,
+          1.5441437369518654e-18,
+          5.3410679208340355e-14,
+          5.378396146698106e-14,
+          2.0217822490901465e-06,
+          4.738887803770691e-12,
+          1.3864897502544567e-20
+        ],
+        "worst_samples": [
+          {
+            "field": "T",
+            "sample": {
+              "minute": 7.666666666666667,
+              "second": 460,
+              "record": 115,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 98,
+              "level": 51,
+              "height_m": 5050
+            },
+            "matlab": 271.2739087722429,
+            "fortran": 271.2739087722428
+          },
+          {
+            "field": "q",
+            "sample": {
+              "minute": 0.0,
+              "second": 0,
+              "record": 0,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 16,
+              "height_m": 1550
+            },
+            "matlab": 0.015683207949699643,
+            "fortran": 0.01568320794969976
+          },
+          {
+            "field": "ql",
+            "sample": {
+              "minute": 0.0,
+              "second": 0,
+              "record": 0,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 16,
+              "height_m": 1550
+            },
+            "matlab": 2.1328927728506142e-07,
+            "fortran": 2.1328927716710022e-07
+          },
+          {
+            "field": "qi",
+            "sample": {
+              "minute": 7.666666666666667,
+              "second": 460,
+              "record": 115,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 99,
+              "level": 59,
+              "height_m": 5850
+            },
+            "matlab": 0.00012354543899946967,
+            "fortran": 0.0001235454389995035
+          },
+          {
+            "field": "theta_e_base",
+            "sample": {
+              "minute": 8.866666666666667,
+              "second": 532,
+              "record": 133,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 388,
+              "height_m": 38750
+            },
+            "matlab": 1148.8830833768516,
+            "fortran": 1148.8830833768511
+          },
+          {
+            "field": "theta_e_perturbed",
+            "sample": {
+              "minute": 8.866666666666667,
+              "second": 532,
+              "record": 133,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 388,
+              "height_m": 38750
+            },
+            "matlab": 1148.8830833768516,
+            "fortran": 1148.8830833768511
+          },
+          {
+            "field": "theta_e_condensate_derivative",
+            "sample": {
+              "minute": 0.0,
+              "second": 0,
+              "record": 0,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 100,
+              "level": 53,
+              "height_m": 5250
+            },
+            "matlab": -699.8179742367938,
+            "fortran": -699.8179912898195
+          },
+          {
+            "field": "theta_e_sink",
+            "sample": {
+              "minute": 9.933333333333334,
+              "second": 596,
+              "record": 149,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 51,
+              "height_m": 5050
+            },
+            "matlab": 0.0023885344036954,
+            "fortran": 0.002388534314036469
+          },
+          {
+            "field": "qt_sink",
+            "sample": {
+              "minute": 9.933333333333334,
+              "second": 596,
+              "record": 149,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 18,
+              "height_m": 1750
+            },
+            "matlab": -4.7198924723037576e-07,
+            "fortran": -4.719892472300242e-07
+          }
+        ]
+      },
+      "fortran_fixed_thermo": {
+        "max_abs_error": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          2.2737367544323206e-13,
+          2.2737367544323206e-13,
+          1.7053025658242404e-05,
+          8.965893088727639e-11,
+          2.117582368135751e-22
+        ],
+        "rms_error": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          3.38171623767174e-14,
+          3.3993209721619334e-14,
+          1.6623441144351537e-06,
+          4.317316792792255e-12,
+          2.4782949802683614e-24
+        ],
+        "worst_samples": [
+          {
+            "field": "T",
+            "sample": {
+              "minute": 0.0,
+              "second": 0,
+              "record": 0,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 1,
+              "height_m": 50
+            },
+            "matlab": 296.9982349446303,
+            "fortran": 296.9982349446303
+          },
+          {
+            "field": "q",
+            "sample": {
+              "minute": 0.0,
+              "second": 0,
+              "record": 0,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 1,
+              "height_m": 50
+            },
+            "matlab": 0.016659565292748743,
+            "fortran": 0.016659565292748743
+          },
+          {
+            "field": "ql",
+            "sample": {
+              "minute": 0.0,
+              "second": 0,
+              "record": 0,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 1,
+              "height_m": 50
+            },
+            "matlab": 0.0,
+            "fortran": 0.0
+          },
+          {
+            "field": "qi",
+            "sample": {
+              "minute": 0.0,
+              "second": 0,
+              "record": 0,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 1,
+              "height_m": 50
+            },
+            "matlab": 0.0,
+            "fortran": 0.0
+          },
+          {
+            "field": "theta_e_base",
+            "sample": {
+              "minute": 0.0,
+              "second": 0,
+              "record": 0,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 350,
+              "height_m": 34950
+            },
+            "matlab": 946.1780333384112,
+            "fortran": 946.178033338411
+          },
+          {
+            "field": "theta_e_perturbed",
+            "sample": {
+              "minute": 0.0,
+              "second": 0,
+              "record": 0,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 350,
+              "height_m": 34950
+            },
+            "matlab": 946.1780333384112,
+            "fortran": 946.178033338411
+          },
+          {
+            "field": "theta_e_condensate_derivative",
+            "sample": {
+              "minute": 0.0,
+              "second": 0,
+              "record": 0,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 100,
+              "level": 53,
+              "height_m": 5250
+            },
+            "matlab": -699.8179742367938,
+            "fortran": -699.8179912898195
+          },
+          {
+            "field": "theta_e_sink",
+            "sample": {
+              "minute": 9.933333333333334,
+              "second": 596,
+              "record": 149,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 51,
+              "height_m": 5050
+            },
+            "matlab": 0.0023885344036954,
+            "fortran": 0.002388534314036469
+          },
+          {
+            "field": "qt_sink",
+            "sample": {
+              "minute": 8.866666666666667,
+              "second": 532,
+              "record": 133,
+              "seed": "matlab",
+              "SSPRK_source": "matlab",
+              "ace": 1,
+              "level": 19,
+              "height_m": 1850
+            },
+            "matlab": -1.0193404009313019e-06,
+            "fortran": -1.019340400931302e-06
+          }
+        ]
+      }
+    },
+    "artifacts_sha256": {
+      "matlab_outputs.bin": "99d66d1e2a6df8a727184c07bc6a5100d043c8dbe9beb78d3ef9e99d52dd53c6",
+      "matlab_inputs_echo.bin": "5743bea0007326c4a05ad816d49d60aa0ba56885d9d07a4d1cf74ee9420397f1",
+      "fortran_inputs_echo.bin": "5743bea0007326c4a05ad816d49d60aa0ba56885d9d07a4d1cf74ee9420397f1",
+      "inputs.bin": "5743bea0007326c4a05ad816d49d60aa0ba56885d9d07a4d1cf74ee9420397f1",
+      "fortran_outputs.bin": "e1cc6fb85d68ceb7ccf9099964a5dbd6bd4dd379e19c2772472f5fa3b10a4c71",
+      "common_thermo.bin": "73769c194abd0dc7e6c8e91bc6f96ac8ae2558b0b5bff730c846755b8d1fb5f3",
+      "fortran_fixed_thermo.bin": "1bf1bd789348784a49904d889b799744628d6c8044b1fc6c225af602acb79b51"
+    }
+  },
+  "phase_selection_mismatches": 0,
+  "selected_point_attribution": [
+    {
+      "ACE": 1,
+      "level": 57,
+      "height_m": 5650,
+      "step_one_based": 146,
+      "step_start_seconds": 580,
+      "step_end_seconds": 584,
+      "same_input_thermal_sink_delta_K_per_s": 0.0,
+      "same_seed_SSPRK_input_effect_on_sink_K_per_s": 4.336808689942018e-18,
+      "inherited_seed_effect_on_sink_K_per_s": -1.7052579487364383e-10,
+      "total_independent_seed_sink_delta_K_per_s": -1.7052579053683514e-10,
+      "same_seed_SSPRK_input_delta_theta_e_qt": [
+        0.0,
+        1.734723475976807e-18
+      ],
+      "same_seed_derivative_delta": 0.0,
+      "same_seed_four_second_theta_update_delta_K": 0.0,
+      "states": {
+        "M_seed_M_SSPRK": {
+          "sample": {
+            "minute": 9.666666666666666,
+            "second": 580,
+            "record": 145,
+            "seed": "matlab",
+            "SSPRK_source": "matlab",
+            "ace": 1,
+            "level": 57,
+            "height_m": 5650
+          },
+          "theta_e_qt_pressure": [
+            345.31812035146646,
+            0.009051373547658172,
+            50819.926315467
+          ],
+          "matlab": {
+            "T": 271.0870247778564,
+            "q": 0.006303555439255176,
+            "ql": 0.0,
+            "qi": 0.0027478181084029957,
+            "theta_e_base": 345.3181266859803,
+            "theta_e_perturbed": 345.3181194305975,
+            "theta_e_condensate_derivative": -725.5382797666243,
+            "theta_e_sink": 0.005436260278663257,
+            "qt_sink": -7.492727028009985e-06
+          },
+          "fortran": {
+            "T": 271.0870247778564,
+            "q": 0.006303555439255176,
+            "ql": 0.0,
+            "qi": 0.0027478181084029957,
+            "theta_e_base": 345.3181266859803,
+            "theta_e_perturbed": 345.3181194305975,
+            "theta_e_condensate_derivative": -725.5382797666243,
+            "theta_e_sink": 0.005436260278663257,
+            "qt_sink": -7.492727028009985e-06
+          },
+          "fortran_fixed_thermo": {
+            "T": 271.0870247778564,
+            "q": 0.006303555439255176,
+            "ql": 0.0,
+            "qi": 0.0027478181084029957,
+            "theta_e_base": 345.3181266859803,
+            "theta_e_perturbed": 345.3181194305975,
+            "theta_e_condensate_derivative": -725.5382797666243,
+            "theta_e_sink": 0.005436260278663257,
+            "qt_sink": -7.492727028009985e-06
+          }
+        },
+        "M_seed_F_SSPRK": {
+          "sample": {
+            "minute": 9.666666666666666,
+            "second": 580,
+            "record": 145,
+            "seed": "matlab",
+            "SSPRK_source": "fortran",
+            "ace": 1,
+            "level": 57,
+            "height_m": 5650
+          },
+          "theta_e_qt_pressure": [
+            345.31812035146646,
+            0.009051373547658174,
+            50819.926315467
+          ],
+          "matlab": {
+            "T": 271.0870247778564,
+            "q": 0.006303555439255176,
+            "ql": 0.0,
+            "qi": 0.0027478181084029975,
+            "theta_e_base": 345.3181266859803,
+            "theta_e_perturbed": 345.3181194305975,
+            "theta_e_condensate_derivative": -725.5382797666243,
+            "theta_e_sink": 0.005436260278663261,
+            "qt_sink": -7.492727028009991e-06
+          },
+          "fortran": {
+            "T": 271.0870247778564,
+            "q": 0.006303555439255176,
+            "ql": 0.0,
+            "qi": 0.0027478181084029975,
+            "theta_e_base": 345.3181266859803,
+            "theta_e_perturbed": 345.3181194305975,
+            "theta_e_condensate_derivative": -725.5382797666243,
+            "theta_e_sink": 0.005436260278663261,
+            "qt_sink": -7.492727028009991e-06
+          },
+          "fortran_fixed_thermo": {
+            "T": 271.0870247778564,
+            "q": 0.006303555439255176,
+            "ql": 0.0,
+            "qi": 0.0027478181084029975,
+            "theta_e_base": 345.3181266859803,
+            "theta_e_perturbed": 345.3181194305975,
+            "theta_e_condensate_derivative": -725.5382797666243,
+            "theta_e_sink": 0.005436260278663261,
+            "qt_sink": -7.492727028009991e-06
+          }
+        },
+        "F_seed_F_SSPRK": {
+          "sample": {
+            "minute": 9.666666666666666,
+            "second": 580,
+            "record": 145,
+            "seed": "fortran",
+            "SSPRK_source": "fortran",
+            "ace": 1,
+            "level": 57,
+            "height_m": 5650
+          },
+          "theta_e_qt_pressure": [
+            345.3181203517429,
+            0.009051373547636242,
+            50819.926315467
+          ],
+          "matlab": {
+            "T": 271.0870247779398,
+            "q": 0.006303555439299777,
+            "ql": 0.0,
+            "qi": 0.0027478181083364648,
+            "theta_e_base": 345.31812668625656,
+            "theta_e_perturbed": 345.318119430874,
+            "theta_e_condensate_derivative": -725.5382570292568,
+            "theta_e_sink": 0.005436260108137466,
+            "qt_sink": -7.492727027788216e-06
+          },
+          "fortran": {
+            "T": 271.0870247779398,
+            "q": 0.006303555439299777,
+            "ql": 0.0,
+            "qi": 0.0027478181083364648,
+            "theta_e_base": 345.31812668625656,
+            "theta_e_perturbed": 345.318119430874,
+            "theta_e_condensate_derivative": -725.5382570292568,
+            "theta_e_sink": 0.005436260108137466,
+            "qt_sink": -7.492727027788216e-06
+          },
+          "fortran_fixed_thermo": {
+            "T": 271.0870247779398,
+            "q": 0.006303555439299777,
+            "ql": 0.0,
+            "qi": 0.0027478181083364648,
+            "theta_e_base": 345.31812668625656,
+            "theta_e_perturbed": 345.318119430874,
+            "theta_e_condensate_derivative": -725.5382570292568,
+            "theta_e_sink": 0.005436260108137466,
+            "qt_sink": -7.492727027788216e-06
+          }
+        }
+      },
+      "actual_same_seed_post_precipitation_theta_delta_K": 0.0,
+      "exact_rounded_update_reproduction": true,
+      "original_gate_sink_values_K_per_s": {
+        "matlab": 0.005436260278663257,
+        "fortran": 0.005436260108137466
+      },
+      "exact_original_gate_sink_reproduction": true
+    },
+    {
+      "ACE": 1,
+      "level": 61,
+      "height_m": 6050,
+      "step_one_based": 146,
+      "step_start_seconds": 580,
+      "step_end_seconds": 584,
+      "same_input_thermal_sink_delta_K_per_s": 0.0,
+      "same_seed_SSPRK_input_effect_on_sink_K_per_s": -7.773390438281513e-11,
+      "inherited_seed_effect_on_sink_K_per_s": 7.77462148479624e-11,
+      "total_independent_seed_sink_delta_K_per_s": 1.2310465147269412e-14,
+      "same_seed_SSPRK_input_delta_theta_e_qt": [
+        -5.684341886080802e-14,
+        0.0
+      ],
+      "same_seed_derivative_delta": 1.1368683772161603e-05,
+      "same_seed_four_second_theta_update_delta_K": -3.1099034458748065e-10,
+      "states": {
+        "M_seed_M_SSPRK": {
+          "sample": {
+            "minute": 9.666666666666666,
+            "second": 580,
+            "record": 145,
+            "seed": "matlab",
+            "SSPRK_source": "matlab",
+            "ace": 1,
+            "level": 61,
+            "height_m": 6050
+          },
+          "theta_e_qt_pressure": [
+            345.4456165501621,
+            0.008071597577323057,
+            48289.69480543453
+          ],
+          "matlab": {
+            "T": 268.91329577455014,
+            "q": 0.005520332241107515,
+            "ql": 0.0,
+            "qi": 0.002551265336215542,
+            "theta_e_base": 345.4456218934592,
+            "theta_e_perturbed": 345.44561453195445,
+            "theta_e_condensate_derivative": -736.1504742675606,
+            "theta_e_sink": 0.005033466500345594,
+            "qt_sink": -6.837551120718473e-06
+          },
+          "fortran": {
+            "T": 268.91329577455014,
+            "q": 0.005520332241107515,
+            "ql": 0.0,
+            "qi": 0.002551265336215542,
+            "theta_e_base": 345.4456218934592,
+            "theta_e_perturbed": 345.44561453195445,
+            "theta_e_condensate_derivative": -736.1504742675606,
+            "theta_e_sink": 0.005033466500345594,
+            "qt_sink": -6.837551120718473e-06
+          },
+          "fortran_fixed_thermo": {
+            "T": 268.91329577455014,
+            "q": 0.005520332241107515,
+            "ql": 0.0,
+            "qi": 0.002551265336215542,
+            "theta_e_base": 345.4456218934592,
+            "theta_e_perturbed": 345.44561453195445,
+            "theta_e_condensate_derivative": -736.1504742675606,
+            "theta_e_sink": 0.005033466500345594,
+            "qt_sink": -6.837551120718473e-06
+          }
+        },
+        "M_seed_F_SSPRK": {
+          "sample": {
+            "minute": 9.666666666666666,
+            "second": 580,
+            "record": 145,
+            "seed": "matlab",
+            "SSPRK_source": "fortran",
+            "ace": 1,
+            "level": 61,
+            "height_m": 6050
+          },
+          "theta_e_qt_pressure": [
+            345.445616550162,
+            0.008071597577323057,
+            48289.69480543453
+          ],
+          "matlab": {
+            "T": 268.9132957745501,
+            "q": 0.005520332241107494,
+            "ql": 0.0,
+            "qi": 0.002551265336215563,
+            "theta_e_base": 345.445621893459,
+            "theta_e_perturbed": 345.4456145319544,
+            "theta_e_condensate_derivative": -736.1504628988769,
+            "theta_e_sink": 0.00503346642261169,
+            "qt_sink": -6.837551120718543e-06
+          },
+          "fortran": {
+            "T": 268.9132957745501,
+            "q": 0.005520332241107494,
+            "ql": 0.0,
+            "qi": 0.002551265336215563,
+            "theta_e_base": 345.445621893459,
+            "theta_e_perturbed": 345.4456145319544,
+            "theta_e_condensate_derivative": -736.1504628988769,
+            "theta_e_sink": 0.00503346642261169,
+            "qt_sink": -6.837551120718543e-06
+          },
+          "fortran_fixed_thermo": {
+            "T": 268.9132957745501,
+            "q": 0.005520332241107494,
+            "ql": 0.0,
+            "qi": 0.002551265336215563,
+            "theta_e_base": 345.445621893459,
+            "theta_e_perturbed": 345.4456145319544,
+            "theta_e_condensate_derivative": -736.1504628988769,
+            "theta_e_sink": 0.00503346642261169,
+            "qt_sink": -6.837551120718543e-06
+          }
+        },
+        "F_seed_F_SSPRK": {
+          "sample": {
+            "minute": 9.666666666666666,
+            "second": 580,
+            "record": 145,
+            "seed": "fortran",
+            "SSPRK_source": "fortran",
+            "ace": 1,
+            "level": 61,
+            "height_m": 6050
+          },
+          "theta_e_qt_pressure": [
+            345.4456165502472,
+            0.00807159757734425,
+            48289.69480543453
+          ],
+          "matlab": {
+            "T": 268.9132957745845,
+            "q": 0.0055203322411236915,
+            "ql": 0.0,
+            "qi": 0.002551265336220559,
+            "theta_e_base": 345.44562189354434,
+            "theta_e_perturbed": 345.4456145320396,
+            "theta_e_condensate_derivative": -736.1504742675606,
+            "theta_e_sink": 0.005033466500357905,
+            "qt_sink": -6.837551120735196e-06
+          },
+          "fortran": {
+            "T": 268.9132957745845,
+            "q": 0.0055203322411236915,
+            "ql": 0.0,
+            "qi": 0.002551265336220559,
+            "theta_e_base": 345.44562189354434,
+            "theta_e_perturbed": 345.4456145320396,
+            "theta_e_condensate_derivative": -736.1504742675606,
+            "theta_e_sink": 0.005033466500357905,
+            "qt_sink": -6.837551120735196e-06
+          },
+          "fortran_fixed_thermo": {
+            "T": 268.9132957745845,
+            "q": 0.0055203322411236915,
+            "ql": 0.0,
+            "qi": 0.002551265336220559,
+            "theta_e_base": 345.44562189354434,
+            "theta_e_perturbed": 345.4456145320396,
+            "theta_e_condensate_derivative": -736.1504742675606,
+            "theta_e_sink": 0.005033466500357905,
+            "qt_sink": -6.837551120735196e-06
+          }
+        }
+      },
+      "actual_same_seed_post_precipitation_theta_delta_K": -3.1099034458748065e-10,
+      "exact_rounded_update_reproduction": true
+    }
+  ],
+  "independent_reference_Tv": {
+    "max_abs_difference_K": 1.1368683772161603e-13,
+    "fortran_minus_matlab_K": 1.1368683772161603e-13,
+    "level": 37,
+    "height_m": 3650
+  },
+  "analysis_source_sha256": "ede001dcfe56f312466b1e5ec983d23ae4d6572cbeea051881e4fa4e6052fef3",
+  "configuration_sha256": {
+    "replay": "ad5279e8b8c6166cdaaa923703e19b253dfbff527389a0b8a5a653e194bae1c6",
+    "thermo": "e60f222fd061fa7dd2963bd05d33e6e24e33d7954882fe745a07dc0c11b9f868"
+  },
+  "evidence_sha256": {
+    "/scratch/peter50504/ACE/migration_work/khn26_ten_minute_error_sources/fortran_environment_thermo.bin": "044c551029f7af458f09e6746281a2461666b8eefe9436bdfa35187784a2e116",
+    "/scratch/peter50504/ACE/migration_work/khn26_ten_minute_error_sources/reference_probe.F": "b70ec7662fd63f9406d34dcfcab534088779c2892e3b70e6e0494781bb8f540f",
+    "/scratch/peter50504/ACE/migration_work/khn26_ten_minute_error_sources/reference_probe_commands.json": "dd0a17fe1958eb51642ed8072c887af41c60923b4658f2669e357779c4f183c6",
+    "/scratch/peter50504/ACE/migration_work/khn26_ten_minute_error_thermo/results.json": "5560854942d3b2ca8106340e72be70e719be237574fe3a9fd19e6e999b0d28c9",
+    "/scratch/peter50504/ACE/migration_work/khn26_ten_minute_error_thermo/matlab_outputs.bin": "99d66d1e2a6df8a727184c07bc6a5100d043c8dbe9beb78d3ef9e99d52dd53c6",
+    "/scratch/peter50504/ACE/migration_work/khn26_ten_minute_error_thermo/fortran_outputs.bin": "e1cc6fb85d68ceb7ccf9099964a5dbd6bd4dd379e19c2772472f5fa3b10a4c71",
+    "/scratch/peter50504/ACE/migration_work/khn26_ten_minute_error_thermo/fortran_fixed_thermo.bin": "1bf1bd789348784a49904d889b799744628d6c8044b1fc6c225af602acb79b51"
+  }
+}

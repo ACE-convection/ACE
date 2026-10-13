@@ -1,0 +1,166 @@
+{
+  "configuration": {
+    "input": "/scratch/peter50504/ACE/data/input/manaus1342_khn26.nc",
+    "input_sha256": "09408f4d0343afd8659df82f8f1cfe5dc59308cff150fb2bcfd569b1b8794d35",
+    "duration_seconds": 10800,
+    "dt_seconds": 4,
+    "expected_steps": 2700,
+    "jobs": [
+      {
+        "name": "multiACE_matlab",
+        "case": "multiACE",
+        "language": "matlab",
+        "reference": "/scratch/peter50504/ACE/migration_work/khn26_multi_weno_three_hour/full/matlab_states.bin",
+        "reference_sha256": "eb7d33bcaabad871df54bfd1533e23dc297dbf42a6e8f033c321c7241e1b992c",
+        "initial_MF_amplitude": 0.0,
+        "command": [
+          "matlab",
+          "-batch",
+          "run('/scratch/peter50504/ACE/migration_work/khn26_multi_precipitation_three_hour/multiACE_matlab/launch.m')"
+        ],
+        "output_state": "matlab_states.bin",
+        "diagnostic_source_sha256": "4b7faf39e2e8704f04b71f310d367f04fc744748e7b4d8a3d82d6282b9783a70"
+      },
+      {
+        "name": "multiACE_fortran",
+        "case": "multiACE",
+        "language": "fortran",
+        "reference": "/scratch/peter50504/ACE/migration_work/khn26_multi_weno_three_hour/full/fortran_states.bin",
+        "reference_sha256": "be233ddf6596c96f150be015898a33d69e901969b06cc85124d30d5a5f7559fc",
+        "initial_MF_amplitude": 0.0,
+        "command": [
+          "/scratch/peter50504/ACE/migration_work/khn26_multi_precipitation_three_hour/multiACE_fortran/build/ace_model.exe",
+          "--input",
+          "/scratch/peter50504/ACE/data/input/manaus1342_khn26.nc",
+          "--physics",
+          "native",
+          "--dt",
+          "4",
+          "--intervals",
+          "180",
+          "--state-output",
+          "/scratch/peter50504/ACE/migration_work/khn26_multi_precipitation_three_hour/multiACE_fortran/full/states.bin",
+          "--output",
+          "/scratch/peter50504/ACE/migration_work/khn26_multi_precipitation_three_hour/multiACE_fortran/full/fields.dat"
+        ],
+        "output_state": "states.bin",
+        "executable_sha256": "0fb1fa24dcc1aaa3104006bbc83999ff052ea7e728405695971fbbd3ac4a25f4",
+        "diagnostic_source_sha256": "6dd6a9abac0841bdffa5f51be07a074a6fe2e79eeadc29ce75db7cff10688b9e"
+      },
+      {
+        "name": "multiACE_p3",
+        "case": "multiACE",
+        "language": "p3",
+        "reference": "/scratch/peter50504/ACE/migration_work/khn26_p3_three_hour/multiACE/full/states.bin",
+        "reference_sha256": "c91e1171f9d840ad1254a4f72e0b3b695caf1785254ae205ab1f0e5db3503044",
+        "initial_MF_amplitude": 0,
+        "command": [
+          "/scratch/peter50504/ACE/migration_work/khn26_multi_precipitation_three_hour/multiACE_p3/build/ace_model.exe",
+          "--input",
+          "/scratch/peter50504/ACE/data/input/manaus1342_khn26.nc",
+          "--physics",
+          "p3",
+          "--dt",
+          "4",
+          "--intervals",
+          "180",
+          "--state-output",
+          "/scratch/peter50504/ACE/migration_work/khn26_multi_precipitation_three_hour/multiACE_p3/full/states.bin",
+          "--output",
+          "/scratch/peter50504/ACE/migration_work/khn26_multi_precipitation_three_hour/multiACE_p3/full/fields.dat",
+          "--p3-lookup-directory",
+          "/scratch/peter50504/ACE_FORTRAN/input_data"
+        ],
+        "output_state": "states.bin",
+        "executable_sha256": "375237d415b4f15c16e2380e43d4fc5987f39cdba3438fced703de4d8cd116a2",
+        "diagnostic_source_sha256": "f214175f8e8b6c99872671b4a2cbe7e14dd06304d74161447b67679866ccfdff"
+      }
+    ],
+    "runner_sha256": "9d020d9b6b1addd8315087dc38bddc8f0e046fde17ba133df3b68e0a289fe468",
+    "cases": [
+      "multiACE"
+    ],
+    "thread_policy": {
+      "matlab": "platform_default",
+      "fortran": 32,
+      "p3": 32
+    },
+    "matlab_removed_thread_environment": [
+      "OMP_NUM_THREADS",
+      "OMP_THREAD_LIMIT",
+      "OMP_DYNAMIC",
+      "OMP_MAX_ACTIVE_LEVELS",
+      "OMP_PROC_BIND",
+      "OMP_PLACES",
+      "OMP_SCHEDULE",
+      "MKL_NUM_THREADS",
+      "MKL_DYNAMIC",
+      "OPENBLAS_NUM_THREADS",
+      "GOTO_NUM_THREADS",
+      "BLIS_NUM_THREADS",
+      "VECLIB_MAXIMUM_THREADS",
+      "GOMP_CPU_AFFINITY",
+      "KMP_AFFINITY",
+      "KMP_HW_SUBSET",
+      "MATLAB_NUM_THREADS",
+      "MATLAB_MAX_NUM_THREADS",
+      "MW_NUM_CPUS",
+      "MW_NUM_THREADS"
+    ],
+    "cpu_binding": "No taskset or explicit affinity",
+    "plot_output": "/scratch/peter50504/ACE/docs/figures/khn26_multi_precipitation_3h",
+    "precipitation_output_version": 1,
+    "precipitation_output_interval_seconds": 60,
+    "precipitation_output_file": "precip_accumulation.bin",
+    "precipitation_record_fields": [
+      "time_seconds",
+      "minute_native_total_or_liquid_mm",
+      "minute_solid_mm",
+      "cumulative_native_total_or_liquid_mm",
+      "cumulative_solid_mm"
+    ],
+    "expected_precipitation_records": 181,
+    "precipitation_amount_units": "mm water equivalent",
+    "definition_native": "Actual applied column-integrated native total-water removal, kg/m2/s; equivalent precipitation, not transported surface rain.",
+    "definition_p3": "Actual P3 surface liquid plus solid precipitation flux, kg/m2/s; returned m/s converted with water density 1000 kg/m3."
+  },
+  "diagnostics": [
+    {
+      "job": "multiACE_matlab",
+      "state_sha256": "eb7d33bcaabad871df54bfd1533e23dc297dbf42a6e8f033c321c7241e1b992c",
+      "precip_sha256": "dd70b44c963bb5b650a545c01d0691eb2983c98beb4c206bec70e74570e64984",
+      "exact_saved_state_reproduction": true,
+      "precipitation_record_count": 181,
+      "precipitation_interval_seconds": 60,
+      "ACE1_accumulation_mm": 124.24701795320364,
+      "area_mean_accumulation_mm": 0.8660247083476813,
+      "peak_ACE1_minute_mean_mm_h": 125.56294961917101,
+      "peak_domain_minute_mean_mm_h": 0.8427713347376059
+    },
+    {
+      "job": "multiACE_fortran",
+      "state_sha256": "be233ddf6596c96f150be015898a33d69e901969b06cc85124d30d5a5f7559fc",
+      "precip_sha256": "cb674b127d54bc76e88b06bb88a5d61236a5291568251ec35236c1db982bc04a",
+      "exact_saved_state_reproduction": true,
+      "precipitation_record_count": 181,
+      "precipitation_interval_seconds": 60,
+      "ACE1_accumulation_mm": 124.24701796012175,
+      "area_mean_accumulation_mm": 0.8660247083962453,
+      "peak_ACE1_minute_mean_mm_h": 125.56294961027453,
+      "peak_domain_minute_mean_mm_h": 0.842771334716627
+    },
+    {
+      "job": "multiACE_p3",
+      "state_sha256": "c91e1171f9d840ad1254a4f72e0b3b695caf1785254ae205ab1f0e5db3503044",
+      "precip_sha256": "978ae29be5cc21affd35f8e01646fc5bb8c5b6bb40d52194f220dbf66036ef27",
+      "exact_saved_state_reproduction": true,
+      "precipitation_record_count": 181,
+      "precipitation_interval_seconds": 60,
+      "ACE1_accumulation_mm": 19.272897975866044,
+      "area_mean_accumulation_mm": 0.21800116303287628,
+      "peak_ACE1_minute_mean_mm_h": 119.18830769409551,
+      "peak_domain_minute_mean_mm_h": 1.068526219099465
+    }
+  ],
+  "scope": "Actual model-step diagnostics, exact minute-saved state reproduction. Native removal equivalent and P3 transported surface precipitation have different definitions."
+}

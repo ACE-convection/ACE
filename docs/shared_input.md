@@ -1,6 +1,114 @@
 # Shared ACE case input
 
-The active MATLAB and Fortran candidates now default to one shared case file
+## Current v0.20 development interface (2026-10-04)
+
+Both drivers now default to `data/input/manaus1342_khn26.nc`, the
+November 2025 KHN26 reference selected by the author and developer.
+The [integration record](migration/v020_khn26_integration.md) owns current
+source changes and numerical scope; [the KHN26 tests](../tests/khn26/README.md)
+reproduce initialization/component/short-run checks. The older S20 adapter
+record is historical evidence.
+
+### Schema: ACE-case-input-2
+
+Schema 2 extends the twelve v0.18 profile fields and ancillary sounding data
+with slab geometry and three operators. All numeric variables use binary64.
+Required global attributes are `ace_input_schema='ACE-case-input-2'`,
+`geometry='slab'`, `case_name`, `arm` and `profile_index`. Grids and ACE counts
+are dynamic. Dimension names and variable units are checked explicitly.
+
+| Variables | MATLAB/Fortran NetCDF API dimensions | Units |
+| --- | --- | --- |
+| Twelve theta_e/qt/Tv/p/rho/height profiles | `mf_level` or `zc_level`, same length | Same as schema 1 below |
+| PMB, PMDv, PMD | `basis_edge, coarse_level, forcing_ace, response_ace` | PMB: `1`; PMDv/PMD: `native` |
+| basis_z, coarse_ze | `basis_edge=coarse_level+1` | m |
+| coarse_z | `coarse_level` | m |
+| ace_width, ace_perimeter | `ace=response_ace=forcing_ace` | m |
+| ace_area | `ace` | m2 |
+| dz | scalar | m |
+| p/T_p/q_p/rho_p/z_p and sounding/postprocessing fields | Same named dimensions as schema 1, with variable grid lengths | Same as schema 1 |
+
+Python/ncdump see all operators in reversed order:
+`response_ace, forcing_ace, coarse_level, basis_edge`. Fortran stores
+`operator(response,forcing,coarse,edge)`; MATLAB keeps API order.
+Readers reject swapped dimension names even when lengths are equal. Schema
+2 requires all three full operators; missing momentum operators must be explicitly marked
+`source_status=disabled_zero_placeholder`. Both drivers reject their
+activation. Older supplied operators without this attribute remain readable. Fortran now includes PMDv/PMD calculation
+branches with the same disabled defaults as MATLAB; see the
+[dynamics alignment record](migration/v020_dynamics_alignment.md).
+
+`native` records unconverted momentum-operator source values; their physical
+units and application need scientific review before those momentum terms
+are enabled. It is not a claim that all three operators are dimensionless.
+The converter does not rescale their coefficients.
+
+The schema requires positive geometry and
+`ace_area/ace_perimeter=ace_width`. The converter preserves the original
+S20 convention `Ai=D` km2 and `Bi=1` km by representing a 1 km span:
+`ace_width=D*1000`, `ace_area=ace_width*1000`, and `ace_perimeter=1000`.
+MATLAB converts area/perimeter back to its original units; Fortran uses SI.
+This is a geometry representation, not a new boundary-condition model.
+
+`mf_level-1` must partition evenly into `coarse_level` blocks. Profiles use
+`z=zm+dz/2`; `basis_z` and `coarse_ze` retain identical supplied basis
+coordinates, matching the fine-grid partition within floating-point
+roundoff. `coarse_z=coarse_ze(1:end-1)`. The S20 converter retains 40 km depth
+with configurable dz (default 100 m), without resampling basis operators.
+Schema 2 does not require the annular schema's diameter, Lx or Ly fields.
+
+### Prepare the S20 shared file after basis provision
+
+Use the final basis containing `D`, `Z`, `PMB`, `PMDv`, `PMD`, the raw sounding
+and the current paired S20 thermodynamic utilities:
+
+```matlab
+addpath('tools/input');
+provenance=struct('source_commit','<S20 source revision>', ...
+    'basis_sha256','<actual basis SHA-256>', ...
+    'sounding_sha256','<actual sounding SHA-256>');
+create_s20_shared_input(basis_file,sounding_file, ...
+    'data/input/goamazon314_s20.nc',314,3,provenance,100);
+```
+
+The tool extracts the driver's unchanged S20 preprocessing functions,
+including humidity adjustment, for a single selected profile. It requires
+operators to match the requested grid and writes their exact binary64
+coefficients. The output path must be fresh. This entry has been implemented
+but not executed or tested; no new case file is distributed. The original
+`create_shared_input` is the historical v0.18 converter and should be used
+from the `v0.18.0` checkout with that version's helpers.
+
+### Select a shared case
+
+From `matlab/`:
+
+```matlab
+setenv('ACE_INPUT_FILE','/absolute/path/to/case.nc');
+ace
+```
+
+From `fortran/`:
+
+```bash
+./ace_model.exe --input /absolute/path/to/case.nc \
+  --physics native --intervals 2 --output /existing/output/directory/state.dat
+```
+
+Fortran make dependencies include `ace_input.F`. P3 tables remain external
+text data. Legacy input is explicit: MATLAB `ACE_INPUT_MODE=legacy` /
+`ACE_LEGACY_DATA`, Fortran `--legacy-input`. Reader APIs still support schema
+1 files; the current MATLAB KHN26 driver rejects annular geometry rather than reinterpreting it.
+Reading the same case does not match initial perturbations, timesteps,
+physics or boundaries; those remain documented model differences.
+
+## Published v0.18 interface and evidence
+
+The following records the tested v0.18 implementation and schema 1. Its
+commands, compiler validation and conversion evidence apply to a
+`v0.18.0` checkout, not the current KHN26/P3 sources.
+
+The published MATLAB and Fortran implementations default to one shared case file
 at `data/input/manus208.nc`. `data/input/goamazon314.nc` is an additional
 converted case. Historical snapshots remain unchanged. This reader migration
 does not establish cross-implementation dynamics equivalence or promote the
@@ -191,3 +299,36 @@ path to initialize, then calls the actual numerical routines without the
 normal driver's unused Statistics/plotting diagnostics. Dry agreement does
 not extend to the controlled precipitating cases; review the scientific
 sink and inversion differences before claiming shared model behavior.
+
+## KHN26 processed reference case (2026-10-04)
+
+The author-selected November 2025 KHN26 case uses the actual 101-ACE
+`COMPOSITE_ACE_BASIS_2D_KHN26_4UNEVEN.mat` and
+`acelevels_manaus.nc`, one-based profile 1342. The converter
+[`tools/input/create_khn26_shared_input.py`](../tools/input/create_khn26_shared_input.py)
+produces `data/input/manaus1342_khn26.nc` with schema 2 and direct profile/PMB
+copying. Missing momentum operators are full-shape compressed zero
+placeholders with `source_status=disabled_zero_placeholder`; this is not
+a scientific momentum basis, and momentum activation remains unsupported
+for this case. The original supplied Tv is preserved separately from the
+KHN26 driver's inversion-derived reference decision.
+
+The [KHN26 review](migration/v020_khn26_review.md) preserves input/source
+provenance and readback evidence. The [integration record](migration/v020_khn26_integration.md)
+records current driver/Fortran changes.
+The older raw-sounding S20 converter and default GoAmazon314 input are
+not the selected KHN26 case. No raw-sounding intermediates are fabricated
+to satisfy the older S20 driver; both active drivers now use this processed-input contract.
+
+Reproduce the KHN26 conversion with original data and a fresh output path:
+
+```bash
+python3 tools/input/create_khn26_shared_input.py \
+  /path/COMPOSITE_ACE_BASIS_2D_KHN26_4UNEVEN.mat \
+  /path/acelevels_manaus.nc data/input/manaus1342_khn26.nc --profile 1342
+```
+
+The generated NC is ignored, not committed or uploaded. The tracked
+`data/input/manaus1342_khn26.provenance.json` pins its source and output hashes.
+The legacy raw-sounding S20 recipe above is historical and is not the KHN26
+conversion path.

@@ -15,8 +15,8 @@ function Tv = eval_Tv(T, q, qc)
   Returns:
     double: density temperature following Eq. (4.3.6) in Emanuel (1994).
 %}
-  if nargin==2
-    qc = 0;
-  end
+  % if nargin==2
+  %   qc = 0;
+  % end
   
   Tv = T .* (1 + 0.607789855072462*q - qc);

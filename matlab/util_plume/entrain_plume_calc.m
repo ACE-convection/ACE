@@ -2,14 +2,16 @@ function [theta_e, qt, T, q, ql, qi] = entrain_plume_calc(T_p, q_p, rho_p, z_p, 
 global qc_cap eps_tur
   Np = length(p_p);
   theta_e_p = eval_theta_e(T_p,q_p,0,0,p_p);
-  
+  z_p = z_p-z_p(1);
+
   if nargin==5 %Mixing ratio not prescribed
     % DIB profile
-    W = sin( pi*z_p/14e3 );
+    z_d = 14e3; % Depth of updraft
+    W = sin( pi*z_p/z_d );
     MF = rho_p .* W; % Mass flux
     zbar = ( z_p(1:end-1)+z_p(2:end) )/2;
     X = 2*( MF(2:end)-MF(1:end-1) )./( MF(2:end)+MF(1:end-1) ); % Values at zbar
-    X(zbar>7e3 | ~(X>0)) = 0;
+    X(zbar>z_d/2 | ~(X>0)) = 0;
 %     X = X + eps_tur*( z_p(2:end)-z_p(1:end-1) ); % Adding turbulent entrainment (eps_tur in 1/m)
     X(X>1) = 1;
   else
@@ -18,17 +20,18 @@ global qc_cap eps_tur
   end
 
   %% Average over lowest 500-m for initial parcel
-  theta_e_i = mean( interp1(z_p,theta_e_p,[0:5:500]) );
-  qt_i = mean( interp1(z_p,q_p,[0:5:500]) );
-  [T_i, q_i, ql_i, qi_i] = inv_T_from_theta_e(theta_e_i, qt_i, p_p(1));
+  % theta_e_i = mean( interp1(z_p,theta_e_p,[0:5:500]) );
+  % qt_i = mean( interp1(z_p,q_p,[0:5:500]) );
+  % [T_i, q_i, ql_i, qi_i] = inv_T_from_theta_e(theta_e_i, qt_i, p_p(1));
 
   %% Initiate with surface values
-% %   theta_e_i = theta_e_p(1);
-% %   T_i = T_p(1);
-% %   q_i = q_p(1);
-% %   qt_i = q_p(1);
-% %   ql_i = 0;
-% %   qi_i = 0;
+  id0 = 1;
+  theta_e_i = theta_e_p(id0);
+  T_i = T_p(id0);
+  q_i = q_p(id0);
+  qt_i = q_p(id0);
+  ql_i = 0;
+  qi_i = 0;
 
   % Allocate
   theta_e = [theta_e_i;zeros(Np-1,1)];

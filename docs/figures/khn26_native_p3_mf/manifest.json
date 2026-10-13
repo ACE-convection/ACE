@@ -1,0 +1,13 @@
+{
+  "singleACE_mf_20min_snapshots.json": "60db4b199febe5bfe0ab8733840a91b704c15df256bf278cdf055253b087f77a",
+  "multiACE_mf_20min_snapshots.pdf": "83f2c79fd6c7a76afb2ea98cb3282f1c27d611c0258db7a15ebdfca4bb51f09c",
+  "multiACE_mf_20min_snapshots.png": "6424cfa53fa4e681edff2a0dfed608db052a9b823cdd62af343e0681767359a1",
+  "p3_configuration.json": "82d775432181cf9db0aff73fd49c801e76363dd1d67edd9921ebb53930f46e36",
+  "multiACE_mf_20min_snapshots.json": "584b9623d0d375554757639618d4980a490b2411935e13bac760272a8ef7e574",
+  "multiACE_native_configuration.json": "aa5909c880109f39ec35204b36bd600e7162ccc02fc8472299135a4a4d1722c0",
+  "singleACE_mf_20min_snapshots.pdf": "05c4a937eae083549552a84395c205720e8f5fa54c25e834974597098f92b496",
+  "singleACE_mf_20min_snapshots.png": "5aee36c84b341aa5d18518cca2a369e2be5e8f69de5711c0b130e65cbd123917",
+  "singleACE_native_configuration.json": "9fe5575b34fd0359b9b04989f96b361e0b78aebb123436c9d916a7bb5cda1e50",
+  "plot_script_sha256": "f1a146586ff5e7bfa7e3f9c67564111b7bb1a02ca164edb6cd7e5a28267025fb",
+  "state_reader_sha256": "1ed5c7931647a291059adbf73423db3b5692db9b290fb89e58901c85008574f0"
+}
