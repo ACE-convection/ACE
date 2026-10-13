@@ -1,4 +1,4 @@
-# MATLAB KHN26 v0.20 development source
+# MATLAB KHN26 v0.20.0 source
 
 `ace.m` now follows the author-selected November 2025 KHN26 driver and its
 paired utilities. The default shared input is
@@ -30,5 +30,7 @@ source preservation, adapter changes and scientific alignment. See
 [shared input](../docs/shared_input.md) for conversion and
 [KHN26 tests](../tests/khn26/README.md) for validated scope. The original
 MATLAB native precipitation formula is preserved, including its known
-high-condensate overflow. Full six-hour, real32 and P3 acceptance remain
-separate work. Use `v0.18.0` for the accepted v0.18 source/tests.
+high-condensate overflow. The developer accepted the documented three-hour GNU real64 comparisons
+for v0.20.0; [release notes](../docs/releases/v0.20.0-notes.md) retain known
+differences. The six-hour defaults remain outside this tested scope, and
+P3 is a Fortran-only feature. Use `v0.18.0` for the accepted v0.18 source/tests.

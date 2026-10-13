@@ -8,6 +8,15 @@ The final release includes the accepted single-precision precipitation work;
 published. The original normalization release commit `2b62c29` remains in
 ancestry. v0.20 preparation is now tracked in the roadmap.
 
+## v0.20.0 acceptance (2026-10-12)
+
+The developer accepted the KHN26 three-hour results and native/P3 differences
+and authorized release and merge into `main`.
+[Release notes](../releases/v0.20.0-notes.md) define the current scope,
+completed evidence and known limitations. Earlier preparation and review
+records remain historical; their pending-release language does not override
+this acceptance.
+
 ## Start here
 
 | Purpose | Authoritative document |

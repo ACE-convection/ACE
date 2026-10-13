@@ -13,22 +13,21 @@ ACE currently has two implementations with different roles:
 
 The two implementations share the same core model formulation, but they are not necessarily identical in all physical parameterizations. A major goal of this repository is to maintain consistency between the shared components of the MATLAB and Fortran implementations and to provide systematic tests for their numerical agreement.
 
-This development branch contains the imported MATLAB S20 and historical
-Fortran v0.20/P3 sources. Source integration and shared NetCDF adapters are
-implemented; input-only readback and Fortran builds are verified. Basis
-confirmation and model validation are deferred. See the
-[v0.20 integration record](docs/migration/v020_source_integration.md) for
-source identities, input contracts and known code findings.
-The [shared input schema](docs/shared_input.md) now includes PMB, PMDv and
-PMD with explicit geometry and dynamic dimensions. The default S20 case
-file still requires the final basis before conversion.
+The accepted `v0.20.0` release contains the author-selected November 2025
+KHN26 MATLAB implementation, aligned Fortran native dynamics and the
+Fortran-only P3 5.3.1 integration. The developer accepted the observed
+three-hour evolution and precipitation differences on 2026-10-12.
+[Release notes](docs/releases/v0.20.0-notes.md) define the tested GNU real64
+scope, known differences and unresolved issues. The dt=6 s, six-hour driver
+defaults are distinct from the tested dt=4 s, +1 K, three-hour cases.
 
-The published `v0.18.0` remains the tested release. The developer accepted
-the MATLAB/Fortran v0.18 alignment on
-2026-10-02 using the Manus singleACE and twelve-hour multiACE comparisons.
-The [v0.18.0 release record](docs/releases/v0.18.0.md) defines the accepted
-scope and retained limitations. Current sources are directly under
-[`matlab/`](matlab/README.md) and [`fortran/`](fortran/README.md).
+Current sources are directly under [`matlab/`](matlab/README.md) and
+[`fortran/`](fortran/README.md). The shared KHN26 NetCDF input supplies the
+101-ACE slab basis; PMDv/PMD are disabled placeholders. Minute precipitation
+accumulation is available through the diagnostic runner, rather than as a
+new production-driver default. P3 requires external lookup data.
+The previous [v0.18.0 release](docs/releases/v0.18.0.md) remains available
+for its accepted Manus and mixed-precision configuration.
 
 Developers running the accepted cases should start with the
 [test instructions](tests/README.md) and [shared-input instructions](docs/shared_input.md).
@@ -63,7 +62,7 @@ former staging paths to the source roots and records historical recovery.
 Migration-only `active/` and `history/` source copies leave the current tree;
 Git preserves their commits, imported ancestry and provenance. The unified
 `v0.18.0` tag identifies both implementations in one normalized repository
-state. Future `v0.20.0` likewise identifies both implementations; MATLAB and
+state. `v0.20.0` likewise identifies both implementations; MATLAB and
 Fortran advance together in one ACE history.
 
 Git commits, branches and tags preserve historical versions after migration-only
@@ -76,11 +75,12 @@ Refactoring and repository restructuring remain separate from scientific changes
 
 ## P3 microphysics
 
-Integration of the **Predicted Particle Properties (P3) microphysics scheme**
-developed by Morrison, Milbrandt, and collaborators is planned for ACE v0.20.
-The published v0.18 Fortran implementation uses native simplified precipitation.
-This development branch imports the historical v0.20 P3 5.3.1 module and
-ACE wrapper; its coupled execution has not yet been validated here.
+The **Predicted Particle Properties (P3) microphysics scheme** developed by
+Morrison, Milbrandt, and collaborators is included in ACE v0.20.0 for Fortran.
+The historical P3 5.3.1 module and ACE wrapper completed the documented
+three-hour cases. Known dry/warm edge-case failures remain unresolved;
+see the release notes for the accepted scope and external lookup dependency.
+The v0.18 Fortran implementation uses native simplified precipitation.
 
 The current upstream P3 source code is maintained separately at the
 [P3-microphysics repository](https://github.com/P3-microphysics/P3-microphysics).

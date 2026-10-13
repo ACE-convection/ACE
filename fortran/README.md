@@ -1,4 +1,9 @@
-# Fortran KHN26 alignment and P3 development source
+# Fortran KHN26 alignment and P3 v0.20.0 source
+
+The developer accepted the documented native/P3 three-hour GNU real64 cases
+for v0.20.0. [Release notes](../docs/releases/v0.20.0-notes.md) list known
+differences, P3 edge-case failures and external-data requirements. Minute
+precipitation accumulation is supplied by the diagnostic runner.
 
 `src/test.F` defaults to `../data/input/manaus1342_khn26.nc`. Shared slab
 cases use dt=6 s, 360 one-minute output intervals and native precipitation.
