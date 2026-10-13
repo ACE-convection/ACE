@@ -10,11 +10,10 @@ character(16) :: physics
 character(1024) :: state_output
 ! P3 prognostics: MF, th, qv, qc, nc, qr, nr, qi, ni, qrim, brim.
 ! Shared theta_e/qt profiles are input metadata, converted once before integration.
-integer :: i,n,t,ncols,nz,ncoarse,ndt,argument,parse_status,record_length,io_status
+integer :: i,t,ncols,nz,ncoarse,ndt,argument,parse_status
 integer :: intervals
 real :: ts,te,dt,start,finish
 type(ace_t) :: model
-real(kind=4), allocatable :: Xout(:,:,:),rh4(:,:),b4(:,:)
 logical :: shared_input
 character(1024) :: input_file,output_file,validation_file,arg,p3_directory
 
@@ -67,8 +66,6 @@ enddo
 
 call model%initialize(shared_input,input_file,p3_directory,n_weno,physics,dt,intervals,intervals_set, &
                       ncols,nz,ncoarse,n_prog,khn26_case,precipitation_enabled)
-allocate(Xout(ncols+1,nz,11))
-allocate(rh4(ncols,nz),b4(ncols,nz))
 
 if (len_trim(validation_file)>0) then
   call model%with_legacy_state(validate_model)
@@ -93,20 +90,15 @@ if (steps>0) then
   stop
 endif
 call cpu_time(start)
-! Retain the historical nine-field real32 output, using compiler-independent record sizing.
-inquire(iolength=record_length) Xout(1:ncols,:,1:3),Xout(1:ncols,:,4),Xout(1:ncols,:,6), &
-                              Xout(1:ncols,:,8),Xout(1:ncols,:,10),rh4,b4
-open(10,file=trim(output_file),access='direct',form='unformatted',status='new',recl=record_length,iostat=io_status)
-if (io_status/=0) error stop 'Cannot open model output; provide an existing output directory'
-n=1
+call model%open_output(output_file)
 do t=1,intervals
-  call write_state()
+  call model%output()
   call model%integrate(te,reset_clock_to_target=.true.)
   if (len_trim(state_output)>0) call model%with_legacy_state(write_saved_state)
   ts=te; te=ts+dt*real(ndt)
 enddo
-call write_state()
-close(10)
+call model%output()
+call model%close_output()
 if (len_trim(state_output)>0) close(state_unit)
 call cpu_time(finish)
 write(*,*) 'time cost =',finish-start
@@ -143,10 +135,4 @@ real(real64), intent(in) :: input_coarse_z(:),input_coarse_ze(:)
 write(state_unit) real(X,real64)
 end subroutine write_saved_state
 
-subroutine write_state()
-call model%diagnose(Xout,rh4,b4)
-write(10,rec=n) Xout(1:ncols,:,1:3),Xout(1:ncols,:,4),Xout(1:ncols,:,6), &
-                 Xout(1:ncols,:,8),Xout(1:ncols,:,10),rh4,b4
-n=n+1
-end subroutine
 end program test

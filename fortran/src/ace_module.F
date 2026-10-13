@@ -34,13 +34,15 @@ type :: ace_diagnostics_t
   real(kind=4), allocatable :: Xout(:,:,:), rh4(:,:), b4(:,:)
 end type ace_diagnostics_t
 
-! OOP-4a: the model also owns observational diagnostic buffers.
+! OOP-4b: the model owns observational diagnostics and normal output records.
 ! Components retain the existing model real kind and layouts.
 type :: ace_t
   private
   type(ace_response_t) :: response
   type(ace_thermal_t) :: thermal
   type(ace_diagnostics_t) :: diagnostics
+  integer :: output_unit, output_record=1
+  logical :: output_open=.false.
   logical :: precipitation_enabled
   integer :: ncols, nz, n_prog, n_weno
   real :: dt, t
@@ -50,6 +52,9 @@ type :: ace_t
   real(real64), allocatable :: input_profile(:,:),diameters(:),input_area(:),input_perimeter(:)
   real(real64), allocatable :: input_coarse_z(:),input_coarse_ze(:),tmp(:)
 contains
+  procedure :: open_output => model_open_output
+  procedure :: output => model_output
+  procedure :: close_output => model_close_output
   procedure :: diagnose => model_diagnose
   procedure :: integrate => model_integrate
   procedure :: initialize => model_initialize
@@ -1471,18 +1476,57 @@ if (present(reset_clock_to_target)) then
 endif
 end subroutine model_integrate
 
-subroutine model_diagnose(self,Xout,rh4,b4)
+! Allocate buffers without calculating diagnostics or touching model state.
+subroutine model_prepare_diagnostics(self)
 class(ace_t), intent(inout) :: self
-! Optional copies serve the existing serializer until OOP-4b. No aliases escape.
-real(kind=4), intent(out), optional :: Xout(:,:,:),rh4(:,:),b4(:,:)
-integer :: i,k
-real :: dum1
 if (.not.allocated(self%diagnostics%Xout)) then
   allocate(self%diagnostics%Xout(self%ncols+1,self%nz,11))
   allocate(self%diagnostics%Tr(self%ncols,self%nz),self%diagnostics%q(self%ncols,self%nz), &
            self%diagnostics%ql(self%ncols,self%nz),self%diagnostics%qi(self%ncols,self%nz), &
            self%diagnostics%rh4(self%ncols,self%nz),self%diagnostics%b4(self%ncols,self%nz))
 endif
+end subroutine model_prepare_diagnostics
+
+subroutine model_open_output(self,filename)
+class(ace_t), intent(inout) :: self
+character(*), intent(in) :: filename
+integer :: record_length,io_status
+if (self%output_open) error stop 'Model output is already open'
+call model_prepare_diagnostics(self)
+! Preserve the nine-field real32 layout and compiler-independent record sizing.
+inquire(iolength=record_length) self%diagnostics%Xout(1:self%ncols,:,1:3),self%diagnostics%Xout(1:self%ncols,:,4), &
+                              self%diagnostics%Xout(1:self%ncols,:,6),self%diagnostics%Xout(1:self%ncols,:,8), &
+                              self%diagnostics%Xout(1:self%ncols,:,10),self%diagnostics%rh4,self%diagnostics%b4
+open(newunit=self%output_unit,file=trim(filename),access='direct',form='unformatted',status='new',recl=record_length,iostat=io_status)
+if (io_status/=0) error stop 'Cannot open model output; provide an existing output directory'
+self%output_record=1
+self%output_open=.true.
+end subroutine model_open_output
+
+subroutine model_output(self)
+class(ace_t), intent(inout) :: self
+if (.not.self%output_open) error stop 'Model output is not open'
+call self%diagnose()
+write(self%output_unit,rec=self%output_record) self%diagnostics%Xout(1:self%ncols,:,1:3),self%diagnostics%Xout(1:self%ncols,:,4), &
+                 self%diagnostics%Xout(1:self%ncols,:,6),self%diagnostics%Xout(1:self%ncols,:,8), &
+                 self%diagnostics%Xout(1:self%ncols,:,10),self%diagnostics%rh4,self%diagnostics%b4
+self%output_record=self%output_record+1
+end subroutine model_output
+
+subroutine model_close_output(self)
+class(ace_t), intent(inout) :: self
+if (.not.self%output_open) error stop 'Model output is not open'
+close(self%output_unit)
+self%output_open=.false.
+end subroutine model_close_output
+
+subroutine model_diagnose(self,Xout,rh4,b4)
+class(ace_t), intent(inout) :: self
+! Optional diagnostic copies remain available; no aliases escape.
+real(kind=4), intent(out), optional :: Xout(:,:,:),rh4(:,:),b4(:,:)
+integer :: i,k
+real :: dum1
+call model_prepare_diagnostics(self)
 self%diagnostics%Xout=0.
 self%diagnostics%Xout(:,:,1:self%n_prog)=self%X
 do k=1,self%nz

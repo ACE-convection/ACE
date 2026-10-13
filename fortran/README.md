@@ -16,7 +16,17 @@ The interval driver explicitly passes `reset_clock_to_target=.true.` to
 preserve its historical `ts=te` assignment, including fractional-dt rounding;
 standalone calls retain the accumulated clock.
 
-CLI parsing and output scheduling stay in `test.F`. Validation/serialization
+`ace_t%open_output(filename)` opens a fresh direct-access file with a model-owned
+unit and resets its record counter to 1. `ace_t%output()` refreshes diagnostics
+and writes one nine-field real32 record; `ace_t%close_output()` closes the file.
+Call close explicitly before reopening a fresh file; copying a model while
+its output is open is outside the supported lifecycle. Diagnoses alone do not
+advance the output counter. Opening an already open object, writing/closing
+a closed output, and overwriting existing files are rejected. Diagnostic
+buffers allocate on first diagnosis or output opening, without changing
+integrator caches.
+
+CLI parsing and output scheduling stay in `test.F`. Validation and saved-state output
 borrow the private arrays through the synchronous `with_legacy_state` callback;
 integration occurs after callbacks return. Procedural integration/tendency
 must not be invoked inside a model callback: old procedural interfaces use a
@@ -24,8 +34,8 @@ separate legacy thermal cache, with an optional response argument for existing
 test callers. The model uses its own contexts without shared aliases or full
 state/table copies. Damping and P3 wrapper/library state remain process-wide.
 Use one model, initialized once, per fresh process until later lifecycle
-stages are validated. Initialization scratch, integration caches and driver
-diagnostic buffers remain distinct. Internal output callbacks still require
+stages are validated. Initialization scratch, integration caches and model
+diagnostic buffers remain distinct. Validation/saved-state callbacks still require
 an executable stack under the validated GNU toolchain. See the
 [staged OOP plan](../docs/migration/fortran_v020_oop_refactor.md).
 

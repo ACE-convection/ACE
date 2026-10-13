@@ -576,3 +576,23 @@ contracts, nine supplemental gates and four compilation/link variants.
 The numerical diagnostic body differs from the frozen writer only by
 component qualification; removing diagnostic additions recovers the OOP-3b
 module exactly. Existing serialization and cadence remain unchanged.
+
+
+OOP-4b transfers normal-output units, record sizing, counter and the nine-field
+real32 write into `ace_t%open_output(filename)`, `%output()` and
+`%close_output()`. The driver retains cadence and comparison state streams.
+`oop_output_contract.py WORKSPACE` compares 12 repeated/poisoned-buffer records
+at four three-minute checkpoints against the hash-pinned frozen writer, checks
+model/cache/clock preservation, frozen executable state and normal-field
+identity, reopen record reset and six lifecycle/fresh-file failure cases.
+The existing diagnostic, integration, initialization and compilation gates
+continue to apply. Damping/P3 still require one initialized model per process.
+
+[OOP-4b results](oop_stage4b_results.json) record 195 bitwise-identical frozen
+artifacts, 165 observation layouts, 18 valid state streams, three output and
+three diagnostic contracts, integration clock/cache/fractional-dt contracts,
+nine supplemental gates and four compilation/link variants. Each output
+contract verifies 12 records, four frozen checkpoint fields, model/cache
+neutrality and reopen reset; six error cases preserve the fresh-file policy.
+Exact inverse extraction recovers the OOP-4a module and driver. No tolerance,
+numerical method or scientific parameterization changed.

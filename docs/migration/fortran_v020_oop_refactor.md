@@ -821,3 +821,99 @@ OOP-4a is complete. OOP-4b output ownership is the next separate approval
 boundary. Damping/P3 state still requires one initialized model per fresh
 process; validation/saved-state callbacks still require the GNU executable
 stack. No commit, push, tag, main merge or reference-history merge was performed.
+
+
+## OOP-4b normal output ownership (2026-10-13)
+
+The developer authorized OOP-4b after OOP-4a commit `a16b22d`.
+`ace_t` now owns the output unit, open flag and next record counter.
+`open_output(filename)` allocates diagnostic buffers without calculating them,
+uses the original nine-field real32 `INQUIRE(IOLENGTH=...)` sizing and opens
+an unformatted direct-access `status='new'` file. `NEWUNIT` replaces fixed
+unit 10; record numbering still starts at 1. `output()` calls `diagnose()`
+once, writes the original ordered field slices and increments the counter
+once. `close_output()` closes the owned unit. Close is explicit; reopening a
+fresh file resets the record counter and retains model/clock/cache state.
+Copying a model with an open output is outside this stage's supported lifecycle.
+Already-open and not-open operations are rejected. Existing-file and missing-
+directory failures retain the driver's original error message.
+
+The shared private buffer allocation helper contains the unchanged allocation
+block from OOP-4a. Diagnosis formulas, kinds, loop order and optional copy
+interface are unchanged. The driver retains CLI parsing, output scheduling,
+initial/interval/final cadence and comparison state-stream writers (including
+the three-integer header, initial reference Tv and binary64 X). It no longer
+owns normal-output arrays, record sizing, file unit or serialization.
+No initialization, integration, response, damping, native or P3 numerical
+statements change. No output header or new field is added to the historical
+nine-field format.
+
+`oop_output_contract.py WORKSPACE` extracts the independent diagnostic/write
+oracle from the hash-pinned frozen OOP-0 driver. An isolated checked helper
+writes three repeated records at each of four checkpoints (0/60/120/180 s),
+poisons diagnostic buffers before each write and intersperses diagnoses that
+must not consume records. It checks full state/clock/thermal-cache/response-
+work preservation around open/write/close, record length/counter, exact
+12-record frozen-writer identity, four checkpoint records and saved state
+streams against the frozen executable, and a single final record in a
+reopened fresh file. Initially undefined scratch is seeded only in the
+isolated helper, as in the previous diagnostic contract. Separate failures
+check unopened output/close, double open, output after close, existing-file
+preservation and missing output directory. Each initialized model runs in a
+fresh none/native/P3 process.
+
+Reproduce in a fresh workspace; frozen baseline files remain read-only:
+
+```bash
+python3 tests/khn26/oop_regression.py NEW_WORKSPACE --candidate-baseline migration_work/fortran_v020_oop_stage0
+python3 tests/khn26/oop_regression.py NEW_WORKSPACE --compile-compatibility
+python3 tests/khn26/oop_regression.py NEW_WORKSPACE --analyze-existing
+python3 tests/khn26/oop_output_contract.py NEW_WORKSPACE
+python3 tests/khn26/oop_diagnose_contract.py NEW_WORKSPACE
+python3 tests/khn26/oop_integration_contract.py NEW_WORKSPACE
+python3 tests/khn26/oop_initialization_contract.py NEW_WORKSPACE
+```
+
+Acceptance workspace: `migration_work/fortran_v020_oop_stage4b`.
+OOP-5a damping, OOP-5b P3 lifecycle and reference-history integration remain
+separate review boundaries. Retain one initialized model per fresh process
+and the GNU executable-stack restriction of validation/saved-state callbacks.
+No automatic commit or next stage is authorized.
+
+### Completed OOP-4b gates (2026-10-13)
+
+All 24 candidate model commands passed. All 195 artifacts match frozen OOP-0
+exactly, including initialization/response tables, nine RK frames, cache and
+physics/damping observations, comparison state streams and normal output.
+Postprocessing passed 165 observation-layout/frame checks and validated 18
+state streams and finite nine-field real32 output. No tolerance was changed.
+
+All three none/native/P3 output contracts passed: 12 records per case match
+the independent frozen writer exactly; four initial/interior/final records
+and three-minute comparison state streams match the hash-pinned frozen
+executable. Poisoned diagnostic buffers refresh exactly, intervening diagnoses
+do not consume records, and model/clock/integrator-cache/response work remains
+byte-identical across open/write/close. Closing and opening a fresh file resets
+the counter and produces exactly one final-state record. Six output lifecycle
+and fresh-file failure cases passed, preserving existing file contents.
+
+All existing diagnosis and integration clock/cache contracts passed, including
+fractional-dt three-minute native state/output replay. All nine supplemental
+initialization/error gates passed. Dry/native 600 s comparisons each retain
+151 bitwise-identical finite saved states with nonnegative qt. Four real32/
+real64 serial/OpenMP uninstrumented compilation/link cases and empty type
+clients passed; numerical runtime acceptance remains GNU real64/OpenMP32.
+
+[Stage-4b results](../../tests/khn26/oop_stage4b_results.json) record source,
+input/compiler/executable hashes, commands, comparisons, frozen oracle and
+isolated-helper provenance. Reversing the output additions and buffer-
+allocation extraction recovers the OOP-4a module exactly. Reversing the driver
+extraction recovers the prior driver exactly, including output cadence and
+comparison state writers. Current source matches the executed acceptance
+snapshot; input/interpolation/third-party P3 source and frozen evidence remain
+unchanged. No long scientific experiment or performance acceptance is claimed.
+
+OOP-4b is complete. OOP-5a damping cache ownership is the next separate review
+boundary. Damping/P3 still requires one initialized model per fresh process;
+validation/saved-state callbacks retain the GNU executable-stack restriction.
+No commit, push, tag, main merge or reference-history merge was performed.
