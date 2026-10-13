@@ -470,3 +470,27 @@ build checks and limitations. The raw workspace is
 `migration_work/fortran_v020_oop_stage2`; the frozen OOP-0 workspace remains
 unchanged. Current production source matches the executed candidate snapshot.
 OOP-2 is complete; OOP-3a awaits a separate instruction.
+
+## Final reference-history integration decision (2026-10-13)
+
+The developer selected preservation of the OOP reference branch's Git history
+after the staged OOP work and its validation. Historical Fortran v0.20
+`88e4af5892ec2b93f6bde65fbc11c506276e420f` is already an ancestor of this
+branch, joined as the second parent of `d9e8401`. The later reference tip
+`b3f922e48e238581a85d31469bafcb800569a748` exists in the local object store
+but is not yet an ancestor; it adds 13 reachable commits beyond `88e4af5`.
+
+Keep this history integration separate from OOP implementation stages and
+scientific feature ports. At final integration, preserve the reference tip
+and its ancestors as a merge parent while retaining the validated ACE tree,
+following the earlier history-only `ours` merge approach. Record the pinned
+reference, omitted source changes and tree identity explicitly; ancestry
+preservation does not claim that every reference algorithm was ported or is
+scientifically equivalent. Verify the reference tip is then an ancestor and
+that the integration commit's tree matches its ACE first parent's tree.
+No source replacement, history rewrite, push or main merge is implied.
+
+The separate `ACE_FORTRAN` checkout currently has local modifications to
+`makefile` and `src/test.F`; they are outside the committed reference history
+and must remain untouched. They are not included by this decision. The final
+history merge has not been executed during this inspection.
