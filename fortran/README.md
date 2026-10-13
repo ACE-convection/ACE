@@ -32,9 +32,14 @@ integration occurs after callbacks return. Procedural integration/tendency
 must not be invoked inside a model callback: old procedural interfaces use a
 separate legacy thermal cache, with an optional response argument for existing
 test callers. The model uses its own contexts without shared aliases or full
-state/table copies. Damping and P3 wrapper/library state remain process-wide.
-Use one model, initialized once, per fresh process until later lifecycle
-stages are validated. Initialization scratch, integration caches and model
+state/table copies. Damping first-use flag/values now belong to the model; its cache is built
+at the first end-of-step damping call and reused without changing expressions.
+Sequential native objects are checked against fresh-process references,
+including different dt/grid. Initialize each object once and keep its dt/grid
+fixed. Concurrent integration and mixed P3/native independence are outside the
+validated lifecycle. P3 wrapper/library and lookup state remain process-wide;
+use one P3 model per fresh process pending OOP-5b. Public procedural calls
+retain a separate singleton damping cache and their prior first-use behavior. Initialization scratch, integration caches and model
 diagnostic buffers remain distinct. Validation/saved-state callbacks still require
 an executable stack under the validated GNU toolchain. See the
 [staged OOP plan](../docs/migration/fortran_v020_oop_refactor.md).

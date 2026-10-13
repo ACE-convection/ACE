@@ -110,6 +110,8 @@ call self%close_output()
 call oop_output_snapshot(self,after)
 end subroutine oop_check_output
 '''
+    if "type :: ace_damping_t" in module:
+        helper = helper.replace("write(unit) self%X,self%Ref,self%A,self%B,self%forcing,self%Tv0,self%t,self%dt", "write(unit) self%damping%first,allocated(self%damping%damp)\nif (allocated(self%damping%damp)) write(unit) self%damping%damp\nwrite(unit) self%X,self%Ref,self%A,self%B,self%forcing,self%Tv0,self%t,self%dt", 1)
     module = replace_once(module, 'end module ace_module', helper + '\nend module ace_module')
     (dest / 'ace_module_contract.F').write_text(module)
     driver = '''program contract

@@ -69,6 +69,8 @@ end subroutine
         (9, 'if (first) then\n  allocate(damp(nz))', 'end subroutine ImDamp'),
         (10, 'yi = X\n\ndo while', '\n\ncontains\nsubroutine apply_native_precipitation()'),
         (11, 'allocate(packed_pmb(', 'call move_alloc(packed_pmb,PMB)')]:
+        if slot == 9 and "type :: ace_damping_t" in source:
+            start = start.replace("first", "damping%first").replace("damp(nz)", "damping%damp(nz)")
         if contextual:
             start, end = response_code(start), response_code(end)
             end = end.replace("end subroutine ace_initialization", "end subroutine ace_initialization_context").replace("end subroutine ace_tendency", "end subroutine ace_tendency_context")

@@ -917,3 +917,127 @@ OOP-4b is complete. OOP-5a damping cache ownership is the next separate review
 boundary. Damping/P3 still requires one initialized model per fresh process;
 validation/saved-state callbacks retain the GNU executable-stack restriction.
 No commit, push, tag, main merge or reference-history merge was performed.
+
+
+## OOP-5a model-owned damping cache (2026-10-13)
+
+The developer authorized OOP-5a after OOP-4b commit `bf8de1a`. A private
+`ace_damping_t` holds the original model-kind allocatable `damp(:)` and
+`first=.true.` flag. Each `ace_t` owns one context; the private integration
+and `ImDamp` interfaces receive it explicitly. The public procedural
+`ace_driver` retains its signature and uses separate saved `legacy_damping`
+storage, with its historical single-context first-use semantics.
+
+`initialize`, `diagnose`, output opening/writing and no-op integration do not
+build the damping cache. The first actual end-of-step damping call allocates
+it and evaluates the unchanged dt/Ref/grid expression; subsequent calls reuse
+it. Constants, expression grouping, k/i/n loop order, prognostic/environment
+slices and placement after physics remain unchanged. The existing explicit
+`Ref(nz,7)` dummy, versus eight-column integration Ref, is retained; this stage
+does not repair that pre-existing interface risk. It currently reads columns
+1..3, and checked builds and an independent frozen oracle exercise the same
+actual/dummy layout. Reinitializing an existing object or changing dt/grid
+in place remains outside the supported lifecycle.
+
+`oop_damping_contract.py WORKSPACE` extracts its oracle verbatim from the
+hash-pinned OOP-0 module. Removing context qualification and restoring the
+local SAVE declarations must recover the frozen ImDamp exactly. Synthetic
+17/29-level, 2/3-ACE contexts with different references and dt=3/5 each perform
+five first/subsequent damping calls. Alternating instance states/cache values
+must match separate fresh-process oracle runs exactly.
+
+Three two-object native contracts use the full pinned shared input with equal
+dt=4, full grids with dt=4/3, and full/cropped grids with dt=4/3. A integrates
+once before B initializes; both caches remain live while A and then B continue
+to five steps. Both streams must match their own fresh-process frozen
+executable references. Assertions check first-use timing, cache preservation,
+idle-object state, diagnoses/output/no-op neutrality and unused legacy caches.
+The cropped fixture preserves the first 201 fine/100 coarse levels, all 101
+ACEs, existing profiles, geometry and sliced response operators. Its derivation
+and SHA-256 are recorded. It is a test-only lifecycle fixture, not an accepted
+scientific case or a claim that cropping preserves response physics.
+
+The observational regression runner keeps original labels/frame shapes and
+now observes explicit damping context values and rejects any model use of
+legacy damping. Existing diagnose/output snapshot contracts include damping
+allocation flags/cache; integration no-op snapshots also include them. The
+current-source profiler adapter adjusts only its damping anchor; historical
+stage-budget code remains pinned to preserved sources and is unchanged.
+
+Reproduce in a fresh workspace, preserving frozen baseline files:
+
+```bash
+python3 tests/khn26/oop_regression.py NEW_WORKSPACE --candidate-baseline migration_work/fortran_v020_oop_stage0
+python3 tests/khn26/oop_regression.py NEW_WORKSPACE --compile-compatibility
+python3 tests/khn26/oop_regression.py NEW_WORKSPACE --analyze-existing
+python3 tests/khn26/oop_damping_contract.py NEW_WORKSPACE
+python3 tests/khn26/oop_diagnose_contract.py NEW_WORKSPACE
+python3 tests/khn26/oop_integration_contract.py NEW_WORKSPACE
+python3 tests/khn26/oop_output_contract.py NEW_WORKSPACE
+python3 tests/khn26/oop_initialization_contract.py NEW_WORKSPACE
+```
+
+Acceptance workspace: `migration_work/fortran_v020_oop_stage5a`.
+Native sequential-object support is limited to the exercised lifecycle; do
+not claim concurrent integration, object reinitialization or mixed P3/native
+independence. P3 wrapper/library state and lookup selection remain process-
+wide pending OOP-5b; retain one P3 model per fresh process. Validation/saved-
+state callbacks still require the GNU executable stack. No automatic commit,
+next stage, main merge or reference-history merge is authorized.
+
+### Completed OOP-5a gates (2026-10-13)
+
+All 24 candidate model commands passed; all 195 artifacts match frozen OOP-0
+exactly. Postprocessing passed 165 observation-layout/frame checks and validated
+18 state streams and finite nine-field output. Raw damping arrays and pre/post-
+damping states preserve the original first and subsequent timestep bytes. No
+tolerance was changed. Observed model paths leave all legacy response, thermal
+and damping storage unused, with legacy damping first-use flag still true.
+
+Both independent synthetic frozen damping oracles passed five calls each,
+including different array shapes, height/density references and dt. All three
+two-native-instance cases passed (same configuration, different dt, different
+grid/dt); both five-step trajectories, stream headers, initial reference Tv
+and saved states match their own hash-verified fresh-process frozen references.
+First-use timing, idle instance state and retained cache assertions passed.
+
+All existing diagnosis, integration and output contracts passed with damping
+flags/allocation/cache included in their observational/no-op snapshots. This
+includes fractional-dt three-minute native state/output replay and none/native/
+P3 output contracts with six lifecycle/fresh-file error cases. All nine
+supplemental initialization/error gates passed; dry/native 600 s each retain
+151 bitwise-identical finite saved states with nonnegative qt. Four real32/
+real64 serial/OpenMP uninstrumented compilation/link cases and empty clients
+passed. Current/previous profiler adapter anchors and compilation passed;
+no performance/model profiling run is claimed. Numerical runtime acceptance
+remains GNU real64/OpenMP32.
+
+The initial cropped-fixture attempt used NetCDF default chunks [34,34,34,34],
+which repeatedly decompressed multiple ACEs for the existing reader. Its fresh
+cropped baseline was interrupted with SIGINT; artifacts and attempt status are
+preserved in `damping_contract`. The completed damping contract uses separate
+`damping_contract_aligned` artifacts and [1,1,100,101] chunks aligned to response/
+forcing ACE reads. An independent audit confirms every decoded variable bit,
+all attributes and dimensions are identical between the two fixture layouts.
+Only the test fixture storage layout changed; the original input and model
+reader remain unchanged. Fresh-workspace reproduction uses the repaired layout
+by default; `--contract-directory damping_contract_aligned` preserves the
+original attempt in this acceptance workspace.
+
+[Stage-5a results](../../tests/khn26/oop_stage5a_results.json) record source,
+input/compiler/executable/runner hashes, commands, comparisons, frozen oracle,
+fixture derivation/layout audit and isolated helper provenance. Reversing the
+damping context/type/qualification changes recovers the OOP-4b module exactly;
+the driver, input, interpolation and third-party P3 sources remain identical.
+Current source matches the executed snapshot; frozen baseline and prior-stage
+evidence remain intact. No long scientific experiment or performance
+acceptance is claimed.
+
+OOP-5a is complete. Native sequential-object isolation is validated for the
+exercised fixed-configuration lifecycle, with each object initialized once.
+Concurrent, reinitialized, copied-live-output and mixed P3/native lifecycle
+support is not claimed. Public procedural damping remains singleton. OOP-5b
+P3 wrapper/library lifecycle is the next separate review boundary; retain one
+P3 model per fresh process. Validation/saved-state callbacks still require
+the GNU executable stack. No commit, push, tag, main merge or reference-history
+merge was performed.

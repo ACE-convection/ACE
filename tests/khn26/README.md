@@ -596,3 +596,29 @@ contract verifies 12 records, four frozen checkpoint fields, model/cache
 neutrality and reopen reset; six error cases preserve the fresh-file policy.
 Exact inverse extraction recovers the OOP-4a module and driver. No tolerance,
 numerical method or scientific parameterization changed.
+
+
+OOP-5a adds private model-owned damping first-use flag/values and separate
+legacy procedural storage. `oop_damping_contract.py WORKSPACE` compares five
+first/subsequent calls on two synthetic shapes/grids/dt against fresh-process
+frozen ImDamp oracles. Three two-native-object tests (same configuration,
+different dt, and different grid/dt) compare both five-step trajectories with
+fresh frozen executable references. The cropped 201-level fixture is solely
+for lifecycle testing; its parent/derivation/hash are recorded and no physical
+acceptance is claimed. Existing diagnostic/output neutrality and integration
+no-op cache gates include damping flag/allocation/value snapshots. Native
+sequential-object support does not certify concurrent, reinitialized or mixed
+P3/native objects; P3 still requires one instance per fresh process.
+
+[OOP-5a results](oop_stage5a_results.json) record 195 bitwise-identical frozen
+artifacts, 165 observation layouts, 18 valid state streams, two independent
+five-call damping oracles and three two-native-object/fresh-reference cases.
+All existing diagnosis/integration/output contracts, nine supplemental gates,
+four compilation/link variants and current/previous profiler adapter compile
+checks pass. Snapshot contracts include damping first/allocation/cache state.
+The cropped fixture uses response/forcing ACE aligned chunks; its initial
+slow default-chunk attempt is preserved separately, and every decoded variable
+bit/attribute is audited identical after the layout repair. Numerical source
+statements and tolerances are unchanged; no performance or long scientific
+acceptance is claimed. See the OOP plan for validated native lifecycle limits
+and the remaining single-P3-instance restriction.

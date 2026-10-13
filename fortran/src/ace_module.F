@@ -27,6 +27,13 @@ type :: ace_thermal_t
   real, allocatable :: reference_tv(:), Ta(:,:), q(:,:), ql(:,:), qi(:,:)
 end type ace_thermal_t
 
+! First-use damping cache retains the original kind, expression and timing.
+type :: ace_damping_t
+  private
+  real, allocatable :: damp(:)
+  logical :: first=.true.
+end type ace_damping_t
+
 ! Observational diagnostics are separate from initialization and RK caches.
 type :: ace_diagnostics_t
   private
@@ -40,6 +47,7 @@ type :: ace_t
   private
   type(ace_response_t) :: response
   type(ace_thermal_t) :: thermal
+  type(ace_damping_t) :: damping
   type(ace_diagnostics_t) :: diagnostics
   integer :: output_unit, output_record=1
   logical :: output_open=.false.
@@ -77,6 +85,7 @@ real, parameter :: tau_pr = 5*60 ! sec; relaxation timescale for precip
 ! Compatibility storage for the old procedural interfaces; never used by ace_t.
 type(ace_response_t), save :: legacy_response
 type(ace_thermal_t), save :: legacy_thermal
+type(ace_damping_t), save :: legacy_damping
 character(1024), save :: p3_lookup_directory="./input_data/"
 
 contains
@@ -96,17 +105,18 @@ logical, intent(in), optional :: precipitation_input
 type(ace_response_t), intent(inout), optional :: response
 ! Procedural callers use the legacy thermal cache and optional response context.
 if (present(response)) then
-  call ace_driver_context(response,legacy_thermal,ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input)
+  call ace_driver_context(response,legacy_thermal,legacy_damping,ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input)
 else
-  call ace_driver_context(legacy_response,legacy_thermal,ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input)
+  call ace_driver_context(legacy_response,legacy_thermal,legacy_damping,ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input)
 endif
 end subroutine ace_driver
 
 
-subroutine ace_driver_context(response,thermal,ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input)
+subroutine ace_driver_context(response,thermal,damping,ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input)
 implicit none
 type(ace_response_t), intent(inout) :: response
 type(ace_thermal_t), intent(inout) :: thermal
+type(ace_damping_t), intent(inout) :: damping
 
 ! input/output variables
 integer, intent(in) :: ncols,nz,n_weno,n_prog
@@ -204,7 +214,7 @@ do while ( t < te)
   enddo
 
   ! implicit damping 
-  call ImDamp(ncols,nz,n_prog,X,Ref,dt)
+  call ImDamp(damping,ncols,nz,n_prog,X,Ref,dt)
 
 
   t = t + dt
@@ -575,8 +585,9 @@ dXdt(:,nz-10:nz,:)=0.
 end subroutine ace_tendency_context
 
  
-subroutine ImDamp(ncols,nz,n_prog,X,Ref,dt)
+subroutine ImDamp(damping,ncols,nz,n_prog,X,Ref,dt)
 implicit none
+type(ace_damping_t), intent(inout) :: damping
 
 ! input/output variables
 integer, intent(in) :: ncols,nz,n_prog
@@ -586,22 +597,20 @@ real, dimension(nz,7), intent(in) :: Ref
 
 ! local variable
 integer :: i,k,n
-real, dimension(:), allocatable, save :: damp
-logical, save :: first = .True.
 
-if (first) then
-  allocate(damp(nz))
+if (damping%first) then
+  allocate(damping%damp(nz))
   do k=1,nz
-    damp(k) = dt * exp( ( Ref(k,3) - Ref(nz,3) ) / SLD ) / SLTau
+    damping%damp(k) = dt * exp( ( Ref(k,3) - Ref(nz,3) ) / SLD ) / SLTau
   enddo
-  first = .False.
+  damping%first = .False.
 endif
 
 do k=1,nz
   do i=1,ncols
-    X(i,k,1) = X(i,k,1) / ( 1. + damp(k) / Ref(k,2) )
+    X(i,k,1) = X(i,k,1) / ( 1. + damping%damp(k) / Ref(k,2) )
     do n=2,n_prog
-      X(i,k,n) = ( X(i,k,n) + damp(k) * X(ncols+1,k,n) / Ref(k,1) ) / ( 1. + damp(k) / Ref(k,1) )
+      X(i,k,n) = ( X(i,k,n) + damping%damp(k) * X(ncols+1,k,n) / Ref(k,1) ) / ( 1. + damping%damp(k) / Ref(k,1) )
     enddo
   enddo
 enddo
@@ -1348,8 +1357,8 @@ integer :: i,k,record_length,io_status
 real :: dz,dum1
 real(real64) :: input_lx,input_ly,input_dz
 character(64) :: geometry
-! Damping and P3 caches remain process-wide until their lifecycle stages.
-! As before, initialize one model once in a fresh process.
+! Each object is initialized once; its damping cache is built on first use.
+! P3 wrapper/library caches remain process-wide until OOP-5b.
 if (shared_input) then
   call read_case_metadata(trim(input_file),nz,ncols,ncoarse,geometry)
 else
@@ -1467,7 +1476,7 @@ subroutine model_integrate(self,te,reset_clock_to_target)
 class(ace_t), intent(inout) :: self
 real, intent(in) :: te
 logical, intent(in), optional :: reset_clock_to_target
-call ace_driver_context(self%response,self%thermal,self%ncols,self%nz,self%n_weno,self%n_prog, &
+call ace_driver_context(self%response,self%thermal,self%damping,self%ncols,self%nz,self%n_weno,self%n_prog, &
                         self%X,self%Ref,self%A,self%B,self%t,te,self%dt,self%forcing,self%precipitation_enabled)
 ! Preserve the historical interval driver's explicit ts=te assignment.
 ! Standalone integration retains its full-dt clock, including target overshoot.

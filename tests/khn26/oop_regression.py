@@ -60,6 +60,8 @@ def thermal_code(source, prefix="thermal%"):
 
 
 def candidate_stage(source):
+    if "type :: ace_damping_t" in source:
+        return "OOP-5a"
     if "procedure :: output => model_output" in source:
         return "OOP-4b"
     if "procedure :: diagnose => model_diagnose" in source:
@@ -116,7 +118,10 @@ end subroutine ace_tendency"""
     if contextual:
         tendency_hook = response_code(tendency_hook).replace("end subroutine ace_tendency", "end subroutine ace_tendency_context")
     source = replace_once(source, "end subroutine ace_tendency_context" if contextual else "end subroutine ace_tendency", tendency_hook)
+    damping_owned = "type :: ace_damping_t" in source
     ownership_guard = "if (allocated(legacy_response%PMB)) error stop 'Model used legacy response storage'\n"
+    if damping_owned:
+        ownership_guard += "if (allocated(legacy_damping%damp) .or. .not.legacy_damping%first) error stop 'Model used legacy damping storage'\n"
     if thermal_owned:
         ownership_guard += "if (allocated(legacy_thermal%reference_tv) .or. allocated(legacy_thermal%Ta) .or. &\n" \
                            "    allocated(legacy_thermal%q) .or. allocated(legacy_thermal%ql) .or. &\n" \
@@ -130,13 +135,14 @@ end subroutine ace_tendency"""
                               ownership_guard + "! Synchronous bridge to the unchanged procedural integration/output path.")
     source = replace_once(source, "  ! call physics here", "  call oop_dump('before_physics',X)\n  ! call physics here")
     source = replace_once(source, "  ! implicit damping ", "  call oop_dump('after_physics',X)\n  ! implicit damping ")
-    source = replace_once(source, "  call ImDamp(ncols,nz,n_prog,X,Ref,dt)",
-                          "  call ImDamp(ncols,nz,n_prog,X,Ref,dt)\n  call oop_dump('after_damping',X)")
+    damping_call = "  call ImDamp(damping,ncols,nz,n_prog,X,Ref,dt)" if damping_owned else "  call ImDamp(ncols,nz,n_prog,X,Ref,dt)"
+    source = replace_once(source, damping_call, damping_call + "\n  call oop_dump('after_damping',X)")
     sink_end = "end subroutine precip_sinks_context" if thermal_owned else "end subroutine precip_sinks"
     source = replace_once(source, sink_end,
                           "call oop_dump('native_sinks',dXdt)\n" + sink_end)
+    damping_values = "damping%damp" if damping_owned else "damp"
     source = replace_once(source, "end subroutine ImDamp",
-                          "call oop_dump('damp',damp)\nend subroutine ImDamp")
+                          "call oop_dump('damp'," + damping_values + ")\nend subroutine ImDamp")
     source = replace_once(source, "itt = itt + 1", """
 call oop_dump('p3_liquid_flux',precip_liq)
 call oop_dump('p3_solid_flux',precip_sol)

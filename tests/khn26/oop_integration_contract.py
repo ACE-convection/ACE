@@ -66,6 +66,10 @@ if (allocated(legacy_response%PMB) .or. allocated(legacy_thermal%Ta) .or. &
     allocated(legacy_thermal%reference_tv)) error stop 'Object used legacy storage'
 end subroutine oop_check_integrate
 '''
+    damping_owned = "type :: ace_damping_t" in module
+    if damping_owned:
+        cache_write = "write(cache_unit) self%thermal%reference_tv,self%thermal%Ta,self%thermal%q,self%thermal%ql,self%thermal%qi"
+        helper = helper.replace(cache_write, cache_write + "\nwrite(cache_unit) self%damping%first,self%damping%damp")
     module = replace_once(module, 'end module ace_module', helper + '\nend module ace_module')
     (dest / 'ace_module_contract.F').write_text(module)
     driver = '''program contract
@@ -126,6 +130,7 @@ end program contract
         assert a[initial:initial+size]==a[initial+size:initial+2*size]==b[initial:initial+size]
         assert a[initial+2*size:]==b[initial+size:]
         caches=(candidate/'caches.bin').read_bytes();half=(z+4*n*z)*8
+        if damping_owned: half += 4+z*8
         assert len(caches)==2*half and caches[:half]==caches[half:]
         report['checks'][physics]={'clock_assertions_passed':True,'full_dt_overshoot_preserved':True,
                                   'no_op_state_and_cache_bitwise_unchanged':True,'explicit_reset_and_five_steps_match_frozen_baseline':True,
