@@ -22,6 +22,11 @@ PRECIP_FILE='precip_accumulation.bin'
 PRECIP_INTERVAL=60
 PRECIP_FIELDS=['time_seconds','minute_native_total_or_liquid_mm','minute_solid_mm',
                'cumulative_native_total_or_liquid_mm','cumulative_solid_mm']
+MATLAB_THREAD_ENV=['OMP_NUM_THREADS','OMP_THREAD_LIMIT','OMP_DYNAMIC','OMP_MAX_ACTIVE_LEVELS',
+    'OMP_PROC_BIND','OMP_PLACES','OMP_SCHEDULE','MKL_NUM_THREADS','MKL_DYNAMIC',
+    'OPENBLAS_NUM_THREADS','GOTO_NUM_THREADS','BLIS_NUM_THREADS','VECLIB_MAXIMUM_THREADS',
+    'GOMP_CPU_AFFINITY','KMP_AFFINITY','KMP_HW_SUBSET','MATLAB_NUM_THREADS',
+    'MATLAB_MAX_NUM_THREADS','MW_NUM_CPUS','MW_NUM_THREADS']
 
 
 def write(path,value):
@@ -116,9 +121,10 @@ def read_minute_precip(path,ncols=101,duration=10800):
     return minute_liquid+minute_solid,cumulative_liquid+cumulative_solid
 
 
-def prepare(work):
+def prepare(work,cases='all'):
     native_paths=dict(singleACE=ROOT/'migration_work/khn26_single_matlab_default_fortran32_3h',
                       multiACE=ROOT/'migration_work/khn26_multi_weno_three_hour')
+    if cases!='all':native_paths={cases:native_paths[cases]}
     p3base=ROOT/'migration_work/khn26_p3_three_hour'
     p3cfg=json.loads((p3base/'configuration.json').read_text())
     work.mkdir(parents=True,exist_ok=False)
@@ -171,6 +177,18 @@ def prepare(work):
                         if sha(file)!=cfg['sha256'][str(file)]: raise ValueError('Recorded native source changed')
                         originals[name]=file.read_bytes()
                 for name,data in originals.items(): (src/name).write_bytes(data)
+                if language=='p3':
+                    driver=(src/'test.F').read_text()
+                    driver=replace(driver,'use ace_module\n','use ace_module\nuse omp_lib, only: omp_get_max_threads,omp_get_num_threads\n')
+                    driver=replace(driver,'shared_input=.true.','''if (omp_get_max_threads()/=32) error stop 'Expected OpenMP cap 32'
+!$omp parallel
+!$omp single
+write(*,*) 'ACE_PRECIP_OPENMP_TEAM',omp_get_num_threads()
+if (omp_get_num_threads()/=32) error stop 'Expected OpenMP team 32'
+!$omp end single
+!$omp end parallel
+shared_input=.true.''')
+                    (src/'test.F').write_text(driver)
                 original=(src/'ace_module.F').read_text(); source=patch_module(original)
                 (src/'ace_module.F').write_text(source)
                 (job/'diagnostic.patch').write_text(''.join(difflib.unified_diff(original.splitlines(True),source.splitlines(True),fromfile='reference',tofile='diagnostic')))
@@ -193,6 +211,9 @@ def prepare(work):
             print('Prepared '+job.name,flush=True)
     write(work/'configuration.json',dict(input=p3cfg['case']['input'],input_sha256=p3cfg['case']['input_sha256'],
         duration_seconds=10800,dt_seconds=4,expected_steps=2700,jobs=jobs,runner_sha256=sha(Path(__file__)),
+        cases=list(native_paths),thread_policy={'matlab':'platform_default','fortran':32,'p3':32},
+        matlab_removed_thread_environment=MATLAB_THREAD_ENV,cpu_binding='No taskset or explicit affinity',
+        plot_output=str(ROOT/'docs/figures'/('khn26_multi_precipitation_3h' if cases=='multiACE' else 'khn26_precipitation_3h')),
         precipitation_output_version=1,precipitation_output_interval_seconds=PRECIP_INTERVAL,
         precipitation_output_file=PRECIP_FILE,precipitation_record_fields=PRECIP_FIELDS,
         expected_precipitation_records=181,precipitation_amount_units='mm water equivalent',
@@ -234,7 +255,7 @@ def plot(work,out):
     out.mkdir(parents=True,exist_ok=True)
     labels={'matlab':'MATLAB','fortran':'Fortran','p3':'Fortran P3'}
     colors={'matlab':'#1f77b4','fortran':'#ff7f0e','p3':'#2ca02c'}
-    for case in ('singleACE','multiACE'):
+    for case in dict.fromkeys(job['case'] for job in cfg['jobs']):
         for scope in ('ACE1','area_mean'):
             fig,axes=plt.subplots(2,1,figsize=(11,8),sharex=True,layout='constrained')
             for language in ('matlab','fortran','p3'):
@@ -270,8 +291,7 @@ def supervise(work):
         for job in cfg['jobs']:
             root=work/job['name'];env=dict(os.environ)
             if job['language']=='matlab':
-                for key in ('OMP_NUM_THREADS','OMP_THREAD_LIMIT','OMP_DYNAMIC','OMP_PLACES','OMP_PROC_BIND','GOMP_CPU_AFFINITY',
-                    'MKL_NUM_THREADS','MKL_DYNAMIC','OPENBLAS_NUM_THREADS','GOTO_NUM_THREADS','BLIS_NUM_THREADS','MATLAB_NUM_THREADS','MATLAB_MAX_NUM_THREADS'):
+                for key in MATLAB_THREAD_ENV:
                     env.pop(key,None)
                 env['MATLAB_PREFDIR']=str(root/'matlab_prefs');Path(env['MATLAB_PREFDIR']).mkdir()
             else:
@@ -280,7 +300,11 @@ def supervise(work):
             log=(root/'full/run.log').open('x')
             process=subprocess.Popen(job['command'],cwd=root/'full',env=env,stdout=log,stderr=subprocess.STDOUT,
                 stdin=subprocess.DEVNULL,start_new_session=True)
-            children.append((job,process,log));write(root/'launch.json',dict(pid=process.pid,command=job['command']))
+            children.append((job,process,log));write(root/'launch.json',dict(pid=process.pid,command=job['command'],
+                started_utc=datetime.now(timezone.utc).isoformat(),
+                threads='platform_default' if job['language']=='matlab' else 32,
+                thread_environment={key:env[key] for key in MATLAB_THREAD_ENV if key in env},
+                inherited_allowed_cpus=sorted(os.sched_getaffinity(0))))
         while True:
             statuses={}
             for job,p,log in children:
@@ -295,7 +319,7 @@ def supervise(work):
             log.close()
             if sha(work/job['name']/'full'/job['output_state'])!=job['reference_sha256']:
                 raise ValueError('Saved-state reproduction failed: '+job['name'])
-        out=ROOT/'docs/figures/khn26_precipitation_3h'
+        out=Path(cfg.get('plot_output',ROOT/'docs/figures/khn26_precipitation_3h'))
         plot(work,out)
         write(work/'status.json',dict(state='completed',output=str(out),exact_saved_state_reproduction_all=True,
             updated_utc=datetime.now(timezone.utc).isoformat()))
@@ -321,8 +345,9 @@ if __name__=='__main__':
     actions=parser.add_mutually_exclusive_group(required=True)
     for action in ('prepare','launch','supervise','plot'):actions.add_argument('--'+action,action='store_true')
     parser.add_argument('--output',type=Path,default=ROOT/'docs/figures/khn26_precipitation_3h')
+    parser.add_argument('--cases',choices=('all','singleACE','multiACE'),default='all',help='Cases to include during preparation')
     args=parser.parse_args();work=args.work.resolve()
-    if args.prepare:prepare(work)
+    if args.prepare:prepare(work,args.cases)
     elif args.launch:launch(work)
     elif args.supervise:supervise(work)
     else:plot(work,args.output.resolve())

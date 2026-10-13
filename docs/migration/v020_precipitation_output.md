@@ -66,6 +66,42 @@ rejects that legacy layout. Any later authorized experiment needs a fresh
 workspace prepared with the new format; preparation and launch are separate
 explicit commands.
 
+## Authorized multiACE-only background launch
+
+The developer subsequently authorized only multiACE MATLAB native,
+Fortran native and Fortran P3, starting together for three hours.
+The fresh workspace is `migration_work/khn26_multi_precipitation_three_hour`;
+all three launched at 2026-10-12 10:49:22 UTC. Supervisor PID at launch:
+3673749; model PIDs: MATLAB 3673775, Fortran native 3673776, P3 3673778.
+These identify the launch, not completed results.
+
+MATLAB has no imposed thread setting, thread-control environment variables
+or CPU binding; its startup query reports the platform default of 80
+computational threads. Both Fortran builds use real64 OpenMP, request and
+cap 32 threads with dynamic teams disabled, and assert team size 32 at
+startup. The P3 assertion only adds thread evidence to the isolated driver.
+No singleACE job is prepared or launched by this configuration. The minute
+accumulators and reader are unchanged from the validated output change.
+Host process inspection after launch confirmed all three models and the
+supervisor alive, with 32 threads in each Fortran process. MATLAB's queried
+80 computational threads are distinct from its auxiliary/runtime threads.
+
+```bash
+python3 tests/khn26/precip_timeseries.py NEW_WORKSPACE --prepare --cases multiACE
+python3 tests/khn26/precip_timeseries.py NEW_WORKSPACE --launch
+```
+
+The supervisor records progress in `status.json`. After all three complete,
+it checks saved-state reproduction and precipitation records, then writes
+ACE-1 and domain-area-mean three-line plots to
+`docs/figures/khn26_multi_precipitation_3h`. All three subsequently completed by 2026-10-12 12:30:19 UTC. Each has
+181 precipitation records, and its saved-state stream is byte-identical to
+its own previous reference. [Results](../figures/khn26_multi_precipitation_3h/results.json)
+and the ACE-1/domain-area-mean PNG/PDF curves are now preserved. The developer
+reviewed these curves and accepted their differences for
+[v0.20.0](../releases/v0.20.0-notes.md). Production sources remain unchanged;
+minute precipitation output is still an isolated diagnostic-runner feature.
+
 ## Focused validation
 
 [Output checks](../../tests/khn26/check_precip_output.py) exercise the actual
