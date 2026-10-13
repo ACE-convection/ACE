@@ -370,3 +370,103 @@ artifact/executable hashes and tool provenance. The full candidate workspace
 is `migration_work/fortran_v020_oop_stage1`; the stage-0 workspace is unchanged.
 The developer clarified that OOP-1 should be committed after completion;
 OOP-2 still awaits a separate instruction.
+
+## OOP-2 initialization ownership (2026-10-12)
+
+The developer authorized OOP-2 after OOP-1 commit `88151b0`.
+`ace_t%initialize` now contains the original metadata/default resolution,
+shared/legacy profile and geometry reads, allocation/conversion, environment
+reconstruction, KHN26 bubble or legacy MF initialization, P3 directory setter
+and response initialization in their original statement order. CLI parsing
+and existing error strings/options remain in their original layers.
+
+The object owns X/Ref/A/B/forcing, Tv0, initial fine/coarse grids, input
+binary64 arrays, retained profile conversion arrays and initialization-only
+Tr/q/ql/qi scratch. No input adapter, interpolation formula, PMB packing,
+RK expression, physics call or third-party P3 source is changed. Removing
+`self%` qualification and the separate output-buffer allocations reproduces
+the original initialization statements exactly. This textual audit is a
+supplement to numerical comparisons, not scientific equivalence evidence.
+
+`test.F` calls `model%initialize` then `model%with_legacy_state(run_model)`.
+The temporary synchronous callback exposes assumed-shape arguments to the
+existing procedural integration and serialization code without pointer
+aliases or an explicit copy of the live state. Ref/A/B/Tv0 and input coarse
+grids are read-only callback arguments; X/forcing retain their original
+mutable use. `write_state` takes X/Ref/Tv0 as explicit read-only arguments.
+The callback is a transitional public bridge, not `integrate` or `output`.
+GNU linking reports an executable-stack requirement for the internal
+procedure callback in `test.F`; compatibility on hosts forbidding that
+mechanism is not established. Later integration/output methods should
+remove the bridge rather than retain this compiler-dependent mechanism.
+
+Driver dimensions/options and integration time still drive the procedural
+path. The object's dt/t fields record initialization only; they are not a
+claim of model-owned integration time. Response context, reference_tv,
+Ta/q/ql/qi integration caches, damping SAVE variables, wrapper clocks and
+P3 library globals remain module/process state. Initialization scratch and
+driver diagnostic arrays are separate from those integration caches. Keep
+one model initialized once in a fresh process; reinitialization and multiple
+independent objects are not supported or validated at this stage. Retained
+input/profile arrays are not prematurely deallocated.
+
+KHN26 single/multi and P3 smoke experiment adapters now alter the bubble/MF
+at its owning initialization site in `ace_module.F`, preserving the original
+experiment expressions and source patches. Probe/profiler helper insertion
+uses the module `contains` boundary rather than the newly added type-bound
+procedure boundary. These adapter changes introduce no production experiment
+configuration options.
+
+Reproduce with pinned stage-0 artifacts, input, compiler and lookup data:
+
+```bash
+python3 tests/khn26/oop_regression.py NEW_WORKSPACE --candidate-baseline migration_work/fortran_v020_oop_stage0
+python3 tests/khn26/oop_regression.py NEW_WORKSPACE --compile-compatibility
+python3 tests/khn26/oop_regression.py NEW_WORKSPACE --analyze-existing
+python3 tests/khn26/oop_initialization_contract.py NEW_WORKSPACE
+```
+
+The supplemental initialization-contract runner uses the existing frozen
+baseline executable read-only, with all new outputs in the candidate
+workspace. It compares default shared and legacy initialization, an unused
+lookup-directory option, user-visible failure messages, and 150-step dry/native
+state streams. The unused-directory initialization must succeed: the existing
+setter stores the path; P3 table loading occurs later. It does not promise
+that missing tables are checked during initialization. `--resume` verifies
+completed binary-artifact and executable hashes before skipping saved gates.
+OOP-3 and any commit require separate developer instructions.
+
+### Completed OOP-2 gates (2026-10-13)
+
+All 24 candidate model commands passed. Candidate observational neutrality,
+checked/production prefix identity and the frozen OOP-0 comparison all pass;
+all 195 binary artifacts are bitwise identical, including initialization,
+operator tables, raw RK response/tendency/thermal/sink/flux/damping data,
+state streams and normal real32 output. Postprocessing passed 165 observation
+layout/frame checks and validated 18 saved-state streams plus normal output.
+No tolerance was changed and no numerical divergence was found.
+
+Supplemental gates passed default shared and original legacy initialization,
+initialization with an unused lookup directory, four user-visible error
+contracts, and 150-step (600 s, dt=4 s, +0.25 K) dry/native trajectories.
+Both 151-state candidate streams match the frozen executable exactly and
+remain finite with nonnegative qt. An initial supplemental test incorrectly
+expected a missing lookup path to fail before P3 table loading; it was
+interrupted, its source/log retained, and the corrected initialization test
+passed. Completed gates were hash-verified on resume. Initial/resumed
+execution sources and later tooling are recorded separately.
+
+All four uninstrumented real32/real64 serial/OpenMP compilation/link cases
+and empty public-type clients passed. SingleACE probe/single-driver builds,
+production/checked multiACE experiment builds and profiler adapter compilation
+also passed. These adapter checks do not certify rerun experiment trajectories.
+Runtime numerical evidence remains GNU real64/OpenMP32; no real32/serial
+runtime, Intel runtime, three-hour rerun or multi-instance acceptance is added.
+
+[Stage-2 results](../../tests/khn26/oop_stage2_results.json) preserve source,
+input, compiler, commands, baseline comparisons, raw-artifact/executable/tool
+hashes, observation layouts, state diagnostics, supplemental gates, adapter
+build checks and limitations. The raw workspace is
+`migration_work/fortran_v020_oop_stage2`; the frozen OOP-0 workspace remains
+unchanged. Current production source matches the executed candidate snapshot.
+OOP-2 is complete; OOP-3a awaits a separate instruction.

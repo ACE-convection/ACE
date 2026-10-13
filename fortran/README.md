@@ -5,6 +5,16 @@ for v0.20.0. [Release notes](../docs/releases/v0.20.0-notes.md) list known
 differences, P3 edge-case failures and external-data requirements. Minute
 precipitation accumulation is supplied by the diagnostic runner.
 
+On the OOP refactor branch, `ace_t%initialize` owns the initial model state,
+reference/profile arrays and geometry. CLI parsing stays in `test.F`; its
+existing integration/output path borrows the private arrays through the
+synchronous `with_legacy_state` callback. Response tables, integration thermal
+caches, damping and P3 library state still belong to the procedural module.
+Use one model, initialized once, per fresh process until later lifecycle
+stages are validated. The object's initialization scratch is distinct from
+the integration caches and the driver's diagnostic buffers. See the
+[staged OOP plan](../docs/migration/fortran_v020_oop_refactor.md).
+
 `src/test.F` defaults to `../data/input/manaus1342_khn26.nc`. Shared slab
 cases use dt=6 s, 360 one-minute output intervals and native precipitation.
 The default prognostics are MF/theta_e/qt; the KHN26 saturated +0.25 K bubble

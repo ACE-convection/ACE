@@ -55,7 +55,7 @@ do slot=1,11
 enddo
 end subroutine
 '''
-    source = source.replace('contains\n', helpers, 1)
+    source = source.replace('\ncontains\n\nsubroutine ace_driver', '\n'+helpers+'\nsubroutine ace_driver', 1)
     for slot, start, end in [
         (1, 'if (.not.all(ieee_is_finite(environment_tv))', 'end subroutine ace_initialization'),
         (2, '! initialization\ndo k=1,nz', 'end subroutine ace_tendency'),

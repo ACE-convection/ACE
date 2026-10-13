@@ -1,4 +1,5 @@
 module ace_module
+use iso_fortran_env, only: real64
 use ace_interpolation, only: interp1, pchip
 implicit none
 
@@ -6,13 +7,20 @@ private
 public :: weno, weno_vec, inv_theta_e, pchip, theta_e, ace_driver, ace_initialization, eval_qs, set_p3_lookup_directory
 public :: ace_t
 
-! OOP-1: passive declaration only; the validated procedural path still owns
-! all live state. Components use the existing model real kind and layouts.
+! OOP-2: initialization owns state; legacy integration borrows it synchronously.
+! Components retain the existing model real kind and layouts.
 type :: ace_t
   private
   integer :: ncols, nz, n_prog, n_weno
   real :: dt, t
   real, allocatable :: X(:,:,:), Ref(:,:), A(:), B(:), forcing(:,:)
+  real, allocatable :: Tv0(:),z(:),zm(:),rho_e(:),rho_zm(:),the_e(:),q_e(:),p_z(:)
+  real, allocatable :: coarse_z(:),coarse_ze(:),Tr(:,:),q(:,:),ql(:,:),qi(:,:)
+  real(real64), allocatable :: input_profile(:,:),diameters(:),input_area(:),input_perimeter(:)
+  real(real64), allocatable :: input_coarse_z(:),input_coarse_ze(:),tmp(:)
+contains
+  procedure :: initialize => model_initialize
+  procedure :: with_legacy_state => model_with_legacy_state
 end type ace_t
 
 ! defien operator for grid interface
@@ -1210,5 +1218,152 @@ end subroutine cal_cij
  end function polysvp1
 ! qv_sat from P3
 
+
+subroutine model_initialize(self,shared_input,input_file,p3_directory,n_weno,physics,dt,intervals,intervals_set, &
+                            ncols,nz,ncoarse,n_prog,khn26_case,precipitation_enabled)
+use ace_input, only: read_case_metadata, read_case_profile, read_case_geometry
+use iso_fortran_env, only: real64
+class(ace_t), intent(inout) :: self
+logical, intent(in) :: shared_input, intervals_set
+character(*), intent(in) :: input_file,p3_directory
+integer, intent(in) :: n_weno
+character(*), intent(inout) :: physics
+real, intent(inout) :: dt
+integer, intent(inout) :: intervals
+integer, intent(out) :: ncols,nz,ncoarse,n_prog
+logical, intent(out) :: khn26_case,precipitation_enabled
+real, parameter :: Rd=287.04, Cp=1005.7, g=9.80665, p0=1.e5
+integer :: i,k,record_length,io_status
+real :: dz,dum1
+real(real64) :: input_lx,input_ly,input_dz
+character(64) :: geometry
+! Transitional singleton: response context and caches still belong to ace_module.
+! As before, initialize one model once in a fresh process.
+if (shared_input) then
+  call read_case_metadata(trim(input_file),nz,ncols,ncoarse,geometry)
+else
+  nz=801; ncols=8; ncoarse=200; geometry='annular'
+endif
+khn26_case=shared_input .and. trim(geometry)=='slab'
+if (len_trim(physics)==0) then
+  physics='p3'
+  if (khn26_case) physics='native'
+endif
+if (physics/='native' .and. physics/='none' .and. physics/='p3') error stop 'Invalid --physics'
+n_prog=3
+if (physics=='p3') n_prog=11
+precipitation_enabled=physics/='none'
+if (dt==0.) then
+  dt=2.
+  if (khn26_case) dt=6.
+endif
+if (khn26_case .and. .not.intervals_set) intervals=360
+allocate(self%input_profile(nz,12),self%diameters(7),self%input_area(ncols),self%input_perimeter(ncols))
+allocate(self%input_coarse_z(ncoarse),self%input_coarse_ze(ncoarse+1),self%tmp(nz))
+if (shared_input) then
+  call read_case_profile(trim(input_file),self%input_profile,self%diameters,input_lx,input_ly,input_dz, &
+                         self%input_coarse_z,self%input_coarse_ze)
+  call read_case_geometry(trim(input_file),self%input_area,self%input_perimeter)
+else
+  self%input_profile=0.
+  inquire(iolength=record_length) self%tmp
+  open(20,file='./input_data/ini_manus_208.dat',access='direct',recl=record_length,status='old',iostat=io_status)
+  if (io_status/=0) error stop 'Cannot open legacy initial profile'
+  do k=5,12
+    read(20,rec=k,iostat=io_status) self%input_profile(:,k)
+    if (io_status/=0) error stop 'Cannot read legacy initial profile'
+  enddo
+  close(20)
+  input_dz=50.; input_lx=64000.; input_ly=64000.
+  self%diameters=[5000.d0,10000.d0,15000.d0,25000.d0,35000.d0,45000.d0,55000.d0]
+  self%input_area(1:7)=self%diameters
+  self%input_perimeter(1:7)=4*atan(1.d0)*self%diameters
+  self%input_perimeter(8)=2*(input_lx+input_ly)
+  self%input_area(8)=input_lx*input_ly-atan(1.d0)*self%diameters(7)**2
+  do i=7,2,-1
+    self%input_area(i)=atan(1.d0)*(self%diameters(i)**2-self%diameters(i-1)**2)
+  enddo
+  self%input_area(1)=atan(1.d0)*self%diameters(1)**2
+  do k=1,ncoarse
+    self%input_coarse_z(k)=self%input_profile((k-1)*4+1,6)
+    self%input_coarse_ze(k)=self%input_coarse_z(k)
+  enddo
+  self%input_coarse_ze(ncoarse+1)=40000.
+endif
+
+allocate(self%X(ncols+1,nz,n_prog),self%Ref(nz,8),self%forcing(ncols,nz))
+allocate(self%Tr(ncols,nz),self%q(ncols,nz),self%ql(ncols,nz),self%qi(ncols,nz))
+allocate(self%A(ncols+1),self%B(ncols+1),self%Tv0(nz),self%z(nz),self%zm(nz),self%rho_e(nz),self%rho_zm(nz),self%the_e(nz),self%q_e(nz),self%p_z(nz))
+allocate(self%coarse_z(ncoarse),self%coarse_ze(ncoarse+1))
+self%A(1:ncols)=real(self%input_area,kind(self%A)); self%B(1:ncols)=real(self%input_perimeter,kind(self%B))
+self%A(ncols+1)=self%A(ncols); self%B(ncols+1)=self%B(ncols)
+dz=real(input_dz,kind(dz))
+self%rho_zm=real(self%input_profile(:,5),kind(self%rho_zm)); self%zm=real(self%input_profile(:,6),kind(self%zm))
+self%the_e=real(self%input_profile(:,7),kind(self%the_e)); self%q_e=real(self%input_profile(:,8),kind(self%q_e))
+self%p_z=real(self%input_profile(:,10),kind(self%p_z)); self%rho_e=real(self%input_profile(:,11),kind(self%rho_e))
+self%z=real(self%input_profile(:,12),kind(self%z))
+self%coarse_z=real(self%input_coarse_z,kind(self%coarse_z)); self%coarse_ze=real(self%input_coarse_ze,kind(self%coarse_ze))
+self%forcing=0.
+self%X=0.
+! Convert shared theta_e/qt input once; the P3 state stores th and qv.
+do k=1,nz
+  self%Ref(k,1)=self%rho_e(k); self%Ref(k,2)=self%rho_zm(k)
+  self%Ref(k,3)=self%z(k); self%Ref(k,4)=self%zm(k)
+  self%Ref(k,5)=dz; self%Ref(k,6)=dz; self%Ref(k,7)=self%p_z(k)
+  self%Ref(k,8)=(self%p_z(k)/p0)**(Rd/Cp)
+  call inv_theta_e(self%the_e(k),self%q_e(k),self%Ref(k,7),self%Tr(1,k),self%q(1,k),self%ql(1,k),self%qi(1,k))
+  self%Tv0(k)=real(self%input_profile(k,9),kind(self%Tv0))
+  if (khn26_case) self%Tv0(k)=self%Tr(1,k)*(1.+0.607789855072462*self%q(1,k)-self%ql(1,k)-self%qi(1,k))
+  if (n_prog==3) then
+    self%X(:,k,2)=self%the_e(k); self%X(:,k,3)=self%q_e(k)
+  else
+    self%X(:,k,2)=self%Tr(1,k)/self%Ref(k,8); self%X(:,k,3)=self%q(1,k)
+    ! Preserve reconstructed total water when mapping the environment to P3.
+    self%X(:,k,4)=self%ql(1,k); self%X(:,k,8)=self%qi(1,k)
+  endif
+enddo
+if (khn26_case) then
+  ! KHN26 +0.25 K saturated bubble in ACE 1, one-based levels 11..51.
+  do k=11,min(51,nz)
+    dum1=self%Tr(1,k)+0.25
+    self%q(1,k)=eval_qs(dum1,self%p_z(k),0.,merge(1,0,dum1<273.1636783445389))
+    self%q(1,k)=self%q(1,k)/(1.+self%q(1,k)) ! condensate-free saturation specific humidity
+    if (n_prog==3) then
+      self%X(1,k,2)=theta_e(dum1,self%q(1,k),0.,0.,self%p_z(k)); self%X(1,k,3)=self%q(1,k)
+    else
+      self%X(1,k,2)=dum1/self%Ref(k,8); self%X(1,k,3)=self%q(1,k)
+      self%X(1,k,4)=0.; self%X(1,k,8)=0.
+    endif
+  enddo
+else
+  do k=1,nz
+    if (self%zm(k)<=1000.) self%X(1,k,1)=0.3*sin(4.*atan(1.)*self%zm(k)/1000.)
+  enddo
+endif
+call set_p3_lookup_directory(trim(p3_directory))
+if (shared_input) then
+  call ace_initialization(ncols,nz,ncoarse,self%coarse_z,self%coarse_ze,trim(input_file),self%Tv0,netcdf_input=.true.)
+else
+  call ace_initialization(ncols,nz,ncoarse,self%coarse_z,self%coarse_ze,'./input_data/PMB.dat',self%Tv0)
+endif
+
+self%ncols=ncols; self%nz=nz; self%n_prog=n_prog; self%n_weno=n_weno
+self%dt=dt; self%t=0.
+end subroutine model_initialize
+
+subroutine model_with_legacy_state(self,action)
+class(ace_t), intent(inout) :: self
+interface
+  subroutine action(X,Ref,A,B,forcing,Tv0,input_coarse_z,input_coarse_ze)
+    use iso_fortran_env, only: real64
+    real, intent(inout) :: X(:,:,:),forcing(:,:)
+    real, intent(in) :: Ref(:,:),A(:),B(:),Tv0(:)
+    real(real64), intent(in) :: input_coarse_z(:),input_coarse_ze(:)
+  end subroutine action
+end interface
+! Synchronous bridge to the unchanged procedural integration/output path.
+! No pointers or state copies escape; this is not an integration method.
+call action(self%X,self%Ref,self%A,self%B,self%forcing,self%Tv0,self%input_coarse_z,self%input_coarse_ze)
+end subroutine model_with_legacy_state
 
 end module ace_module 

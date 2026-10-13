@@ -49,15 +49,16 @@ function X = timeint(""")
     (work/'single_main.m').write_text(matlab)
     module_original=(ROOT/'fortran/src/ace_module.F').read_text()
     module=replace_once(module_original,'!dXdt(2:ncols,:,:)=0.','dXdt(2:ncols,:,:)=0.')
-    (work/'ace_module_single.F').write_text(module)
     driver_original=(ROOT/'fortran/src/test.F').read_text()
-    driver=replace_once(driver_original,'dum1=Tr(1,k)+0.25',f"dum1=Tr(1,k)+{case['bubble_delta_K']}")
-    driver=replace_once(driver,'call set_p3_lookup_directory(trim(p3_directory))',f"""do k=1,nz
-  if (zm(k)<=1000.) X(1,k,1)={case['initial_mf_amplitude']}*sin(4.*atan(1.)*zm(k)/1000.)
+    driver=driver_original
+    module=replace_once(module,'dum1=self%Tr(1,k)+0.25',f"dum1=self%Tr(1,k)+{case['bubble_delta_K']}")
+    module=replace_once(module,'call set_p3_lookup_directory(trim(p3_directory))',f"""do k=1,nz
+  if (self%zm(k)<=1000.) self%X(1,k,1)={case['initial_mf_amplitude']}*sin(4.*atan(1.)*self%zm(k)/1000.)
 enddo
 call set_p3_lookup_directory(trim(p3_directory))""")
-    driver=replace_once(driver,'Tv0,netcdf_input=.true.)',
-                        f"Tv0,netcdf_input=.true.,Wbar_eq_zero_input=.{str(mean).lower()}.)")
+    module=replace_once(module,'self%Tv0,netcdf_input=.true.)',
+                        f"self%Tv0,netcdf_input=.true.,Wbar_eq_zero_input=.{str(mean).lower()}.)")
+    (work/'ace_module_single.F').write_text(module)
     (work/'single_driver.F').write_text(driver)
     for name,before,after in [('matlab',matlab_original,matlab),('module',module_original,module),('driver',driver_original,driver)]:
         (work/f'{name}_single.diff').write_text(''.join(difflib.unified_diff(before.splitlines(True),after.splitlines(True),fromfile=name+'/production',tofile=name+'/single_test')))

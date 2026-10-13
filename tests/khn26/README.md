@@ -514,3 +514,20 @@ python3 tests/khn26/unrestricted_multi.py migration_work/khn26_multi_3h_run --pr
 Preparation creates drivers/configuration without launching a simulation.
 The original stopped twelve-hour launch and its three-hour comparison remain
 historical evidence; their raw logs, workspace names and results are unchanged.
+
+## Staged Fortran OOP preservation
+
+The [OOP plan](../../docs/migration/fortran_v020_oop_refactor.md) records the
+ownership boundaries and stage-specific gates. `oop_regression.py` freezes
+OOP-0 or compares a candidate with that hash-verified workspace; it preserves
+initialization, raw RK/physics/cache observations, state streams and nine-field
+output exactly. `oop_initialization_contract.py` adds shared/legacy/default
+and error-contract checks plus fresh-process 600 s dry/native comparisons
+using the frozen baseline executable without modifying its workspace.
+
+[OOP-2 results](oop_stage2_results.json) record the completed initialization
+ownership gates. Numerical runtime scope remains GNU real64/OpenMP32; the
+real32/serial compatibility matrix certifies compilation and linking only.
+Keep one model initialized once per fresh process until response/cache and
+P3 lifecycle migration is validated. Commands and external data requirements
+are listed in the OOP plan.

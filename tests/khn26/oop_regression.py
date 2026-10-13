@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Freeze v0.20 and verify isolated observational hooks before OOP changes.
+"""Freeze v0.20 and compare staged OOP candidates with isolated observations.
 
-No production source edits. Run sequential fresh-process native/none/P3
+The runner never edits production source. Run fresh-process native/none/P3
 prefixes and minute-output cases. --compare compares observation workspaces
-without integration; a later OOP adapter must preserve these observation points.
+without integration; candidate adapters preserve these observation points.
 """
 import argparse
 import hashlib
@@ -446,7 +446,7 @@ def run(work, lookup, candidate_baseline=None):
         preservation = compare_dirs(candidate_baseline/"runs", work/"runs")
         write(work/"baseline_comparison.json", preservation)
         assert preservation["passed"], "Candidate diverged from frozen OOP-0 baseline"
-    result = {"passed": True, "stage": "OOP-1" if frozen else "OOP-0", "configuration": config, "comparisons": reports,
+    result = {"passed": True, "stage": ("OOP-2" if "procedure :: initialize => model_initialize" in originals["ace_module.F"].decode() else "OOP-1") if frozen else "OOP-0", "configuration": config, "comparisons": reports,
               "baseline_preservation": preservation, "artifacts": artifacts,
               "scope": "GNU real64 OpenMP 32; default 0.25 K bubble; dt=4; initialization, ten-step prefix, 60 s interval outputs; no three-hour rerun."}
     write(work/"results.json", result)

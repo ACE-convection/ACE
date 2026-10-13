@@ -125,12 +125,12 @@ write(multi_precip_unit) sinks
 flush(multi_precip_unit)
 end subroutine
 end module""")
-    (work/'ace_module_multi.F').write_text(module)
     driver_original=(ROOT/'fortran/src/test.F').read_text()
-    driver=replace_once(driver_original,'dum1=Tr(1,k)+0.25','dum1=Tr(1,k)+1.0')
+    module=replace_once(module,'dum1=self%Tr(1,k)+0.25','dum1=self%Tr(1,k)+1.0')
+    driver=driver_original
     if initial_mf:
-        driver=replace_once(driver,'call set_p3_lookup_directory(trim(p3_directory))',
-                            f"do k=1,nz\n  if (zm(k)<=1000.) X(1,k,1)={initial_mf}*sin(4.*atan(1.)*zm(k)/1000.)\nenddo\ncall set_p3_lookup_directory(trim(p3_directory))")
+        module=replace_once(module,'call set_p3_lookup_directory(trim(p3_directory))',
+                            f"do k=1,nz\n  if (self%zm(k)<=1000.) self%X(1,k,1)={initial_mf}*sin(4.*atan(1.)*self%zm(k)/1000.)\nenddo\ncall set_p3_lookup_directory(trim(p3_directory))")
     driver=replace_once(driver,'use ace_module\n','use ace_module\nuse omp_lib, only: omp_get_max_threads,omp_get_num_threads\n')
     driver=replace_once(driver,'shared_input=.true.',"""if (omp_get_max_threads()/=32) error stop 'Expected OpenMP cap 32'
 !$omp parallel
@@ -140,6 +140,7 @@ if (omp_get_num_threads()/=32) error stop 'Expected OpenMP team 32'
 !$omp end single
 !$omp end parallel
 shared_input=.true.""")
+    (work/'ace_module_multi.F').write_text(module)
     (work/'multi_driver.F').write_text(driver)
     for label,before,after in [('matlab',source,matlab),('module',original,module),('driver',driver_original,driver)]:
         (work/(label+'.diff')).write_text(''.join(difflib.unified_diff(before.splitlines(True),after.splitlines(True),fromfile=label+'/production',tofile=label+'/multi_test')))
