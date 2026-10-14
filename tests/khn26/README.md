@@ -647,3 +647,26 @@ compilation/link gates all pass. Exact inverse extraction recovers the OOP-5a
 module and its directory validation. One P3 wrapper context per fresh process
 is enforced; final three-hour OOP acceptance/history integration remain later
 work. No tolerance or numerical algorithm was changed.
+
+`oop_long_regression.py WORKSPACE --prepare` builds isolated OOP-5b plain and
+minute-precipitation-observed copies, preserving production sources. Use
+`--run` to execute native/P3 plain/observed one-minute identity gates followed
+by separate fresh-process three-hour multiACE runs. The experiment matches
+the accepted +1 K bubble, zero initial MF, dt=4 s and GNU real64/OpenMP32.
+All saved states, nine-field normal output and minute/cumulative precipitation
+must match the hash-pinned archived Fortran references byte-for-byte. Input,
+lookup, source, executable and helper hashes are recorded. Live `status.json`
+and final `results.json` are workspace artifacts; a background launch does
+not itself certify final acceptance. See the OOP plan's final three-hour
+launch record for workspace, logs and reproduction details.
+
+[Final OOP three-hour results](oop_long_results.json) record successful native
+and P3 multiACE runs: all 181 states, all nine-field normal output records and
+all minute/cumulative precipitation records match the archived references
+bit-for-bit. An independent post-run audit reverified hashes, layouts, complete
+record counts, finite states/outputs, nonnegative water/number fields and
+precipitation bookkeeping. P3 riming validity and one actual initialization
+also pass. Current production source matches the executed OOP-5b snapshot.
+This completes the documented multiACE OOP preservation gates; reference
+history integration remains separate, and existing lifecycle/precision scope
+limits still apply.

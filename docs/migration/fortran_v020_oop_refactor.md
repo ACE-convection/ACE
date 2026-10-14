@@ -1180,3 +1180,96 @@ integration. Third-party process-wide state, the existing damping Ref dummy
 layout and GNU validation/saved-state executable-stack requirements remain
 documented limitations. No commit, push, tag, main merge or reference-history
 merge was performed in this stage.
+
+## Final three-hour OOP preservation gate launched (2026-10-14)
+
+The developer authorized background native/P3 three-hour result-preservation
+validation. `tests/khn26/oop_long_regression.py` prepares isolated plain and
+precipitation-observed builds from OOP-5b commit `2dbeb65`. Production source
+is unchanged. Both copies use the accepted +1 K bubble, zero initial MF,
+dt=4 s and GNU real64/OpenMP32; the observed copy reuses the existing minute
+precipitation accumulator. An actual OpenMP team assertion is test-only.
+
+Workspace: `migration_work/fortran_v020_oop_long`. Before launching the two
+long processes, the supervisor requires native/P3 plain-versus-observed
+one-minute state/output identity, and identity against the corresponding
+prefixes of the archived three-hour references. Inputs, lookup table,
+production/isolated sources, helper snapshots, executables and references
+are hash-pinned. Native/P3 long cases run in separate fresh processes.
+
+After successful model exits, the supervisor automatically compares all
+181 saved states (including the environment and reference Tv), nine-field
+normal output and minute/cumulative precipitation artifacts byte-for-byte
+against the accepted Fortran replays. State streams are also compared with
+the original native/P3 three-hour references. Precipitation time axis,
+nonnegative amounts and cumulative bookkeeping, finite normal output and
+P3 saved-state validity are checked. No tolerance is allowed. Native removal
+equivalent and P3 surface precipitation retain their different definitions.
+
+Live progress is in `status.json`; launch commands and logs are retained in
+each case directory. Final `results.json` is written automatically on success
+or failure. These local artifacts remain ignored until reviewed and summarized
+as versioned acceptance evidence. A completed run is not claimed by this
+launch record. History integration and main merge remain separate work.
+
+The first sandbox launch did not persist; its empty supervisor log is
+preserved. The subsequent approved host launch uses `supervisor_host.log`
+and records the actual host supervisor in `supervisor.pid` (3563174 at launch).
+
+Reproduction in a fresh workspace:
+
+```bash
+python3 tests/khn26/oop_long_regression.py NEW_WORKSPACE --prepare
+python3 tests/khn26/oop_long_regression.py NEW_WORKSPACE --run
+```
+
+For a detached run, retain the process outside an ephemeral sandbox and use
+the workspace's executed runner with its snapshotted `helpers` on PYTHONPATH.
+
+## Final three-hour OOP preservation acceptance (2026-10-14)
+
+Both native and P3 multiACE runs completed normally (exit 0). Their launch
+time was 08:25:10 UTC; automatic comparisons completed at 08:55:45 UTC,
+approximately 30 minutes 34 seconds after launch. This elapsed interval
+includes concurrent initialization/integration and final comparisons, not
+the preceding builds/prefix checks, and is not a performance benchmark.
+
+[Final results](../../tests/khn26/oop_long_results.json) preserve the executed
+configuration, pinned sources/builds/helpers, prefix checks, complete artifact
+comparisons, P3 validity and independent post-run audit. All native/P3 plain
+and observed one-minute state/output prefixes match the archived references;
+plain and observed results match each other exactly.
+
+| Three-hour artifact | Native | P3 |
+| --- | --- | --- |
+| All 181 saved states, environment and initial reference Tv | Bitwise identical | Bitwise identical |
+| All 181 nine-field real32 normal output records | Bitwise identical | Bitwise identical |
+| All 181 minute/cumulative precipitation records | Bitwise identical | Bitwise identical |
+| State stream against original accepted three-hour reference | Bitwise identical | Bitwise identical |
+
+Native state SHA-256 remains
+`be233ddf6596c96f150be015898a33d69e901969b06cc85124d30d5a5f7559fc`;
+P3 remains
+`c91e1171f9d840ad1254a4f72e0b3b695caf1785254ae205ab1f0e5db3503044`.
+The independent review rehashed all pinned inputs, sources, helpers, builds,
+references and results; verified exact state headers/file sizes, 181 complete
+records and nine-field output sizes; and read every saved state, including
+the environment, for finite values. Native qt and P3 water/number fields are
+nonnegative. P3 rimed mass does not exceed ice mass. Normal outputs are finite;
+precipitation time axes, nonnegative amounts and cumulative bookkeeping are
+exact. Both logs confirm an actual 32-thread team, and P3 initializes once.
+Production source still matches the executed OOP-5b snapshot. The isolated
+module differences were verified to be exactly the +1 K experiment bubble
+and the existing observational precipitation patch.
+
+The final OOP behavior-preservation gate is passed for the accepted multiACE
+native/P3 configurations, together with the earlier staged gates. No
+scientific formula, tolerance, production configuration or third-party P3
+source was changed. This does not extend acceptance to singleACE long runs,
+real32 numerical runtime, other compilers, performance, concurrent/multiple
+P3 contexts or reset/copy lifecycles. Existing documented limitations remain.
+
+Read-only history preflight reconfirms that reference tip `b3f922e` is not yet
+an ancestor of this branch and retains 13 commits beyond `88e4af5`. The
+separately planned history-only integration remains the next integration
+step; no commit, reference-history merge, main merge, push or tag was made.
