@@ -622,3 +622,28 @@ bit/attribute is audited identical after the layout repair. Numerical source
 statements and tolerances are unchanged; no performance or long scientific
 acceptance is claimed. See the OOP plan for validated native lifecycle limits
 and the remaining single-P3-instance restriction.
+
+
+OOP-5b moves wrapper directory/first/itt into a private model context and keeps
+separate procedural storage. The unchanged P3 library retains SAVE is_init,
+shared tables/options and mutable global_status; one ACE P3 wrapper context
+per fresh process is explicitly enforced before a second library init/main.
+`oop_p3_contract.py WORKSPACE` checks model, sequential native interference and
+public procedural ten-step prefixes against frozen states, every P3 field and
+surface flux; verifies the directory used, exactly one init and itt=1..10;
+and checks four second-context rejections plus four directory validation errors.
+Current snapshot contracts include P3 options/counter/claim neutrality; native
+multi-object tests require the library to remain unused. No independent second
+P3 instance, copied P3 model or concurrent lifecycle is certified. Final OOP
+three-hour acceptance and history integration remain separate steps.
+
+[OOP-5b results](oop_stage5b_results.json) record 195 bitwise-identical frozen
+artifacts, 165 observation layouts, 18 valid state streams, three P3 wrapper
+contracts with all-field/surface-flux identity, and eight explicit restriction/
+directory validation errors. Actual init path/count and itt=1..10 are traced
+only in isolated copies; third-party source/tables stay unchanged. Existing
+damping, diagnosis, integration/no-op, output, nine supplemental and four
+compilation/link gates all pass. Exact inverse extraction recovers the OOP-5a
+module and its directory validation. One P3 wrapper context per fresh process
+is enforced; final three-hour OOP acceptance/history integration remain later
+work. No tolerance or numerical algorithm was changed.

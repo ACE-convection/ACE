@@ -195,6 +195,8 @@ if (.not.legacy_damping%first .or. allocated(legacy_damping%damp)) error stop 'O
 if (allocated(legacy_response%PMB) .or. allocated(legacy_thermal%Ta)) error stop 'Objects used legacy context'
 end subroutine
 '''
+    if "type :: ace_p3_t" in module:
+        helper = helper.replace("if (.not.legacy_damping%first .or. allocated(legacy_damping%damp))", "if (p3_context_claimed .or. .not.a%p3%first .or. a%p3%itt/=1 .or. .not.b%p3%first .or. b%p3%itt/=1) error stop 'Native path used P3'\nif (.not.legacy_damping%first .or. allocated(legacy_damping%damp))", 1)
     module = replace_once(module, 'end module ace_module', oracle + '\n' + helper + '\nend module ace_module')
     (dest / 'ace_module_contract.F').write_text(module)
     driver = '''program contract

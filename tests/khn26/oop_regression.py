@@ -60,6 +60,8 @@ def thermal_code(source, prefix="thermal%"):
 
 
 def candidate_stage(source):
+    if "type :: ace_p3_t" in source:
+        return "OOP-5b"
     if "type :: ace_damping_t" in source:
         return "OOP-5a"
     if "procedure :: output => model_output" in source:
@@ -118,8 +120,11 @@ end subroutine ace_tendency"""
     if contextual:
         tendency_hook = response_code(tendency_hook).replace("end subroutine ace_tendency", "end subroutine ace_tendency_context")
     source = replace_once(source, "end subroutine ace_tendency_context" if contextual else "end subroutine ace_tendency", tendency_hook)
+    p3_owned = "type :: ace_p3_t" in source
     damping_owned = "type :: ace_damping_t" in source
     ownership_guard = "if (allocated(legacy_response%PMB)) error stop 'Model used legacy response storage'\n"
+    if p3_owned:
+        ownership_guard += "if (.not.legacy_p3%first .or. legacy_p3%itt/=1) error stop 'Model used legacy P3 storage'\n"
     if damping_owned:
         ownership_guard += "if (allocated(legacy_damping%damp) .or. .not.legacy_damping%first) error stop 'Model used legacy damping storage'\n"
     if thermal_owned:
@@ -143,10 +148,8 @@ end subroutine ace_tendency"""
     damping_values = "damping%damp" if damping_owned else "damp"
     source = replace_once(source, "end subroutine ImDamp",
                           "call oop_dump('damp'," + damping_values + ")\nend subroutine ImDamp")
-    source = replace_once(source, "itt = itt + 1", """
-call oop_dump('p3_liquid_flux',precip_liq)
-call oop_dump('p3_solid_flux',precip_sol)
-itt = itt + 1""")
+    counter = "p3%itt" if p3_owned else "itt"
+    source = replace_once(source, counter + " = " + counter + " + 1", "call oop_dump('p3_liquid_flux',precip_liq)\ncall oop_dump('p3_solid_flux',precip_sol)\n" + counter + " = " + counter + " + 1")
     helpers = ""
     for rank in range(1, 5):
         dims = ",".join(":" for _ in range(rank))

@@ -1041,3 +1041,142 @@ P3 wrapper/library lifecycle is the next separate review boundary; retain one
 P3 model per fresh process. Validation/saved-state callbacks still require
 the GNU executable stack. No commit, push, tag, main merge or reference-history
 merge was performed.
+
+
+## OOP-5b model-owned P3 wrapper lifecycle (2026-10-14)
+
+The developer authorized OOP-5b after OOP-5a commit `9c8b2bb`. Private
+`ace_p3_t` owns the original character(1024) directory, integer itt=1 and
+logical first=.true.; each model holds one wrapper context. Private integration
+and wrapper interfaces receive it explicitly. The public procedural driver
+signature is unchanged and uses saved `legacy_p3`; its public directory setter
+still performs the same empty/overlength validation and now affects only that
+legacy context. The same validated assignment helper records the model's
+initialization option at the former setter position. No new configuration
+format or public model option setter is introduced.
+
+The wrapper retains all work arrays/kinds, compile-time options, P3 parameter
+ordering, X_old timing, field packing/copy order, initialization failure check,
+global_status check and increment position. First actual P3 use calls p3_init,
+sets first false, calls p3_main with itt=1 and increments after copying all
+fields. No-op integration, diagnosis and output do not initialize P3 or advance
+its iteration counter. Native-only paths retain first=true/itt=1 without using
+the library. A legacy setter or another native initialization cannot change a
+model's stored directory. The setter retains historical first-use semantics:
+changing the procedural directory after library initialization does not reload
+P3 tables/options.
+
+### Third-party library contract and explicit restriction
+
+The unchanged `microphy_p3.F` p3_init holds SAVE is_init. Once true, it returns
+STATUS_OK without rereading the supplied directory or applying new options.
+Tables, n_iceCat, iparam and runtime constants are module storage; global_status
+is shared mutable state. No reset/reload/instance contract is exposed. Treating
+a second wrapper's successful init return as independent initialization would
+silently reuse the first library configuration. This stage therefore uses the
+planned fallback: **one ACE P3 wrapper context per fresh process**. It does not
+claim two sequential independent P3 objects or multi-configuration support.
+
+A process-lifetime claim is set only after the first wrapper's successful
+p3_init. Before a different fresh wrapper's first call, the guard rejects it
+with `Only one P3 context per fresh process is supported`, before a second
+library init/main. This covers model/model and model/legacy ordering. Claiming
+at actual first use preserves validation-only/no-op timing; unused objects do
+not reserve the library. The claim is not released when a model leaves scope,
+because the library's initialization/status remain process-wide. Copies of
+initialized P3 models and direct external library calls are unsupported;
+concurrent integration and reset/reinitialize are not certified. Public
+procedural callers continue sharing a single legacy wrapper context/counter.
+Only the single-context restriction is newly enforced; all valid frozen
+single-context model/procedural behavior is retained.
+
+`oop_p3_contract.py WORKSPACE` extracts the wrapper from hash-pinned OOP-0.
+Removing component qualification, guard and claim, then restoring local SAVE
+declarations must recover that numerical body exactly. Isolated tracing records
+actual p3_init call paths, p3_main iteration arguments, all post-physics fields
+and liquid/solid surface flux. Model, one-model-with-sequential-native-operations,
+and public procedural ten-step dt=4 cases must match frozen initialized/evolved
+streams, all 11 fields and flux artifacts exactly. Assertions and library
+stdout verify first-use init once, first itt=1, ten increments and neutral
+no-op/diagnose/output calls. The model path retains its correct lookup despite
+a deliberately invalid legacy path and unused native option.
+
+Four rejection cases cover a second model (same and invalid different directory),
+legacy after model and model after legacy. Init/main traces must retain exactly
+one call when the new guard rejects the second context. Four additional cases
+preserve public/model empty/overlength directory validation with no library
+calls. Third-party source/tables are never instrumented or changed; only the
+isolated ACE module copy gains trace code. The baseline workspace is read-only.
+
+Existing diagnostic/output snapshots and no-op integration cache snapshots
+now include model P3 directory/first/itt and the library claim. Native multi-
+object tests additionally require no P3 claim/use. Observational regression
+keeps all frozen labels/shapes and rejects model use of the legacy P3 counter.
+
+Reproduce in a fresh workspace:
+
+```bash
+python3 tests/khn26/oop_regression.py NEW_WORKSPACE --candidate-baseline migration_work/fortran_v020_oop_stage0
+python3 tests/khn26/oop_regression.py NEW_WORKSPACE --compile-compatibility
+python3 tests/khn26/oop_regression.py NEW_WORKSPACE --analyze-existing
+python3 tests/khn26/oop_p3_contract.py NEW_WORKSPACE
+python3 tests/khn26/oop_damping_contract.py NEW_WORKSPACE
+python3 tests/khn26/oop_diagnose_contract.py NEW_WORKSPACE
+python3 tests/khn26/oop_integration_contract.py NEW_WORKSPACE
+python3 tests/khn26/oop_output_contract.py NEW_WORKSPACE
+python3 tests/khn26/oop_initialization_contract.py NEW_WORKSPACE
+```
+
+Acceptance workspace: `migration_work/fortran_v020_oop_stage5b`.
+The final native/P3 three-hour OOP acceptance reruns and the separately planned
+reference-history integration remain later work. Completing these wrapper
+ownership gates does not claim final OOP acceptance. No automatic commit,
+push, tag, main merge, reference-history merge or third-party redesign is
+included in this stage.
+
+### Completed OOP-5b gates (2026-10-14)
+
+All 24 candidate model commands passed; all 195 artifacts match frozen OOP-0
+exactly. Postprocessing passed 165 observation-layout/frame checks and validated
+18 state streams and finite nine-field normal output. Initialization/operators,
+nine RK frames, thermal/native/P3/flux/damping observations and state/output
+streams retain their original bytes. Observed model paths leave legacy
+response/thermal/damping/P3 state unused. No tolerance was changed.
+
+All three P3 wrapper contracts passed: model, one-model-with-sequential-native
+operations, and public procedural ten-step prefixes. Each matches frozen
+initialized/evolved streams, every post-physics field and both surface flux
+streams exactly. Tracing and the unchanged library's stdout verify one actual
+init, the correct lookup path, itt=1..10 and increment after field copy.
+No-op/diagnose/output calls leave counter/options/claim unchanged. Four
+second-context cases are rejected before a second init/main, across same/
+different-directory model and model/legacy ordering. Four empty/overlength
+model/procedural directory checks preserve the original message without any
+library call. The plan's single-P3-context fallback is retained and enforced;
+no independent multi-P3 lifecycle is claimed.
+
+The independent five-call damping oracles and all three two-native-object
+cases passed; native paths keep P3 first=true/itt=1 and do not claim the library.
+All diagnosis, integration and output contracts passed with P3 options/counter/
+claim added to snapshots, including fractional-dt three-minute native replay.
+All nine supplemental initialization/error gates passed. Dry/native 600 s each
+retain 151 bitwise-identical finite states with nonnegative qt. Four real32/
+real64 serial/OpenMP uninstrumented compilation/link cases and empty clients
+passed; current/previous profiler adapter compilation passed. Numerical runtime
+acceptance remains GNU real64/OpenMP32; no profiling/performance run is claimed.
+
+[Stage-5b results](../../tests/khn26/oop_stage5b_results.json) preserve source,
+input/compiler/executable/runner hashes, commands, comparisons, frozen wrapper
+oracle, init/iteration traces and isolated-helper provenance. Exact inverse
+extraction, including setter forwarding/helper validation, recovers the OOP-5a
+module. Driver/input/interpolation/third-party P3 source is unchanged; current
+source matches the executed snapshot. Lookup tables, frozen baseline and
+previous-stage evidence remain intact.
+
+OOP-5b ownership and restriction gates are complete. The final accepted native/
+P3 three-hour state/diagnostic/precipitation acceptance reruns remain required
+before final OOP acceptance and the separately planned reference-history
+integration. Third-party process-wide state, the existing damping Ref dummy
+layout and GNU validation/saved-state executable-stack requirements remain
+documented limitations. No commit, push, tag, main merge or reference-history
+merge was performed in this stage.

@@ -34,6 +34,14 @@ type :: ace_damping_t
   logical :: first=.true.
 end type ace_damping_t
 
+! Wrapper ownership does not isolate the third-party process-wide P3 library.
+type :: ace_p3_t
+  private
+  character(1024) :: directory="./input_data/"
+  integer :: itt=1
+  logical :: first=.true.
+end type ace_p3_t
+
 ! Observational diagnostics are separate from initialization and RK caches.
 type :: ace_diagnostics_t
   private
@@ -48,6 +56,7 @@ type :: ace_t
   type(ace_response_t) :: response
   type(ace_thermal_t) :: thermal
   type(ace_damping_t) :: damping
+  type(ace_p3_t) :: p3
   type(ace_diagnostics_t) :: diagnostics
   integer :: output_unit, output_record=1
   logical :: output_open=.false.
@@ -86,7 +95,9 @@ real, parameter :: tau_pr = 5*60 ! sec; relaxation timescale for precip
 type(ace_response_t), save :: legacy_response
 type(ace_thermal_t), save :: legacy_thermal
 type(ace_damping_t), save :: legacy_damping
-character(1024), save :: p3_lookup_directory="./input_data/"
+type(ace_p3_t), save :: legacy_p3
+! No reset/release: p3_init and mutable library status persist for this process.
+logical, save :: p3_context_claimed=.false.
 
 contains
 
@@ -105,18 +116,19 @@ logical, intent(in), optional :: precipitation_input
 type(ace_response_t), intent(inout), optional :: response
 ! Procedural callers use the legacy thermal cache and optional response context.
 if (present(response)) then
-  call ace_driver_context(response,legacy_thermal,legacy_damping,ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input)
+  call ace_driver_context(response,legacy_thermal,legacy_damping,legacy_p3,ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input)
 else
-  call ace_driver_context(legacy_response,legacy_thermal,legacy_damping,ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input)
+  call ace_driver_context(legacy_response,legacy_thermal,legacy_damping,legacy_p3,ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input)
 endif
 end subroutine ace_driver
 
 
-subroutine ace_driver_context(response,thermal,damping,ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input)
+subroutine ace_driver_context(response,thermal,damping,p3,ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input)
 implicit none
 type(ace_response_t), intent(inout) :: response
 type(ace_thermal_t), intent(inout) :: thermal
 type(ace_damping_t), intent(inout) :: damping
+type(ace_p3_t), intent(inout) :: p3
 
 ! input/output variables
 integer, intent(in) :: ncols,nz,n_weno,n_prog
@@ -195,7 +207,7 @@ do while ( t < te)
       call apply_native_precipitation()
     endif
   elseif (n_prog==11) then
-    call p3_wrapper_ace(ncols,nz,n_prog,dt,yi,X,Ref)
+    call p3_wrapper_ace(p3,ncols,nz,n_prog,dt,yi,X,Ref)
   else
     write(*,*) "No suitable microphysics scheme"
     stop
@@ -664,14 +676,21 @@ end subroutine precip_sinks_context
 
 subroutine set_p3_lookup_directory(directory)
 character(*), intent(in) :: directory
-if (len_trim(directory)==0 .or. len_trim(directory)>len(p3_lookup_directory)) &
-  error stop 'Invalid P3 lookup directory'
-p3_lookup_directory=directory
+call set_p3_context_directory(legacy_p3,directory)
 end subroutine
 
-subroutine p3_wrapper_ace(ncols,nz,n_prog,dt,X_old,X,Ref)
+subroutine set_p3_context_directory(p3,directory)
+type(ace_p3_t), intent(inout) :: p3
+character(*), intent(in) :: directory
+if (len_trim(directory)==0 .or. len_trim(directory)>len(p3%directory)) &
+  error stop 'Invalid P3 lookup directory'
+p3%directory=directory
+end subroutine
+
+subroutine p3_wrapper_ace(p3,ncols,nz,n_prog,dt,X_old,X,Ref)
 use microphy_p3
 implicit none
+type(ace_p3_t), intent(inout) :: p3
 
 ! input/output variables
 integer, intent(in) :: ncols, nz, n_prog
@@ -681,8 +700,6 @@ real, dimension(ncols+1,nz,n_prog), intent(in) :: X_old
 real, dimension(ncols+1,nz,n_prog), intent(inout) :: X ! mf, th, qv, qc, nc, qr, nr, qi, ni, qrim, brim
 
 ! local variables
-integer, save :: itt = 1
-logical, save :: first = .True.
 integer, parameter :: nCat = 1 ,&                ! the number of ice categories
                       n_diag_2d = 1 ,&           ! size of 2d diagnostic array
                       n_diag_3d = 1              ! size of 3d diagnostic array
@@ -707,10 +724,12 @@ real, dimension(ncols,n_diag_2d) :: diag_2d
 real, dimension(ncols,nz,n_diag_3d) :: diag_3d
 real, dimension(ncols) :: precip_liq,precip_sol
 
-if (first) then
-  call p3_init(trim(p3_lookup_directory),ncat,trplMomI,liqfrac,trim(model),stat,abort_on_err,dowr)
+if (p3%first) then
+  if (p3_context_claimed) error stop 'Only one P3 context per fresh process is supported'
+  call p3_init(trim(p3%directory),ncat,trplMomI,liqfrac,trim(model),stat,abort_on_err,dowr)
   if (stat/=0) stop "Failure of p3 initialization"
-  first = .False.
+  p3%first = .False.
+  p3_context_claimed=.true.
 endif
 
 th_old = X_old(1:ncols,:,2)
@@ -739,7 +758,7 @@ qiliq = 0.
 
 call p3_main(qc,nc,qr,nr,th_old,th,qv_old,qv,dt, &
              qitot,qirim,qiliq,ni,birim,zi,ssat,w, &
-             p,dz,itt,precip_liq,precip_sol, &
+             p,dz,p3%itt,precip_liq,precip_sol, &
              1,ncols,1,nz,nCat, &
              diag_ze,diag_effc,diag_effi,diag_vmi,diag_di,diag_rhoi, &
              n_diag_2d,diag_2d,n_diag_3d,diag_3d,log_predictNc,trim(model), &
@@ -761,7 +780,7 @@ X(1:ncols,:,9)  = ni
 X(1:ncols,:,10) = qirim
 X(1:ncols,:,11) = birim
 
-itt = itt + 1
+p3%itt = p3%itt + 1
 
 end subroutine p3_wrapper_ace
 
@@ -1358,7 +1377,7 @@ real :: dz,dum1
 real(real64) :: input_lx,input_ly,input_dz
 character(64) :: geometry
 ! Each object is initialized once; its damping cache is built on first use.
-! P3 wrapper/library caches remain process-wide until OOP-5b.
+! P3 wrapper options/clock are local; the library permits one context per process.
 if (shared_input) then
   call read_case_metadata(trim(input_file),nz,ncols,ncoarse,geometry)
 else
@@ -1460,7 +1479,7 @@ else
     if (self%zm(k)<=1000.) self%X(1,k,1)=0.3*sin(4.*atan(1.)*self%zm(k)/1000.)
   enddo
 endif
-call set_p3_lookup_directory(trim(p3_directory))
+call set_p3_context_directory(self%p3,trim(p3_directory))
 if (shared_input) then
   call ace_initialization_context(self%response,self%thermal,ncols,nz,ncoarse,self%coarse_z,self%coarse_ze,trim(input_file),self%Tv0,netcdf_input=.true.)
 else
@@ -1476,7 +1495,7 @@ subroutine model_integrate(self,te,reset_clock_to_target)
 class(ace_t), intent(inout) :: self
 real, intent(in) :: te
 logical, intent(in), optional :: reset_clock_to_target
-call ace_driver_context(self%response,self%thermal,self%damping,self%ncols,self%nz,self%n_weno,self%n_prog, &
+call ace_driver_context(self%response,self%thermal,self%damping,self%p3,self%ncols,self%nz,self%n_weno,self%n_prog, &
                         self%X,self%Ref,self%A,self%B,self%t,te,self%dt,self%forcing,self%precipitation_enabled)
 ! Preserve the historical interval driver's explicit ts=te assignment.
 ! Standalone integration retains its full-dt clock, including target overshoot.

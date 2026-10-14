@@ -36,10 +36,23 @@ state/table copies. Damping first-use flag/values now belong to the model; its c
 at the first end-of-step damping call and reused without changing expressions.
 Sequential native objects are checked against fresh-process references,
 including different dt/grid. Initialize each object once and keep its dt/grid
-fixed. Concurrent integration and mixed P3/native independence are outside the
-validated lifecycle. P3 wrapper/library and lookup state remain process-wide;
-use one P3 model per fresh process pending OOP-5b. Public procedural calls
-retain a separate singleton damping cache and their prior first-use behavior. Initialization scratch, integration caches and model
+fixed. Concurrent integration and general mixed P3/native lifecycle support
+are outside the validated scope; one P3 object with sequential native operations
+is specifically tested. P3 wrapper directory, first-use flag and iteration counter
+now belong to each model. The third-party library retains process-wide tables,
+initialization flag and mutable status; it cannot reload options after first
+initialization. Only one ACE P3 wrapper context may be used per fresh process,
+across both model and procedural API. A second context is rejected before its
+library init/main call; the claim lasts until process exit. Copying initialized
+P3 models, concurrent P3 use and direct external library initialization are
+outside the supported lifecycle. Public procedural calls
+retain singleton damping and P3 wrapper contexts with their prior first-use
+semantics. `set_p3_lookup_directory` configures only the procedural wrapper;
+model options come from `initialize` and are not changed by that setter or
+another object's initialization. Each P3 context starts with itt=1, initializes
+the library on its first actual P3 step and increments once after field copy.
+No-op integration, diagnose and output do not initialize or advance P3.
+Initialization scratch, integration caches and model
 diagnostic buffers remain distinct. Validation/saved-state callbacks still require
 an executable stack under the validated GNU toolchain. See the
 [staged OOP plan](../docs/migration/fortran_v020_oop_refactor.md).
