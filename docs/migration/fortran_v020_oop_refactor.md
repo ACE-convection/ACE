@@ -1273,3 +1273,27 @@ Read-only history preflight reconfirms that reference tip `b3f922e` is not yet
 an ancestor of this branch and retains 13 commits beyond `88e4af5`. The
 separately planned history-only integration remains the next integration
 step; no commit, reference-history merge, main merge, push or tag was made.
+
+## Completed reference-history and main integration (2026-10-14)
+
+After final preservation acceptance, the developer authorized the separate
+history integration. Merge `af399d784c3737a66ad7355186a0f6dc503707fc` has
+first parent `1056b91385f6a4b87d30067d6022b660e20726a8` and second parent
+`b3f922e48e238581a85d31469bafcb800569a748`. The `ours` strategy preserves
+the validated ACE tree `884c7d9204f86e3952899831fec8d47a480e1ef5` exactly.
+Reference ancestry is verified, including the 13 commits beyond `88e4af5`.
+Original reference identities and relationships are retained; historical
+source changes are not applied, and scientific equivalence is not implied.
+Uncommitted work in the separate ACE_FORTRAN checkout is outside this history.
+
+The developer then authorized main integration. Merge `8eb5446` has the
+previous main `115cc50` and history-integrated OOP tip `af399d7` as parents.
+Its tree is again `884c7d9204f86e3952899831fec8d47a480e1ef5`; no conflict or
+source adjustment occurred. Production source hashes were reverified against
+the final three-hour evidence, and the reference tip is an ancestor of main.
+These graph/tree checks validate integration of the already-tested snapshot;
+they are not new numerical runs. Existing acceptance limits remain.
+
+The developer subsequently requested release v0.20.87. Its
+[release notes](../releases/v0.20.87-notes.md) document the unified milestone.
+Release documentation is separate from scientific source changes.

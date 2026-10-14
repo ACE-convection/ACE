@@ -17,6 +17,15 @@ completed evidence and known limitations. Earlier preparation and review
 records remain historical; their pending-release language does not override
 this acceptance.
 
+## v0.20.87 OOP integration (2026-10-14)
+
+OOP-0 through OOP-5b and final native/P3 multiACE three-hour preservation
+gates passed. History-only merge `af399d7` links ACE_FORTRAN reference
+`b3f922e` and its ancestors without replacing the validated ACE source.
+Merge `8eb5446` integrates the completed branch into `main` with the same
+validated tree. [v0.20.87 release notes](../releases/v0.20.87-notes.md)
+define this milestone's changes, evidence and retained limitations.
+
 ## Start here
 
 | Purpose | Authoritative document |

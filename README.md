@@ -13,7 +13,14 @@ ACE currently has two implementations with different roles:
 
 The two implementations share the same core model formulation, but they are not necessarily identical in all physical parameterizations. A major goal of this repository is to maintain consistency between the shared components of the MATLAB and Fortran implementations and to provide systematic tests for their numerical agreement.
 
-The accepted `v0.20.0` release contains the author-selected November 2025
+The `v0.20.87` milestone adds the behavior-preserving Fortran `ace_t` OOP
+refactor and preserves the original Fortran repository's Git history.
+Native/P3 multiACE three-hour states, normal output and precipitation records
+match the accepted Fortran references bit-for-bit. See the
+[v0.20.87 release notes](docs/releases/v0.20.87-notes.md) for evidence and
+retained lifecycle limits.
+
+The accepted `v0.20.0` scientific baseline contains the author-selected November 2025
 KHN26 MATLAB implementation, aligned Fortran native dynamics and the
 Fortran-only P3 5.3.1 integration. The developer accepted the observed
 three-hour evolution and precipitation differences on 2026-10-12.

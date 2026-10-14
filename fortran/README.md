@@ -1,11 +1,14 @@
-# Fortran KHN26 alignment and P3 v0.20.0 source
+# Fortran KHN26 alignment, P3 and v0.20.87 OOP source
 
 The developer accepted the documented native/P3 three-hour GNU real64 cases
 for v0.20.0. [Release notes](../docs/releases/v0.20.0-notes.md) list known
 differences, P3 edge-case failures and external-data requirements. Minute
 precipitation accumulation is supplied by the diagnostic runner.
 
-On the OOP refactor branch, `ace_t%initialize` owns the initial model state,
+The v0.20.87 OOP refactor is integrated into `main`; its
+[release notes](../docs/releases/v0.20.87-notes.md) record bitwise native/P3
+three-hour preservation and retained lifecycle limits.
+`ace_t%initialize` owns the initial model state,
 reference/profile arrays, geometry and an `ace_response_t` context containing
 the coarse grids, packed response tables, work arrays and response flags.
 `ace_t%integrate(te)` uses the object's dt, persistent clock, precipitation
