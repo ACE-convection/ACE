@@ -31,7 +31,15 @@ def prepare(work,seed):
     input_file=ROOT/'data/input/manaus1342_khn26.nc'
     base=ROOT/'migration_work/khn26_single_3h/build64'
     module=(ROOT/'fortran/src/ace_module.F').read_text()
-    module=module.replace('! defien operator','public :: ace_tendency, coarse_F\n\n! defien operator',1)
+    module=module.replace('! defien operator','public :: ace_tendency, capture_coarse_forcing\n\n! defien operator',1)
+    module=module.replace('\ncontains\n\nsubroutine ace_driver', '''
+contains
+subroutine capture_coarse_forcing(unit)
+integer, intent(in) :: unit
+write(unit) legacy_response%coarse_F
+end subroutine capture_coarse_forcing
+
+subroutine ace_driver''',1)
     (work/'ace_module_capture.F').write_text(module)
     include=subprocess.check_output(['nf-config','--fflags'],text=True).split()
     libs=subprocess.check_output(['nf-config','--flibs'],text=True).split()

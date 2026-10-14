@@ -1,0 +1,5810 @@
+{
+  "stage": "OOP-0",
+  "passed": true,
+  "baseline_commit": "115cc50db158f2a0f0ba55fca66027958a895060",
+  "configuration": {
+    "baseline_commit": "115cc50db158f2a0f0ba55fca66027958a895060",
+    "architecture_reference": "b3f922e48e238581a85d31469bafcb800569a748",
+    "source_sha256": {
+      "ace_input.F": "41a9c009d579372ee34ddb046fba8093eee0f926003ccaf828a7186d0fe5a987",
+      "ace_interpolation.F": "5b4b3b83a9be9f5c3b886850f45d67c632c9005d4b75c054bdc6ce9de0e1862e",
+      "microphy_p3.F": "8ab448e72a43230543b6d0911a195141ba7dc1264cdd0f532b21b49d9a9d1b11",
+      "ace_module.F": "d026834539ed441406dafeb58761c244f242cc0f17861e9b18708d5d0818d2c6",
+      "test.F": "22bba49ae1ef96b0399624d1dd9ecb9d2ab6aeb043bc390fb883a52bd576f218"
+    },
+    "input": "/scratch/peter50504/ACE/data/input/manaus1342_khn26.nc",
+    "input_sha256": "09408f4d0343afd8659df82f8f1cfe5dc59308cff150fb2bcfd569b1b8794d35",
+    "lookup_directory": "/scratch/peter50504/ACE_FORTRAN/input_data",
+    "lookup_sha256": "57d2e839b4bbc52fa15892ac47d04a76c0854577a5df34dae264e55bdad4baf3",
+    "compiler": "GNU Fortran (conda-forge gcc 11.2.0-16) 11.2.0\nCopyright (C) 2021 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+    "netcdf_flags": [
+      "-I/home/peter50504/miniconda3/include",
+      "-I/home/peter50504/miniconda3/include"
+    ],
+    "netcdf_libraries": [
+      "-L/home/peter50504/miniconda3/lib",
+      "-lnetcdff",
+      "-lnetcdf"
+    ],
+    "threads": 32,
+    "default_bubble_K": 0.25,
+    "dt_seconds": 4,
+    "prefix_steps": 10,
+    "short_output_seconds": 60,
+    "no_production_source_edit": true,
+    "no_v024_features": true
+  },
+  "comparisons": {
+    "none/initialize/production/initialization.bin": {
+      "baseline_sha256": "ff78c9d2ccbbed4065ca5040d084f941a6997194db0d8b139a8b66f694c6437a",
+      "candidate_sha256": "ff78c9d2ccbbed4065ca5040d084f941a6997194db0d8b139a8b66f694c6437a",
+      "baseline_bytes": 1015376,
+      "candidate_bytes": 1015376,
+      "bitwise_identical": true
+    },
+    "none/prefix/production/states.bin": {
+      "baseline_sha256": "241ab0f3fbf57473a49f2b21a135056f77c3295cae757aa016a522eaa40ce34d",
+      "candidate_sha256": "241ab0f3fbf57473a49f2b21a135056f77c3295cae757aa016a522eaa40ce34d",
+      "baseline_bytes": 10801348,
+      "candidate_bytes": 10801348,
+      "bitwise_identical": true
+    },
+    "none/prefix/checked/states.bin": {
+      "baseline_sha256": "241ab0f3fbf57473a49f2b21a135056f77c3295cae757aa016a522eaa40ce34d",
+      "candidate_sha256": "241ab0f3fbf57473a49f2b21a135056f77c3295cae757aa016a522eaa40ce34d",
+      "baseline_bytes": 10801348,
+      "candidate_bytes": 10801348,
+      "bitwise_identical": true
+    },
+    "none/checked_vs_production/plain": {
+      "baseline_sha256": "241ab0f3fbf57473a49f2b21a135056f77c3295cae757aa016a522eaa40ce34d",
+      "candidate_sha256": "241ab0f3fbf57473a49f2b21a135056f77c3295cae757aa016a522eaa40ce34d",
+      "baseline_bytes": 10801348,
+      "candidate_bytes": 10801348,
+      "bitwise_identical": true
+    },
+    "none/checked_vs_production/observed": {
+      "baseline_sha256": "241ab0f3fbf57473a49f2b21a135056f77c3295cae757aa016a522eaa40ce34d",
+      "candidate_sha256": "241ab0f3fbf57473a49f2b21a135056f77c3295cae757aa016a522eaa40ce34d",
+      "baseline_bytes": 10801348,
+      "candidate_bytes": 10801348,
+      "bitwise_identical": true
+    },
+    "none/checked_vs_production/observations": {
+      "missing": [],
+      "extra": [],
+      "files": {
+        "F.bin": {
+          "baseline_sha256": "9472ec0805ca2f99230633700195b3140004b395f107ac99d631b9fe991061d9",
+          "candidate_sha256": "9472ec0805ca2f99230633700195b3140004b395f107ac99d631b9fe991061d9",
+          "baseline_bytes": 29160720,
+          "candidate_bytes": 29160720,
+          "bitwise_identical": true
+        },
+        "Ta_stage.bin": {
+          "baseline_sha256": "590226f21a67a1c9a95bba684bb5dffa95565923a6162406df12b1bb1d5ef0b2",
+          "candidate_sha256": "590226f21a67a1c9a95bba684bb5dffa95565923a6162406df12b1bb1d5ef0b2",
+          "baseline_bytes": 29160720,
+          "candidate_bytes": 29160720,
+          "bitwise_identical": true
+        },
+        "after_damping.bin": {
+          "baseline_sha256": "d44d730d2026984fa707856f2cf4dc06250e5b463f23c9b8be8696ff901e3a9c",
+          "candidate_sha256": "d44d730d2026984fa707856f2cf4dc06250e5b463f23c9b8be8696ff901e3a9c",
+          "baseline_bytes": 9816480,
+          "candidate_bytes": 9816480,
+          "bitwise_identical": true
+        },
+        "after_physics.bin": {
+          "baseline_sha256": "04b18e49ccaf203ded09bec3e417854ac9db1b3ba97b4b1cc38902555d6908a4",
+          "candidate_sha256": "04b18e49ccaf203ded09bec3e417854ac9db1b3ba97b4b1cc38902555d6908a4",
+          "baseline_bytes": 9816480,
+          "candidate_bytes": 9816480,
+          "bitwise_identical": true
+        },
+        "before_physics.bin": {
+          "baseline_sha256": "04b18e49ccaf203ded09bec3e417854ac9db1b3ba97b4b1cc38902555d6908a4",
+          "candidate_sha256": "04b18e49ccaf203ded09bec3e417854ac9db1b3ba97b4b1cc38902555d6908a4",
+          "baseline_bytes": 9816480,
+          "candidate_bytes": 9816480,
+          "bitwise_identical": true
+        },
+        "coarse_F.bin": {
+          "baseline_sha256": "f9abc7b2aca5d63e012d2ec9ce1833040ec67b593a94ff615a673fc4b6468050",
+          "candidate_sha256": "f9abc7b2aca5d63e012d2ec9ce1833040ec67b593a94ff615a673fc4b6468050",
+          "baseline_bytes": 14544000,
+          "candidate_bytes": 14544000,
+          "bitwise_identical": true
+        },
+        "coarse_z.bin": {
+          "baseline_sha256": "4f7e51baeb72ee6d6888391c9de53d4527346bdc272b59e3429bb1128c21d1b3",
+          "candidate_sha256": "4f7e51baeb72ee6d6888391c9de53d4527346bdc272b59e3429bb1128c21d1b3",
+          "baseline_bytes": 1600,
+          "candidate_bytes": 1600,
+          "bitwise_identical": true
+        },
+        "coarse_ze.bin": {
+          "baseline_sha256": "00554ea438737e9d4833ce16ad94a6cf879e9a7fd2f1befa040ac69342213dbd",
+          "candidate_sha256": "00554ea438737e9d4833ce16ad94a6cf879e9a7fd2f1befa040ac69342213dbd",
+          "baseline_bytes": 1608,
+          "candidate_bytes": 1608,
+          "bitwise_identical": true
+        },
+        "damp.bin": {
+          "baseline_sha256": "6c3eeba36cb4dfafb1b267cfc15aff03d9df007d2d7f168b056f6ff7700e5442",
+          "candidate_sha256": "6c3eeba36cb4dfafb1b267cfc15aff03d9df007d2d7f168b056f6ff7700e5442",
+          "baseline_bytes": 32080,
+          "candidate_bytes": 32080,
+          "bitwise_identical": true
+        },
+        "dwdt.bin": {
+          "baseline_sha256": "4edf9ec1b76581adef7804417e856db7d567c6b02e6d26bcf3a18170de745d1f",
+          "candidate_sha256": "4edf9ec1b76581adef7804417e856db7d567c6b02e6d26bcf3a18170de745d1f",
+          "baseline_bytes": 14616720,
+          "candidate_bytes": 14616720,
+          "bitwise_identical": true
+        },
+        "q_stage.bin": {
+          "baseline_sha256": "2bb7a292b40d0cb7ad69ef550531cf2d3740c9d04dc53f59664402aa31147af7",
+          "candidate_sha256": "2bb7a292b40d0cb7ad69ef550531cf2d3740c9d04dc53f59664402aa31147af7",
+          "baseline_bytes": 29160720,
+          "candidate_bytes": 29160720,
+          "bitwise_identical": true
+        },
+        "qi_stage.bin": {
+          "baseline_sha256": "09ba9b18a4d137c751f51dfe438205abd436b5a3757bab988ef326936f2d05fe",
+          "candidate_sha256": "09ba9b18a4d137c751f51dfe438205abd436b5a3757bab988ef326936f2d05fe",
+          "baseline_bytes": 29160720,
+          "candidate_bytes": 29160720,
+          "bitwise_identical": true
+        },
+        "ql_stage.bin": {
+          "baseline_sha256": "8ef186cd7c2e881c3682672350fabf608be041917b85031d8ec43fe61867cea1",
+          "candidate_sha256": "8ef186cd7c2e881c3682672350fabf608be041917b85031d8ec43fe61867cea1",
+          "baseline_bytes": 29160720,
+          "candidate_bytes": 29160720,
+          "bitwise_identical": true
+        },
+        "reference_tv.bin": {
+          "baseline_sha256": "ac75d51f97847ea16e48d296799a2c9d7d4d9fdfc9755633ebb8c04437a57929",
+          "candidate_sha256": "ac75d51f97847ea16e48d296799a2c9d7d4d9fdfc9755633ebb8c04437a57929",
+          "baseline_bytes": 3208,
+          "candidate_bytes": 3208,
+          "bitwise_identical": true
+        },
+        "rho0B.bin": {
+          "baseline_sha256": "c8dc595a9f10f49b0718826c2d77ad2cd9311e3127810692aa92e343b06d8e8b",
+          "candidate_sha256": "c8dc595a9f10f49b0718826c2d77ad2cd9311e3127810692aa92e343b06d8e8b",
+          "baseline_bytes": 29160720,
+          "candidate_bytes": 29160720,
+          "bitwise_identical": true
+        },
+        "tendency.bin": {
+          "baseline_sha256": "37479b73ba8fbfc2499adbbc71524a754c9e76613da584ea2b521c812c027a63",
+          "candidate_sha256": "37479b73ba8fbfc2499adbbc71524a754c9e76613da584ea2b521c812c027a63",
+          "baseline_bytes": 87482160,
+          "candidate_bytes": 87482160,
+          "bitwise_identical": true
+        }
+      },
+      "passed": true
+    },
+    "none/minute/production/states.bin": {
+      "baseline_sha256": "276f367062f971d10ba27ab4a1b81598db840aafa46973cfbce55763641bc100",
+      "candidate_sha256": "276f367062f971d10ba27ab4a1b81598db840aafa46973cfbce55763641bc100",
+      "baseline_bytes": 1966516,
+      "candidate_bytes": 1966516,
+      "bitwise_identical": true
+    },
+    "none/minute/production/fields.bin": {
+      "baseline_sha256": "6b40fa07935473bae941dc165d0b71baafc0b5830bd16ed4eb36952d44ce80e9",
+      "candidate_sha256": "6b40fa07935473bae941dc165d0b71baafc0b5830bd16ed4eb36952d44ce80e9",
+      "baseline_bytes": 2916072,
+      "candidate_bytes": 2916072,
+      "bitwise_identical": true
+    },
+    "native/initialize/production/initialization.bin": {
+      "baseline_sha256": "ff78c9d2ccbbed4065ca5040d084f941a6997194db0d8b139a8b66f694c6437a",
+      "candidate_sha256": "ff78c9d2ccbbed4065ca5040d084f941a6997194db0d8b139a8b66f694c6437a",
+      "baseline_bytes": 1015376,
+      "candidate_bytes": 1015376,
+      "bitwise_identical": true
+    },
+    "native/prefix/production/states.bin": {
+      "baseline_sha256": "456cb4007f148ee56865060525f675ce27d3d2408737af1cd5a9d408fd61d5bc",
+      "candidate_sha256": "456cb4007f148ee56865060525f675ce27d3d2408737af1cd5a9d408fd61d5bc",
+      "baseline_bytes": 10801348,
+      "candidate_bytes": 10801348,
+      "bitwise_identical": true
+    },
+    "native/prefix/checked/states.bin": {
+      "baseline_sha256": "456cb4007f148ee56865060525f675ce27d3d2408737af1cd5a9d408fd61d5bc",
+      "candidate_sha256": "456cb4007f148ee56865060525f675ce27d3d2408737af1cd5a9d408fd61d5bc",
+      "baseline_bytes": 10801348,
+      "candidate_bytes": 10801348,
+      "bitwise_identical": true
+    },
+    "native/checked_vs_production/plain": {
+      "baseline_sha256": "456cb4007f148ee56865060525f675ce27d3d2408737af1cd5a9d408fd61d5bc",
+      "candidate_sha256": "456cb4007f148ee56865060525f675ce27d3d2408737af1cd5a9d408fd61d5bc",
+      "baseline_bytes": 10801348,
+      "candidate_bytes": 10801348,
+      "bitwise_identical": true
+    },
+    "native/checked_vs_production/observed": {
+      "baseline_sha256": "456cb4007f148ee56865060525f675ce27d3d2408737af1cd5a9d408fd61d5bc",
+      "candidate_sha256": "456cb4007f148ee56865060525f675ce27d3d2408737af1cd5a9d408fd61d5bc",
+      "baseline_bytes": 10801348,
+      "candidate_bytes": 10801348,
+      "bitwise_identical": true
+    },
+    "native/checked_vs_production/observations": {
+      "missing": [],
+      "extra": [],
+      "files": {
+        "F.bin": {
+          "baseline_sha256": "e4d5ada251b3dcea5ceef07cf27ce6c35f56299f206c10f3ab714ba81bd04d8d",
+          "candidate_sha256": "e4d5ada251b3dcea5ceef07cf27ce6c35f56299f206c10f3ab714ba81bd04d8d",
+          "baseline_bytes": 29160720,
+          "candidate_bytes": 29160720,
+          "bitwise_identical": true
+        },
+        "Ta_stage.bin": {
+          "baseline_sha256": "22e78e2a0abb2e70a62269a11babd74a09085e7e7f7fc8cec3bc0354e3b25ecb",
+          "candidate_sha256": "22e78e2a0abb2e70a62269a11babd74a09085e7e7f7fc8cec3bc0354e3b25ecb",
+          "baseline_bytes": 29160720,
+          "candidate_bytes": 29160720,
+          "bitwise_identical": true
+        },
+        "after_damping.bin": {
+          "baseline_sha256": "6fa1269a967731860de7234fadef35dca7618dbce4920353c363906785417669",
+          "candidate_sha256": "6fa1269a967731860de7234fadef35dca7618dbce4920353c363906785417669",
+          "baseline_bytes": 9816480,
+          "candidate_bytes": 9816480,
+          "bitwise_identical": true
+        },
+        "after_physics.bin": {
+          "baseline_sha256": "41f93543117ea76f73aa0fdbe316498e599a0f3e351c60903e4a3696dfaebb15",
+          "candidate_sha256": "41f93543117ea76f73aa0fdbe316498e599a0f3e351c60903e4a3696dfaebb15",
+          "baseline_bytes": 9816480,
+          "candidate_bytes": 9816480,
+          "bitwise_identical": true
+        },
+        "before_physics.bin": {
+          "baseline_sha256": "96f94da26c38c4a93cfe8c83e4c02c3bbd9021f2e1a2ede2896b7dc5c53392f9",
+          "candidate_sha256": "96f94da26c38c4a93cfe8c83e4c02c3bbd9021f2e1a2ede2896b7dc5c53392f9",
+          "baseline_bytes": 9816480,
+          "candidate_bytes": 9816480,
+          "bitwise_identical": true
+        },
+        "coarse_F.bin": {
+          "baseline_sha256": "a0a1c25933a0083f5400b5e285141befb6d7e8ee7ff3557995f340bf31962d76",
+          "candidate_sha256": "a0a1c25933a0083f5400b5e285141befb6d7e8ee7ff3557995f340bf31962d76",
+          "baseline_bytes": 14544000,
+          "candidate_bytes": 14544000,
+          "bitwise_identical": true
+        },
+        "coarse_z.bin": {
+          "baseline_sha256": "4f7e51baeb72ee6d6888391c9de53d4527346bdc272b59e3429bb1128c21d1b3",
+          "candidate_sha256": "4f7e51baeb72ee6d6888391c9de53d4527346bdc272b59e3429bb1128c21d1b3",
+          "baseline_bytes": 1600,
+          "candidate_bytes": 1600,
+          "bitwise_identical": true
+        },
+        "coarse_ze.bin": {
+          "baseline_sha256": "00554ea438737e9d4833ce16ad94a6cf879e9a7fd2f1befa040ac69342213dbd",
+          "candidate_sha256": "00554ea438737e9d4833ce16ad94a6cf879e9a7fd2f1befa040ac69342213dbd",
+          "baseline_bytes": 1608,
+          "candidate_bytes": 1608,
+          "bitwise_identical": true
+        },
+        "damp.bin": {
+          "baseline_sha256": "6c3eeba36cb4dfafb1b267cfc15aff03d9df007d2d7f168b056f6ff7700e5442",
+          "candidate_sha256": "6c3eeba36cb4dfafb1b267cfc15aff03d9df007d2d7f168b056f6ff7700e5442",
+          "baseline_bytes": 32080,
+          "candidate_bytes": 32080,
+          "bitwise_identical": true
+        },
+        "dwdt.bin": {
+          "baseline_sha256": "467b6c1687a6abe137a96a34bd35cc1dcc2627b6e28dfd795f532243c1f0e5e2",
+          "candidate_sha256": "467b6c1687a6abe137a96a34bd35cc1dcc2627b6e28dfd795f532243c1f0e5e2",
+          "baseline_bytes": 14616720,
+          "candidate_bytes": 14616720,
+          "bitwise_identical": true
+        },
+        "native_sinks.bin": {
+          "baseline_sha256": "ac78d924911178950e5b085d44f5bd7d18757bde2e058a75bb78ff05a271e2f9",
+          "candidate_sha256": "ac78d924911178950e5b085d44f5bd7d18757bde2e058a75bb78ff05a271e2f9",
+          "baseline_bytes": 6480160,
+          "candidate_bytes": 6480160,
+          "bitwise_identical": true
+        },
+        "q_stage.bin": {
+          "baseline_sha256": "0bae6705573ef9f19c041bd06ec0241c29deb109ff82d32e0f839f94ae945d85",
+          "candidate_sha256": "0bae6705573ef9f19c041bd06ec0241c29deb109ff82d32e0f839f94ae945d85",
+          "baseline_bytes": 29160720,
+          "candidate_bytes": 29160720,
+          "bitwise_identical": true
+        },
+        "qi_stage.bin": {
+          "baseline_sha256": "22dac60846ce1e480e8acaadcec6b2a12b07d0339d31e3332d0298ae67df75ca",
+          "candidate_sha256": "22dac60846ce1e480e8acaadcec6b2a12b07d0339d31e3332d0298ae67df75ca",
+          "baseline_bytes": 29160720,
+          "candidate_bytes": 29160720,
+          "bitwise_identical": true
+        },
+        "ql_stage.bin": {
+          "baseline_sha256": "f8ef4af066292d6e79fb0d8aa3c1e09e54c390aa8575f222cb4ece2d6b79d46a",
+          "candidate_sha256": "f8ef4af066292d6e79fb0d8aa3c1e09e54c390aa8575f222cb4ece2d6b79d46a",
+          "baseline_bytes": 29160720,
+          "candidate_bytes": 29160720,
+          "bitwise_identical": true
+        },
+        "reference_tv.bin": {
+          "baseline_sha256": "ac75d51f97847ea16e48d296799a2c9d7d4d9fdfc9755633ebb8c04437a57929",
+          "candidate_sha256": "ac75d51f97847ea16e48d296799a2c9d7d4d9fdfc9755633ebb8c04437a57929",
+          "baseline_bytes": 3208,
+          "candidate_bytes": 3208,
+          "bitwise_identical": true
+        },
+        "rho0B.bin": {
+          "baseline_sha256": "2d6d2021964dccbd657998d2a8c6034331569d57a8a7ca849a6a91d3666d290e",
+          "candidate_sha256": "2d6d2021964dccbd657998d2a8c6034331569d57a8a7ca849a6a91d3666d290e",
+          "baseline_bytes": 29160720,
+          "candidate_bytes": 29160720,
+          "bitwise_identical": true
+        },
+        "tendency.bin": {
+          "baseline_sha256": "04053d93a76220e89c027f69b3805dccb9c959ca0c054b49bbe3bcacd77c6d5f",
+          "candidate_sha256": "04053d93a76220e89c027f69b3805dccb9c959ca0c054b49bbe3bcacd77c6d5f",
+          "baseline_bytes": 87482160,
+          "candidate_bytes": 87482160,
+          "bitwise_identical": true
+        }
+      },
+      "passed": true
+    },
+    "native/minute/production/states.bin": {
+      "baseline_sha256": "29a63b302ed6c343163f0f232c20ee823f2b1acfb08f1983417c6bbe23c5fe68",
+      "candidate_sha256": "29a63b302ed6c343163f0f232c20ee823f2b1acfb08f1983417c6bbe23c5fe68",
+      "baseline_bytes": 1966516,
+      "candidate_bytes": 1966516,
+      "bitwise_identical": true
+    },
+    "native/minute/production/fields.bin": {
+      "baseline_sha256": "b6d470b25160c4677db5c99260db6fe1287080a001b4a442a63fca5f1606a469",
+      "candidate_sha256": "b6d470b25160c4677db5c99260db6fe1287080a001b4a442a63fca5f1606a469",
+      "baseline_bytes": 2916072,
+      "candidate_bytes": 2916072,
+      "bitwise_identical": true
+    },
+    "p3/initialize/production/initialization.bin": {
+      "baseline_sha256": "f10eb2e96302a72ddfbee797f6c7aa8ba32db4977f3c0381bf184f070ba14ade",
+      "candidate_sha256": "f10eb2e96302a72ddfbee797f6c7aa8ba32db4977f3c0381bf184f070ba14ade",
+      "baseline_bytes": 3633104,
+      "candidate_bytes": 3633104,
+      "bitwise_identical": true
+    },
+    "p3/prefix/production/states.bin": {
+      "baseline_sha256": "9fd25a43728fdb9369a53202332d2fd42f0485880ddaf518e6507c0aec1c3ffd",
+      "candidate_sha256": "9fd25a43728fdb9369a53202332d2fd42f0485880ddaf518e6507c0aec1c3ffd",
+      "baseline_bytes": 39596356,
+      "candidate_bytes": 39596356,
+      "bitwise_identical": true
+    },
+    "p3/prefix/checked/states.bin": {
+      "baseline_sha256": "9fd25a43728fdb9369a53202332d2fd42f0485880ddaf518e6507c0aec1c3ffd",
+      "candidate_sha256": "9fd25a43728fdb9369a53202332d2fd42f0485880ddaf518e6507c0aec1c3ffd",
+      "baseline_bytes": 39596356,
+      "candidate_bytes": 39596356,
+      "bitwise_identical": true
+    },
+    "p3/checked_vs_production/plain": {
+      "baseline_sha256": "9fd25a43728fdb9369a53202332d2fd42f0485880ddaf518e6507c0aec1c3ffd",
+      "candidate_sha256": "9fd25a43728fdb9369a53202332d2fd42f0485880ddaf518e6507c0aec1c3ffd",
+      "baseline_bytes": 39596356,
+      "candidate_bytes": 39596356,
+      "bitwise_identical": true
+    },
+    "p3/checked_vs_production/observed": {
+      "baseline_sha256": "9fd25a43728fdb9369a53202332d2fd42f0485880ddaf518e6507c0aec1c3ffd",
+      "candidate_sha256": "9fd25a43728fdb9369a53202332d2fd42f0485880ddaf518e6507c0aec1c3ffd",
+      "baseline_bytes": 39596356,
+      "candidate_bytes": 39596356,
+      "bitwise_identical": true
+    },
+    "p3/checked_vs_production/observations": {
+      "missing": [],
+      "extra": [],
+      "files": {
+        "F.bin": {
+          "baseline_sha256": "56fcc21058662865e6b40e50c386923b501014fd913d8116de42f777a845ff2a",
+          "candidate_sha256": "56fcc21058662865e6b40e50c386923b501014fd913d8116de42f777a845ff2a",
+          "baseline_bytes": 29160720,
+          "candidate_bytes": 29160720,
+          "bitwise_identical": true
+        },
+        "Ta_stage.bin": {
+          "baseline_sha256": "96ab0f83c03d48edf76d9ef0ccbbb6b3f02b4f8f82835cf7de367d749441e64f",
+          "candidate_sha256": "96ab0f83c03d48edf76d9ef0ccbbb6b3f02b4f8f82835cf7de367d749441e64f",
+          "baseline_bytes": 29160720,
+          "candidate_bytes": 29160720,
+          "bitwise_identical": true
+        },
+        "after_damping.bin": {
+          "baseline_sha256": "a17a8c857a452c4d1a43b1c21c983d439232f065b6118df2f128d3fe1bd70fbf",
+          "candidate_sha256": "a17a8c857a452c4d1a43b1c21c983d439232f065b6118df2f128d3fe1bd70fbf",
+          "baseline_bytes": 35993760,
+          "candidate_bytes": 35993760,
+          "bitwise_identical": true
+        },
+        "after_physics.bin": {
+          "baseline_sha256": "e134d9a7c54949456607e34d90cfb2d4ffbc76cea5ee15fec29dac0c31c7a9aa",
+          "candidate_sha256": "e134d9a7c54949456607e34d90cfb2d4ffbc76cea5ee15fec29dac0c31c7a9aa",
+          "baseline_bytes": 35993760,
+          "candidate_bytes": 35993760,
+          "bitwise_identical": true
+        },
+        "before_physics.bin": {
+          "baseline_sha256": "19446cf6300f271b606bac4b384a5337c8ec0d550a3849f844e4220a1f8de833",
+          "candidate_sha256": "19446cf6300f271b606bac4b384a5337c8ec0d550a3849f844e4220a1f8de833",
+          "baseline_bytes": 35993760,
+          "candidate_bytes": 35993760,
+          "bitwise_identical": true
+        },
+        "coarse_F.bin": {
+          "baseline_sha256": "b10c0fc882faf6fa513bb0aef8ec7d01c499a3f4032398ac356ec7620ad19832",
+          "candidate_sha256": "b10c0fc882faf6fa513bb0aef8ec7d01c499a3f4032398ac356ec7620ad19832",
+          "baseline_bytes": 14544000,
+          "candidate_bytes": 14544000,
+          "bitwise_identical": true
+        },
+        "coarse_z.bin": {
+          "baseline_sha256": "4f7e51baeb72ee6d6888391c9de53d4527346bdc272b59e3429bb1128c21d1b3",
+          "candidate_sha256": "4f7e51baeb72ee6d6888391c9de53d4527346bdc272b59e3429bb1128c21d1b3",
+          "baseline_bytes": 1600,
+          "candidate_bytes": 1600,
+          "bitwise_identical": true
+        },
+        "coarse_ze.bin": {
+          "baseline_sha256": "00554ea438737e9d4833ce16ad94a6cf879e9a7fd2f1befa040ac69342213dbd",
+          "candidate_sha256": "00554ea438737e9d4833ce16ad94a6cf879e9a7fd2f1befa040ac69342213dbd",
+          "baseline_bytes": 1608,
+          "candidate_bytes": 1608,
+          "bitwise_identical": true
+        },
+        "damp.bin": {
+          "baseline_sha256": "6c3eeba36cb4dfafb1b267cfc15aff03d9df007d2d7f168b056f6ff7700e5442",
+          "candidate_sha256": "6c3eeba36cb4dfafb1b267cfc15aff03d9df007d2d7f168b056f6ff7700e5442",
+          "baseline_bytes": 32080,
+          "candidate_bytes": 32080,
+          "bitwise_identical": true
+        },
+        "dwdt.bin": {
+          "baseline_sha256": "0a0c2b7a8302e2e670b8d57389d08dc3b1a9ca2e1879619e66e588d8dee4bd6f",
+          "candidate_sha256": "0a0c2b7a8302e2e670b8d57389d08dc3b1a9ca2e1879619e66e588d8dee4bd6f",
+          "baseline_bytes": 14616720,
+          "candidate_bytes": 14616720,
+          "bitwise_identical": true
+        },
+        "p3_liquid_flux.bin": {
+          "baseline_sha256": "081a939f060acb24594e32ade266399354d59769fcbad7f84a86a3dbcf1bc5c2",
+          "candidate_sha256": "081a939f060acb24594e32ade266399354d59769fcbad7f84a86a3dbcf1bc5c2",
+          "baseline_bytes": 8080,
+          "candidate_bytes": 8080,
+          "bitwise_identical": true
+        },
+        "p3_solid_flux.bin": {
+          "baseline_sha256": "081a939f060acb24594e32ade266399354d59769fcbad7f84a86a3dbcf1bc5c2",
+          "candidate_sha256": "081a939f060acb24594e32ade266399354d59769fcbad7f84a86a3dbcf1bc5c2",
+          "baseline_bytes": 8080,
+          "candidate_bytes": 8080,
+          "bitwise_identical": true
+        },
+        "q_stage.bin": {
+          "baseline_sha256": "adefa0e51ea3fc12b75293634eb357ecf80eb82f563a1d6dff2da33294526c37",
+          "candidate_sha256": "adefa0e51ea3fc12b75293634eb357ecf80eb82f563a1d6dff2da33294526c37",
+          "baseline_bytes": 29160720,
+          "candidate_bytes": 29160720,
+          "bitwise_identical": true
+        },
+        "qi_stage.bin": {
+          "baseline_sha256": "cac9c292bb19e8375bc35d42f65a2bac1b6eea5ad6d53c734b52cc39e4c1a0c7",
+          "candidate_sha256": "cac9c292bb19e8375bc35d42f65a2bac1b6eea5ad6d53c734b52cc39e4c1a0c7",
+          "baseline_bytes": 29160720,
+          "candidate_bytes": 29160720,
+          "bitwise_identical": true
+        },
+        "ql_stage.bin": {
+          "baseline_sha256": "d0667919604688b224f1ebc71e0a3445903ebf09c36cb064dff7014e4dd9e6b4",
+          "candidate_sha256": "d0667919604688b224f1ebc71e0a3445903ebf09c36cb064dff7014e4dd9e6b4",
+          "baseline_bytes": 29160720,
+          "candidate_bytes": 29160720,
+          "bitwise_identical": true
+        },
+        "reference_tv.bin": {
+          "baseline_sha256": "ac75d51f97847ea16e48d296799a2c9d7d4d9fdfc9755633ebb8c04437a57929",
+          "candidate_sha256": "ac75d51f97847ea16e48d296799a2c9d7d4d9fdfc9755633ebb8c04437a57929",
+          "baseline_bytes": 3208,
+          "candidate_bytes": 3208,
+          "bitwise_identical": true
+        },
+        "rho0B.bin": {
+          "baseline_sha256": "77175c538ba4d784fd9bad600c1874e46ac5453c425abc3fa641d65edb4ee36d",
+          "candidate_sha256": "77175c538ba4d784fd9bad600c1874e46ac5453c425abc3fa641d65edb4ee36d",
+          "baseline_bytes": 29160720,
+          "candidate_bytes": 29160720,
+          "bitwise_identical": true
+        },
+        "tendency.bin": {
+          "baseline_sha256": "37b525ee0a416b4574874e06fa6d3a7520b1f48ea3cfd09d1468a2ded959b54e",
+          "candidate_sha256": "37b525ee0a416b4574874e06fa6d3a7520b1f48ea3cfd09d1468a2ded959b54e",
+          "baseline_bytes": 320767920,
+          "candidate_bytes": 320767920,
+          "bitwise_identical": true
+        }
+      },
+      "passed": true
+    },
+    "p3/minute/production/states.bin": {
+      "baseline_sha256": "aa77435f8df7262833485f33bd2b030f6b59f433ec70c2f6b4dce8d108311b8b",
+      "candidate_sha256": "aa77435f8df7262833485f33bd2b030f6b59f433ec70c2f6b4dce8d108311b8b",
+      "baseline_bytes": 7201972,
+      "candidate_bytes": 7201972,
+      "bitwise_identical": true
+    },
+    "p3/minute/production/fields.bin": {
+      "baseline_sha256": "421238e95116622cb4123f2205701131f5b0c9b92e8da93437a8282a7e1be2ef",
+      "candidate_sha256": "421238e95116622cb4123f2205701131f5b0c9b92e8da93437a8282a7e1be2ef",
+      "baseline_bytes": 2916072,
+      "candidate_bytes": 2916072,
+      "bitwise_identical": true
+    }
+  },
+  "observation_layouts": {
+    "runs/none_initialize_production_observed/observations/coarse_z.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        200
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/none_initialize_production_observed/observations/coarse_ze.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        201
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/none_initialize_production_observed/observations/reference_tv.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/none_minute_production_observed/observations/coarse_z.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        200
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/none_minute_production_observed/observations/Ta_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_minute_production_observed/observations/dwdt.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        201
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_minute_production_observed/observations/after_physics.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        3
+      ],
+      "array_order": "Fortran",
+      "frames": 15,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/none_minute_production_observed/observations/before_physics.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        3
+      ],
+      "array_order": "Fortran",
+      "frames": 15,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/none_minute_production_observed/observations/tendency.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401,
+        3
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_minute_production_observed/observations/qi_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_minute_production_observed/observations/after_damping.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        3
+      ],
+      "array_order": "Fortran",
+      "frames": 15,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/none_minute_production_observed/observations/rho0B.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_minute_production_observed/observations/q_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_minute_production_observed/observations/ql_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_minute_production_observed/observations/reference_tv.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/none_minute_production_observed/observations/F.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_minute_production_observed/observations/coarse_F.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        200
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_minute_production_observed/observations/damp.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 15,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/none_minute_production_observed/observations/coarse_ze.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        201
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/none_prefix_checked_observed/observations/reference_tv.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/none_prefix_checked_observed/observations/ql_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_prefix_checked_observed/observations/dwdt.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        201
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_prefix_checked_observed/observations/tendency.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401,
+        3
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_prefix_checked_observed/observations/qi_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_prefix_checked_observed/observations/Ta_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_prefix_checked_observed/observations/q_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_prefix_checked_observed/observations/F.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_prefix_checked_observed/observations/coarse_z.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        200
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/none_prefix_checked_observed/observations/after_physics.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        3
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/none_prefix_checked_observed/observations/coarse_F.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        200
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_prefix_checked_observed/observations/after_damping.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        3
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/none_prefix_checked_observed/observations/before_physics.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        3
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/none_prefix_checked_observed/observations/coarse_ze.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        201
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/none_prefix_checked_observed/observations/damp.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/none_prefix_checked_observed/observations/rho0B.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_prefix_production_observed/observations/Ta_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_prefix_production_observed/observations/q_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_prefix_production_observed/observations/coarse_z.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        200
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/none_prefix_production_observed/observations/rho0B.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_prefix_production_observed/observations/F.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_prefix_production_observed/observations/after_damping.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        3
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/none_prefix_production_observed/observations/ql_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_prefix_production_observed/observations/after_physics.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        3
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/none_prefix_production_observed/observations/tendency.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401,
+        3
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_prefix_production_observed/observations/qi_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_prefix_production_observed/observations/dwdt.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        201
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/none_prefix_production_observed/observations/damp.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/none_prefix_production_observed/observations/before_physics.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        3
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/none_prefix_production_observed/observations/reference_tv.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/none_prefix_production_observed/observations/coarse_ze.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        201
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/none_prefix_production_observed/observations/coarse_F.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        200
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_initialize_production_observed/observations/reference_tv.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/native_initialize_production_observed/observations/coarse_z.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        200
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/native_initialize_production_observed/observations/PMB.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        200,
+        101,
+        201,
+        101
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/native_initialize_production_observed/observations/PMDv.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        101,
+        200,
+        201
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/native_initialize_production_observed/observations/coarse_ze.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        201
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/native_initialize_production_observed/observations/PMD.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        101,
+        200,
+        201
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/native_minute_production_observed/observations/Ta_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_minute_production_observed/observations/F.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_minute_production_observed/observations/before_physics.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        3
+      ],
+      "array_order": "Fortran",
+      "frames": 15,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/native_minute_production_observed/observations/q_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_minute_production_observed/observations/coarse_z.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        200
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/native_minute_production_observed/observations/ql_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_minute_production_observed/observations/damp.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 15,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/native_minute_production_observed/observations/native_sinks.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401,
+        2
+      ],
+      "array_order": "Fortran",
+      "frames": 15,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/native_minute_production_observed/observations/qi_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_minute_production_observed/observations/reference_tv.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/native_minute_production_observed/observations/tendency.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401,
+        3
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_minute_production_observed/observations/rho0B.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_minute_production_observed/observations/dwdt.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        201
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_minute_production_observed/observations/coarse_ze.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        201
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/native_minute_production_observed/observations/after_damping.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        3
+      ],
+      "array_order": "Fortran",
+      "frames": 15,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/native_minute_production_observed/observations/after_physics.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        3
+      ],
+      "array_order": "Fortran",
+      "frames": 15,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/native_minute_production_observed/observations/coarse_F.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        200
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_prefix_checked_observed/observations/coarse_F.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        200
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_prefix_checked_observed/observations/coarse_ze.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        201
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/native_prefix_checked_observed/observations/damp.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/native_prefix_checked_observed/observations/F.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_prefix_checked_observed/observations/tendency.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401,
+        3
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_prefix_checked_observed/observations/qi_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_prefix_checked_observed/observations/ql_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_prefix_checked_observed/observations/q_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_prefix_checked_observed/observations/dwdt.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        201
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_prefix_checked_observed/observations/coarse_z.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        200
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/native_prefix_checked_observed/observations/rho0B.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_prefix_checked_observed/observations/before_physics.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        3
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/native_prefix_checked_observed/observations/after_physics.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        3
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/native_prefix_checked_observed/observations/Ta_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_prefix_checked_observed/observations/native_sinks.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401,
+        2
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/native_prefix_checked_observed/observations/reference_tv.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/native_prefix_checked_observed/observations/after_damping.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        3
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/native_prefix_production_observed/observations/after_physics.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        3
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/native_prefix_production_observed/observations/after_damping.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        3
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/native_prefix_production_observed/observations/coarse_ze.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        201
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/native_prefix_production_observed/observations/q_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_prefix_production_observed/observations/coarse_F.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        200
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_prefix_production_observed/observations/rho0B.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_prefix_production_observed/observations/damp.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/native_prefix_production_observed/observations/dwdt.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        201
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_prefix_production_observed/observations/before_physics.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        3
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/native_prefix_production_observed/observations/coarse_z.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        200
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/native_prefix_production_observed/observations/Ta_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_prefix_production_observed/observations/F.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_prefix_production_observed/observations/qi_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_prefix_production_observed/observations/tendency.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401,
+        3
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/native_prefix_production_observed/observations/reference_tv.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/native_prefix_production_observed/observations/native_sinks.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401,
+        2
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/native_prefix_production_observed/observations/ql_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_initialize_production_observed/observations/coarse_ze.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        201
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/p3_initialize_production_observed/observations/coarse_z.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        200
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/p3_initialize_production_observed/observations/reference_tv.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/p3_minute_production_observed/observations/after_physics.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        11
+      ],
+      "array_order": "Fortran",
+      "frames": 15,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/p3_minute_production_observed/observations/coarse_ze.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        201
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/p3_minute_production_observed/observations/p3_liquid_flux.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101
+      ],
+      "array_order": "Fortran",
+      "frames": 15,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/p3_minute_production_observed/observations/after_damping.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        11
+      ],
+      "array_order": "Fortran",
+      "frames": 15,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/p3_minute_production_observed/observations/q_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_minute_production_observed/observations/coarse_F.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        200
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_minute_production_observed/observations/before_physics.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        11
+      ],
+      "array_order": "Fortran",
+      "frames": 15,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/p3_minute_production_observed/observations/dwdt.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        201
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_minute_production_observed/observations/ql_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_minute_production_observed/observations/damp.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 15,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/p3_minute_production_observed/observations/rho0B.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_minute_production_observed/observations/tendency.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401,
+        11
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_minute_production_observed/observations/qi_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_minute_production_observed/observations/p3_solid_flux.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101
+      ],
+      "array_order": "Fortran",
+      "frames": 15,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/p3_minute_production_observed/observations/Ta_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_minute_production_observed/observations/F.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 135,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_minute_production_observed/observations/coarse_z.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        200
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/p3_minute_production_observed/observations/reference_tv.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/p3_prefix_checked_observed/observations/after_damping.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        11
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/p3_prefix_checked_observed/observations/Ta_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_prefix_checked_observed/observations/rho0B.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_prefix_checked_observed/observations/after_physics.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        11
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/p3_prefix_checked_observed/observations/coarse_z.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        200
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/p3_prefix_checked_observed/observations/ql_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_prefix_checked_observed/observations/coarse_ze.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        201
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/p3_prefix_checked_observed/observations/dwdt.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        201
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_prefix_checked_observed/observations/tendency.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401,
+        11
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_prefix_checked_observed/observations/qi_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_prefix_checked_observed/observations/before_physics.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        11
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/p3_prefix_checked_observed/observations/damp.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/p3_prefix_checked_observed/observations/p3_liquid_flux.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/p3_prefix_checked_observed/observations/q_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_prefix_checked_observed/observations/coarse_F.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        200
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_prefix_checked_observed/observations/p3_solid_flux.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/p3_prefix_checked_observed/observations/F.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_prefix_checked_observed/observations/reference_tv.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/p3_prefix_production_observed/observations/F.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_prefix_production_observed/observations/damp.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/p3_prefix_production_observed/observations/before_physics.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        11
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/p3_prefix_production_observed/observations/p3_solid_flux.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/p3_prefix_production_observed/observations/coarse_F.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        200
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_prefix_production_observed/observations/p3_liquid_flux.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/p3_prefix_production_observed/observations/reference_tv.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/p3_prefix_production_observed/observations/after_physics.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        11
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/p3_prefix_production_observed/observations/coarse_z.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        200
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/p3_prefix_production_observed/observations/rho0B.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_prefix_production_observed/observations/after_damping.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        102,
+        401,
+        11
+      ],
+      "array_order": "Fortran",
+      "frames": 10,
+      "frame_axis": "step",
+      "stage_one_frame": null
+    },
+    "runs/p3_prefix_production_observed/observations/Ta_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_prefix_production_observed/observations/coarse_ze.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        201
+      ],
+      "array_order": "Fortran",
+      "frames": 1,
+      "frame_axis": "initialization",
+      "stage_one_frame": null
+    },
+    "runs/p3_prefix_production_observed/observations/qi_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_prefix_production_observed/observations/tendency.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401,
+        11
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_prefix_production_observed/observations/ql_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_prefix_production_observed/observations/dwdt.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        201
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    },
+    "runs/p3_prefix_production_observed/observations/q_stage.bin": {
+      "dtype": "little-endian binary64",
+      "shape_per_frame": [
+        101,
+        401
+      ],
+      "array_order": "Fortran",
+      "frames": 90,
+      "frame_axis": "RK stages 1..9 per step",
+      "stage_one_frame": "frame 0; then every ninth frame"
+    }
+  },
+  "state_validity": {
+    "none_minute_production_observed": {
+      "finite": true,
+      "water_nonnegative": true,
+      "qrim_not_above_qi": null,
+      "saved_states": 2,
+      "field_minima": [
+        [
+          0.0,
+          336.1767593709555,
+          2.402924919735964e-06
+        ],
+        [
+          -0.16190966168643167,
+          336.17675941516643,
+          2.402902573713869e-06
+        ]
+      ],
+      "field_maxima": [
+        [
+          0.0,
+          1227.772002510752,
+          0.017755543371278704
+        ],
+        [
+          0.3829551362177805,
+          1227.772002510752,
+          0.01772941028997496
+        ]
+      ],
+      "max_abs_area_mean_MF_each_saved_state": [
+        0.0,
+        9.55587994942697e-19
+      ]
+    },
+    "none_minute_production_plain": {
+      "finite": true,
+      "water_nonnegative": true,
+      "qrim_not_above_qi": null,
+      "saved_states": 2,
+      "field_minima": [
+        [
+          0.0,
+          336.1767593709555,
+          2.402924919735964e-06
+        ],
+        [
+          -0.16190966168643167,
+          336.17675941516643,
+          2.402902573713869e-06
+        ]
+      ],
+      "field_maxima": [
+        [
+          0.0,
+          1227.772002510752,
+          0.017755543371278704
+        ],
+        [
+          0.3829551362177805,
+          1227.772002510752,
+          0.01772941028997496
+        ]
+      ],
+      "max_abs_area_mean_MF_each_saved_state": [
+        0.0,
+        9.55587994942697e-19
+      ]
+    },
+    "none_prefix_checked_observed": {
+      "finite": true,
+      "water_nonnegative": true,
+      "qrim_not_above_qi": null,
+      "saved_states": 11,
+      "field_minima": [
+        [
+          0.0,
+          336.1767593709555,
+          2.402924919735964e-06
+        ],
+        [
+          -0.011138585396459904,
+          336.1767593709575,
+          2.4029248108815444e-06
+        ],
+        [
+          -0.02226258355612372,
+          336.17675937140154,
+          2.4029244853636915e-06
+        ],
+        [
+          -0.03336317970932841,
+          336.17675937228597,
+          2.402923945213745e-06
+        ],
+        [
+          -0.04443277514941879,
+          336.176759373608,
+          2.402923193332693e-06
+        ],
+        [
+          -0.055463403891275714,
+          336.17675937536364,
+          2.4029222334659596e-06
+        ],
+        [
+          -0.0664471324521245,
+          336.17675937754785,
+          2.402921070186889e-06
+        ],
+        [
+          -0.07737607620428372,
+          336.1767593801544,
+          2.402919708872003e-06
+        ],
+        [
+          -0.08824240035695609,
+          336.17675938317615,
+          2.402918155670553e-06
+        ],
+        [
+          -0.09903832764758412,
+          336.17675938660483,
+          2.4029164174717534e-06
+        ],
+        [
+          -0.1097561560654985,
+          336.1767593904314,
+          2.40291450187263e-06
+        ]
+      ],
+      "field_maxima": [
+        [
+          0.0,
+          1227.772002510752,
+          0.017755543371278704
+        ],
+        [
+          0.02596560712739499,
+          1227.772002510752,
+          0.017755310885303226
+        ],
+        [
+          0.05190676593402377,
+          1227.772002510752,
+          0.01775485307909156
+        ],
+        [
+          0.07781298085965188,
+          1227.772002510752,
+          0.017754170912398077
+        ],
+        [
+          0.10367660420311622,
+          1227.772002510752,
+          0.017753265814466884
+        ],
+        [
+          0.12948908536368106,
+          1227.772002510752,
+          0.01775213966577393
+        ],
+        [
+          0.15524189944245445,
+          1227.772002510752,
+          0.01775079478263637
+        ],
+        [
+          0.18092657855630628,
+          1227.772002510752,
+          0.017749233894842713
+        ],
+        [
+          0.20653471073666807,
+          1227.772002510752,
+          0.017747460119025747
+        ],
+        [
+          0.23205793238175335,
+          1227.772002510752,
+          0.01774547692821308
+        ],
+        [
+          0.257487964424397,
+          1227.772002510752,
+          0.01774328811764357
+        ]
+      ],
+      "max_abs_area_mean_MF_each_saved_state": [
+        0.0,
+        7.751563480844694e-20,
+        1.6422863268673418e-19,
+        1.8519126348990322e-19,
+        2.0577040560627443e-19,
+        5.239679398159202e-19,
+        3.542921644679852e-19,
+        4.108716802581303e-19,
+        5.253109224703626e-19,
+        5.207565338723052e-19,
+        9.723516372366966e-19
+      ]
+    },
+    "none_prefix_checked_plain": {
+      "finite": true,
+      "water_nonnegative": true,
+      "qrim_not_above_qi": null,
+      "saved_states": 11,
+      "field_minima": [
+        [
+          0.0,
+          336.1767593709555,
+          2.402924919735964e-06
+        ],
+        [
+          -0.011138585396459904,
+          336.1767593709575,
+          2.4029248108815444e-06
+        ],
+        [
+          -0.02226258355612372,
+          336.17675937140154,
+          2.4029244853636915e-06
+        ],
+        [
+          -0.03336317970932841,
+          336.17675937228597,
+          2.402923945213745e-06
+        ],
+        [
+          -0.04443277514941879,
+          336.176759373608,
+          2.402923193332693e-06
+        ],
+        [
+          -0.055463403891275714,
+          336.17675937536364,
+          2.4029222334659596e-06
+        ],
+        [
+          -0.0664471324521245,
+          336.17675937754785,
+          2.402921070186889e-06
+        ],
+        [
+          -0.07737607620428372,
+          336.1767593801544,
+          2.402919708872003e-06
+        ],
+        [
+          -0.08824240035695609,
+          336.17675938317615,
+          2.402918155670553e-06
+        ],
+        [
+          -0.09903832764758412,
+          336.17675938660483,
+          2.4029164174717534e-06
+        ],
+        [
+          -0.1097561560654985,
+          336.1767593904314,
+          2.40291450187263e-06
+        ]
+      ],
+      "field_maxima": [
+        [
+          0.0,
+          1227.772002510752,
+          0.017755543371278704
+        ],
+        [
+          0.02596560712739499,
+          1227.772002510752,
+          0.017755310885303226
+        ],
+        [
+          0.05190676593402377,
+          1227.772002510752,
+          0.01775485307909156
+        ],
+        [
+          0.07781298085965188,
+          1227.772002510752,
+          0.017754170912398077
+        ],
+        [
+          0.10367660420311622,
+          1227.772002510752,
+          0.017753265814466884
+        ],
+        [
+          0.12948908536368106,
+          1227.772002510752,
+          0.01775213966577393
+        ],
+        [
+          0.15524189944245445,
+          1227.772002510752,
+          0.01775079478263637
+        ],
+        [
+          0.18092657855630628,
+          1227.772002510752,
+          0.017749233894842713
+        ],
+        [
+          0.20653471073666807,
+          1227.772002510752,
+          0.017747460119025747
+        ],
+        [
+          0.23205793238175335,
+          1227.772002510752,
+          0.01774547692821308
+        ],
+        [
+          0.257487964424397,
+          1227.772002510752,
+          0.01774328811764357
+        ]
+      ],
+      "max_abs_area_mean_MF_each_saved_state": [
+        0.0,
+        7.751563480844694e-20,
+        1.6422863268673418e-19,
+        1.8519126348990322e-19,
+        2.0577040560627443e-19,
+        5.239679398159202e-19,
+        3.542921644679852e-19,
+        4.108716802581303e-19,
+        5.253109224703626e-19,
+        5.207565338723052e-19,
+        9.723516372366966e-19
+      ]
+    },
+    "none_prefix_production_observed": {
+      "finite": true,
+      "water_nonnegative": true,
+      "qrim_not_above_qi": null,
+      "saved_states": 11,
+      "field_minima": [
+        [
+          0.0,
+          336.1767593709555,
+          2.402924919735964e-06
+        ],
+        [
+          -0.011138585396459904,
+          336.1767593709575,
+          2.4029248108815444e-06
+        ],
+        [
+          -0.02226258355612372,
+          336.17675937140154,
+          2.4029244853636915e-06
+        ],
+        [
+          -0.03336317970932841,
+          336.17675937228597,
+          2.402923945213745e-06
+        ],
+        [
+          -0.04443277514941879,
+          336.176759373608,
+          2.402923193332693e-06
+        ],
+        [
+          -0.055463403891275714,
+          336.17675937536364,
+          2.4029222334659596e-06
+        ],
+        [
+          -0.0664471324521245,
+          336.17675937754785,
+          2.402921070186889e-06
+        ],
+        [
+          -0.07737607620428372,
+          336.1767593801544,
+          2.402919708872003e-06
+        ],
+        [
+          -0.08824240035695609,
+          336.17675938317615,
+          2.402918155670553e-06
+        ],
+        [
+          -0.09903832764758412,
+          336.17675938660483,
+          2.4029164174717534e-06
+        ],
+        [
+          -0.1097561560654985,
+          336.1767593904314,
+          2.40291450187263e-06
+        ]
+      ],
+      "field_maxima": [
+        [
+          0.0,
+          1227.772002510752,
+          0.017755543371278704
+        ],
+        [
+          0.02596560712739499,
+          1227.772002510752,
+          0.017755310885303226
+        ],
+        [
+          0.05190676593402377,
+          1227.772002510752,
+          0.01775485307909156
+        ],
+        [
+          0.07781298085965188,
+          1227.772002510752,
+          0.017754170912398077
+        ],
+        [
+          0.10367660420311622,
+          1227.772002510752,
+          0.017753265814466884
+        ],
+        [
+          0.12948908536368106,
+          1227.772002510752,
+          0.01775213966577393
+        ],
+        [
+          0.15524189944245445,
+          1227.772002510752,
+          0.01775079478263637
+        ],
+        [
+          0.18092657855630628,
+          1227.772002510752,
+          0.017749233894842713
+        ],
+        [
+          0.20653471073666807,
+          1227.772002510752,
+          0.017747460119025747
+        ],
+        [
+          0.23205793238175335,
+          1227.772002510752,
+          0.01774547692821308
+        ],
+        [
+          0.257487964424397,
+          1227.772002510752,
+          0.01774328811764357
+        ]
+      ],
+      "max_abs_area_mean_MF_each_saved_state": [
+        0.0,
+        7.751563480844694e-20,
+        1.6422863268673418e-19,
+        1.8519126348990322e-19,
+        2.0577040560627443e-19,
+        5.239679398159202e-19,
+        3.542921644679852e-19,
+        4.108716802581303e-19,
+        5.253109224703626e-19,
+        5.207565338723052e-19,
+        9.723516372366966e-19
+      ]
+    },
+    "none_prefix_production_plain": {
+      "finite": true,
+      "water_nonnegative": true,
+      "qrim_not_above_qi": null,
+      "saved_states": 11,
+      "field_minima": [
+        [
+          0.0,
+          336.1767593709555,
+          2.402924919735964e-06
+        ],
+        [
+          -0.011138585396459904,
+          336.1767593709575,
+          2.4029248108815444e-06
+        ],
+        [
+          -0.02226258355612372,
+          336.17675937140154,
+          2.4029244853636915e-06
+        ],
+        [
+          -0.03336317970932841,
+          336.17675937228597,
+          2.402923945213745e-06
+        ],
+        [
+          -0.04443277514941879,
+          336.176759373608,
+          2.402923193332693e-06
+        ],
+        [
+          -0.055463403891275714,
+          336.17675937536364,
+          2.4029222334659596e-06
+        ],
+        [
+          -0.0664471324521245,
+          336.17675937754785,
+          2.402921070186889e-06
+        ],
+        [
+          -0.07737607620428372,
+          336.1767593801544,
+          2.402919708872003e-06
+        ],
+        [
+          -0.08824240035695609,
+          336.17675938317615,
+          2.402918155670553e-06
+        ],
+        [
+          -0.09903832764758412,
+          336.17675938660483,
+          2.4029164174717534e-06
+        ],
+        [
+          -0.1097561560654985,
+          336.1767593904314,
+          2.40291450187263e-06
+        ]
+      ],
+      "field_maxima": [
+        [
+          0.0,
+          1227.772002510752,
+          0.017755543371278704
+        ],
+        [
+          0.02596560712739499,
+          1227.772002510752,
+          0.017755310885303226
+        ],
+        [
+          0.05190676593402377,
+          1227.772002510752,
+          0.01775485307909156
+        ],
+        [
+          0.07781298085965188,
+          1227.772002510752,
+          0.017754170912398077
+        ],
+        [
+          0.10367660420311622,
+          1227.772002510752,
+          0.017753265814466884
+        ],
+        [
+          0.12948908536368106,
+          1227.772002510752,
+          0.01775213966577393
+        ],
+        [
+          0.15524189944245445,
+          1227.772002510752,
+          0.01775079478263637
+        ],
+        [
+          0.18092657855630628,
+          1227.772002510752,
+          0.017749233894842713
+        ],
+        [
+          0.20653471073666807,
+          1227.772002510752,
+          0.017747460119025747
+        ],
+        [
+          0.23205793238175335,
+          1227.772002510752,
+          0.01774547692821308
+        ],
+        [
+          0.257487964424397,
+          1227.772002510752,
+          0.01774328811764357
+        ]
+      ],
+      "max_abs_area_mean_MF_each_saved_state": [
+        0.0,
+        7.751563480844694e-20,
+        1.6422863268673418e-19,
+        1.8519126348990322e-19,
+        2.0577040560627443e-19,
+        5.239679398159202e-19,
+        3.542921644679852e-19,
+        4.108716802581303e-19,
+        5.253109224703626e-19,
+        5.207565338723052e-19,
+        9.723516372366966e-19
+      ]
+    },
+    "native_minute_production_observed": {
+      "finite": true,
+      "water_nonnegative": true,
+      "qrim_not_above_qi": null,
+      "saved_states": 2,
+      "field_minima": [
+        [
+          0.0,
+          336.1767593709555,
+          2.402924919735964e-06
+        ],
+        [
+          -0.16190966168712864,
+          336.17675941516643,
+          2.402902573699478e-06
+        ]
+      ],
+      "field_maxima": [
+        [
+          0.0,
+          1227.772002510752,
+          0.017755543371278704
+        ],
+        [
+          0.3829551362197723,
+          1227.772002510752,
+          0.01772941028997482
+        ]
+      ],
+      "max_abs_area_mean_MF_each_saved_state": [
+        0.0,
+        6.927062739605882e-19
+      ]
+    },
+    "native_minute_production_plain": {
+      "finite": true,
+      "water_nonnegative": true,
+      "qrim_not_above_qi": null,
+      "saved_states": 2,
+      "field_minima": [
+        [
+          0.0,
+          336.1767593709555,
+          2.402924919735964e-06
+        ],
+        [
+          -0.16190966168712864,
+          336.17675941516643,
+          2.402902573699478e-06
+        ]
+      ],
+      "field_maxima": [
+        [
+          0.0,
+          1227.772002510752,
+          0.017755543371278704
+        ],
+        [
+          0.3829551362197723,
+          1227.772002510752,
+          0.01772941028997482
+        ]
+      ],
+      "max_abs_area_mean_MF_each_saved_state": [
+        0.0,
+        6.927062739605882e-19
+      ]
+    },
+    "native_prefix_checked_observed": {
+      "finite": true,
+      "water_nonnegative": true,
+      "qrim_not_above_qi": null,
+      "saved_states": 11,
+      "field_minima": [
+        [
+          0.0,
+          336.1767593709555,
+          2.402924919735964e-06
+        ],
+        [
+          -0.011138585396459904,
+          336.1767593709575,
+          2.4029248108815444e-06
+        ],
+        [
+          -0.022262583556138138,
+          336.17675937140154,
+          2.4029244853636686e-06
+        ],
+        [
+          -0.03336317970935007,
+          336.17675937228597,
+          2.402923945213647e-06
+        ],
+        [
+          -0.04443277514945172,
+          336.176759373608,
+          2.402923193332438e-06
+        ],
+        [
+          -0.05546340389132471,
+          336.17675937536364,
+          2.4029222334654386e-06
+        ],
+        [
+          -0.06644713245219422,
+          336.17675937754785,
+          2.4029210701859647e-06
+        ],
+        [
+          -0.07737607620438085,
+          336.1767593801544,
+          2.402919708870513e-06
+        ],
+        [
+          -0.08824240035708696,
+          336.17675938317615,
+          2.40291815566831e-06
+        ],
+        [
+          -0.09903832764775758,
+          336.17675938660483,
+          2.402916417468548e-06
+        ],
+        [
+          -0.1097561560657239,
+          336.1767593904314,
+          2.402914501868232e-06
+        ]
+      ],
+      "field_maxima": [
+        [
+          0.0,
+          1227.772002510752,
+          0.017755543371278704
+        ],
+        [
+          0.02596560712739499,
+          1227.772002510752,
+          0.017755310885303226
+        ],
+        [
+          0.0519067659340576,
+          1227.772002510752,
+          0.01775485307909156
+        ],
+        [
+          0.07781298085970328,
+          1227.772002510752,
+          0.017754170912398077
+        ],
+        [
+          0.10367660420319531,
+          1227.772002510752,
+          0.017753265814466884
+        ],
+        [
+          0.1294890853637996,
+          1227.772002510752,
+          0.01775213966577393
+        ],
+        [
+          0.15524189944262634,
+          1227.772002510752,
+          0.017750794782636366
+        ],
+        [
+          0.180926578556549,
+          1227.772002510752,
+          0.017749233894842703
+        ],
+        [
+          0.2065347107370013,
+          1227.772002510752,
+          0.01774746011902573
+        ],
+        [
+          0.2320579323822027,
+          1227.772002510752,
+          0.01774547692821305
+        ],
+        [
+          0.25748796442499133,
+          1227.772002510752,
+          0.017743288117643533
+        ]
+      ],
+      "max_abs_area_mean_MF_each_saved_state": [
+        0.0,
+        7.751563480844694e-20,
+        1.465549325835935e-19,
+        2.42857875550702e-19,
+        3.135137080015952e-19,
+        3.480393979733589e-19,
+        3.622845806481029e-19,
+        4.0113655608607675e-19,
+        8.151449795440163e-19,
+        4.54380650233035e-19,
+        9.977202132608866e-19
+      ]
+    },
+    "native_prefix_checked_plain": {
+      "finite": true,
+      "water_nonnegative": true,
+      "qrim_not_above_qi": null,
+      "saved_states": 11,
+      "field_minima": [
+        [
+          0.0,
+          336.1767593709555,
+          2.402924919735964e-06
+        ],
+        [
+          -0.011138585396459904,
+          336.1767593709575,
+          2.4029248108815444e-06
+        ],
+        [
+          -0.022262583556138138,
+          336.17675937140154,
+          2.4029244853636686e-06
+        ],
+        [
+          -0.03336317970935007,
+          336.17675937228597,
+          2.402923945213647e-06
+        ],
+        [
+          -0.04443277514945172,
+          336.176759373608,
+          2.402923193332438e-06
+        ],
+        [
+          -0.05546340389132471,
+          336.17675937536364,
+          2.4029222334654386e-06
+        ],
+        [
+          -0.06644713245219422,
+          336.17675937754785,
+          2.4029210701859647e-06
+        ],
+        [
+          -0.07737607620438085,
+          336.1767593801544,
+          2.402919708870513e-06
+        ],
+        [
+          -0.08824240035708696,
+          336.17675938317615,
+          2.40291815566831e-06
+        ],
+        [
+          -0.09903832764775758,
+          336.17675938660483,
+          2.402916417468548e-06
+        ],
+        [
+          -0.1097561560657239,
+          336.1767593904314,
+          2.402914501868232e-06
+        ]
+      ],
+      "field_maxima": [
+        [
+          0.0,
+          1227.772002510752,
+          0.017755543371278704
+        ],
+        [
+          0.02596560712739499,
+          1227.772002510752,
+          0.017755310885303226
+        ],
+        [
+          0.0519067659340576,
+          1227.772002510752,
+          0.01775485307909156
+        ],
+        [
+          0.07781298085970328,
+          1227.772002510752,
+          0.017754170912398077
+        ],
+        [
+          0.10367660420319531,
+          1227.772002510752,
+          0.017753265814466884
+        ],
+        [
+          0.1294890853637996,
+          1227.772002510752,
+          0.01775213966577393
+        ],
+        [
+          0.15524189944262634,
+          1227.772002510752,
+          0.017750794782636366
+        ],
+        [
+          0.180926578556549,
+          1227.772002510752,
+          0.017749233894842703
+        ],
+        [
+          0.2065347107370013,
+          1227.772002510752,
+          0.01774746011902573
+        ],
+        [
+          0.2320579323822027,
+          1227.772002510752,
+          0.01774547692821305
+        ],
+        [
+          0.25748796442499133,
+          1227.772002510752,
+          0.017743288117643533
+        ]
+      ],
+      "max_abs_area_mean_MF_each_saved_state": [
+        0.0,
+        7.751563480844694e-20,
+        1.465549325835935e-19,
+        2.42857875550702e-19,
+        3.135137080015952e-19,
+        3.480393979733589e-19,
+        3.622845806481029e-19,
+        4.0113655608607675e-19,
+        8.151449795440163e-19,
+        4.54380650233035e-19,
+        9.977202132608866e-19
+      ]
+    },
+    "native_prefix_production_observed": {
+      "finite": true,
+      "water_nonnegative": true,
+      "qrim_not_above_qi": null,
+      "saved_states": 11,
+      "field_minima": [
+        [
+          0.0,
+          336.1767593709555,
+          2.402924919735964e-06
+        ],
+        [
+          -0.011138585396459904,
+          336.1767593709575,
+          2.4029248108815444e-06
+        ],
+        [
+          -0.022262583556138138,
+          336.17675937140154,
+          2.4029244853636686e-06
+        ],
+        [
+          -0.03336317970935007,
+          336.17675937228597,
+          2.402923945213647e-06
+        ],
+        [
+          -0.04443277514945172,
+          336.176759373608,
+          2.402923193332438e-06
+        ],
+        [
+          -0.05546340389132471,
+          336.17675937536364,
+          2.4029222334654386e-06
+        ],
+        [
+          -0.06644713245219422,
+          336.17675937754785,
+          2.4029210701859647e-06
+        ],
+        [
+          -0.07737607620438085,
+          336.1767593801544,
+          2.402919708870513e-06
+        ],
+        [
+          -0.08824240035708696,
+          336.17675938317615,
+          2.40291815566831e-06
+        ],
+        [
+          -0.09903832764775758,
+          336.17675938660483,
+          2.402916417468548e-06
+        ],
+        [
+          -0.1097561560657239,
+          336.1767593904314,
+          2.402914501868232e-06
+        ]
+      ],
+      "field_maxima": [
+        [
+          0.0,
+          1227.772002510752,
+          0.017755543371278704
+        ],
+        [
+          0.02596560712739499,
+          1227.772002510752,
+          0.017755310885303226
+        ],
+        [
+          0.0519067659340576,
+          1227.772002510752,
+          0.01775485307909156
+        ],
+        [
+          0.07781298085970328,
+          1227.772002510752,
+          0.017754170912398077
+        ],
+        [
+          0.10367660420319531,
+          1227.772002510752,
+          0.017753265814466884
+        ],
+        [
+          0.1294890853637996,
+          1227.772002510752,
+          0.01775213966577393
+        ],
+        [
+          0.15524189944262634,
+          1227.772002510752,
+          0.017750794782636366
+        ],
+        [
+          0.180926578556549,
+          1227.772002510752,
+          0.017749233894842703
+        ],
+        [
+          0.2065347107370013,
+          1227.772002510752,
+          0.01774746011902573
+        ],
+        [
+          0.2320579323822027,
+          1227.772002510752,
+          0.01774547692821305
+        ],
+        [
+          0.25748796442499133,
+          1227.772002510752,
+          0.017743288117643533
+        ]
+      ],
+      "max_abs_area_mean_MF_each_saved_state": [
+        0.0,
+        7.751563480844694e-20,
+        1.465549325835935e-19,
+        2.42857875550702e-19,
+        3.135137080015952e-19,
+        3.480393979733589e-19,
+        3.622845806481029e-19,
+        4.0113655608607675e-19,
+        8.151449795440163e-19,
+        4.54380650233035e-19,
+        9.977202132608866e-19
+      ]
+    },
+    "native_prefix_production_plain": {
+      "finite": true,
+      "water_nonnegative": true,
+      "qrim_not_above_qi": null,
+      "saved_states": 11,
+      "field_minima": [
+        [
+          0.0,
+          336.1767593709555,
+          2.402924919735964e-06
+        ],
+        [
+          -0.011138585396459904,
+          336.1767593709575,
+          2.4029248108815444e-06
+        ],
+        [
+          -0.022262583556138138,
+          336.17675937140154,
+          2.4029244853636686e-06
+        ],
+        [
+          -0.03336317970935007,
+          336.17675937228597,
+          2.402923945213647e-06
+        ],
+        [
+          -0.04443277514945172,
+          336.176759373608,
+          2.402923193332438e-06
+        ],
+        [
+          -0.05546340389132471,
+          336.17675937536364,
+          2.4029222334654386e-06
+        ],
+        [
+          -0.06644713245219422,
+          336.17675937754785,
+          2.4029210701859647e-06
+        ],
+        [
+          -0.07737607620438085,
+          336.1767593801544,
+          2.402919708870513e-06
+        ],
+        [
+          -0.08824240035708696,
+          336.17675938317615,
+          2.40291815566831e-06
+        ],
+        [
+          -0.09903832764775758,
+          336.17675938660483,
+          2.402916417468548e-06
+        ],
+        [
+          -0.1097561560657239,
+          336.1767593904314,
+          2.402914501868232e-06
+        ]
+      ],
+      "field_maxima": [
+        [
+          0.0,
+          1227.772002510752,
+          0.017755543371278704
+        ],
+        [
+          0.02596560712739499,
+          1227.772002510752,
+          0.017755310885303226
+        ],
+        [
+          0.0519067659340576,
+          1227.772002510752,
+          0.01775485307909156
+        ],
+        [
+          0.07781298085970328,
+          1227.772002510752,
+          0.017754170912398077
+        ],
+        [
+          0.10367660420319531,
+          1227.772002510752,
+          0.017753265814466884
+        ],
+        [
+          0.1294890853637996,
+          1227.772002510752,
+          0.01775213966577393
+        ],
+        [
+          0.15524189944262634,
+          1227.772002510752,
+          0.017750794782636366
+        ],
+        [
+          0.180926578556549,
+          1227.772002510752,
+          0.017749233894842703
+        ],
+        [
+          0.2065347107370013,
+          1227.772002510752,
+          0.01774746011902573
+        ],
+        [
+          0.2320579323822027,
+          1227.772002510752,
+          0.01774547692821305
+        ],
+        [
+          0.25748796442499133,
+          1227.772002510752,
+          0.017743288117643533
+        ]
+      ],
+      "max_abs_area_mean_MF_each_saved_state": [
+        0.0,
+        7.751563480844694e-20,
+        1.465549325835935e-19,
+        2.42857875550702e-19,
+        3.135137080015952e-19,
+        3.480393979733589e-19,
+        3.622845806481029e-19,
+        4.0113655608607675e-19,
+        8.151449795440163e-19,
+        4.54380650233035e-19,
+        9.977202132608866e-19
+      ]
+    },
+    "p3_minute_production_observed": {
+      "finite": true,
+      "water_nonnegative": true,
+      "qrim_not_above_qi": true,
+      "saved_states": 2,
+      "field_minima": [
+        [
+          0.0,
+          297.48143802414046,
+          2.3591282923072173e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.15757836209858064,
+          297.48143802414074,
+          2.3590533783120805e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "field_maxima": [
+        [
+          0.0,
+          1227.7463788382108,
+          0.017755543371278704,
+          4.173200321379994e-05,
+          0.0,
+          0.0,
+          0.0,
+          0.0001624718693345054,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.37282065395934844,
+          1227.7463788382108,
+          0.01772959032310111,
+          1.6102648377410134e-05,
+          118362828.1642479,
+          4.010950660361147e-07,
+          6367.440700845129,
+          0.00014817580066224916,
+          3.0572967919889193,
+          0.0,
+          0.0
+        ]
+      ],
+      "max_abs_area_mean_MF_each_saved_state": [
+        0.0,
+        7.665651791566598e-19
+      ]
+    },
+    "p3_minute_production_plain": {
+      "finite": true,
+      "water_nonnegative": true,
+      "qrim_not_above_qi": true,
+      "saved_states": 2,
+      "field_minima": [
+        [
+          0.0,
+          297.48143802414046,
+          2.3591282923072173e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.15757836209858064,
+          297.48143802414074,
+          2.3590533783120805e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "field_maxima": [
+        [
+          0.0,
+          1227.7463788382108,
+          0.017755543371278704,
+          4.173200321379994e-05,
+          0.0,
+          0.0,
+          0.0,
+          0.0001624718693345054,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.37282065395934844,
+          1227.7463788382108,
+          0.01772959032310111,
+          1.6102648377410134e-05,
+          118362828.1642479,
+          4.010950660361147e-07,
+          6367.440700845129,
+          0.00014817580066224916,
+          3.0572967919889193,
+          0.0,
+          0.0
+        ]
+      ],
+      "max_abs_area_mean_MF_each_saved_state": [
+        0.0,
+        7.665651791566598e-19
+      ]
+    },
+    "p3_prefix_checked_observed": {
+      "finite": true,
+      "water_nonnegative": true,
+      "qrim_not_above_qi": true,
+      "saved_states": 11,
+      "field_minima": [
+        [
+          0.0,
+          297.48143802414046,
+          2.3591282923072173e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.01113855784647053,
+          297.48143802414074,
+          2.359095866973339e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.022263881381248064,
+          297.48143802414074,
+          2.3590952853071864e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.033357684857590664,
+          297.48143802414074,
+          2.3590942746951373e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.044401837596915676,
+          297.48143802414074,
+          2.359092842101606e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.05537829639737344,
+          297.48143802414074,
+          2.3590909967848835e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.06626913561571467,
+          297.48143802414074,
+          2.359088750232189e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.07705657707097407,
+          297.48143802414074,
+          2.3590861160984977e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.08772301978637113,
+          297.48143802414074,
+          2.359083110134261e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.09825106978777619,
+          297.48143802414074,
+          2.3590797501030873e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.10862356841413695,
+          297.48143802414074,
+          2.359076055690437e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "field_maxima": [
+        [
+          0.0,
+          1227.7463788382108,
+          0.017755543371278704,
+          4.173200321379994e-05,
+          0.0,
+          0.0,
+          0.0,
+          0.0001624718693345054,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.025965532645329106,
+          1227.7463788382108,
+          0.017755310885669968,
+          3.932467754174723e-05,
+          1008505.441709087,
+          7.605759275780918e-08,
+          1165.4124855648192,
+          0.0001601678289562827,
+          3.2826141173760264,
+          0.0,
+          0.0
+        ],
+        [
+          0.0519100087484424,
+          1227.7463788382108,
+          0.017754852949951747,
+          3.704801259791994e-05,
+          1006207.0749812013,
+          1.4009975244164067e-07,
+          2149.940707796964,
+          0.00015902407068885236,
+          3.2608265615606165,
+          0.0,
+          0.0
+        ],
+        [
+          0.07780081709393856,
+          1227.7463788382108,
+          0.017754170364449092,
+          3.4892420945824324e-05,
+          1004070.06431518,
+          1.9379690359018115e-07,
+          2978.791893927356,
+          0.00015771137989354695,
+          3.2361351736011126,
+          0.0,
+          0.0
+        ],
+        [
+          0.10360574294688225,
+          1227.7463788382108,
+          0.017753264607514346,
+          3.28497936446718e-05,
+          1002082.7851999674,
+          2.385823654753944e-07,
+          3673.625064067943,
+          0.00015623710504849889,
+          3.2086755665631,
+          0.0,
+          0.0
+        ],
+        [
+          0.12929271786388216,
+          1227.7463788382108,
+          0.017752137816345076,
+          3.091272778141083e-05,
+          1000234.5517502895,
+          2.75691347936139e-07,
+          4253.108325003361,
+          0.0001546232023500306,
+          3.1785948276111875,
+          0.0,
+          0.0
+        ],
+        [
+          0.1548298679565825,
+          1227.7463788382108,
+          0.017750792764048066,
+          2.907445454969968e-05,
+          998515.5213743934,
+          3.0618986657239443e-07,
+          4733.348947026563,
+          0.00015455841948560728,
+          3.16696378097056,
+          0.0,
+          0.0
+        ],
+        [
+          0.18018556184037599,
+          1227.7463788382108,
+          0.01774923283165674,
+          2.7328776064023937e-05,
+          996916.6138943759,
+          3.309990137626531e-07,
+          5128.257614718805,
+          0.00015435840616948458,
+          3.1636960812089554,
+          0.0,
+          0.0
+        ],
+        [
+          0.205328458386696,
+          1227.7463788382108,
+          0.017747461969001604,
+          2.567000963137357e-05,
+          995429.4406504756,
+          3.509154707240751e-07,
+          5449.857602322771,
+          0.00015402227433958848,
+          3.158126814386347,
+          0.0,
+          0.0
+        ],
+        [
+          0.23022755595952935,
+          1227.7463788382108,
+          0.01774548465421228,
+          2.409293848227311e-05,
+          994046.2416304727,
+          3.6662890719310917e-07,
+          5708.547766959525,
+          0.00015354981467368878,
+          3.150247162321006,
+          0.0,
+          0.0
+        ],
+        [
+          0.25485223621096803,
+          1227.7463788382108,
+          0.01774330584783729,
+          2.259276813041353e-05,
+          992759.8293823452,
+          3.787367824992651e-07,
+          5913.326725032312,
+          0.00015294148717604996,
+          3.140058008832845,
+          0.0,
+          0.0
+        ]
+      ],
+      "max_abs_area_mean_MF_each_saved_state": [
+        0.0,
+        6.862326550891717e-20,
+        9.284242883552505e-20,
+        1.836486750450684e-19,
+        2.172528098818527e-19,
+        3.4534375368195495e-19,
+        2.9417561791621483e-19,
+        3.98631778874258e-19,
+        5.758474993760699e-19,
+        4.545925021739024e-19,
+        8.026045595661944e-19
+      ]
+    },
+    "p3_prefix_checked_plain": {
+      "finite": true,
+      "water_nonnegative": true,
+      "qrim_not_above_qi": true,
+      "saved_states": 11,
+      "field_minima": [
+        [
+          0.0,
+          297.48143802414046,
+          2.3591282923072173e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.01113855784647053,
+          297.48143802414074,
+          2.359095866973339e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.022263881381248064,
+          297.48143802414074,
+          2.3590952853071864e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.033357684857590664,
+          297.48143802414074,
+          2.3590942746951373e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.044401837596915676,
+          297.48143802414074,
+          2.359092842101606e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.05537829639737344,
+          297.48143802414074,
+          2.3590909967848835e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.06626913561571467,
+          297.48143802414074,
+          2.359088750232189e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.07705657707097407,
+          297.48143802414074,
+          2.3590861160984977e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.08772301978637113,
+          297.48143802414074,
+          2.359083110134261e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.09825106978777619,
+          297.48143802414074,
+          2.3590797501030873e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.10862356841413695,
+          297.48143802414074,
+          2.359076055690437e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "field_maxima": [
+        [
+          0.0,
+          1227.7463788382108,
+          0.017755543371278704,
+          4.173200321379994e-05,
+          0.0,
+          0.0,
+          0.0,
+          0.0001624718693345054,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.025965532645329106,
+          1227.7463788382108,
+          0.017755310885669968,
+          3.932467754174723e-05,
+          1008505.441709087,
+          7.605759275780918e-08,
+          1165.4124855648192,
+          0.0001601678289562827,
+          3.2826141173760264,
+          0.0,
+          0.0
+        ],
+        [
+          0.0519100087484424,
+          1227.7463788382108,
+          0.017754852949951747,
+          3.704801259791994e-05,
+          1006207.0749812013,
+          1.4009975244164067e-07,
+          2149.940707796964,
+          0.00015902407068885236,
+          3.2608265615606165,
+          0.0,
+          0.0
+        ],
+        [
+          0.07780081709393856,
+          1227.7463788382108,
+          0.017754170364449092,
+          3.4892420945824324e-05,
+          1004070.06431518,
+          1.9379690359018115e-07,
+          2978.791893927356,
+          0.00015771137989354695,
+          3.2361351736011126,
+          0.0,
+          0.0
+        ],
+        [
+          0.10360574294688225,
+          1227.7463788382108,
+          0.017753264607514346,
+          3.28497936446718e-05,
+          1002082.7851999674,
+          2.385823654753944e-07,
+          3673.625064067943,
+          0.00015623710504849889,
+          3.2086755665631,
+          0.0,
+          0.0
+        ],
+        [
+          0.12929271786388216,
+          1227.7463788382108,
+          0.017752137816345076,
+          3.091272778141083e-05,
+          1000234.5517502895,
+          2.75691347936139e-07,
+          4253.108325003361,
+          0.0001546232023500306,
+          3.1785948276111875,
+          0.0,
+          0.0
+        ],
+        [
+          0.1548298679565825,
+          1227.7463788382108,
+          0.017750792764048066,
+          2.907445454969968e-05,
+          998515.5213743934,
+          3.0618986657239443e-07,
+          4733.348947026563,
+          0.00015455841948560728,
+          3.16696378097056,
+          0.0,
+          0.0
+        ],
+        [
+          0.18018556184037599,
+          1227.7463788382108,
+          0.01774923283165674,
+          2.7328776064023937e-05,
+          996916.6138943759,
+          3.309990137626531e-07,
+          5128.257614718805,
+          0.00015435840616948458,
+          3.1636960812089554,
+          0.0,
+          0.0
+        ],
+        [
+          0.205328458386696,
+          1227.7463788382108,
+          0.017747461969001604,
+          2.567000963137357e-05,
+          995429.4406504756,
+          3.509154707240751e-07,
+          5449.857602322771,
+          0.00015402227433958848,
+          3.158126814386347,
+          0.0,
+          0.0
+        ],
+        [
+          0.23022755595952935,
+          1227.7463788382108,
+          0.01774548465421228,
+          2.409293848227311e-05,
+          994046.2416304727,
+          3.6662890719310917e-07,
+          5708.547766959525,
+          0.00015354981467368878,
+          3.150247162321006,
+          0.0,
+          0.0
+        ],
+        [
+          0.25485223621096803,
+          1227.7463788382108,
+          0.01774330584783729,
+          2.259276813041353e-05,
+          992759.8293823452,
+          3.787367824992651e-07,
+          5913.326725032312,
+          0.00015294148717604996,
+          3.140058008832845,
+          0.0,
+          0.0
+        ]
+      ],
+      "max_abs_area_mean_MF_each_saved_state": [
+        0.0,
+        6.862326550891717e-20,
+        9.284242883552505e-20,
+        1.836486750450684e-19,
+        2.172528098818527e-19,
+        3.4534375368195495e-19,
+        2.9417561791621483e-19,
+        3.98631778874258e-19,
+        5.758474993760699e-19,
+        4.545925021739024e-19,
+        8.026045595661944e-19
+      ]
+    },
+    "p3_prefix_production_observed": {
+      "finite": true,
+      "water_nonnegative": true,
+      "qrim_not_above_qi": true,
+      "saved_states": 11,
+      "field_minima": [
+        [
+          0.0,
+          297.48143802414046,
+          2.3591282923072173e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.01113855784647053,
+          297.48143802414074,
+          2.359095866973339e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.022263881381248064,
+          297.48143802414074,
+          2.3590952853071864e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.033357684857590664,
+          297.48143802414074,
+          2.3590942746951373e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.044401837596915676,
+          297.48143802414074,
+          2.359092842101606e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.05537829639737344,
+          297.48143802414074,
+          2.3590909967848835e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.06626913561571467,
+          297.48143802414074,
+          2.359088750232189e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.07705657707097407,
+          297.48143802414074,
+          2.3590861160984977e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.08772301978637113,
+          297.48143802414074,
+          2.359083110134261e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.09825106978777619,
+          297.48143802414074,
+          2.3590797501030873e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.10862356841413695,
+          297.48143802414074,
+          2.359076055690437e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "field_maxima": [
+        [
+          0.0,
+          1227.7463788382108,
+          0.017755543371278704,
+          4.173200321379994e-05,
+          0.0,
+          0.0,
+          0.0,
+          0.0001624718693345054,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.025965532645329106,
+          1227.7463788382108,
+          0.017755310885669968,
+          3.932467754174723e-05,
+          1008505.441709087,
+          7.605759275780918e-08,
+          1165.4124855648192,
+          0.0001601678289562827,
+          3.2826141173760264,
+          0.0,
+          0.0
+        ],
+        [
+          0.0519100087484424,
+          1227.7463788382108,
+          0.017754852949951747,
+          3.704801259791994e-05,
+          1006207.0749812013,
+          1.4009975244164067e-07,
+          2149.940707796964,
+          0.00015902407068885236,
+          3.2608265615606165,
+          0.0,
+          0.0
+        ],
+        [
+          0.07780081709393856,
+          1227.7463788382108,
+          0.017754170364449092,
+          3.4892420945824324e-05,
+          1004070.06431518,
+          1.9379690359018115e-07,
+          2978.791893927356,
+          0.00015771137989354695,
+          3.2361351736011126,
+          0.0,
+          0.0
+        ],
+        [
+          0.10360574294688225,
+          1227.7463788382108,
+          0.017753264607514346,
+          3.28497936446718e-05,
+          1002082.7851999674,
+          2.385823654753944e-07,
+          3673.625064067943,
+          0.00015623710504849889,
+          3.2086755665631,
+          0.0,
+          0.0
+        ],
+        [
+          0.12929271786388216,
+          1227.7463788382108,
+          0.017752137816345076,
+          3.091272778141083e-05,
+          1000234.5517502895,
+          2.75691347936139e-07,
+          4253.108325003361,
+          0.0001546232023500306,
+          3.1785948276111875,
+          0.0,
+          0.0
+        ],
+        [
+          0.1548298679565825,
+          1227.7463788382108,
+          0.017750792764048066,
+          2.907445454969968e-05,
+          998515.5213743934,
+          3.0618986657239443e-07,
+          4733.348947026563,
+          0.00015455841948560728,
+          3.16696378097056,
+          0.0,
+          0.0
+        ],
+        [
+          0.18018556184037599,
+          1227.7463788382108,
+          0.01774923283165674,
+          2.7328776064023937e-05,
+          996916.6138943759,
+          3.309990137626531e-07,
+          5128.257614718805,
+          0.00015435840616948458,
+          3.1636960812089554,
+          0.0,
+          0.0
+        ],
+        [
+          0.205328458386696,
+          1227.7463788382108,
+          0.017747461969001604,
+          2.567000963137357e-05,
+          995429.4406504756,
+          3.509154707240751e-07,
+          5449.857602322771,
+          0.00015402227433958848,
+          3.158126814386347,
+          0.0,
+          0.0
+        ],
+        [
+          0.23022755595952935,
+          1227.7463788382108,
+          0.01774548465421228,
+          2.409293848227311e-05,
+          994046.2416304727,
+          3.6662890719310917e-07,
+          5708.547766959525,
+          0.00015354981467368878,
+          3.150247162321006,
+          0.0,
+          0.0
+        ],
+        [
+          0.25485223621096803,
+          1227.7463788382108,
+          0.01774330584783729,
+          2.259276813041353e-05,
+          992759.8293823452,
+          3.787367824992651e-07,
+          5913.326725032312,
+          0.00015294148717604996,
+          3.140058008832845,
+          0.0,
+          0.0
+        ]
+      ],
+      "max_abs_area_mean_MF_each_saved_state": [
+        0.0,
+        6.862326550891717e-20,
+        9.284242883552505e-20,
+        1.836486750450684e-19,
+        2.172528098818527e-19,
+        3.4534375368195495e-19,
+        2.9417561791621483e-19,
+        3.98631778874258e-19,
+        5.758474993760699e-19,
+        4.545925021739024e-19,
+        8.026045595661944e-19
+      ]
+    },
+    "p3_prefix_production_plain": {
+      "finite": true,
+      "water_nonnegative": true,
+      "qrim_not_above_qi": true,
+      "saved_states": 11,
+      "field_minima": [
+        [
+          0.0,
+          297.48143802414046,
+          2.3591282923072173e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.01113855784647053,
+          297.48143802414074,
+          2.359095866973339e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.022263881381248064,
+          297.48143802414074,
+          2.3590952853071864e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.033357684857590664,
+          297.48143802414074,
+          2.3590942746951373e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.044401837596915676,
+          297.48143802414074,
+          2.359092842101606e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.05537829639737344,
+          297.48143802414074,
+          2.3590909967848835e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.06626913561571467,
+          297.48143802414074,
+          2.359088750232189e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.07705657707097407,
+          297.48143802414074,
+          2.3590861160984977e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.08772301978637113,
+          297.48143802414074,
+          2.359083110134261e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.09825106978777619,
+          297.48143802414074,
+          2.3590797501030873e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.10862356841413695,
+          297.48143802414074,
+          2.359076055690437e-06,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "field_maxima": [
+        [
+          0.0,
+          1227.7463788382108,
+          0.017755543371278704,
+          4.173200321379994e-05,
+          0.0,
+          0.0,
+          0.0,
+          0.0001624718693345054,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.025965532645329106,
+          1227.7463788382108,
+          0.017755310885669968,
+          3.932467754174723e-05,
+          1008505.441709087,
+          7.605759275780918e-08,
+          1165.4124855648192,
+          0.0001601678289562827,
+          3.2826141173760264,
+          0.0,
+          0.0
+        ],
+        [
+          0.0519100087484424,
+          1227.7463788382108,
+          0.017754852949951747,
+          3.704801259791994e-05,
+          1006207.0749812013,
+          1.4009975244164067e-07,
+          2149.940707796964,
+          0.00015902407068885236,
+          3.2608265615606165,
+          0.0,
+          0.0
+        ],
+        [
+          0.07780081709393856,
+          1227.7463788382108,
+          0.017754170364449092,
+          3.4892420945824324e-05,
+          1004070.06431518,
+          1.9379690359018115e-07,
+          2978.791893927356,
+          0.00015771137989354695,
+          3.2361351736011126,
+          0.0,
+          0.0
+        ],
+        [
+          0.10360574294688225,
+          1227.7463788382108,
+          0.017753264607514346,
+          3.28497936446718e-05,
+          1002082.7851999674,
+          2.385823654753944e-07,
+          3673.625064067943,
+          0.00015623710504849889,
+          3.2086755665631,
+          0.0,
+          0.0
+        ],
+        [
+          0.12929271786388216,
+          1227.7463788382108,
+          0.017752137816345076,
+          3.091272778141083e-05,
+          1000234.5517502895,
+          2.75691347936139e-07,
+          4253.108325003361,
+          0.0001546232023500306,
+          3.1785948276111875,
+          0.0,
+          0.0
+        ],
+        [
+          0.1548298679565825,
+          1227.7463788382108,
+          0.017750792764048066,
+          2.907445454969968e-05,
+          998515.5213743934,
+          3.0618986657239443e-07,
+          4733.348947026563,
+          0.00015455841948560728,
+          3.16696378097056,
+          0.0,
+          0.0
+        ],
+        [
+          0.18018556184037599,
+          1227.7463788382108,
+          0.01774923283165674,
+          2.7328776064023937e-05,
+          996916.6138943759,
+          3.309990137626531e-07,
+          5128.257614718805,
+          0.00015435840616948458,
+          3.1636960812089554,
+          0.0,
+          0.0
+        ],
+        [
+          0.205328458386696,
+          1227.7463788382108,
+          0.017747461969001604,
+          2.567000963137357e-05,
+          995429.4406504756,
+          3.509154707240751e-07,
+          5449.857602322771,
+          0.00015402227433958848,
+          3.158126814386347,
+          0.0,
+          0.0
+        ],
+        [
+          0.23022755595952935,
+          1227.7463788382108,
+          0.01774548465421228,
+          2.409293848227311e-05,
+          994046.2416304727,
+          3.6662890719310917e-07,
+          5708.547766959525,
+          0.00015354981467368878,
+          3.150247162321006,
+          0.0,
+          0.0
+        ],
+        [
+          0.25485223621096803,
+          1227.7463788382108,
+          0.01774330584783729,
+          2.259276813041353e-05,
+          992759.8293823452,
+          3.787367824992651e-07,
+          5913.326725032312,
+          0.00015294148717604996,
+          3.140058008832845,
+          0.0,
+          0.0
+        ]
+      ],
+      "max_abs_area_mean_MF_each_saved_state": [
+        0.0,
+        6.862326550891717e-20,
+        9.284242883552505e-20,
+        1.836486750450684e-19,
+        2.172528098818527e-19,
+        3.4534375368195495e-19,
+        2.9417561791621483e-19,
+        3.98631778874258e-19,
+        5.758474993760699e-19,
+        4.545925021739024e-19,
+        8.026045595661944e-19
+      ]
+    }
+  },
+  "precipitation": {
+    "native_minute_production_observed": {
+      "definition": "actual column-integrated native removal equivalent",
+      "duration_seconds": 60,
+      "ACE1_accumulation_mm": 1.8623179481557576e-09,
+      "area_mean_accumulation_mm": 1.5692872343460085e-09,
+      "finite_nonnegative": true
+    },
+    "native_prefix_checked_observed": {
+      "definition": "actual column-integrated native removal equivalent",
+      "duration_seconds": 40,
+      "ACE1_accumulation_mm": 1.1404337792109936e-09,
+      "area_mean_accumulation_mm": 1.0460599928558582e-09,
+      "finite_nonnegative": true
+    },
+    "native_prefix_production_observed": {
+      "definition": "actual column-integrated native removal equivalent",
+      "duration_seconds": 40,
+      "ACE1_accumulation_mm": 1.1404337792109936e-09,
+      "area_mean_accumulation_mm": 1.0460599928558582e-09,
+      "finite_nonnegative": true
+    },
+    "p3_minute_production_observed": {
+      "definition": "P3 surface liquid+solid flux converted from m/s to mm/s",
+      "duration_seconds": 60,
+      "ACE1_accumulation_mm": 0.0,
+      "area_mean_accumulation_mm": 0.0,
+      "finite_nonnegative": true
+    },
+    "p3_prefix_checked_observed": {
+      "definition": "P3 surface liquid+solid flux converted from m/s to mm/s",
+      "duration_seconds": 40,
+      "ACE1_accumulation_mm": 0.0,
+      "area_mean_accumulation_mm": 0.0,
+      "finite_nonnegative": true
+    },
+    "p3_prefix_production_observed": {
+      "definition": "P3 surface liquid+solid flux converted from m/s to mm/s",
+      "duration_seconds": 40,
+      "ACE1_accumulation_mm": 0.0,
+      "area_mean_accumulation_mm": 0.0,
+      "finite_nonnegative": true
+    }
+  },
+  "environment_evidence": {
+    "netcdf_fortran_version": "4.6.2",
+    "execution_policy": "sequential fresh-process GNU real64 OpenMP; OMP_NUM_THREADS=32, OMP_THREAD_LIMIT=32, OMP_DYNAMIC=FALSE, OMP_STACKSIZE=64M, OPENBLAS_NUM_THREADS=1",
+    "observed_team_evidence": {
+      "method": "host ps -C ace_model.exe -o pid,nlwp,etime,comm",
+      "pid": 1180310,
+      "NLWP": 32,
+      "case": "native prefix; integration sampling"
+    },
+    "comparator_fixture_checks": [
+      "exact equality",
+      "numeric first divergence and max/relative errors",
+      "signed zero bit difference",
+      "truncated size",
+      "mixed integer-header state location",
+      "real32 normal output interpretation"
+    ]
+  },
+  "executable_sha256": {
+    "builds/checked_plain/ace_model.exe": "ea822ec575c667d27472fa79182891a9720e3103d1fe909ef00ccf651408c06c",
+    "builds/production_observed/ace_model.exe": "d6080ae92c77dda6bc3cd7fe2a27a010f38ab5f2a1ee5875751215849adebf56",
+    "builds/checked_observed/ace_model.exe": "cfd29ece4ef76ea924ad23bad4ac2c92917198f96c5d7e29634691ca9f6951aa",
+    "builds/production_plain/ace_model.exe": "28e9b8ca166ae5dc40b42bab156c1a7a4ccce4d7888100592b3c95fbba5b0624"
+  },
+  "artifacts": {
+    "runs/native_prefix_production_plain/states.bin": {
+      "sha256": "456cb4007f148ee56865060525f675ce27d3d2408737af1cd5a9d408fd61d5bc",
+      "bytes": 10801348
+    },
+    "runs/native_minute_production_plain/fields.bin": {
+      "sha256": "b6d470b25160c4677db5c99260db6fe1287080a001b4a442a63fca5f1606a469",
+      "bytes": 2916072
+    },
+    "runs/native_minute_production_plain/states.bin": {
+      "sha256": "29a63b302ed6c343163f0f232c20ee823f2b1acfb08f1983417c6bbe23c5fe68",
+      "bytes": 1966516
+    },
+    "runs/p3_prefix_checked_plain/states.bin": {
+      "sha256": "9fd25a43728fdb9369a53202332d2fd42f0485880ddaf518e6507c0aec1c3ffd",
+      "bytes": 39596356
+    },
+    "runs/p3_initialize_production_plain/initialization.bin": {
+      "sha256": "f10eb2e96302a72ddfbee797f6c7aa8ba32db4977f3c0381bf184f070ba14ade",
+      "bytes": 3633104
+    },
+    "runs/p3_prefix_production_observed/states.bin": {
+      "sha256": "9fd25a43728fdb9369a53202332d2fd42f0485880ddaf518e6507c0aec1c3ffd",
+      "bytes": 39596356
+    },
+    "runs/native_prefix_production_observed/states.bin": {
+      "sha256": "456cb4007f148ee56865060525f675ce27d3d2408737af1cd5a9d408fd61d5bc",
+      "bytes": 10801348
+    },
+    "runs/native_prefix_checked_observed/states.bin": {
+      "sha256": "456cb4007f148ee56865060525f675ce27d3d2408737af1cd5a9d408fd61d5bc",
+      "bytes": 10801348
+    },
+    "runs/none_initialize_production_plain/initialization.bin": {
+      "sha256": "ff78c9d2ccbbed4065ca5040d084f941a6997194db0d8b139a8b66f694c6437a",
+      "bytes": 1015376
+    },
+    "runs/native_initialize_production_plain/initialization.bin": {
+      "sha256": "ff78c9d2ccbbed4065ca5040d084f941a6997194db0d8b139a8b66f694c6437a",
+      "bytes": 1015376
+    },
+    "runs/native_prefix_checked_plain/states.bin": {
+      "sha256": "456cb4007f148ee56865060525f675ce27d3d2408737af1cd5a9d408fd61d5bc",
+      "bytes": 10801348
+    },
+    "runs/p3_initialize_production_observed/initialization.bin": {
+      "sha256": "f10eb2e96302a72ddfbee797f6c7aa8ba32db4977f3c0381bf184f070ba14ade",
+      "bytes": 3633104
+    },
+    "runs/native_minute_production_observed/fields.bin": {
+      "sha256": "b6d470b25160c4677db5c99260db6fe1287080a001b4a442a63fca5f1606a469",
+      "bytes": 2916072
+    },
+    "runs/native_minute_production_observed/states.bin": {
+      "sha256": "29a63b302ed6c343163f0f232c20ee823f2b1acfb08f1983417c6bbe23c5fe68",
+      "bytes": 1966516
+    },
+    "runs/p3_minute_production_observed/fields.bin": {
+      "sha256": "421238e95116622cb4123f2205701131f5b0c9b92e8da93437a8282a7e1be2ef",
+      "bytes": 2916072
+    },
+    "runs/p3_minute_production_observed/states.bin": {
+      "sha256": "aa77435f8df7262833485f33bd2b030f6b59f433ec70c2f6b4dce8d108311b8b",
+      "bytes": 7201972
+    },
+    "runs/none_initialize_production_observed/initialization.bin": {
+      "sha256": "ff78c9d2ccbbed4065ca5040d084f941a6997194db0d8b139a8b66f694c6437a",
+      "bytes": 1015376
+    },
+    "runs/p3_prefix_production_plain/states.bin": {
+      "sha256": "9fd25a43728fdb9369a53202332d2fd42f0485880ddaf518e6507c0aec1c3ffd",
+      "bytes": 39596356
+    },
+    "runs/p3_minute_production_plain/fields.bin": {
+      "sha256": "421238e95116622cb4123f2205701131f5b0c9b92e8da93437a8282a7e1be2ef",
+      "bytes": 2916072
+    },
+    "runs/p3_minute_production_plain/states.bin": {
+      "sha256": "aa77435f8df7262833485f33bd2b030f6b59f433ec70c2f6b4dce8d108311b8b",
+      "bytes": 7201972
+    },
+    "runs/none_minute_production_observed/fields.bin": {
+      "sha256": "6b40fa07935473bae941dc165d0b71baafc0b5830bd16ed4eb36952d44ce80e9",
+      "bytes": 2916072
+    },
+    "runs/none_minute_production_observed/states.bin": {
+      "sha256": "276f367062f971d10ba27ab4a1b81598db840aafa46973cfbce55763641bc100",
+      "bytes": 1966516
+    },
+    "runs/native_initialize_production_observed/initialization.bin": {
+      "sha256": "ff78c9d2ccbbed4065ca5040d084f941a6997194db0d8b139a8b66f694c6437a",
+      "bytes": 1015376
+    },
+    "runs/p3_prefix_checked_observed/states.bin": {
+      "sha256": "9fd25a43728fdb9369a53202332d2fd42f0485880ddaf518e6507c0aec1c3ffd",
+      "bytes": 39596356
+    },
+    "runs/none_minute_production_plain/fields.bin": {
+      "sha256": "6b40fa07935473bae941dc165d0b71baafc0b5830bd16ed4eb36952d44ce80e9",
+      "bytes": 2916072
+    },
+    "runs/none_minute_production_plain/states.bin": {
+      "sha256": "276f367062f971d10ba27ab4a1b81598db840aafa46973cfbce55763641bc100",
+      "bytes": 1966516
+    },
+    "runs/none_prefix_checked_plain/states.bin": {
+      "sha256": "241ab0f3fbf57473a49f2b21a135056f77c3295cae757aa016a522eaa40ce34d",
+      "bytes": 10801348
+    },
+    "runs/none_prefix_production_plain/states.bin": {
+      "sha256": "241ab0f3fbf57473a49f2b21a135056f77c3295cae757aa016a522eaa40ce34d",
+      "bytes": 10801348
+    },
+    "runs/none_prefix_checked_observed/states.bin": {
+      "sha256": "241ab0f3fbf57473a49f2b21a135056f77c3295cae757aa016a522eaa40ce34d",
+      "bytes": 10801348
+    },
+    "runs/none_prefix_production_observed/states.bin": {
+      "sha256": "241ab0f3fbf57473a49f2b21a135056f77c3295cae757aa016a522eaa40ce34d",
+      "bytes": 10801348
+    },
+    "runs/none_prefix_production_observed/observations/Ta_stage.bin": {
+      "sha256": "590226f21a67a1c9a95bba684bb5dffa95565923a6162406df12b1bb1d5ef0b2",
+      "bytes": 29160720
+    },
+    "runs/none_prefix_production_observed/observations/q_stage.bin": {
+      "sha256": "2bb7a292b40d0cb7ad69ef550531cf2d3740c9d04dc53f59664402aa31147af7",
+      "bytes": 29160720
+    },
+    "runs/none_prefix_production_observed/observations/coarse_z.bin": {
+      "sha256": "4f7e51baeb72ee6d6888391c9de53d4527346bdc272b59e3429bb1128c21d1b3",
+      "bytes": 1600
+    },
+    "runs/none_prefix_production_observed/observations/rho0B.bin": {
+      "sha256": "c8dc595a9f10f49b0718826c2d77ad2cd9311e3127810692aa92e343b06d8e8b",
+      "bytes": 29160720
+    },
+    "runs/none_prefix_production_observed/observations/F.bin": {
+      "sha256": "9472ec0805ca2f99230633700195b3140004b395f107ac99d631b9fe991061d9",
+      "bytes": 29160720
+    },
+    "runs/none_prefix_production_observed/observations/after_damping.bin": {
+      "sha256": "d44d730d2026984fa707856f2cf4dc06250e5b463f23c9b8be8696ff901e3a9c",
+      "bytes": 9816480
+    },
+    "runs/none_prefix_production_observed/observations/ql_stage.bin": {
+      "sha256": "8ef186cd7c2e881c3682672350fabf608be041917b85031d8ec43fe61867cea1",
+      "bytes": 29160720
+    },
+    "runs/none_prefix_production_observed/observations/after_physics.bin": {
+      "sha256": "04b18e49ccaf203ded09bec3e417854ac9db1b3ba97b4b1cc38902555d6908a4",
+      "bytes": 9816480
+    },
+    "runs/none_prefix_production_observed/observations/tendency.bin": {
+      "sha256": "37479b73ba8fbfc2499adbbc71524a754c9e76613da584ea2b521c812c027a63",
+      "bytes": 87482160
+    },
+    "runs/none_prefix_production_observed/observations/qi_stage.bin": {
+      "sha256": "09ba9b18a4d137c751f51dfe438205abd436b5a3757bab988ef326936f2d05fe",
+      "bytes": 29160720
+    },
+    "runs/none_prefix_production_observed/observations/dwdt.bin": {
+      "sha256": "4edf9ec1b76581adef7804417e856db7d567c6b02e6d26bcf3a18170de745d1f",
+      "bytes": 14616720
+    },
+    "runs/none_prefix_production_observed/observations/damp.bin": {
+      "sha256": "6c3eeba36cb4dfafb1b267cfc15aff03d9df007d2d7f168b056f6ff7700e5442",
+      "bytes": 32080
+    },
+    "runs/none_prefix_production_observed/observations/before_physics.bin": {
+      "sha256": "04b18e49ccaf203ded09bec3e417854ac9db1b3ba97b4b1cc38902555d6908a4",
+      "bytes": 9816480
+    },
+    "runs/none_prefix_production_observed/observations/reference_tv.bin": {
+      "sha256": "ac75d51f97847ea16e48d296799a2c9d7d4d9fdfc9755633ebb8c04437a57929",
+      "bytes": 3208
+    },
+    "runs/none_prefix_production_observed/observations/coarse_ze.bin": {
+      "sha256": "00554ea438737e9d4833ce16ad94a6cf879e9a7fd2f1befa040ac69342213dbd",
+      "bytes": 1608
+    },
+    "runs/none_prefix_production_observed/observations/coarse_F.bin": {
+      "sha256": "f9abc7b2aca5d63e012d2ec9ce1833040ec67b593a94ff615a673fc4b6468050",
+      "bytes": 14544000
+    },
+    "runs/none_prefix_checked_observed/observations/reference_tv.bin": {
+      "sha256": "ac75d51f97847ea16e48d296799a2c9d7d4d9fdfc9755633ebb8c04437a57929",
+      "bytes": 3208
+    },
+    "runs/none_prefix_checked_observed/observations/ql_stage.bin": {
+      "sha256": "8ef186cd7c2e881c3682672350fabf608be041917b85031d8ec43fe61867cea1",
+      "bytes": 29160720
+    },
+    "runs/none_prefix_checked_observed/observations/dwdt.bin": {
+      "sha256": "4edf9ec1b76581adef7804417e856db7d567c6b02e6d26bcf3a18170de745d1f",
+      "bytes": 14616720
+    },
+    "runs/none_prefix_checked_observed/observations/tendency.bin": {
+      "sha256": "37479b73ba8fbfc2499adbbc71524a754c9e76613da584ea2b521c812c027a63",
+      "bytes": 87482160
+    },
+    "runs/none_prefix_checked_observed/observations/qi_stage.bin": {
+      "sha256": "09ba9b18a4d137c751f51dfe438205abd436b5a3757bab988ef326936f2d05fe",
+      "bytes": 29160720
+    },
+    "runs/none_prefix_checked_observed/observations/Ta_stage.bin": {
+      "sha256": "590226f21a67a1c9a95bba684bb5dffa95565923a6162406df12b1bb1d5ef0b2",
+      "bytes": 29160720
+    },
+    "runs/none_prefix_checked_observed/observations/q_stage.bin": {
+      "sha256": "2bb7a292b40d0cb7ad69ef550531cf2d3740c9d04dc53f59664402aa31147af7",
+      "bytes": 29160720
+    },
+    "runs/none_prefix_checked_observed/observations/F.bin": {
+      "sha256": "9472ec0805ca2f99230633700195b3140004b395f107ac99d631b9fe991061d9",
+      "bytes": 29160720
+    },
+    "runs/none_prefix_checked_observed/observations/coarse_z.bin": {
+      "sha256": "4f7e51baeb72ee6d6888391c9de53d4527346bdc272b59e3429bb1128c21d1b3",
+      "bytes": 1600
+    },
+    "runs/none_prefix_checked_observed/observations/after_physics.bin": {
+      "sha256": "04b18e49ccaf203ded09bec3e417854ac9db1b3ba97b4b1cc38902555d6908a4",
+      "bytes": 9816480
+    },
+    "runs/none_prefix_checked_observed/observations/coarse_F.bin": {
+      "sha256": "f9abc7b2aca5d63e012d2ec9ce1833040ec67b593a94ff615a673fc4b6468050",
+      "bytes": 14544000
+    },
+    "runs/none_prefix_checked_observed/observations/after_damping.bin": {
+      "sha256": "d44d730d2026984fa707856f2cf4dc06250e5b463f23c9b8be8696ff901e3a9c",
+      "bytes": 9816480
+    },
+    "runs/none_prefix_checked_observed/observations/before_physics.bin": {
+      "sha256": "04b18e49ccaf203ded09bec3e417854ac9db1b3ba97b4b1cc38902555d6908a4",
+      "bytes": 9816480
+    },
+    "runs/none_prefix_checked_observed/observations/coarse_ze.bin": {
+      "sha256": "00554ea438737e9d4833ce16ad94a6cf879e9a7fd2f1befa040ac69342213dbd",
+      "bytes": 1608
+    },
+    "runs/none_prefix_checked_observed/observations/damp.bin": {
+      "sha256": "6c3eeba36cb4dfafb1b267cfc15aff03d9df007d2d7f168b056f6ff7700e5442",
+      "bytes": 32080
+    },
+    "runs/none_prefix_checked_observed/observations/rho0B.bin": {
+      "sha256": "c8dc595a9f10f49b0718826c2d77ad2cd9311e3127810692aa92e343b06d8e8b",
+      "bytes": 29160720
+    },
+    "runs/p3_prefix_checked_observed/observations/after_damping.bin": {
+      "sha256": "a17a8c857a452c4d1a43b1c21c983d439232f065b6118df2f128d3fe1bd70fbf",
+      "bytes": 35993760
+    },
+    "runs/p3_prefix_checked_observed/observations/Ta_stage.bin": {
+      "sha256": "96ab0f83c03d48edf76d9ef0ccbbb6b3f02b4f8f82835cf7de367d749441e64f",
+      "bytes": 29160720
+    },
+    "runs/p3_prefix_checked_observed/observations/rho0B.bin": {
+      "sha256": "77175c538ba4d784fd9bad600c1874e46ac5453c425abc3fa641d65edb4ee36d",
+      "bytes": 29160720
+    },
+    "runs/p3_prefix_checked_observed/observations/after_physics.bin": {
+      "sha256": "e134d9a7c54949456607e34d90cfb2d4ffbc76cea5ee15fec29dac0c31c7a9aa",
+      "bytes": 35993760
+    },
+    "runs/p3_prefix_checked_observed/observations/coarse_z.bin": {
+      "sha256": "4f7e51baeb72ee6d6888391c9de53d4527346bdc272b59e3429bb1128c21d1b3",
+      "bytes": 1600
+    },
+    "runs/p3_prefix_checked_observed/observations/ql_stage.bin": {
+      "sha256": "d0667919604688b224f1ebc71e0a3445903ebf09c36cb064dff7014e4dd9e6b4",
+      "bytes": 29160720
+    },
+    "runs/p3_prefix_checked_observed/observations/coarse_ze.bin": {
+      "sha256": "00554ea438737e9d4833ce16ad94a6cf879e9a7fd2f1befa040ac69342213dbd",
+      "bytes": 1608
+    },
+    "runs/p3_prefix_checked_observed/observations/dwdt.bin": {
+      "sha256": "0a0c2b7a8302e2e670b8d57389d08dc3b1a9ca2e1879619e66e588d8dee4bd6f",
+      "bytes": 14616720
+    },
+    "runs/p3_prefix_checked_observed/observations/tendency.bin": {
+      "sha256": "37b525ee0a416b4574874e06fa6d3a7520b1f48ea3cfd09d1468a2ded959b54e",
+      "bytes": 320767920
+    },
+    "runs/p3_prefix_checked_observed/observations/qi_stage.bin": {
+      "sha256": "cac9c292bb19e8375bc35d42f65a2bac1b6eea5ad6d53c734b52cc39e4c1a0c7",
+      "bytes": 29160720
+    },
+    "runs/p3_prefix_checked_observed/observations/before_physics.bin": {
+      "sha256": "19446cf6300f271b606bac4b384a5337c8ec0d550a3849f844e4220a1f8de833",
+      "bytes": 35993760
+    },
+    "runs/p3_prefix_checked_observed/observations/damp.bin": {
+      "sha256": "6c3eeba36cb4dfafb1b267cfc15aff03d9df007d2d7f168b056f6ff7700e5442",
+      "bytes": 32080
+    },
+    "runs/p3_prefix_checked_observed/observations/p3_liquid_flux.bin": {
+      "sha256": "081a939f060acb24594e32ade266399354d59769fcbad7f84a86a3dbcf1bc5c2",
+      "bytes": 8080
+    },
+    "runs/p3_prefix_checked_observed/observations/q_stage.bin": {
+      "sha256": "adefa0e51ea3fc12b75293634eb357ecf80eb82f563a1d6dff2da33294526c37",
+      "bytes": 29160720
+    },
+    "runs/p3_prefix_checked_observed/observations/coarse_F.bin": {
+      "sha256": "b10c0fc882faf6fa513bb0aef8ec7d01c499a3f4032398ac356ec7620ad19832",
+      "bytes": 14544000
+    },
+    "runs/p3_prefix_checked_observed/observations/p3_solid_flux.bin": {
+      "sha256": "081a939f060acb24594e32ade266399354d59769fcbad7f84a86a3dbcf1bc5c2",
+      "bytes": 8080
+    },
+    "runs/p3_prefix_checked_observed/observations/F.bin": {
+      "sha256": "56fcc21058662865e6b40e50c386923b501014fd913d8116de42f777a845ff2a",
+      "bytes": 29160720
+    },
+    "runs/p3_prefix_checked_observed/observations/reference_tv.bin": {
+      "sha256": "ac75d51f97847ea16e48d296799a2c9d7d4d9fdfc9755633ebb8c04437a57929",
+      "bytes": 3208
+    },
+    "runs/native_initialize_production_observed/observations/reference_tv.bin": {
+      "sha256": "ac75d51f97847ea16e48d296799a2c9d7d4d9fdfc9755633ebb8c04437a57929",
+      "bytes": 3208
+    },
+    "runs/native_initialize_production_observed/observations/coarse_z.bin": {
+      "sha256": "4f7e51baeb72ee6d6888391c9de53d4527346bdc272b59e3429bb1128c21d1b3",
+      "bytes": 1600
+    },
+    "runs/native_initialize_production_observed/observations/PMB.bin": {
+      "sha256": "4eb93807eb918f2c1b059bfaff80bacd9ea61b510684399f25c381b9d807099e",
+      "bytes": 3280641600
+    },
+    "runs/native_initialize_production_observed/observations/PMDv.bin": {
+      "sha256": "4bce4109560289abeb5a7351b9fdf947df5d6ed842c15a95edb3b64bac31a190",
+      "bytes": 3280641600
+    },
+    "runs/native_initialize_production_observed/observations/coarse_ze.bin": {
+      "sha256": "00554ea438737e9d4833ce16ad94a6cf879e9a7fd2f1befa040ac69342213dbd",
+      "bytes": 1608
+    },
+    "runs/native_initialize_production_observed/observations/PMD.bin": {
+      "sha256": "4bce4109560289abeb5a7351b9fdf947df5d6ed842c15a95edb3b64bac31a190",
+      "bytes": 3280641600
+    },
+    "runs/none_minute_production_observed/observations/coarse_z.bin": {
+      "sha256": "4f7e51baeb72ee6d6888391c9de53d4527346bdc272b59e3429bb1128c21d1b3",
+      "bytes": 1600
+    },
+    "runs/none_minute_production_observed/observations/Ta_stage.bin": {
+      "sha256": "d31e52d786510819e1f5d430a46e41dc90daf7010ce71802626b50747207435b",
+      "bytes": 43741080
+    },
+    "runs/none_minute_production_observed/observations/dwdt.bin": {
+      "sha256": "aadc40bac4b7f5f642fbcc999375d619433f07f7e5489339d3a072d12fe4d93b",
+      "bytes": 21925080
+    },
+    "runs/none_minute_production_observed/observations/after_physics.bin": {
+      "sha256": "58a0f9e0cf54d76fbeae52ebd3d660d8d6898201a749cde408937bfc89bf3de6",
+      "bytes": 14724720
+    },
+    "runs/none_minute_production_observed/observations/before_physics.bin": {
+      "sha256": "58a0f9e0cf54d76fbeae52ebd3d660d8d6898201a749cde408937bfc89bf3de6",
+      "bytes": 14724720
+    },
+    "runs/none_minute_production_observed/observations/tendency.bin": {
+      "sha256": "dea1514ec2de583bf4303ddfdaae2378dddb8e62b0984836af822845b24697dd",
+      "bytes": 131223240
+    },
+    "runs/none_minute_production_observed/observations/qi_stage.bin": {
+      "sha256": "6d6d4fccdb8549fb2ce7b303dc367a629a51835c4ba8aa739cb47f51a916a9ff",
+      "bytes": 43741080
+    },
+    "runs/none_minute_production_observed/observations/after_damping.bin": {
+      "sha256": "aef693e86a86553014a9eea5e036647bb2ee9b6522cce7221f6aa089508b175b",
+      "bytes": 14724720
+    },
+    "runs/none_minute_production_observed/observations/rho0B.bin": {
+      "sha256": "d3524b313ab77a1b4c76ddd422dc04a04c417ee46fd81556b3bf73fe55993811",
+      "bytes": 43741080
+    },
+    "runs/none_minute_production_observed/observations/q_stage.bin": {
+      "sha256": "da84fcf71d844bd11ed8467079068be0a25fda325a177a2377552f5628323b10",
+      "bytes": 43741080
+    },
+    "runs/none_minute_production_observed/observations/ql_stage.bin": {
+      "sha256": "a508a2c2e98337d739243884c7024b389d51333f610d272502be0a8ac7e23808",
+      "bytes": 43741080
+    },
+    "runs/none_minute_production_observed/observations/reference_tv.bin": {
+      "sha256": "ac75d51f97847ea16e48d296799a2c9d7d4d9fdfc9755633ebb8c04437a57929",
+      "bytes": 3208
+    },
+    "runs/none_minute_production_observed/observations/F.bin": {
+      "sha256": "8016005f49d4f06fb569f75b751511cf6c7f4644c21efa00381de306a721d11f",
+      "bytes": 43741080
+    },
+    "runs/none_minute_production_observed/observations/coarse_F.bin": {
+      "sha256": "4a45215508fd70c621f44c4127ad574bee576d24e8c6f124a7f11c80b0503afa",
+      "bytes": 21816000
+    },
+    "runs/none_minute_production_observed/observations/damp.bin": {
+      "sha256": "36b064324c76a2220a3ad1d29a76f50d36e47dda0d6398ec81b14e32c9ef2304",
+      "bytes": 48120
+    },
+    "runs/none_minute_production_observed/observations/coarse_ze.bin": {
+      "sha256": "00554ea438737e9d4833ce16ad94a6cf879e9a7fd2f1befa040ac69342213dbd",
+      "bytes": 1608
+    },
+    "runs/none_initialize_production_observed/observations/coarse_z.bin": {
+      "sha256": "4f7e51baeb72ee6d6888391c9de53d4527346bdc272b59e3429bb1128c21d1b3",
+      "bytes": 1600
+    },
+    "runs/none_initialize_production_observed/observations/coarse_ze.bin": {
+      "sha256": "00554ea438737e9d4833ce16ad94a6cf879e9a7fd2f1befa040ac69342213dbd",
+      "bytes": 1608
+    },
+    "runs/none_initialize_production_observed/observations/reference_tv.bin": {
+      "sha256": "ac75d51f97847ea16e48d296799a2c9d7d4d9fdfc9755633ebb8c04437a57929",
+      "bytes": 3208
+    },
+    "runs/p3_minute_production_observed/observations/after_physics.bin": {
+      "sha256": "f18d3a85c068b515b4594aaf9ed7068d7097874933fe50c2ec03c5695c36fd0d",
+      "bytes": 53990640
+    },
+    "runs/p3_minute_production_observed/observations/coarse_ze.bin": {
+      "sha256": "00554ea438737e9d4833ce16ad94a6cf879e9a7fd2f1befa040ac69342213dbd",
+      "bytes": 1608
+    },
+    "runs/p3_minute_production_observed/observations/p3_liquid_flux.bin": {
+      "sha256": "a149367fa1577609e7ee5ad2df25b83145bc479d890fb44fca1e30d5b9d752d4",
+      "bytes": 12120
+    },
+    "runs/p3_minute_production_observed/observations/after_damping.bin": {
+      "sha256": "7626edf31a1bd3135bf5a5e037f72dfa173fdebd46b2f7b76acdacbf07d0d37a",
+      "bytes": 53990640
+    },
+    "runs/p3_minute_production_observed/observations/q_stage.bin": {
+      "sha256": "6c393381fdb288d1d146a9cbe9405978fc2b4ef56e44583518fbbc00f6c95d05",
+      "bytes": 43741080
+    },
+    "runs/p3_minute_production_observed/observations/coarse_F.bin": {
+      "sha256": "94a0a2d9042d168475abfee01ed308ddb1018be21e47e8a24b9f66381061b304",
+      "bytes": 21816000
+    },
+    "runs/p3_minute_production_observed/observations/before_physics.bin": {
+      "sha256": "73bf3860062e9545367bfef9be0348cbd824cbacf4a9574f1b83d893c4074618",
+      "bytes": 53990640
+    },
+    "runs/p3_minute_production_observed/observations/dwdt.bin": {
+      "sha256": "4f2fae403953350157c12e51fefb41c8e8a0dde572956dde3dea410a5e7a1c96",
+      "bytes": 21925080
+    },
+    "runs/p3_minute_production_observed/observations/ql_stage.bin": {
+      "sha256": "2bf24897e258f9942cd22c1bfe67d4dbdd5c267dc4d31c5d63b4568b17923167",
+      "bytes": 43741080
+    },
+    "runs/p3_minute_production_observed/observations/damp.bin": {
+      "sha256": "36b064324c76a2220a3ad1d29a76f50d36e47dda0d6398ec81b14e32c9ef2304",
+      "bytes": 48120
+    },
+    "runs/p3_minute_production_observed/observations/rho0B.bin": {
+      "sha256": "04c575bb3f71abc74cdbbb534a9b8bd5d334bd7d27baf802faade2e9c1390e79",
+      "bytes": 43741080
+    },
+    "runs/p3_minute_production_observed/observations/tendency.bin": {
+      "sha256": "e426251481036467d33f69de4144944bb1e4a0774164f76e570f0aa9eb5ef2a9",
+      "bytes": 481151880
+    },
+    "runs/p3_minute_production_observed/observations/qi_stage.bin": {
+      "sha256": "d33cc9fcaddc5bff72772aba0827e78c540a7bc4db23c48ff24d57bc6aafb000",
+      "bytes": 43741080
+    },
+    "runs/p3_minute_production_observed/observations/p3_solid_flux.bin": {
+      "sha256": "a149367fa1577609e7ee5ad2df25b83145bc479d890fb44fca1e30d5b9d752d4",
+      "bytes": 12120
+    },
+    "runs/p3_minute_production_observed/observations/Ta_stage.bin": {
+      "sha256": "5fa088e1b616c426a0b7e2ffbca8bf91036330123ba08766930dfaeca688bcb4",
+      "bytes": 43741080
+    },
+    "runs/p3_minute_production_observed/observations/F.bin": {
+      "sha256": "fcac993d95d805a6a347c312a734f7ca051943d3e93c413dddfc43ca419450d3",
+      "bytes": 43741080
+    },
+    "runs/p3_minute_production_observed/observations/coarse_z.bin": {
+      "sha256": "4f7e51baeb72ee6d6888391c9de53d4527346bdc272b59e3429bb1128c21d1b3",
+      "bytes": 1600
+    },
+    "runs/p3_minute_production_observed/observations/reference_tv.bin": {
+      "sha256": "ac75d51f97847ea16e48d296799a2c9d7d4d9fdfc9755633ebb8c04437a57929",
+      "bytes": 3208
+    },
+    "runs/native_minute_production_observed/observations/Ta_stage.bin": {
+      "sha256": "fb7045c428341825edc14346598cbcf776e2c437d9227ed394900c4d1a43c966",
+      "bytes": 43741080
+    },
+    "runs/native_minute_production_observed/observations/F.bin": {
+      "sha256": "2d8b3ae069ee298380441e2bb74d0bfdd89f5092c8717ab7103eb39119d6c188",
+      "bytes": 43741080
+    },
+    "runs/native_minute_production_observed/observations/before_physics.bin": {
+      "sha256": "bd441e240bc8ea81495727b38c23efd803ccc401b8389c0fc0908bad282fd2f0",
+      "bytes": 14724720
+    },
+    "runs/native_minute_production_observed/observations/q_stage.bin": {
+      "sha256": "96a0fb282fb2d005c8d05a3975d15e51aefb88007388d394131a206570a27940",
+      "bytes": 43741080
+    },
+    "runs/native_minute_production_observed/observations/coarse_z.bin": {
+      "sha256": "4f7e51baeb72ee6d6888391c9de53d4527346bdc272b59e3429bb1128c21d1b3",
+      "bytes": 1600
+    },
+    "runs/native_minute_production_observed/observations/ql_stage.bin": {
+      "sha256": "5dbcfe8ba338cadd9343f98fddc3dec9b7139e0809924c5f23781c7111b9fac0",
+      "bytes": 43741080
+    },
+    "runs/native_minute_production_observed/observations/damp.bin": {
+      "sha256": "36b064324c76a2220a3ad1d29a76f50d36e47dda0d6398ec81b14e32c9ef2304",
+      "bytes": 48120
+    },
+    "runs/native_minute_production_observed/observations/native_sinks.bin": {
+      "sha256": "287c30f9b67e22a7bf2d64f931f850715f3d626e1d5bfd0d3ea082fcae3d5084",
+      "bytes": 9720240
+    },
+    "runs/native_minute_production_observed/observations/qi_stage.bin": {
+      "sha256": "2c3f7d6d9f0d1a7475cf544a9700d86d3807abf77db1df462ab96f097613c0a8",
+      "bytes": 43741080
+    },
+    "runs/native_minute_production_observed/observations/reference_tv.bin": {
+      "sha256": "ac75d51f97847ea16e48d296799a2c9d7d4d9fdfc9755633ebb8c04437a57929",
+      "bytes": 3208
+    },
+    "runs/native_minute_production_observed/observations/tendency.bin": {
+      "sha256": "9c2519aabd4959658bd46ce067a7a09320151747c635f28609b675f1d4010581",
+      "bytes": 131223240
+    },
+    "runs/native_minute_production_observed/observations/rho0B.bin": {
+      "sha256": "9ac600ac679e102552449a8db9aa8e0c3bc38448534ce30e38dbf0dcf20b3483",
+      "bytes": 43741080
+    },
+    "runs/native_minute_production_observed/observations/dwdt.bin": {
+      "sha256": "53ec426d1efdb855473660c549ef76c0d0cec5db390757febf0d40fdac96cfff",
+      "bytes": 21925080
+    },
+    "runs/native_minute_production_observed/observations/coarse_ze.bin": {
+      "sha256": "00554ea438737e9d4833ce16ad94a6cf879e9a7fd2f1befa040ac69342213dbd",
+      "bytes": 1608
+    },
+    "runs/native_minute_production_observed/observations/after_damping.bin": {
+      "sha256": "2427cc74b9cd835fa20c2afc46cfa35e6d3275da6bec0ea01736e591c2a81ddf",
+      "bytes": 14724720
+    },
+    "runs/native_minute_production_observed/observations/after_physics.bin": {
+      "sha256": "a352a69fff4fbf95402ecd171df1bc3be2812082a36f2bae94c6385bb1db7d8d",
+      "bytes": 14724720
+    },
+    "runs/native_minute_production_observed/observations/coarse_F.bin": {
+      "sha256": "ab79fecf9b1675a5f04253a90cb62c8fa8b489a641984cd86ba98ba22cde213d",
+      "bytes": 21816000
+    },
+    "runs/p3_initialize_production_observed/observations/coarse_ze.bin": {
+      "sha256": "00554ea438737e9d4833ce16ad94a6cf879e9a7fd2f1befa040ac69342213dbd",
+      "bytes": 1608
+    },
+    "runs/p3_initialize_production_observed/observations/coarse_z.bin": {
+      "sha256": "4f7e51baeb72ee6d6888391c9de53d4527346bdc272b59e3429bb1128c21d1b3",
+      "bytes": 1600
+    },
+    "runs/p3_initialize_production_observed/observations/reference_tv.bin": {
+      "sha256": "ac75d51f97847ea16e48d296799a2c9d7d4d9fdfc9755633ebb8c04437a57929",
+      "bytes": 3208
+    },
+    "runs/native_prefix_checked_observed/observations/coarse_F.bin": {
+      "sha256": "a0a1c25933a0083f5400b5e285141befb6d7e8ee7ff3557995f340bf31962d76",
+      "bytes": 14544000
+    },
+    "runs/native_prefix_checked_observed/observations/coarse_ze.bin": {
+      "sha256": "00554ea438737e9d4833ce16ad94a6cf879e9a7fd2f1befa040ac69342213dbd",
+      "bytes": 1608
+    },
+    "runs/native_prefix_checked_observed/observations/damp.bin": {
+      "sha256": "6c3eeba36cb4dfafb1b267cfc15aff03d9df007d2d7f168b056f6ff7700e5442",
+      "bytes": 32080
+    },
+    "runs/native_prefix_checked_observed/observations/F.bin": {
+      "sha256": "e4d5ada251b3dcea5ceef07cf27ce6c35f56299f206c10f3ab714ba81bd04d8d",
+      "bytes": 29160720
+    },
+    "runs/native_prefix_checked_observed/observations/tendency.bin": {
+      "sha256": "04053d93a76220e89c027f69b3805dccb9c959ca0c054b49bbe3bcacd77c6d5f",
+      "bytes": 87482160
+    },
+    "runs/native_prefix_checked_observed/observations/qi_stage.bin": {
+      "sha256": "22dac60846ce1e480e8acaadcec6b2a12b07d0339d31e3332d0298ae67df75ca",
+      "bytes": 29160720
+    },
+    "runs/native_prefix_checked_observed/observations/ql_stage.bin": {
+      "sha256": "f8ef4af066292d6e79fb0d8aa3c1e09e54c390aa8575f222cb4ece2d6b79d46a",
+      "bytes": 29160720
+    },
+    "runs/native_prefix_checked_observed/observations/q_stage.bin": {
+      "sha256": "0bae6705573ef9f19c041bd06ec0241c29deb109ff82d32e0f839f94ae945d85",
+      "bytes": 29160720
+    },
+    "runs/native_prefix_checked_observed/observations/dwdt.bin": {
+      "sha256": "467b6c1687a6abe137a96a34bd35cc1dcc2627b6e28dfd795f532243c1f0e5e2",
+      "bytes": 14616720
+    },
+    "runs/native_prefix_checked_observed/observations/coarse_z.bin": {
+      "sha256": "4f7e51baeb72ee6d6888391c9de53d4527346bdc272b59e3429bb1128c21d1b3",
+      "bytes": 1600
+    },
+    "runs/native_prefix_checked_observed/observations/rho0B.bin": {
+      "sha256": "2d6d2021964dccbd657998d2a8c6034331569d57a8a7ca849a6a91d3666d290e",
+      "bytes": 29160720
+    },
+    "runs/native_prefix_checked_observed/observations/before_physics.bin": {
+      "sha256": "96f94da26c38c4a93cfe8c83e4c02c3bbd9021f2e1a2ede2896b7dc5c53392f9",
+      "bytes": 9816480
+    },
+    "runs/native_prefix_checked_observed/observations/after_physics.bin": {
+      "sha256": "41f93543117ea76f73aa0fdbe316498e599a0f3e351c60903e4a3696dfaebb15",
+      "bytes": 9816480
+    },
+    "runs/native_prefix_checked_observed/observations/Ta_stage.bin": {
+      "sha256": "22e78e2a0abb2e70a62269a11babd74a09085e7e7f7fc8cec3bc0354e3b25ecb",
+      "bytes": 29160720
+    },
+    "runs/native_prefix_checked_observed/observations/native_sinks.bin": {
+      "sha256": "ac78d924911178950e5b085d44f5bd7d18757bde2e058a75bb78ff05a271e2f9",
+      "bytes": 6480160
+    },
+    "runs/native_prefix_checked_observed/observations/reference_tv.bin": {
+      "sha256": "ac75d51f97847ea16e48d296799a2c9d7d4d9fdfc9755633ebb8c04437a57929",
+      "bytes": 3208
+    },
+    "runs/native_prefix_checked_observed/observations/after_damping.bin": {
+      "sha256": "6fa1269a967731860de7234fadef35dca7618dbce4920353c363906785417669",
+      "bytes": 9816480
+    },
+    "runs/native_prefix_production_observed/observations/after_physics.bin": {
+      "sha256": "41f93543117ea76f73aa0fdbe316498e599a0f3e351c60903e4a3696dfaebb15",
+      "bytes": 9816480
+    },
+    "runs/native_prefix_production_observed/observations/after_damping.bin": {
+      "sha256": "6fa1269a967731860de7234fadef35dca7618dbce4920353c363906785417669",
+      "bytes": 9816480
+    },
+    "runs/native_prefix_production_observed/observations/coarse_ze.bin": {
+      "sha256": "00554ea438737e9d4833ce16ad94a6cf879e9a7fd2f1befa040ac69342213dbd",
+      "bytes": 1608
+    },
+    "runs/native_prefix_production_observed/observations/q_stage.bin": {
+      "sha256": "0bae6705573ef9f19c041bd06ec0241c29deb109ff82d32e0f839f94ae945d85",
+      "bytes": 29160720
+    },
+    "runs/native_prefix_production_observed/observations/coarse_F.bin": {
+      "sha256": "a0a1c25933a0083f5400b5e285141befb6d7e8ee7ff3557995f340bf31962d76",
+      "bytes": 14544000
+    },
+    "runs/native_prefix_production_observed/observations/rho0B.bin": {
+      "sha256": "2d6d2021964dccbd657998d2a8c6034331569d57a8a7ca849a6a91d3666d290e",
+      "bytes": 29160720
+    },
+    "runs/native_prefix_production_observed/observations/damp.bin": {
+      "sha256": "6c3eeba36cb4dfafb1b267cfc15aff03d9df007d2d7f168b056f6ff7700e5442",
+      "bytes": 32080
+    },
+    "runs/native_prefix_production_observed/observations/dwdt.bin": {
+      "sha256": "467b6c1687a6abe137a96a34bd35cc1dcc2627b6e28dfd795f532243c1f0e5e2",
+      "bytes": 14616720
+    },
+    "runs/native_prefix_production_observed/observations/before_physics.bin": {
+      "sha256": "96f94da26c38c4a93cfe8c83e4c02c3bbd9021f2e1a2ede2896b7dc5c53392f9",
+      "bytes": 9816480
+    },
+    "runs/native_prefix_production_observed/observations/coarse_z.bin": {
+      "sha256": "4f7e51baeb72ee6d6888391c9de53d4527346bdc272b59e3429bb1128c21d1b3",
+      "bytes": 1600
+    },
+    "runs/native_prefix_production_observed/observations/Ta_stage.bin": {
+      "sha256": "22e78e2a0abb2e70a62269a11babd74a09085e7e7f7fc8cec3bc0354e3b25ecb",
+      "bytes": 29160720
+    },
+    "runs/native_prefix_production_observed/observations/F.bin": {
+      "sha256": "e4d5ada251b3dcea5ceef07cf27ce6c35f56299f206c10f3ab714ba81bd04d8d",
+      "bytes": 29160720
+    },
+    "runs/native_prefix_production_observed/observations/qi_stage.bin": {
+      "sha256": "22dac60846ce1e480e8acaadcec6b2a12b07d0339d31e3332d0298ae67df75ca",
+      "bytes": 29160720
+    },
+    "runs/native_prefix_production_observed/observations/tendency.bin": {
+      "sha256": "04053d93a76220e89c027f69b3805dccb9c959ca0c054b49bbe3bcacd77c6d5f",
+      "bytes": 87482160
+    },
+    "runs/native_prefix_production_observed/observations/reference_tv.bin": {
+      "sha256": "ac75d51f97847ea16e48d296799a2c9d7d4d9fdfc9755633ebb8c04437a57929",
+      "bytes": 3208
+    },
+    "runs/native_prefix_production_observed/observations/native_sinks.bin": {
+      "sha256": "ac78d924911178950e5b085d44f5bd7d18757bde2e058a75bb78ff05a271e2f9",
+      "bytes": 6480160
+    },
+    "runs/native_prefix_production_observed/observations/ql_stage.bin": {
+      "sha256": "f8ef4af066292d6e79fb0d8aa3c1e09e54c390aa8575f222cb4ece2d6b79d46a",
+      "bytes": 29160720
+    },
+    "runs/p3_prefix_production_observed/observations/F.bin": {
+      "sha256": "56fcc21058662865e6b40e50c386923b501014fd913d8116de42f777a845ff2a",
+      "bytes": 29160720
+    },
+    "runs/p3_prefix_production_observed/observations/damp.bin": {
+      "sha256": "6c3eeba36cb4dfafb1b267cfc15aff03d9df007d2d7f168b056f6ff7700e5442",
+      "bytes": 32080
+    },
+    "runs/p3_prefix_production_observed/observations/before_physics.bin": {
+      "sha256": "19446cf6300f271b606bac4b384a5337c8ec0d550a3849f844e4220a1f8de833",
+      "bytes": 35993760
+    },
+    "runs/p3_prefix_production_observed/observations/p3_solid_flux.bin": {
+      "sha256": "081a939f060acb24594e32ade266399354d59769fcbad7f84a86a3dbcf1bc5c2",
+      "bytes": 8080
+    },
+    "runs/p3_prefix_production_observed/observations/coarse_F.bin": {
+      "sha256": "b10c0fc882faf6fa513bb0aef8ec7d01c499a3f4032398ac356ec7620ad19832",
+      "bytes": 14544000
+    },
+    "runs/p3_prefix_production_observed/observations/p3_liquid_flux.bin": {
+      "sha256": "081a939f060acb24594e32ade266399354d59769fcbad7f84a86a3dbcf1bc5c2",
+      "bytes": 8080
+    },
+    "runs/p3_prefix_production_observed/observations/reference_tv.bin": {
+      "sha256": "ac75d51f97847ea16e48d296799a2c9d7d4d9fdfc9755633ebb8c04437a57929",
+      "bytes": 3208
+    },
+    "runs/p3_prefix_production_observed/observations/after_physics.bin": {
+      "sha256": "e134d9a7c54949456607e34d90cfb2d4ffbc76cea5ee15fec29dac0c31c7a9aa",
+      "bytes": 35993760
+    },
+    "runs/p3_prefix_production_observed/observations/coarse_z.bin": {
+      "sha256": "4f7e51baeb72ee6d6888391c9de53d4527346bdc272b59e3429bb1128c21d1b3",
+      "bytes": 1600
+    },
+    "runs/p3_prefix_production_observed/observations/rho0B.bin": {
+      "sha256": "77175c538ba4d784fd9bad600c1874e46ac5453c425abc3fa641d65edb4ee36d",
+      "bytes": 29160720
+    },
+    "runs/p3_prefix_production_observed/observations/after_damping.bin": {
+      "sha256": "a17a8c857a452c4d1a43b1c21c983d439232f065b6118df2f128d3fe1bd70fbf",
+      "bytes": 35993760
+    },
+    "runs/p3_prefix_production_observed/observations/Ta_stage.bin": {
+      "sha256": "96ab0f83c03d48edf76d9ef0ccbbb6b3f02b4f8f82835cf7de367d749441e64f",
+      "bytes": 29160720
+    },
+    "runs/p3_prefix_production_observed/observations/coarse_ze.bin": {
+      "sha256": "00554ea438737e9d4833ce16ad94a6cf879e9a7fd2f1befa040ac69342213dbd",
+      "bytes": 1608
+    },
+    "runs/p3_prefix_production_observed/observations/qi_stage.bin": {
+      "sha256": "cac9c292bb19e8375bc35d42f65a2bac1b6eea5ad6d53c734b52cc39e4c1a0c7",
+      "bytes": 29160720
+    },
+    "runs/p3_prefix_production_observed/observations/tendency.bin": {
+      "sha256": "37b525ee0a416b4574874e06fa6d3a7520b1f48ea3cfd09d1468a2ded959b54e",
+      "bytes": 320767920
+    },
+    "runs/p3_prefix_production_observed/observations/ql_stage.bin": {
+      "sha256": "d0667919604688b224f1ebc71e0a3445903ebf09c36cb064dff7014e4dd9e6b4",
+      "bytes": 29160720
+    },
+    "runs/p3_prefix_production_observed/observations/dwdt.bin": {
+      "sha256": "0a0c2b7a8302e2e670b8d57389d08dc3b1a9ca2e1879619e66e588d8dee4bd6f",
+      "bytes": 14616720
+    },
+    "runs/p3_prefix_production_observed/observations/q_stage.bin": {
+      "sha256": "adefa0e51ea3fc12b75293634eb357ecf80eb82f563a1d6dff2da33294526c37",
+      "bytes": 29160720
+    }
+  },
+  "integration_runner_sha256": "c430f8988d1b73932b2d933aeb0aa5d0b2af743c6ea2a9ea352c1d9b835d4d9a",
+  "analysis_runner_sha256": "1f4c9f88c73957856e10d0d77cd921a797bba51109c73b132a2dcffdce0b4b45",
+  "commands_record_sha256": "f2fb9254807943b9188103a615a900f152058b9d37bba6cba5485c8bea28eee0",
+  "observational_patch_sha256": "42ea5544728ec4be0af1d7b331213f44a85c1a45eb96791737243b06d2dcdc45",
+  "raw_workspace": "/scratch/peter50504/ACE/migration_work/fortran_v020_oop_stage0",
+  "coordinate_decoding": "Divide raw element index by product(shape_per_frame) for frame; unravel remainder in Fortran order. RK frame maps to step=frame//9+1, stage=frame%9+1. Indices in files are zero-based.",
+  "observation_layout_count": 165,
+  "valid_state_stream_count": 18,
+  "limitations": [
+    "No OOP model implemented",
+    "No three-hour rerun",
+    "GNU real64/OpenMP evidence only; no new real32 acceptance",
+    "Later candidate execution requires a separately approved OOP observation adapter"
+  ],
+  "production_source_unchanged": true
+}

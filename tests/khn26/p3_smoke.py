@@ -70,14 +70,14 @@ def experiment(work, tables):
     paths = ['microphy_p3.F','ace_input.F','ace_interpolation.F','ace_module.F','test.F']
     for name in paths:
         (source/name).write_bytes((ROOT/'fortran/src'/name).read_bytes())
-    driver = (source/'test.F').read_text()
-    old = 'dum1=Tr(1,k)+0.25'
+    driver = (source/'ace_module.F').read_text()
+    old = 'dum1=self%Tr(1,k)+0.25'
     if driver.count(old)!=1:
         raise ValueError('Expected unique production bubble statement')
-    changed = driver.replace(old,'dum1=Tr(1,k)+1.0')
-    (source/'test.F').write_text(changed)
+    changed = driver.replace(old,'dum1=self%Tr(1,k)+1.0')
+    (source/'ace_module.F').write_text(changed)
     (work/'driver.patch').write_text(''.join(difflib.unified_diff(driver.splitlines(True),
-        changed.splitlines(True),fromfile='fortran/src/test.F',tofile='experiment/source/test.F')))
+        changed.splitlines(True),fromfile='fortran/src/ace_module.F',tofile='experiment/source/ace_module.F')))
     table = tables/'p3_lookupTable_1.dat-v6.4-2momI'
     input_path = ROOT/'data/input/manaus1342_khn26.nc'
     config = dict(input=str(input_path),input_sha256=sha(input_path),

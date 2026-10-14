@@ -19,7 +19,8 @@ VARIANTS = {
 
 def run(work, repeats):
     work.mkdir(parents=True, exist_ok=False)
-    original = (ROOT/'fortran/src/ace_module.F').read_text()
+    # Strip ownership qualifiers only for the isolated standalone kernel.
+    original = (ROOT/'fortran/src/ace_module.F').read_text().replace("response%", "")
     begin = original.index('do i=1,ncols\n  do k=1,coarse_nz+1\n    value=0.')
     end = original.index('!$omp end parallel do', begin)
     production_loop = original[begin:end]

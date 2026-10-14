@@ -51,14 +51,21 @@ fwrite(fid,ace.Tv_zc,'double');fclose(fid);
     module = (ROOT / 'fortran/src/ace_module.F').read_text()
     access = module.replace('! defien operator',
                             'public :: ace_tendency, weno_up3, precip_sinks, set_probe_thermodynamics\n\n! defien operator', 1)
-    access = access.replace('contains\n', '''contains
+    access = access.replace('\ncontains\n\nsubroutine ace_driver', '''
+contains
 subroutine set_probe_thermodynamics(t_in,q_in,ql_in,qi_in)
 real, intent(in) :: t_in(:),q_in(:),ql_in(:),qi_in(:)
 deallocate(Ta,q,ql,qi)
 allocate(Ta(1,size(t_in)),q(1,size(t_in)),ql(1,size(t_in)),qi(1,size(t_in)))
 Ta(1,:)=t_in;q(1,:)=q_in;ql(1,:)=ql_in;qi(1,:)=qi_in
 end subroutine
-''', 1)
+
+subroutine ace_driver''', 1)
+    if "type :: ace_thermal_t" in module:
+        from oop_regression import thermal_code
+        begin = access.index("subroutine set_probe_thermodynamics(")
+        end = access.index("end subroutine", begin)
+        access = access[:begin] + thermal_code(access[begin:end], "legacy_thermal%") + access[end:]
     (work / 'ace_module_probe.F').write_text(access)
     include = subprocess.check_output(['nf-config', '--fflags'], text=True).split()
     libs = subprocess.check_output(['nf-config', '--flibs'], text=True).split()

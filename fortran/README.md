@@ -5,6 +5,58 @@ for v0.20.0. [Release notes](../docs/releases/v0.20.0-notes.md) list known
 differences, P3 edge-case failures and external-data requirements. Minute
 precipitation accumulation is supplied by the diagnostic runner.
 
+On the OOP refactor branch, `ace_t%initialize` owns the initial model state,
+reference/profile arrays, geometry and an `ace_response_t` context containing
+the coarse grids, packed response tables, work arrays and response flags.
+`ace_t%integrate(te)` uses the object's dt, persistent clock, precipitation
+option and private thermal cache (reference_tv/Ta/q/ql/qi). RK workspace stays
+automatic; cache allocation, stage-one refresh, later-stage reuse and post-RK
+native refresh retain the v0.20 sequence. Full-dt target overshoot is preserved.
+The interval driver explicitly passes `reset_clock_to_target=.true.` to
+preserve its historical `ts=te` assignment, including fractional-dt rounding;
+standalone calls retain the accumulated clock.
+
+`ace_t%open_output(filename)` opens a fresh direct-access file with a model-owned
+unit and resets its record counter to 1. `ace_t%output()` refreshes diagnostics
+and writes one nine-field real32 record; `ace_t%close_output()` closes the file.
+Call close explicitly before reopening a fresh file; copying a model while
+its output is open is outside the supported lifecycle. Diagnoses alone do not
+advance the output counter. Opening an already open object, writing/closing
+a closed output, and overwriting existing files are rejected. Diagnostic
+buffers allocate on first diagnosis or output opening, without changing
+integrator caches.
+
+CLI parsing and output scheduling stay in `test.F`. Validation and saved-state output
+borrow the private arrays through the synchronous `with_legacy_state` callback;
+integration occurs after callbacks return. Procedural integration/tendency
+must not be invoked inside a model callback: old procedural interfaces use a
+separate legacy thermal cache, with an optional response argument for existing
+test callers. The model uses its own contexts without shared aliases or full
+state/table copies. Damping first-use flag/values now belong to the model; its cache is built
+at the first end-of-step damping call and reused without changing expressions.
+Sequential native objects are checked against fresh-process references,
+including different dt/grid. Initialize each object once and keep its dt/grid
+fixed. Concurrent integration and general mixed P3/native lifecycle support
+are outside the validated scope; one P3 object with sequential native operations
+is specifically tested. P3 wrapper directory, first-use flag and iteration counter
+now belong to each model. The third-party library retains process-wide tables,
+initialization flag and mutable status; it cannot reload options after first
+initialization. Only one ACE P3 wrapper context may be used per fresh process,
+across both model and procedural API. A second context is rejected before its
+library init/main call; the claim lasts until process exit. Copying initialized
+P3 models, concurrent P3 use and direct external library initialization are
+outside the supported lifecycle. Public procedural calls
+retain singleton damping and P3 wrapper contexts with their prior first-use
+semantics. `set_p3_lookup_directory` configures only the procedural wrapper;
+model options come from `initialize` and are not changed by that setter or
+another object's initialization. Each P3 context starts with itt=1, initializes
+the library on its first actual P3 step and increments once after field copy.
+No-op integration, diagnose and output do not initialize or advance P3.
+Initialization scratch, integration caches and model
+diagnostic buffers remain distinct. Validation/saved-state callbacks still require
+an executable stack under the validated GNU toolchain. See the
+[staged OOP plan](../docs/migration/fortran_v020_oop_refactor.md).
+
 `src/test.F` defaults to `../data/input/manaus1342_khn26.nc`. Shared slab
 cases use dt=6 s, 360 one-minute output intervals and native precipitation.
 The default prognostics are MF/theta_e/qt; the KHN26 saturated +0.25 K bubble

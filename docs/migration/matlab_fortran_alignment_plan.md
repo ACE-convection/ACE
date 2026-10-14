@@ -50,6 +50,12 @@ marker meanings; snapshot names do not certify model execution.
 For v0.20 input/API blockers, start with the
 [driver dependency map](matlab_driver_dependencies.md) and
 [standalone readiness](matlab_validation_readiness.md).
+The accepted v0.20.0 scope is recorded in [release notes](../releases/v0.20.0-notes.md).
+The next architecture task preserves that unified v0.20 baseline:
+[Fortran OOP refactor plan](fortran_v020_oop_refactor.md). Historical
+`b3f922e` is an architecture reference only. No v0.24 feature implementation
+is included in this step; the feature port follows a validated OOP baseline.
+
 For v0.24, use the [p87 input/reference checklist](matlab_p87_validation_gate.md).
 The old S24 layout proposal is historical evidence only.
 

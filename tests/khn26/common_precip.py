@@ -101,6 +101,9 @@ end block
 deallocate(Ta,q,ql,qi)
 end subroutine
 """
+    if "type :: ace_thermal_t" in original_f:
+        from oop_regression import thermal_code
+        wrapper = thermal_code(wrapper, "legacy_thermal%")
     module=replace_once(module,'end module ace_module',wrapper+'\nend module ace_module')
     (work/'ace_module_probe.F').write_text(module)
     (work/'probe.F').write_text(f"""program probe

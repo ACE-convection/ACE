@@ -514,3 +514,159 @@ python3 tests/khn26/unrestricted_multi.py migration_work/khn26_multi_3h_run --pr
 Preparation creates drivers/configuration without launching a simulation.
 The original stopped twelve-hour launch and its three-hour comparison remain
 historical evidence; their raw logs, workspace names and results are unchanged.
+
+## Staged Fortran OOP preservation
+
+The [OOP plan](../../docs/migration/fortran_v020_oop_refactor.md) records the
+ownership boundaries and stage-specific gates. `oop_regression.py` freezes
+OOP-0 or compares a candidate with that hash-verified workspace; it preserves
+initialization, raw RK/physics/cache observations, state streams and nine-field
+output exactly. `oop_initialization_contract.py` adds shared/legacy/default
+and error-contract checks plus fresh-process 600 s dry/native comparisons
+using the frozen baseline executable without modifying its workspace.
+
+[OOP-2 results](oop_stage2_results.json) record the completed initialization
+ownership gates. OOP-3a moves response tables, coarse grids/work arrays and
+flags into a private model context, with explicit context propagation and
+compatibility dispatch for old procedural tests. Its isolated observer checks
+that model initialization leaves legacy PMB unallocated. The legacy basis
+capture adapter separately checks its coarse forcing against the frozen
+first RK frame. [OOP-3a results](oop_stage3a_results.json) record those gates.
+Numerical runtime scope remains GNU real64/OpenMP32; the
+real32/serial compatibility matrix certifies compilation and linking only.
+Keep one model initialized once per fresh process until response/cache and
+P3 lifecycle migration is validated. Commands and external data requirements
+are listed in the OOP plan.
+
+OOP-3b adds `ace_t%integrate(te)`, persistent object time/options and an explicit
+private thermal context. The isolated observer checks that both legacy
+response and thermal storage stay unallocated throughout the model path.
+`oop_integration_contract.py WORKSPACE` checks persistent time, existing
+full-dt overshoot, repeated/past/aligned no-op targets and exact cache/state
+preservation; five none/native/P3 steps match the frozen executable, including
+an explicit interval clock reset. A fractional-dt three-minute CLI replay
+also preserves state and normal-output bytes. Helpers
+are inserted only into a separate test build, with no production getters.
+Validation and serialization callbacks return before integration starts.
+
+[OOP-3b results](oop_stage3b_results.json) record complete integration/cache
+ownership acceptance: 195 bitwise-identical frozen artifacts, 165 observation
+layouts, 18 valid state streams, nine supplemental gates, clock/cache and
+fractional-dt contracts, four compilation/link variants and adapter checks.
+Checked legacy procedural clients also reproduce none/native/P3 ten-step
+streams from frozen initial arrays. Damping/P3 lifecycle remains a later
+stage; retain the single-model/fresh-process restriction.
+
+OOP-4a adds observational `ace_t%diagnose()` with separate full-precision
+thermal/phase and real32 output buffers. Optional Xout/rh4/b4 copies feed the
+existing serializer at its original cadence. `oop_diagnose_contract.py
+WORKSPACE` extracts its oracle from the hash-pinned frozen writer, verifies
+all diagnostic fields exactly, checks repeated/poisoned-buffer refresh and
+state/cache/clock/response preservation, and compares five steps with
+interspersed diagnoses against the frozen executable. It uses six checkpoints
+and three diagnoses per checkpoint in fresh none/native/P3 processes. Public
+state remains private; helpers exist only in the isolated checked build.
+Output unit/record ownership remains in `test.F` until OOP-4b.
+
+
+[OOP-4a results](oop_stage4a_results.json) record 195 bitwise-identical frozen
+artifacts, 165 observation layouts, 18 valid state streams, all three
+observational diagnosis contracts, integration clock/cache/fractional-dt
+contracts, nine supplemental gates and four compilation/link variants.
+The numerical diagnostic body differs from the frozen writer only by
+component qualification; removing diagnostic additions recovers the OOP-3b
+module exactly. Existing serialization and cadence remain unchanged.
+
+
+OOP-4b transfers normal-output units, record sizing, counter and the nine-field
+real32 write into `ace_t%open_output(filename)`, `%output()` and
+`%close_output()`. The driver retains cadence and comparison state streams.
+`oop_output_contract.py WORKSPACE` compares 12 repeated/poisoned-buffer records
+at four three-minute checkpoints against the hash-pinned frozen writer, checks
+model/cache/clock preservation, frozen executable state and normal-field
+identity, reopen record reset and six lifecycle/fresh-file failure cases.
+The existing diagnostic, integration, initialization and compilation gates
+continue to apply. Damping/P3 still require one initialized model per process.
+
+[OOP-4b results](oop_stage4b_results.json) record 195 bitwise-identical frozen
+artifacts, 165 observation layouts, 18 valid state streams, three output and
+three diagnostic contracts, integration clock/cache/fractional-dt contracts,
+nine supplemental gates and four compilation/link variants. Each output
+contract verifies 12 records, four frozen checkpoint fields, model/cache
+neutrality and reopen reset; six error cases preserve the fresh-file policy.
+Exact inverse extraction recovers the OOP-4a module and driver. No tolerance,
+numerical method or scientific parameterization changed.
+
+
+OOP-5a adds private model-owned damping first-use flag/values and separate
+legacy procedural storage. `oop_damping_contract.py WORKSPACE` compares five
+first/subsequent calls on two synthetic shapes/grids/dt against fresh-process
+frozen ImDamp oracles. Three two-native-object tests (same configuration,
+different dt, and different grid/dt) compare both five-step trajectories with
+fresh frozen executable references. The cropped 201-level fixture is solely
+for lifecycle testing; its parent/derivation/hash are recorded and no physical
+acceptance is claimed. Existing diagnostic/output neutrality and integration
+no-op cache gates include damping flag/allocation/value snapshots. Native
+sequential-object support does not certify concurrent, reinitialized or mixed
+P3/native objects; P3 still requires one instance per fresh process.
+
+[OOP-5a results](oop_stage5a_results.json) record 195 bitwise-identical frozen
+artifacts, 165 observation layouts, 18 valid state streams, two independent
+five-call damping oracles and three two-native-object/fresh-reference cases.
+All existing diagnosis/integration/output contracts, nine supplemental gates,
+four compilation/link variants and current/previous profiler adapter compile
+checks pass. Snapshot contracts include damping first/allocation/cache state.
+The cropped fixture uses response/forcing ACE aligned chunks; its initial
+slow default-chunk attempt is preserved separately, and every decoded variable
+bit/attribute is audited identical after the layout repair. Numerical source
+statements and tolerances are unchanged; no performance or long scientific
+acceptance is claimed. See the OOP plan for validated native lifecycle limits
+and the remaining single-P3-instance restriction.
+
+
+OOP-5b moves wrapper directory/first/itt into a private model context and keeps
+separate procedural storage. The unchanged P3 library retains SAVE is_init,
+shared tables/options and mutable global_status; one ACE P3 wrapper context
+per fresh process is explicitly enforced before a second library init/main.
+`oop_p3_contract.py WORKSPACE` checks model, sequential native interference and
+public procedural ten-step prefixes against frozen states, every P3 field and
+surface flux; verifies the directory used, exactly one init and itt=1..10;
+and checks four second-context rejections plus four directory validation errors.
+Current snapshot contracts include P3 options/counter/claim neutrality; native
+multi-object tests require the library to remain unused. No independent second
+P3 instance, copied P3 model or concurrent lifecycle is certified. Final OOP
+three-hour acceptance and history integration remain separate steps.
+
+[OOP-5b results](oop_stage5b_results.json) record 195 bitwise-identical frozen
+artifacts, 165 observation layouts, 18 valid state streams, three P3 wrapper
+contracts with all-field/surface-flux identity, and eight explicit restriction/
+directory validation errors. Actual init path/count and itt=1..10 are traced
+only in isolated copies; third-party source/tables stay unchanged. Existing
+damping, diagnosis, integration/no-op, output, nine supplemental and four
+compilation/link gates all pass. Exact inverse extraction recovers the OOP-5a
+module and its directory validation. One P3 wrapper context per fresh process
+is enforced; final three-hour OOP acceptance/history integration remain later
+work. No tolerance or numerical algorithm was changed.
+
+`oop_long_regression.py WORKSPACE --prepare` builds isolated OOP-5b plain and
+minute-precipitation-observed copies, preserving production sources. Use
+`--run` to execute native/P3 plain/observed one-minute identity gates followed
+by separate fresh-process three-hour multiACE runs. The experiment matches
+the accepted +1 K bubble, zero initial MF, dt=4 s and GNU real64/OpenMP32.
+All saved states, nine-field normal output and minute/cumulative precipitation
+must match the hash-pinned archived Fortran references byte-for-byte. Input,
+lookup, source, executable and helper hashes are recorded. Live `status.json`
+and final `results.json` are workspace artifacts; a background launch does
+not itself certify final acceptance. See the OOP plan's final three-hour
+launch record for workspace, logs and reproduction details.
+
+[Final OOP three-hour results](oop_long_results.json) record successful native
+and P3 multiACE runs: all 181 states, all nine-field normal output records and
+all minute/cumulative precipitation records match the archived references
+bit-for-bit. An independent post-run audit reverified hashes, layouts, complete
+record counts, finite states/outputs, nonnegative water/number fields and
+precipitation bookkeeping. P3 riming validity and one actual initialization
+also pass. Current production source matches the executed OOP-5b snapshot.
+This completes the documented multiACE OOP preservation gates; reference
+history integration remains separate, and existing lifecycle/precision scope
+limits still apply.

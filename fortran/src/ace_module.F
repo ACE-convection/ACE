@@ -1,9 +1,82 @@
 module ace_module
+use iso_fortran_env, only: real64
 use ace_interpolation, only: interp1, pchip
 implicit none
 
 private
 public :: weno, weno_vec, inv_theta_e, pchip, theta_e, ace_driver, ace_initialization, eval_qs, set_p3_lookup_directory
+public :: ace_t, ace_response_t
+
+! OOP-3a: the owning response context retains all existing kinds and layouts.
+! This public opaque type permits the transitional callback to pass ownership
+! explicitly; its components are private and no pointer aliases are exported.
+type :: ace_response_t
+  private
+  integer :: coarse_nz, coarse_ratio
+  real, allocatable :: coarse_z(:), coarse_ze(:), coarse_F(:,:), dwdt(:,:)
+  ! PMB(source level, forcing ACE, response edge, response ACE).
+  ! Momentum operators retain their input layout and binary64 storage.
+  real*8, allocatable :: PMB(:,:,:,:), PMDv(:,:,:,:), PMD(:,:,:,:)
+  logical :: slab_geometry=.false., zero_ref_buoyancy=.false., Wbar_eq_zero=.false.
+  logical :: turn_off_DHv=.true., turn_off_DHh=.true.
+end type ace_response_t
+
+! Integration cache lifetime follows the original initialization/RK sequence.
+type :: ace_thermal_t
+  private
+  real, allocatable :: reference_tv(:), Ta(:,:), q(:,:), ql(:,:), qi(:,:)
+end type ace_thermal_t
+
+! First-use damping cache retains the original kind, expression and timing.
+type :: ace_damping_t
+  private
+  real, allocatable :: damp(:)
+  logical :: first=.true.
+end type ace_damping_t
+
+! Wrapper ownership does not isolate the third-party process-wide P3 library.
+type :: ace_p3_t
+  private
+  character(1024) :: directory="./input_data/"
+  integer :: itt=1
+  logical :: first=.true.
+end type ace_p3_t
+
+! Observational diagnostics are separate from initialization and RK caches.
+type :: ace_diagnostics_t
+  private
+  real, allocatable :: Tr(:,:), q(:,:), ql(:,:), qi(:,:)
+  real(kind=4), allocatable :: Xout(:,:,:), rh4(:,:), b4(:,:)
+end type ace_diagnostics_t
+
+! OOP-4b: the model owns observational diagnostics and normal output records.
+! Components retain the existing model real kind and layouts.
+type :: ace_t
+  private
+  type(ace_response_t) :: response
+  type(ace_thermal_t) :: thermal
+  type(ace_damping_t) :: damping
+  type(ace_p3_t) :: p3
+  type(ace_diagnostics_t) :: diagnostics
+  integer :: output_unit, output_record=1
+  logical :: output_open=.false.
+  logical :: precipitation_enabled
+  integer :: ncols, nz, n_prog, n_weno
+  real :: dt, t
+  real, allocatable :: X(:,:,:), Ref(:,:), A(:), B(:), forcing(:,:)
+  real, allocatable :: Tv0(:),z(:),zm(:),rho_e(:),rho_zm(:),the_e(:),q_e(:),p_z(:)
+  real, allocatable :: coarse_z(:),coarse_ze(:),Tr(:,:),q(:,:),ql(:,:),qi(:,:)
+  real(real64), allocatable :: input_profile(:,:),diameters(:),input_area(:),input_perimeter(:)
+  real(real64), allocatable :: input_coarse_z(:),input_coarse_ze(:),tmp(:)
+contains
+  procedure :: open_output => model_open_output
+  procedure :: output => model_output
+  procedure :: close_output => model_close_output
+  procedure :: diagnose => model_diagnose
+  procedure :: integrate => model_integrate
+  procedure :: initialize => model_initialize
+  procedure :: with_legacy_state => model_with_legacy_state
+end type ace_t
 
 ! defien operator for grid interface
 
@@ -18,24 +91,44 @@ real, parameter :: qc_ramp = 0.5e-3 ! kg/kg; ramping for precip when qc>qc_ramp
 real, parameter :: dqc = 20 ! kg/kg; transition for a smooth onset of precip ramp function
 real, parameter :: tau_pr = 5*60 ! sec; relaxation timescale for precip
 
-integer :: coarse_nz, coarse_ratio
-real, dimension(:), allocatable :: coarse_z, coarse_ze
-real, dimension(:,:), allocatable :: coarse_F
-real, dimension(:,:), allocatable :: dwdt
-! PMB(source level, forcing ACE, response edge, response ACE).
-! Momentum operators retain their input layout.
-real*8, dimension(:,:,:,:), allocatable :: PMB, PMDv, PMD
-! Slab defaults follow MATLAB S20; momentum coefficients retain their source units.
-logical, save :: slab_geometry=.false., zero_ref_buoyancy=.false., Wbar_eq_zero=.false.
-logical, save :: turn_off_DHv=.true., turn_off_DHh=.true.
-real, allocatable, save :: reference_tv(:)
-character(1024), save :: p3_lookup_directory="./input_data/"
-real, dimension(:,:), allocatable, save :: Ta, q, ql, qi
+! Compatibility storage for the old procedural interfaces; never used by ace_t.
+type(ace_response_t), save :: legacy_response
+type(ace_thermal_t), save :: legacy_thermal
+type(ace_damping_t), save :: legacy_damping
+type(ace_p3_t), save :: legacy_p3
+! No reset/release: p3_init and mutable library status persist for this process.
+logical, save :: p3_context_claimed=.false.
 
 contains
 
-subroutine ace_driver(ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input)
+subroutine ace_driver(ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input,response)
 implicit none
+! input/output variables
+integer, intent(in) :: ncols,nz,n_weno,n_prog
+real, dimension(ncols), intent(in) :: A, B
+real, dimension(nz,8), intent(in) :: Ref
+real, dimension(ncols+1,nz,n_prog), intent(inout) :: X
+real, intent(inout) :: t
+real, intent(in) :: te,dt
+real, dimension(ncols,nz), intent(in) :: B_forcing
+logical, intent(in), optional :: precipitation_input
+
+type(ace_response_t), intent(inout), optional :: response
+! Procedural callers use the legacy thermal cache and optional response context.
+if (present(response)) then
+  call ace_driver_context(response,legacy_thermal,legacy_damping,legacy_p3,ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input)
+else
+  call ace_driver_context(legacy_response,legacy_thermal,legacy_damping,legacy_p3,ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input)
+endif
+end subroutine ace_driver
+
+
+subroutine ace_driver_context(response,thermal,damping,p3,ncols,nz,n_weno,n_prog,X,Ref,A,B,t,te,dt,B_forcing,precipitation_input)
+implicit none
+type(ace_response_t), intent(inout) :: response
+type(ace_thermal_t), intent(inout) :: thermal
+type(ace_damping_t), intent(inout) :: damping
+type(ace_p3_t), intent(inout) :: p3
 
 ! input/output variables
 integer, intent(in) :: ncols,nz,n_weno,n_prog
@@ -58,44 +151,44 @@ yi = X
 
 do while ( t < te)
   ! update ace tendency
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,K1,1)
+  call ace_tendency_context(response,thermal,ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,K1,1)
   yi(1:ncols,:,:) = X(1:ncols,:,:) + K1 * dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,K2,2)
+  call ace_tendency_context(response,thermal,ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,K2,2)
   yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,3)
+  call ace_tendency_context(response,thermal,ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,3)
   K2 = K2 + tmp
   yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,4)
+  call ace_tendency_context(response,thermal,ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,4)
   K2 = K2 + tmp
   yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,5)
+  call ace_tendency_context(response,thermal,ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,5)
   K2 = K2 + tmp
   yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 + K2 ) * dt / 6.
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,6)
+  call ace_tendency_context(response,thermal,ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,6)
   K2 = ( K2 + tmp ) / 15.
   yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt 
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,7)
+  call ace_tendency_context(response,thermal,ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,7)
   K1 = K1 + tmp 
   yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt 
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,8)
+  call ace_tendency_context(response,thermal,ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,8)
   K1 = K1 + tmp 
   yi(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt 
 
-  call ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,9)
+  call ace_tendency_context(response,thermal,ncols,nz,n_weno,n_prog,dt,A,B,yi,Ref,tmp,9)
   K1 = K1 + tmp
 
   yi = X
   X(1:ncols,:,:) = X(1:ncols,:,:) + ( K1 / 6. + K2 ) * dt
   
   ! Match S20's end-of-SSPRK area-mean MF removal before physics/damping.
-  if (Wbar_eq_zero) then
+  if (response%Wbar_eq_zero) then
     do k=1,nz
       mean_mf(k)=sum(X(1:ncols,k,1)*(A/sum(A)))
     enddo
@@ -114,7 +207,7 @@ do while ( t < te)
       call apply_native_precipitation()
     endif
   elseif (n_prog==11) then
-    call p3_wrapper_ace(ncols,nz,n_prog,dt,yi,X,Ref)
+    call p3_wrapper_ace(p3,ncols,nz,n_prog,dt,yi,X,Ref)
   else
     write(*,*) "No suitable microphysics scheme"
     stop
@@ -133,7 +226,7 @@ do while ( t < te)
   enddo
 
   ! implicit damping 
-  call ImDamp(ncols,nz,n_prog,X,Ref,dt)
+  call ImDamp(damping,ncols,nz,n_prog,X,Ref,dt)
 
 
   t = t + dt
@@ -145,20 +238,46 @@ subroutine apply_native_precipitation()
 integer :: ii,kk
 do kk=1,nz
   do ii=1,ncols
-    call inv_theta_e(X(ii,kk,2),X(ii,kk,3),Ref(kk,7),Ta(ii,kk),q(ii,kk),ql(ii,kk),qi(ii,kk))
+    call inv_theta_e(X(ii,kk,2),X(ii,kk,3),Ref(kk,7),thermal%Ta(ii,kk),thermal%q(ii,kk),thermal%ql(ii,kk),thermal%qi(ii,kk))
   enddo
 enddo
-call precip_sinks(ncols,nz,n_prog,Ref(:,7),K1(:,:,1:2))
+call precip_sinks_context(thermal,ncols,nz,n_prog,Ref(:,7),K1(:,:,1:2))
 X(1:ncols,:,2:3)=X(1:ncols,:,2:3)+K1(:,:,1:2)*dt
 end subroutine
-endsubroutine ace_driver
+endsubroutine ace_driver_context
 
 
 subroutine ace_initialization(ncols,nz,nz_presolve,z_presolve,ze_presolve,fname,environment_tv,netcdf_input, &
+                              turn_off_DHv_input,turn_off_DHh_input,zero_ref_buoyancy_input,Wbar_eq_zero_input,response)
+implicit none
+! input variables
+integer, intent(in) :: ncols, nz, nz_presolve
+real, dimension(nz_presolve) :: z_presolve
+real, dimension(nz_presolve+1) :: ze_presolve
+character(*), intent(in) :: fname
+real, intent(in) :: environment_tv(nz)
+logical, intent(in), optional :: netcdf_input
+logical, intent(in), optional :: turn_off_DHv_input,turn_off_DHh_input,zero_ref_buoyancy_input,Wbar_eq_zero_input
+
+type(ace_response_t), intent(inout), optional :: response
+! Procedural callers use the legacy thermal cache and optional response context.
+if (present(response)) then
+  call ace_initialization_context(response,legacy_thermal,ncols,nz,nz_presolve,z_presolve,ze_presolve,fname,environment_tv,netcdf_input, &
+                              turn_off_DHv_input,turn_off_DHh_input,zero_ref_buoyancy_input,Wbar_eq_zero_input)
+else
+  call ace_initialization_context(legacy_response,legacy_thermal,ncols,nz,nz_presolve,z_presolve,ze_presolve,fname,environment_tv,netcdf_input, &
+                              turn_off_DHv_input,turn_off_DHh_input,zero_ref_buoyancy_input,Wbar_eq_zero_input)
+endif
+end subroutine ace_initialization
+
+
+subroutine ace_initialization_context(response,thermal,ncols,nz,nz_presolve,z_presolve,ze_presolve,fname,environment_tv,netcdf_input, &
                               turn_off_DHv_input,turn_off_DHh_input,zero_ref_buoyancy_input,Wbar_eq_zero_input)
 use ace_input, only: read_case_basis, read_case_metadata, basis_available
 use, intrinsic :: ieee_arithmetic, only: ieee_is_finite
 implicit none
+type(ace_response_t), intent(inout) :: response
+type(ace_thermal_t), intent(inout) :: thermal
 
 ! input variables
 integer, intent(in) :: ncols, nz, nz_presolve
@@ -177,48 +296,48 @@ character(64) :: geometry
 
 if (.not.all(ieee_is_finite(environment_tv)) .or. any(environment_tv<=0.)) &
   error stop 'Invalid environmental density temperature'
-allocate(reference_tv(nz))
-reference_tv=environment_tv
-slab_geometry=.false.
-turn_off_DHv=.true.; turn_off_DHh=.true.
-if (present(turn_off_DHv_input)) turn_off_DHv=turn_off_DHv_input
-if (present(turn_off_DHh_input)) turn_off_DHh=turn_off_DHh_input
-coarse_nz=nz_presolve
-if (coarse_nz<1) error stop 'Invalid coarse basis size'
-if (mod(nz-1,coarse_nz)/=0) error stop 'Fine grid does not partition into coarse layers'
-coarse_ratio=(nz-1)/coarse_nz
+allocate(thermal%reference_tv(nz))
+thermal%reference_tv=environment_tv
+response%slab_geometry=.false.
+response%turn_off_DHv=.true.; response%turn_off_DHh=.true.
+if (present(turn_off_DHv_input)) response%turn_off_DHv=turn_off_DHv_input
+if (present(turn_off_DHh_input)) response%turn_off_DHh=turn_off_DHh_input
+response%coarse_nz=nz_presolve
+if (response%coarse_nz<1) error stop 'Invalid coarse basis size'
+if (mod(nz-1,response%coarse_nz)/=0) error stop 'Fine grid does not partition into coarse layers'
+response%coarse_ratio=(nz-1)/response%coarse_nz
 shared=.false.
 if (present(netcdf_input)) shared=netcdf_input
-allocate(coarse_z(coarse_nz),coarse_ze(coarse_nz+1))
-allocate(coarse_F(ncols,coarse_nz))
-allocate(PMB(ncols,ncols,coarse_nz,coarse_nz+1))
-allocate(dwdt(ncols,coarse_nz+1))
-allocate(Ta(ncols,nz),q(ncols,nz),ql(ncols,nz),qi(ncols,nz))
+allocate(response%coarse_z(response%coarse_nz),response%coarse_ze(response%coarse_nz+1))
+allocate(response%coarse_F(ncols,response%coarse_nz))
+allocate(response%PMB(ncols,ncols,response%coarse_nz,response%coarse_nz+1))
+allocate(response%dwdt(ncols,response%coarse_nz+1))
+allocate(thermal%Ta(ncols,nz),thermal%q(ncols,nz),thermal%ql(ncols,nz),thermal%qi(ncols,nz))
 
 
 if (shared) then
   call read_case_metadata(fname,input_nz,input_cols,input_coarse,geometry)
-  if (input_nz/=nz .or. input_cols/=ncols .or. input_coarse/=coarse_nz) &
+  if (input_nz/=nz .or. input_cols/=ncols .or. input_coarse/=response%coarse_nz) &
     error stop 'Basis metadata disagrees with initialized model'
-  call read_case_basis(fname,'PMB',PMB)
-  slab_geometry=trim(geometry)=='slab'
-  if (slab_geometry) then
-    allocate(PMDv(ncols,ncols,coarse_nz,coarse_nz+1),PMD(ncols,ncols,coarse_nz,coarse_nz+1))
-    if (.not.turn_off_DHv .and. .not.basis_available(fname,'PMDv')) &
+  call read_case_basis(fname,'PMB',response%PMB)
+  response%slab_geometry=trim(geometry)=='slab'
+  if (response%slab_geometry) then
+    allocate(response%PMDv(ncols,ncols,response%coarse_nz,response%coarse_nz+1),response%PMD(ncols,ncols,response%coarse_nz,response%coarse_nz+1))
+    if (.not.response%turn_off_DHv .and. .not.basis_available(fname,'PMDv')) &
       error stop 'Cannot activate unavailable PMDv'
-    if (.not.turn_off_DHh .and. .not.basis_available(fname,'PMD')) &
+    if (.not.response%turn_off_DHh .and. .not.basis_available(fname,'PMD')) &
       error stop 'Cannot activate unavailable PMD'
-    call read_case_basis(fname,'PMDv',PMDv)
-    call read_case_basis(fname,'PMD',PMD)
+    call read_case_basis(fname,'PMDv',response%PMDv)
+    call read_case_basis(fname,'PMD',response%PMD)
   endif
 else
-  inquire(iolength=record_length) PMB(1,1,1,:)
+  inquire(iolength=record_length) response%PMB(1,1,1,:)
   open(10,file=trim(fname),access="direct",recl=record_length)
   n=1
   do k=1,ncols
     do j=1,ncols
-      do i=1,coarse_nz
-        read(10,rec=n) PMB(k,j,i,:)
+      do i=1,response%coarse_nz
+        read(10,rec=n) response%PMB(k,j,i,:)
         n=n+1
       enddo
     enddo
@@ -227,28 +346,51 @@ else
 endif
 
 ! Pack once; release the input layout before time integration.
-allocate(packed_pmb(coarse_nz,ncols,coarse_nz+1,ncols))
+allocate(packed_pmb(response%coarse_nz,ncols,response%coarse_nz+1,ncols))
 do i=1,ncols
-  do k=1,coarse_nz+1
-    packed_pmb(:,:,k,i)=transpose(PMB(i,:,:,k))
+  do k=1,response%coarse_nz+1
+    packed_pmb(:,:,k,i)=transpose(response%PMB(i,:,:,k))
   enddo
 enddo
-call move_alloc(packed_pmb,PMB)
+call move_alloc(packed_pmb,response%PMB)
 
-Wbar_eq_zero=slab_geometry
-if (present(Wbar_eq_zero_input)) Wbar_eq_zero=Wbar_eq_zero_input
-zero_ref_buoyancy=slab_geometry
-if (present(zero_ref_buoyancy_input)) zero_ref_buoyancy=zero_ref_buoyancy_input
-if ((.not.turn_off_DHv .or. .not.turn_off_DHh) .and. .not.slab_geometry) &
+response%Wbar_eq_zero=response%slab_geometry
+if (present(Wbar_eq_zero_input)) response%Wbar_eq_zero=Wbar_eq_zero_input
+response%zero_ref_buoyancy=response%slab_geometry
+if (present(zero_ref_buoyancy_input)) response%zero_ref_buoyancy=zero_ref_buoyancy_input
+if ((.not.response%turn_off_DHv .or. .not.response%turn_off_DHh) .and. .not.response%slab_geometry) &
   error stop 'Momentum response requires schema 2 slab operators'
-coarse_z = z_presolve
-coarse_ze = ze_presolve
+response%coarse_z = z_presolve
+response%coarse_ze = ze_presolve
 
-end subroutine ace_initialization
+end subroutine ace_initialization_context
 
 
-subroutine ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,dXdt,rkstage)
+subroutine ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,dXdt,rkstage,response)
 implicit none
+! input/output variables
+integer, intent(in) :: ncols, nz, n_weno, n_prog, rkstage
+real, intent(in) :: dt
+real, dimension(ncols), intent(in) :: A, B ! ACE area/perimeter in SI [m^2, m]
+real, dimension(nz,8), intent(in) :: Ref ! reference varaibles: rhoc, rhoz, z, zm, dz, dzm, p, pi
+! n_prog=3: MF/theta_e/qt; n_prog=11: MF/theta/qv/qc/nc/qr/nr/qi/ni/qrim/brim.
+real, dimension(ncols+1,nz,n_prog), intent(in) :: X
+real, dimension(ncols,nz,n_prog), intent(out) :: dXdt
+
+type(ace_response_t), intent(inout), optional :: response
+! Procedural callers use the legacy thermal cache and optional response context.
+if (present(response)) then
+  call ace_tendency_context(response,legacy_thermal,ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,dXdt,rkstage)
+else
+  call ace_tendency_context(legacy_response,legacy_thermal,ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,dXdt,rkstage)
+endif
+end subroutine ace_tendency
+
+
+subroutine ace_tendency_context(response,thermal,ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,dXdt,rkstage)
+implicit none
+type(ace_response_t), intent(inout) :: response
+type(ace_thermal_t), intent(inout) :: thermal
 
 ! input/output variables
 integer, intent(in) :: ncols, nz, n_weno, n_prog, rkstage
@@ -257,17 +399,17 @@ real, dimension(ncols), intent(in) :: A, B ! ACE area/perimeter in SI [m^2, m]
 real, dimension(nz,8), intent(in) :: Ref ! reference varaibles: rhoc, rhoz, z, zm, dz, dzm, p, pi
 ! n_prog=3: MF/theta_e/qt; n_prog=11: MF/theta/qv/qc/nc/qr/nr/qi/ni/qrim/brim.
 real, dimension(ncols+1,nz,n_prog), intent(in) :: X
-real, dimension(ncols,nz,n_prog), intent(out) :: dXdt 
+real, dimension(ncols,nz,n_prog), intent(out) :: dXdt
 
 ! local variables
 integer :: i,j,l,n,k,ks,ke,outer
 real :: dum1,dum2
 real*8 :: partial,value
-real :: packed_F(coarse_nz,ncols)
+real :: packed_F(response%coarse_nz,ncols)
 real, dimension(ncols,nz,2) :: eps_tur
 real, dimension(nz) :: Tv, mean_rho0B
 real, dimension(ncols,nz) :: rho0B, FH, dz2FH, DHh
-real, dimension(ncols,coarse_nz) :: coarse_DHv, coarse_DHh
+real, dimension(ncols,response%coarse_nz) :: coarse_DHv, coarse_DHh
 real, dimension(ncols,nz,3) :: dXdz
 real, dimension(ncols,nz,2:n_prog) :: Ci, rho0wC
 real, dimension(ncols+1,nz) :: mfc, Wc
@@ -310,14 +452,14 @@ do i=1,ncols
 enddo
 ! MATLAB S20 uses the outermost ACE itself for outer momentum exchange.
 ! Annular input keeps its existing zero-MF environment.
-if (slab_geometry) then
+if (response%slab_geometry) then
   mfc(ncols+1,:)=mfc(ncols,:)
   Wc(ncols+1,:)=Wc(ncols,:)
 endif
 
 do i=1,ncols
   outer=i+1
-  if (slab_geometry) outer=min(outer,ncols)
+  if (response%slab_geometry) outer=min(outer,ncols)
   do n=2,n_prog
     dXdt(i,1:nz  ,n) = 0.
     dXdt(i,1:nz-1,n) = - ( rho0wC(i,2:nz,n) - rho0wC(i,1:nz-1,n) ) / Ref(1:nz-1,5) / Ref(1:nz-1,1)  ! vertical flux convergence
@@ -350,7 +492,7 @@ do i=1,ncols
                      ( ( ioflow(i-1,1:nz-1) + abs(ioflow(i-1,1:nz-1)) ) * Wc(i  ,1:nz-1) &
                      + ( ioflow(i-1,1:nz-1) - abs(ioflow(i-1,1:nz-1)) ) * Wc(i-1,1:nz-1) ) / A(i)  ! inflow from inner
 
-  if (.not.turn_off_DHv) then
+  if (.not.response%turn_off_DHv) then
     FH(i,1:nz-1) = -eps_tur(i,1,1)*(mfc(i,1:nz-1)-mfc(i+1,1:nz-1))
     if (i>1) FH(i,1:nz-1)=FH(i,1:nz-1)-eps_tur(i,1,2)*(mfc(i,1:nz-1)-mfc(i-1,1:nz-1))
     FH(i,1:nz-1)=FH(i,1:nz-1)+0.5*( &
@@ -365,7 +507,7 @@ do i=1,ncols
       dz2FH(i,k)=(FH(i,k-1)-2.*FH(i,k)+FH(i,k+1))/Ref(k,5)**2
     enddo
   endif
-  if (.not.turn_off_DHh) then
+  if (.not.response%turn_off_DHh) then
     DHh(i,1:nz-1)=ioflow(i,1:nz-1)**2
     if (i>1) DHh(i,1:nz-1)=DHh(i,1:nz-1)-ioflow(i-1,1:nz-1)**2
     DHh(i,1:nz-1)=DHh(i,1:nz-1)/Ref(1:nz-1,1)/A(i)
@@ -374,22 +516,22 @@ do i=1,ncols
   if (rkstage==1) then
     do k=1,nz
       if (n_prog==3) then
-        call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),Ta(i,k),q(i,k),ql(i,k),qi(i,k))
+        call inv_theta_e(X(i,k,2),X(i,k,3),Ref(k,7),thermal%Ta(i,k),thermal%q(i,k),thermal%ql(i,k),thermal%qi(i,k))
       elseif (n_prog==11) then
-        Ta(i,:) = X(i,:,2) * Ref(:,8)
-        q(i,:)  = X(i,:,3)
-        ql(i,:) = X(i,:,4) + X(i,:,6)
-        qi(i,:) = X(i,:,8)
+        thermal%Ta(i,:) = X(i,:,2) * Ref(:,8)
+        thermal%q(i,:)  = X(i,:,3)
+        thermal%ql(i,:) = X(i,:,4) + X(i,:,6)
+        thermal%qi(i,:) = X(i,:,8)
       endif
     enddo 
   endif
 
-  Tv(1:nz) = Ta(i,1:nz) * ( 1. + 0.607789855072462 * q(i,1:nz) - ql(i,1:nz) - qi(i,1:nz) )
-  rho0B(i,:) = g * Ref(:,1) * (Tv-reference_tv) / reference_tv
+  Tv(1:nz) = thermal%Ta(i,1:nz) * ( 1. + 0.607789855072462 * thermal%q(i,1:nz) - thermal%ql(i,1:nz) - thermal%qi(i,1:nz) )
+  rho0B(i,:) = g * Ref(:,1) * (Tv-thermal%reference_tv) / thermal%reference_tv
 enddo
 
 ! MATLAB S20 removes the area-weighted mean buoyancy before nonlocal response.
-if (zero_ref_buoyancy) then
+if (response%zero_ref_buoyancy) then
   do k=1,nz
     mean_rho0B(k)=sum(rho0B(:,k)*(A/sum(A)))
   enddo
@@ -400,48 +542,48 @@ endif
 
 do i=1,ncols
   F(i,:)=F(i,:)+rho0B(i,:)
-  coarse_F(i,:)=sum(reshape(F(i,1:nz-1),[coarse_ratio,coarse_nz]),1)/real(coarse_ratio)
-  if (.not.turn_off_DHv) &
-    coarse_DHv(i,:)=-sum(reshape(dz2FH(i,1:nz-1),[coarse_ratio,coarse_nz]),1)/real(coarse_ratio)
-  if (.not.turn_off_DHh) &
-    coarse_DHh(i,:)=sum(reshape(DHh(i,1:nz-1),[coarse_ratio,coarse_nz]),1)/real(coarse_ratio)
+  response%coarse_F(i,:)=sum(reshape(F(i,1:nz-1),[response%coarse_ratio,response%coarse_nz]),1)/real(response%coarse_ratio)
+  if (.not.response%turn_off_DHv) &
+    coarse_DHv(i,:)=-sum(reshape(dz2FH(i,1:nz-1),[response%coarse_ratio,response%coarse_nz]),1)/real(response%coarse_ratio)
+  if (.not.response%turn_off_DHh) &
+    coarse_DHh(i,:)=sum(reshape(DHh(i,1:nz-1),[response%coarse_ratio,response%coarse_nz]),1)/real(response%coarse_ratio)
 enddo
 
-packed_F=transpose(coarse_F)
+packed_F=transpose(response%coarse_F)
 ! Each output keeps the legacy vertical-then-forcing reduction order.
 ! Without -fopenmp these directives leave the same serial kernel.
 !$omp parallel do collapse(2) default(none) schedule(static) &
-!$omp shared(ncols,coarse_nz,PMB,packed_F,dwdt) private(i,k,j,l,partial,value)
+!$omp shared(ncols,response,packed_F) private(i,k,j,l,partial,value)
 do i=1,ncols
-  do k=1,coarse_nz+1
+  do k=1,response%coarse_nz+1
     value=0.
     do j=1,ncols
       partial=0.
-      do l=1,coarse_nz
-        partial=partial+PMB(l,j,k,i)*packed_F(l,j)
+      do l=1,response%coarse_nz
+        partial=partial+response%PMB(l,j,k,i)*packed_F(l,j)
       enddo
       value=value+partial
     enddo
-    dwdt(i,k)=value
+    response%dwdt(i,k)=value
   enddo
 enddo
 !$omp end parallel do
 
 do i=1,ncols
-  do k=1,coarse_nz+1
-    if (.not.turn_off_DHv) dwdt(i,k)=dwdt(i,k)+sum(sum(PMDv(i,:,:,k)*coarse_DHv,2),1)
-    if (.not.turn_off_DHh) dwdt(i,k)=dwdt(i,k)+sum(sum(PMD(i,:,:,k)*coarse_DHh,2),1)
+  do k=1,response%coarse_nz+1
+    if (.not.response%turn_off_DHv) response%dwdt(i,k)=response%dwdt(i,k)+sum(sum(response%PMDv(i,:,:,k)*coarse_DHv,2),1)
+    if (.not.response%turn_off_DHh) response%dwdt(i,k)=response%dwdt(i,k)+sum(sum(response%PMD(i,:,:,k)*coarse_DHh,2),1)
   enddo
 
-  if (slab_geometry) then
-    if (coarse_ratio==1) then
+  if (response%slab_geometry) then
+    if (response%coarse_ratio==1) then
       ! Schema 2 basis edges coincide with MF levels, as in S20's direct branch.
-      dXdt(i,:,1)=dwdt(i,:)
+      dXdt(i,:,1)=response%dwdt(i,:)
     else
-      call interp1(coarse_nz+1,coarse_ze,dwdt(i,:),nz,Ref(:,4),dXdt(i,:,1),'makima',extrap=.true.)
+      call interp1(response%coarse_nz+1,response%coarse_ze,response%dwdt(i,:),nz,Ref(:,4),dXdt(i,:,1),'makima',extrap=.true.)
     endif
   else
-    call interp1(coarse_nz+1,coarse_ze,dwdt(i,:),nz,Ref(:,4),dXdt(i,:,1),'pchip',extrap=.true.)
+    call interp1(response%coarse_nz+1,response%coarse_ze,response%dwdt(i,:),nz,Ref(:,4),dXdt(i,:,1),'pchip',extrap=.true.)
   endif
 enddo  
 
@@ -452,11 +594,12 @@ enddo
 dXdt(:,nz-10:nz,:)=0.
 
 
-end subroutine ace_tendency
+end subroutine ace_tendency_context
 
  
-subroutine ImDamp(ncols,nz,n_prog,X,Ref,dt)
+subroutine ImDamp(damping,ncols,nz,n_prog,X,Ref,dt)
 implicit none
+type(ace_damping_t), intent(inout) :: damping
 
 ! input/output variables
 integer, intent(in) :: ncols,nz,n_prog
@@ -466,22 +609,20 @@ real, dimension(nz,7), intent(in) :: Ref
 
 ! local variable
 integer :: i,k,n
-real, dimension(:), allocatable, save :: damp
-logical, save :: first = .True.
 
-if (first) then
-  allocate(damp(nz))
+if (damping%first) then
+  allocate(damping%damp(nz))
   do k=1,nz
-    damp(k) = dt * exp( ( Ref(k,3) - Ref(nz,3) ) / SLD ) / SLTau
+    damping%damp(k) = dt * exp( ( Ref(k,3) - Ref(nz,3) ) / SLD ) / SLTau
   enddo
-  first = .False.
+  damping%first = .False.
 endif
 
 do k=1,nz
   do i=1,ncols
-    X(i,k,1) = X(i,k,1) / ( 1. + damp(k) / Ref(k,2) )
+    X(i,k,1) = X(i,k,1) / ( 1. + damping%damp(k) / Ref(k,2) )
     do n=2,n_prog
-      X(i,k,n) = ( X(i,k,n) + damp(k) * X(ncols+1,k,n) / Ref(k,1) ) / ( 1. + damp(k) / Ref(k,1) )
+      X(i,k,n) = ( X(i,k,n) + damping%damp(k) * X(ncols+1,k,n) / Ref(k,1) ) / ( 1. + damping%damp(k) / Ref(k,1) )
     enddo
   enddo
 enddo
@@ -490,6 +631,15 @@ end subroutine ImDamp
 
 subroutine precip_sinks(ncols,nz,n_prog,p,dXdt)
 implicit none
+integer, intent(in) :: ncols,nz,n_prog
+real, intent(in) :: p(nz)
+real, intent(inout) :: dXdt(ncols,nz,n_prog-1)
+call precip_sinks_context(legacy_thermal,ncols,nz,n_prog,p,dXdt)
+end subroutine precip_sinks
+
+subroutine precip_sinks_context(thermal,ncols,nz,n_prog,p,dXdt)
+implicit none
+type(ace_thermal_t), intent(in) :: thermal
 
 ! input/output variables
 integer, intent(in) :: ncols,nz,n_prog
@@ -503,7 +653,7 @@ real :: qc, dql, dqi, ramp
 
 do k=1,nz
 do i=1,ncols
-  qc = ql(i,k) + qi(i,k)
+  qc = thermal%ql(i,k) + thermal%qi(i,k)
   dXdt(i,k,:)=0.
   if (qc<=0.) cycle
   ramp=dqc/qc_ramp*(qc-qc_ramp)
@@ -514,26 +664,33 @@ do i=1,ncols
     ! Preserve the finite sink for extreme inputs that overflow MATLAB exp.
     dXdt(i,k,2)=-(qc_ramp/dqc/tau_pr)*(max(ramp,0.)+log(1.+exp(-abs(ramp))))
   endif
-  dql = 1.e-8 * ql(i,k) / qc
-  dqi = 1.e-8 * qi(i,k) / qc
-  dXdt(i,k,1) = dXdt(i,k,2) * ( theta_e(Ta(i,k),q(i,k),ql(i,k)+dql,qi(i,k)+dqi,p(k)) &
-                              - theta_e(Ta(i,k),q(i,k),ql(i,k),qi(i,k),p(k)) ) / 1.e-8
+  dql = 1.e-8 * thermal%ql(i,k) / qc
+  dqi = 1.e-8 * thermal%qi(i,k) / qc
+  dXdt(i,k,1) = dXdt(i,k,2) * ( theta_e(thermal%Ta(i,k),thermal%q(i,k),thermal%ql(i,k)+dql,thermal%qi(i,k)+dqi,p(k)) &
+                              - theta_e(thermal%Ta(i,k),thermal%q(i,k),thermal%ql(i,k),thermal%qi(i,k),p(k)) ) / 1.e-8
 enddo
 enddo
 
-end subroutine precip_sinks
+end subroutine precip_sinks_context
 
 
 subroutine set_p3_lookup_directory(directory)
 character(*), intent(in) :: directory
-if (len_trim(directory)==0 .or. len_trim(directory)>len(p3_lookup_directory)) &
-  error stop 'Invalid P3 lookup directory'
-p3_lookup_directory=directory
+call set_p3_context_directory(legacy_p3,directory)
 end subroutine
 
-subroutine p3_wrapper_ace(ncols,nz,n_prog,dt,X_old,X,Ref)
+subroutine set_p3_context_directory(p3,directory)
+type(ace_p3_t), intent(inout) :: p3
+character(*), intent(in) :: directory
+if (len_trim(directory)==0 .or. len_trim(directory)>len(p3%directory)) &
+  error stop 'Invalid P3 lookup directory'
+p3%directory=directory
+end subroutine
+
+subroutine p3_wrapper_ace(p3,ncols,nz,n_prog,dt,X_old,X,Ref)
 use microphy_p3
 implicit none
+type(ace_p3_t), intent(inout) :: p3
 
 ! input/output variables
 integer, intent(in) :: ncols, nz, n_prog
@@ -543,8 +700,6 @@ real, dimension(ncols+1,nz,n_prog), intent(in) :: X_old
 real, dimension(ncols+1,nz,n_prog), intent(inout) :: X ! mf, th, qv, qc, nc, qr, nr, qi, ni, qrim, brim
 
 ! local variables
-integer, save :: itt = 1
-logical, save :: first = .True.
 integer, parameter :: nCat = 1 ,&                ! the number of ice categories
                       n_diag_2d = 1 ,&           ! size of 2d diagnostic array
                       n_diag_3d = 1              ! size of 3d diagnostic array
@@ -569,10 +724,12 @@ real, dimension(ncols,n_diag_2d) :: diag_2d
 real, dimension(ncols,nz,n_diag_3d) :: diag_3d
 real, dimension(ncols) :: precip_liq,precip_sol
 
-if (first) then
-  call p3_init(trim(p3_lookup_directory),ncat,trplMomI,liqfrac,trim(model),stat,abort_on_err,dowr)
+if (p3%first) then
+  if (p3_context_claimed) error stop 'Only one P3 context per fresh process is supported'
+  call p3_init(trim(p3%directory),ncat,trplMomI,liqfrac,trim(model),stat,abort_on_err,dowr)
   if (stat/=0) stop "Failure of p3 initialization"
-  first = .False.
+  p3%first = .False.
+  p3_context_claimed=.true.
 endif
 
 th_old = X_old(1:ncols,:,2)
@@ -601,7 +758,7 @@ qiliq = 0.
 
 call p3_main(qc,nc,qr,nr,th_old,th,qv_old,qv,dt, &
              qitot,qirim,qiliq,ni,birim,zi,ssat,w, &
-             p,dz,itt,precip_liq,precip_sol, &
+             p,dz,p3%itt,precip_liq,precip_sol, &
              1,ncols,1,nz,nCat, &
              diag_ze,diag_effc,diag_effi,diag_vmi,diag_di,diag_rhoi, &
              n_diag_2d,diag_2d,n_diag_3d,diag_3d,log_predictNc,trim(model), &
@@ -623,7 +780,7 @@ X(1:ncols,:,9)  = ni
 X(1:ncols,:,10) = qirim
 X(1:ncols,:,11) = birim
 
-itt = itt + 1
+p3%itt = p3%itt + 1
 
 end subroutine p3_wrapper_ace
 
@@ -1200,5 +1357,240 @@ end subroutine cal_cij
  end function polysvp1
 ! qv_sat from P3
 
+
+subroutine model_initialize(self,shared_input,input_file,p3_directory,n_weno,physics,dt,intervals,intervals_set, &
+                            ncols,nz,ncoarse,n_prog,khn26_case,precipitation_enabled)
+use ace_input, only: read_case_metadata, read_case_profile, read_case_geometry
+use iso_fortran_env, only: real64
+class(ace_t), intent(inout) :: self
+logical, intent(in) :: shared_input, intervals_set
+character(*), intent(in) :: input_file,p3_directory
+integer, intent(in) :: n_weno
+character(*), intent(inout) :: physics
+real, intent(inout) :: dt
+integer, intent(inout) :: intervals
+integer, intent(out) :: ncols,nz,ncoarse,n_prog
+logical, intent(out) :: khn26_case,precipitation_enabled
+real, parameter :: Rd=287.04, Cp=1005.7, g=9.80665, p0=1.e5
+integer :: i,k,record_length,io_status
+real :: dz,dum1
+real(real64) :: input_lx,input_ly,input_dz
+character(64) :: geometry
+! Each object is initialized once; its damping cache is built on first use.
+! P3 wrapper options/clock are local; the library permits one context per process.
+if (shared_input) then
+  call read_case_metadata(trim(input_file),nz,ncols,ncoarse,geometry)
+else
+  nz=801; ncols=8; ncoarse=200; geometry='annular'
+endif
+khn26_case=shared_input .and. trim(geometry)=='slab'
+if (len_trim(physics)==0) then
+  physics='p3'
+  if (khn26_case) physics='native'
+endif
+if (physics/='native' .and. physics/='none' .and. physics/='p3') error stop 'Invalid --physics'
+n_prog=3
+if (physics=='p3') n_prog=11
+precipitation_enabled=physics/='none'
+if (dt==0.) then
+  dt=2.
+  if (khn26_case) dt=6.
+endif
+if (khn26_case .and. .not.intervals_set) intervals=360
+allocate(self%input_profile(nz,12),self%diameters(7),self%input_area(ncols),self%input_perimeter(ncols))
+allocate(self%input_coarse_z(ncoarse),self%input_coarse_ze(ncoarse+1),self%tmp(nz))
+if (shared_input) then
+  call read_case_profile(trim(input_file),self%input_profile,self%diameters,input_lx,input_ly,input_dz, &
+                         self%input_coarse_z,self%input_coarse_ze)
+  call read_case_geometry(trim(input_file),self%input_area,self%input_perimeter)
+else
+  self%input_profile=0.
+  inquire(iolength=record_length) self%tmp
+  open(20,file='./input_data/ini_manus_208.dat',access='direct',recl=record_length,status='old',iostat=io_status)
+  if (io_status/=0) error stop 'Cannot open legacy initial profile'
+  do k=5,12
+    read(20,rec=k,iostat=io_status) self%input_profile(:,k)
+    if (io_status/=0) error stop 'Cannot read legacy initial profile'
+  enddo
+  close(20)
+  input_dz=50.; input_lx=64000.; input_ly=64000.
+  self%diameters=[5000.d0,10000.d0,15000.d0,25000.d0,35000.d0,45000.d0,55000.d0]
+  self%input_area(1:7)=self%diameters
+  self%input_perimeter(1:7)=4*atan(1.d0)*self%diameters
+  self%input_perimeter(8)=2*(input_lx+input_ly)
+  self%input_area(8)=input_lx*input_ly-atan(1.d0)*self%diameters(7)**2
+  do i=7,2,-1
+    self%input_area(i)=atan(1.d0)*(self%diameters(i)**2-self%diameters(i-1)**2)
+  enddo
+  self%input_area(1)=atan(1.d0)*self%diameters(1)**2
+  do k=1,ncoarse
+    self%input_coarse_z(k)=self%input_profile((k-1)*4+1,6)
+    self%input_coarse_ze(k)=self%input_coarse_z(k)
+  enddo
+  self%input_coarse_ze(ncoarse+1)=40000.
+endif
+
+allocate(self%X(ncols+1,nz,n_prog),self%Ref(nz,8),self%forcing(ncols,nz))
+allocate(self%Tr(ncols,nz),self%q(ncols,nz),self%ql(ncols,nz),self%qi(ncols,nz))
+allocate(self%A(ncols+1),self%B(ncols+1),self%Tv0(nz),self%z(nz),self%zm(nz),self%rho_e(nz),self%rho_zm(nz),self%the_e(nz),self%q_e(nz),self%p_z(nz))
+allocate(self%coarse_z(ncoarse),self%coarse_ze(ncoarse+1))
+self%A(1:ncols)=real(self%input_area,kind(self%A)); self%B(1:ncols)=real(self%input_perimeter,kind(self%B))
+self%A(ncols+1)=self%A(ncols); self%B(ncols+1)=self%B(ncols)
+dz=real(input_dz,kind(dz))
+self%rho_zm=real(self%input_profile(:,5),kind(self%rho_zm)); self%zm=real(self%input_profile(:,6),kind(self%zm))
+self%the_e=real(self%input_profile(:,7),kind(self%the_e)); self%q_e=real(self%input_profile(:,8),kind(self%q_e))
+self%p_z=real(self%input_profile(:,10),kind(self%p_z)); self%rho_e=real(self%input_profile(:,11),kind(self%rho_e))
+self%z=real(self%input_profile(:,12),kind(self%z))
+self%coarse_z=real(self%input_coarse_z,kind(self%coarse_z)); self%coarse_ze=real(self%input_coarse_ze,kind(self%coarse_ze))
+self%forcing=0.
+self%X=0.
+! Convert shared theta_e/qt input once; the P3 state stores th and qv.
+do k=1,nz
+  self%Ref(k,1)=self%rho_e(k); self%Ref(k,2)=self%rho_zm(k)
+  self%Ref(k,3)=self%z(k); self%Ref(k,4)=self%zm(k)
+  self%Ref(k,5)=dz; self%Ref(k,6)=dz; self%Ref(k,7)=self%p_z(k)
+  self%Ref(k,8)=(self%p_z(k)/p0)**(Rd/Cp)
+  call inv_theta_e(self%the_e(k),self%q_e(k),self%Ref(k,7),self%Tr(1,k),self%q(1,k),self%ql(1,k),self%qi(1,k))
+  self%Tv0(k)=real(self%input_profile(k,9),kind(self%Tv0))
+  if (khn26_case) self%Tv0(k)=self%Tr(1,k)*(1.+0.607789855072462*self%q(1,k)-self%ql(1,k)-self%qi(1,k))
+  if (n_prog==3) then
+    self%X(:,k,2)=self%the_e(k); self%X(:,k,3)=self%q_e(k)
+  else
+    self%X(:,k,2)=self%Tr(1,k)/self%Ref(k,8); self%X(:,k,3)=self%q(1,k)
+    ! Preserve reconstructed total water when mapping the environment to P3.
+    self%X(:,k,4)=self%ql(1,k); self%X(:,k,8)=self%qi(1,k)
+  endif
+enddo
+if (khn26_case) then
+  ! KHN26 +0.25 K saturated bubble in ACE 1, one-based levels 11..51.
+  do k=11,min(51,nz)
+    dum1=self%Tr(1,k)+0.25
+    self%q(1,k)=eval_qs(dum1,self%p_z(k),0.,merge(1,0,dum1<273.1636783445389))
+    self%q(1,k)=self%q(1,k)/(1.+self%q(1,k)) ! condensate-free saturation specific humidity
+    if (n_prog==3) then
+      self%X(1,k,2)=theta_e(dum1,self%q(1,k),0.,0.,self%p_z(k)); self%X(1,k,3)=self%q(1,k)
+    else
+      self%X(1,k,2)=dum1/self%Ref(k,8); self%X(1,k,3)=self%q(1,k)
+      self%X(1,k,4)=0.; self%X(1,k,8)=0.
+    endif
+  enddo
+else
+  do k=1,nz
+    if (self%zm(k)<=1000.) self%X(1,k,1)=0.3*sin(4.*atan(1.)*self%zm(k)/1000.)
+  enddo
+endif
+call set_p3_context_directory(self%p3,trim(p3_directory))
+if (shared_input) then
+  call ace_initialization_context(self%response,self%thermal,ncols,nz,ncoarse,self%coarse_z,self%coarse_ze,trim(input_file),self%Tv0,netcdf_input=.true.)
+else
+  call ace_initialization_context(self%response,self%thermal,ncols,nz,ncoarse,self%coarse_z,self%coarse_ze,'./input_data/PMB.dat',self%Tv0)
+endif
+
+self%ncols=ncols; self%nz=nz; self%n_prog=n_prog; self%n_weno=n_weno
+self%dt=dt; self%t=0.
+self%precipitation_enabled=precipitation_enabled
+end subroutine model_initialize
+
+subroutine model_integrate(self,te,reset_clock_to_target)
+class(ace_t), intent(inout) :: self
+real, intent(in) :: te
+logical, intent(in), optional :: reset_clock_to_target
+call ace_driver_context(self%response,self%thermal,self%damping,self%p3,self%ncols,self%nz,self%n_weno,self%n_prog, &
+                        self%X,self%Ref,self%A,self%B,self%t,te,self%dt,self%forcing,self%precipitation_enabled)
+! Preserve the historical interval driver's explicit ts=te assignment.
+! Standalone integration retains its full-dt clock, including target overshoot.
+if (present(reset_clock_to_target)) then
+  if (reset_clock_to_target) self%t=te
+endif
+end subroutine model_integrate
+
+! Allocate buffers without calculating diagnostics or touching model state.
+subroutine model_prepare_diagnostics(self)
+class(ace_t), intent(inout) :: self
+if (.not.allocated(self%diagnostics%Xout)) then
+  allocate(self%diagnostics%Xout(self%ncols+1,self%nz,11))
+  allocate(self%diagnostics%Tr(self%ncols,self%nz),self%diagnostics%q(self%ncols,self%nz), &
+           self%diagnostics%ql(self%ncols,self%nz),self%diagnostics%qi(self%ncols,self%nz), &
+           self%diagnostics%rh4(self%ncols,self%nz),self%diagnostics%b4(self%ncols,self%nz))
+endif
+end subroutine model_prepare_diagnostics
+
+subroutine model_open_output(self,filename)
+class(ace_t), intent(inout) :: self
+character(*), intent(in) :: filename
+integer :: record_length,io_status
+if (self%output_open) error stop 'Model output is already open'
+call model_prepare_diagnostics(self)
+! Preserve the nine-field real32 layout and compiler-independent record sizing.
+inquire(iolength=record_length) self%diagnostics%Xout(1:self%ncols,:,1:3),self%diagnostics%Xout(1:self%ncols,:,4), &
+                              self%diagnostics%Xout(1:self%ncols,:,6),self%diagnostics%Xout(1:self%ncols,:,8), &
+                              self%diagnostics%Xout(1:self%ncols,:,10),self%diagnostics%rh4,self%diagnostics%b4
+open(newunit=self%output_unit,file=trim(filename),access='direct',form='unformatted',status='new',recl=record_length,iostat=io_status)
+if (io_status/=0) error stop 'Cannot open model output; provide an existing output directory'
+self%output_record=1
+self%output_open=.true.
+end subroutine model_open_output
+
+subroutine model_output(self)
+class(ace_t), intent(inout) :: self
+if (.not.self%output_open) error stop 'Model output is not open'
+call self%diagnose()
+write(self%output_unit,rec=self%output_record) self%diagnostics%Xout(1:self%ncols,:,1:3),self%diagnostics%Xout(1:self%ncols,:,4), &
+                 self%diagnostics%Xout(1:self%ncols,:,6),self%diagnostics%Xout(1:self%ncols,:,8), &
+                 self%diagnostics%Xout(1:self%ncols,:,10),self%diagnostics%rh4,self%diagnostics%b4
+self%output_record=self%output_record+1
+end subroutine model_output
+
+subroutine model_close_output(self)
+class(ace_t), intent(inout) :: self
+if (.not.self%output_open) error stop 'Model output is not open'
+close(self%output_unit)
+self%output_open=.false.
+end subroutine model_close_output
+
+subroutine model_diagnose(self,Xout,rh4,b4)
+class(ace_t), intent(inout) :: self
+! Optional diagnostic copies remain available; no aliases escape.
+real(kind=4), intent(out), optional :: Xout(:,:,:),rh4(:,:),b4(:,:)
+integer :: i,k
+real :: dum1
+call model_prepare_diagnostics(self)
+self%diagnostics%Xout=0.
+self%diagnostics%Xout(:,:,1:self%n_prog)=self%X
+do k=1,self%nz
+  do i=1,self%ncols
+    if (self%n_prog==3) then
+      call inv_theta_e(self%X(i,k,2),self%X(i,k,3),self%Ref(k,7),self%diagnostics%Tr(i,k),self%diagnostics%q(i,k),self%diagnostics%ql(i,k),self%diagnostics%qi(i,k))
+      self%diagnostics%Xout(i,k,4)=self%diagnostics%ql(i,k); self%diagnostics%Xout(i,k,8)=self%diagnostics%qi(i,k)
+    else
+      self%diagnostics%Tr(i,k)=self%X(i,k,2)*self%Ref(k,8)
+      self%diagnostics%q(i,k)=self%X(i,k,3); self%diagnostics%ql(i,k)=self%X(i,k,4)+self%X(i,k,6); self%diagnostics%qi(i,k)=self%X(i,k,8)
+    endif
+    self%diagnostics%rh4(i,k)=self%diagnostics%q(i,k)/eval_qs(self%diagnostics%Tr(i,k),self%Ref(k,7),self%diagnostics%q(i,k)+self%diagnostics%ql(i,k)+self%diagnostics%qi(i,k),merge(1,0,self%diagnostics%Tr(i,k)<273.1636783445389))
+    dum1=self%diagnostics%Tr(i,k)*(1.+0.607789855072462*self%diagnostics%q(i,k)-self%diagnostics%ql(i,k)-self%diagnostics%qi(i,k))
+    self%diagnostics%b4(i,k)=g*(dum1-self%Tv0(k))/self%Tv0(k)
+  enddo
+enddo
+if (present(Xout)) Xout=self%diagnostics%Xout
+if (present(rh4)) rh4=self%diagnostics%rh4
+if (present(b4)) b4=self%diagnostics%b4
+end subroutine model_diagnose
+
+subroutine model_with_legacy_state(self,action)
+class(ace_t), intent(inout) :: self
+interface
+  subroutine action(X,Ref,A,B,forcing,Tv0,input_coarse_z,input_coarse_ze,response)
+    use iso_fortran_env, only: real64
+    import ace_response_t
+    type(ace_response_t), intent(inout) :: response
+    real, intent(inout) :: X(:,:,:),forcing(:,:)
+    real, intent(in) :: Ref(:,:),A(:),B(:),Tv0(:)
+    real(real64), intent(in) :: input_coarse_z(:),input_coarse_ze(:)
+  end subroutine action
+end interface
+! Synchronous bridge for validation/serialization until output extraction.
+! Integration calls occur outside the callback; no pointers or state copies escape.
+call action(self%X,self%Ref,self%A,self%B,self%forcing,self%Tv0,self%input_coarse_z,self%input_coarse_ze,self%response)
+end subroutine model_with_legacy_state
 
 end module ace_module 
