@@ -1,0 +1,84 @@
+{
+  "simulated_seconds": 6,
+  "start_state_seconds": 600,
+  "threads": 32,
+  "limits_MF_thetae_qt": [
+    1e-09,
+    1e-07,
+    1e-11
+  ],
+  "runs": {
+    "original_1": {
+      "ode_seconds": 3.8957,
+      "packing_seconds": 3.054644,
+      "max_abs_error_MF_thetae_qt": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "relative_l2_MF_thetae_qt": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "finite": true,
+      "minimum_qt": 2.402409130800386e-06,
+      "screen_passed": true
+    },
+    "precomputed_1": {
+      "ode_seconds": 2.0913,
+      "packing_seconds": 4.386259,
+      "max_abs_error_MF_thetae_qt": [
+        4.996003610813204e-16,
+        5.684341886080802e-14,
+        2.168404344971009e-19
+      ],
+      "relative_l2_MF_thetae_qt": [
+        5.339504154034729e-16,
+        3.4450420655494196e-19,
+        1.8889594715469222e-19
+      ],
+      "finite": true,
+      "minimum_qt": 2.402409130800386e-06,
+      "screen_passed": true
+    },
+    "precomputed_2": {
+      "ode_seconds": 1.8457,
+      "packing_seconds": 4.578239,
+      "max_abs_error_MF_thetae_qt": [
+        4.996003610813204e-16,
+        5.684341886080802e-14,
+        2.168404344971009e-19
+      ],
+      "relative_l2_MF_thetae_qt": [
+        5.339504154034729e-16,
+        3.4450420655494196e-19,
+        1.8889594715469222e-19
+      ],
+      "finite": true,
+      "minimum_qt": 2.402409130800386e-06,
+      "screen_passed": true
+    },
+    "original_2": {
+      "ode_seconds": 3.9178,
+      "packing_seconds": 3.324526,
+      "max_abs_error_MF_thetae_qt": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "relative_l2_MF_thetae_qt": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "finite": true,
+      "minimum_qt": 2.402409130800386e-06,
+      "screen_passed": true
+    }
+  },
+  "original_median_seconds": 3.90675,
+  "precomputed_median_seconds": 1.9685,
+  "observed_step_speedup": 1.9846329692659388,
+  "scientific_acceptance": "pending long trajectory review"
+}
