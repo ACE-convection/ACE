@@ -7,7 +7,7 @@ if isempty(input_mode), input_mode='shared'; end
 assert(ismember(input_mode,{'shared','legacy'}), 'ACE_INPUT_MODE must be shared or legacy');
 shared_input=strcmp(input_mode,'shared');
 input_file=getenv('ACE_INPUT_FILE');
-if isempty(input_file), input_file=fullfile(dir_ace,'../data/input/manaus1342_khn26.nc'); end
+if isempty(input_file), input_file=fullfile(dir_ace,'../data/input/goamazon314_88aces.nc'); end
 if shared_input
   input=read_shared_input(input_file);
   assert(strcmp(input.schema,'ACE-case-input-2') && strcmp(input.geometry,'slab'), ...
@@ -51,7 +51,7 @@ save_output = 1;
 % output_filename = 'GoAmazon_idp=314_2DUNEVEN61ACEs_KHN26_dz=100m_kknw25linear-2clouds.mat'; %Ex~1.5s/1s; Im~1.3s/1s
 % output_filename = 'GoAmazon_idp=314_2D101ACEs_KHN26_dz=100m_ensemble.mat'; %Ex~1.5s/1s; Im~1.3s/1s
 %output_filename = 'GoAmazon_idp=314_2DUNEVEN41ACEs_KHN26_dz=100m-1cloud.mat';
-output_filename = 'manaus1342_khn26.nc';
+output_filename = 'goamazon314_88aces.nc';
 output_override=getenv('ACE_OUTPUT_FILE');
 if ~isempty(output_override), output_filename=output_override; end
 
@@ -122,8 +122,17 @@ one_ace_only = 0;
 Wbar_eq_zero = 1; %enforce domain mean w = 0
 reduce_mf_diff = 1;
 activate_mf_diff = 0; %(0,1,2)=(no,explecit,implicit) mass flux diffusion;  %(42,41,42)s per min with (dz,ztop)=(100,40e3)m
-turn_off_DHv = 1;
-turn_off_DHh = 1;
+turn_off_DHv = 0;
+turn_off_DHh = 0;
+% Explicit switches retain an off mode for control and historical cases.
+for option={'DHH','DHV'}
+  value=getenv(['ACE_' option{1}]);
+  if ~isempty(value)
+    assert(ismember(value,{'on','off'}), 'ACE_DHH/ACE_DHV must be on or off');
+    if strcmp(option{1},'DHH'), turn_off_DHh=strcmp(value,'off');
+    else, turn_off_DHv=strcmp(value,'off'); end
+  end
+end
 turn_off_v_nonlocal = 0;
 truncate_h_nonlocal = 0;
 zero_ref_buoyancy = 1;
@@ -188,6 +197,10 @@ tau_pr = 5*60; % sec; relaxation timescale for precip
 
 % For ODE solver
 dt = 6;  % dt=12 for dz=200m and SSPRK93
+value=getenv('ACE_DT');
+if ~isempty(value), dt=str2double(value); end
+assert(isscalar(dt) && isfinite(dt) && dt>0, 'ACE_DT must be positive');
+assert(abs(60/dt-round(60/dt))<=64*eps*max(1,60/dt), 'dt must divide 60 s');
 % Initiate for continuing runs
 if conti==1
   Xminus1 = X(:,:,:,1:end-1); % X(z,var,ACE-i,time)
@@ -199,7 +212,7 @@ else
   disp('Start Anew!')
 end
 % DO NOT MODIFY THE IF SECTION
-tspan = [0:1:60*6]*60; % sec
+tspan = [0:1:60*8]*60; % sec
 step_count=getenv('ACE_STEPS');
 if ~isempty(step_count)
   steps=str2double(step_count); assert(isfinite(steps) && steps>=1 && steps==fix(steps));
@@ -526,7 +539,10 @@ if save_output
   ncwriteatt(ncoutput,'B','long_name','Buoyancy')
   ncwriteatt(ncoutput,'B','units','m s^-2')
 
-  ncwriteatt(ncoutput,'/','reference_version','KHN26 2025-11');
+  ncwriteatt(ncoutput,'/','reference_version','ACE v0.21.87');
+  ncwriteatt(ncoutput,'/','dt_seconds',dt);
+  ncwriteatt(ncoutput,'/','DHh_enabled',int32(~turn_off_DHh));
+  ncwriteatt(ncoutput,'/','DHv_enabled',int32(~turn_off_DHv));
   ncwriteatt(ncoutput,'/','profile_index',double(case_profile_index));
   ncwriteatt(ncoutput,'/','physics',physics);
   if shared_input, ncwriteatt(ncoutput,'/','input_file',input_file); end

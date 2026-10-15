@@ -63,6 +63,7 @@ for name={'PMB','PMDv','PMD'}
     unit='1'; if ~strcmp(name{1},'PMB'), unit='native'; end
     write_variable(output_file,name{1},basis.(name{1}), ...
         {'basis_edge',nb+1,'coarse_level',nb,'forcing_ace',nc,'response_ace',nc},unit);
+    ncwriteatt(output_file,name{1},'source_status','supplied');
 end
 write_variable(output_file,'basis_z',basis_z,{'basis_edge',nb+1},'m');
 write_variable(output_file,'coarse_ze',coarse_ze,{'basis_edge',nb+1},'m');
@@ -104,7 +105,12 @@ assert(all(isfinite(value(:))), 'Expected finite binary64 input');
 if isempty(dims)
     nccreate(file,name,'Datatype','double','Format','netcdf4');
 else
-    nccreate(file,name,'Dimensions',dims,'Datatype','double','Format','netcdf4','DeflateLevel',1);
+    options={};
+    if ismember(name,{'PMB','PMDv','PMD'})
+        % Both readers consume complete vertical blocks for one ACE pair.
+        options={'ChunkSize',[dims{2},dims{4},1,1]};
+    end
+    nccreate(file,name,'Dimensions',dims,'Datatype','double','Format','netcdf4','DeflateLevel',1,options{:});
 end
 ncwrite(file,name,value);
 ncwriteatt(file,name,'units',unit);

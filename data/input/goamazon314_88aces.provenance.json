@@ -1,0 +1,39 @@
+{
+  "basis_sha256": "9eb0422dc3bf91817494f2a2579e7e5e975eeb641d44e12e79f9aab858cdf9de",
+  "sounding_sha256": "57016c62474bb4a2faf6011d285ee280d9581f9dc791327c506207ae06cc362a",
+  "reference_version": "ACE v0.21.87",
+  "initialization_policy": "Current KHN26 inversion-derived reference Tv and thermal bubble",
+  "sounding_policy": "Raw GOAmazon filtered profile 314; current paired MATLAB preprocessing",
+  "profile_index": 314,
+  "operator_chunks": {
+    "PMB": [
+      1,
+      1,
+      200,
+      201
+    ],
+    "PMDv": [
+      1,
+      1,
+      200,
+      201
+    ],
+    "PMD": [
+      1,
+      1,
+      200,
+      201
+    ]
+  },
+  "output": "data/input/goamazon314_88aces.nc",
+  "output_sha256": "cd2320ba1206e82a54caf5bf288e8ecc31dc0e7208b1f59b2a17535ef9753322",
+  "converter_sha256": "99b2b335f672a8ec6b29b356b4328689bccac83cbfde49fb6ed11456bc72f541",
+  "matlab_driver_sha256": "3d6d62fe8e7279b20895d896eec184842ff6c4380083df39ef5d6fc4a34d516b",
+  "dimensions": {
+    "nz": 401,
+    "ncols": 88,
+    "ncoarse": 200
+  },
+  "model_validation": "Developer accepted native eight-hour MATLAB/Fortran results and MF plots on 2026-10-15; see docs/migration/v02187_validation.json for scope and limitations",
+  "storage_policy": "Full vertical chunks per forcing/response pair; exact readback against original converter output"
+}

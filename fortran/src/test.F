@@ -14,11 +14,11 @@ integer :: i,t,ncols,nz,ncoarse,ndt,argument,parse_status
 integer :: intervals
 real :: ts,te,dt,start,finish
 type(ace_t) :: model
-logical :: shared_input
+logical :: shared_input, turn_off_DHh=.false., turn_off_DHv=.false.
 character(1024) :: input_file,output_file,validation_file,arg,p3_directory
 
 shared_input=.true.
-input_file='../data/input/manaus1342_khn26.nc'
+input_file='../data/input/goamazon314_88aces.nc'
 output_file='./ace_state.dat'
 validation_file=''
 p3_directory='./input_data/'
@@ -30,7 +30,7 @@ do while (argument<=command_argument_count())
   select case(trim(arg))
   case('--legacy-input')
     shared_input=.false.
-  case('--input','--output','--validate-input','--p3-lookup-directory','--intervals','--physics','--steps','--state-output','--dt')
+  case('--input','--output','--validate-input','--p3-lookup-directory','--intervals','--physics','--steps','--state-output','--dt','--dhh','--dhv')
     block
       character(1024) :: option,value
       option=arg
@@ -39,6 +39,10 @@ do while (argument<=command_argument_count())
       call get_command_argument(argument,value)
       if (len_trim(value)==0) error stop 'Empty command argument value'
       select case(trim(option))
+      case('--dhh','--dhv')
+        if (value/='on' .and. value/='off') error stop 'DHh/DHv must be on or off'
+        if (option=='--dhh') turn_off_DHh=value=='off'
+        if (option=='--dhv') turn_off_DHv=value=='off'
       case('--physics'); physics=value
       case('--state-output'); state_output=value
       case('--steps')
@@ -64,8 +68,13 @@ do while (argument<=command_argument_count())
   argument=argument+1
 enddo
 
+if (.not.shared_input) then
+  turn_off_DHh=.true.; turn_off_DHv=.true.
+endif
+
 call model%initialize(shared_input,input_file,p3_directory,n_weno,physics,dt,intervals,intervals_set, &
-                      ncols,nz,ncoarse,n_prog,khn26_case,precipitation_enabled)
+                      ncols,nz,ncoarse,n_prog,khn26_case,precipitation_enabled, &
+                      turn_off_DHv_input=turn_off_DHv,turn_off_DHh_input=turn_off_DHh)
 
 if (len_trim(validation_file)>0) then
   call model%with_legacy_state(validate_model)

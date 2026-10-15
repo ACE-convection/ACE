@@ -49,3 +49,11 @@ venv/
 tmp/
 scratch/
 migration_work/
+
+# v0.21 onward: basis data are local-only, including LFS/distribution parts.
+/data/basis/
+**/*BASIS*.mat
+**/*basis*.mat
+**/*BASIS*.mat.part*
+**/*basis*.mat.part*
+/data/distribution/**/goamazon314_88aces.nc.part*

@@ -1,24 +1,31 @@
-# MATLAB KHN26 v0.20.0 source
+# MATLAB v0.21.87
 
-`ace.m` now follows the author-selected November 2025 KHN26 driver and its
-paired utilities. The default shared input is
-`../data/input/manaus1342_khn26.nc`: actual 101-ACE 4UNEVEN basis, processed
-Manaus profile 1342, dt=6 s and six-hour duration. No sounding preprocessing
-is repeated. The reference Tv is reconstructed from theta_e/qt as in KHN26.
+The default shared input is `../data/input/goamazon314_88aces.nc`: 88 equal
+5 km ACEs, raw GOAmazon filtered profile 314, dz=100 m, dt=6 s and eight
+hours. Current inversion-derived reference Tv, saturated +0.25 K bubble,
+zero initial MF and post-dynamics precipitation ordering are retained.
+`ACE_DHH` and `ACE_DHV` default to `on`; each accepts `on` or `off`.
+`ACE_DT` overrides dt and must divide 60 s. The old Manaus case requires
+both switches `off`. See [release notes](../docs/releases/v0.21.87-notes.md)
+and [new tests](../tests/slab/README.md). The developer accepted the tested
+native eight-hour case and response plots; retained limitations are in the notes.
+Obtain basis/shared operator inputs separately: v0.21 onward keeps them
+local-only. The materializer verifies existing files or reconstructs them
+from separately supplied local parts; do not commit or upload those payloads.
 
 ```matlab
 addpath('/absolute/path/to/ACE/matlab');
-setenv('ACE_INPUT_FILE','/absolute/path/to/manaus1342_khn26.nc');
+maxNumCompThreads(32);
+setenv('ACE_INPUT_FILE','/absolute/path/to/goamazon314_88aces.nc');
 setenv('ACE_OUTPUT_FILE','/absolute/path/to/fresh-output.nc');
 ace
 ```
 
 The output path must be fresh. `ACE_STEPS=10` selects a ten-step smoke run
-with output each step; clear it for the six-hour default. `ACE_PHYSICS` is
+with output each step; clear it for the eight-hour default. `ACE_PHYSICS` is
 `native` by default, or `none` for dynamics comparisons. `ACE_VALIDATE_INPUT`
 selects an initialization-only MAT dump containing `X0` and `model`.
-Dimensions and slab geometry come from schema 2. PMDv/PMD placeholders are
-marked disabled and cannot be enabled. `case_profile_index` retains the
+Dimensions and slab geometry come from schema 2. Unavailable PMDv/PMD placeholders are still rejected when enabled. `case_profile_index` retains the
 original index while `pidx=1` selects the shared file's sole profile.
 
 `ACE_INPUT_MODE=legacy` reads the original KHN26 MAT basis and processed
@@ -32,5 +39,5 @@ source preservation, adapter changes and scientific alignment. See
 MATLAB native precipitation formula is preserved, including its known
 high-condensate overflow. The developer accepted the documented three-hour GNU real64 comparisons
 for v0.20.0; [release notes](../docs/releases/v0.20.0-notes.md) retain known
-differences. The six-hour defaults remain outside this tested scope, and
+differences. The new eight-hour case remains outside that earlier tested scope, and
 P3 is a Fortran-only feature. Use `v0.18.0` for the accepted v0.18 source/tests.

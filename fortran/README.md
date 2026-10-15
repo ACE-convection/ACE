@@ -60,8 +60,13 @@ diagnostic buffers remain distinct. Validation/saved-state callbacks still requi
 an executable stack under the validated GNU toolchain. See the
 [staged OOP plan](../docs/migration/fortran_v020_oop_refactor.md).
 
-`src/test.F` defaults to `../data/input/manaus1342_khn26.nc`. Shared slab
-cases use dt=6 s, 360 one-minute output intervals and native precipitation.
+`src/test.F` defaults to `../data/input/goamazon314_88aces.nc` (88 ACE,
+GOAmazon profile 314). Shared slab cases use dt=6 s, 480 one-minute output
+intervals (eight hours) and native precipitation. `--dhh on|off` and
+`--dhv on|off` default on; use both off for the old Manaus placeholders.
+The optional trailing `ace_t%initialize` momentum flags retain disabled
+API defaults for existing callers. See the [v0.21.87 candidate](../docs/releases/v0.21.87-notes.md)
+and [slab tests](../tests/slab/README.md); validation is in progress.
 The default prognostics are MF/theta_e/qt; the KHN26 saturated +0.25 K bubble
 is initialized in ACE 1, levels 11–51, with zero initial MF. Environmental
 Tv is reconstructed from theta_e/qt for slab cases.
@@ -72,7 +77,7 @@ From `fortran/`, build using the Intel makefile defaults or GNU real64:
 make FC=gfortran \
   FCFLAGS='-O2 -ffree-form -fdefault-real-8 -fdefault-double-8 -ffree-line-length-none' \
   FINCLUDE="$(nf-config --fflags)" LDLIBS="$(nf-config --flibs)"
-./ace_model.exe --input /absolute/path/to/manaus1342_khn26.nc \
+./ace_model.exe --input /absolute/path/to/goamazon314_88aces.nc \
   --physics native --intervals 1 --output /existing/directory/fresh-state.dat
 ```
 
@@ -154,22 +159,27 @@ packed PMB, binary-search PCHIP and MATLAB default/single-thread comparisons.
 Those eight-ACE timings do not predict KHN26 slab performance, whose existing
 MAKIMA/direct path is unchanged.
 
-### PMB memory layout and optional OpenMP
+### Response-table memory layout and optional OpenMP
 
-Initialization packs PMB from the input order `(response ACE, forcing ACE,
+Initialization packs PMB, PMDv and PMD from the input order `(response ACE, forcing ACE,
 source level, response edge)` into `(source level, forcing ACE, response edge,
 response ACE)`. The input layout is released after packing. The dynamics kernel
 traverses contiguous source levels and keeps the original vertical-then-forcing
 sum order with binary64 accumulators. All forcing and response columns remain
-present. PMDv and PMD keep their existing layout and activation policy.
+present. Each operator retains its own vertical-then-forcing reduction;
+PMB, PMDv and PMD contributions are still added in that order. Momentum
+switches and coefficient units are unaffected by packing.
 
-OpenMP distributes independent PMB output points; it does not parallelize the
+OpenMP distributes independent response output points; it does not parallelize the
 sum within a point. It is optional: normal builds run the serial kernel. For
 Intel, pass `make OPENMP_FLAGS=-qopenmp`; for GNU, add `OPENMP_FLAGS=-fopenmp`
 alongside the existing GNU compiler, NetCDF and precision overrides. Set
 `OMP_NUM_THREADS=8` at runtime to request eight threads. Rebuild in a separate
 build directory when changing flags. Packing temporarily requires one extra
-PMB allocation (3.28 GB for KHN26); the persistent basis size is unchanged.
+operator allocation at a time; the persistent basis size is unchanged.
+The v0.21.87 layout-preservation tests additionally pin completed pre-layout
+component and saved-state artifacts, requiring bitwise equality before long runs.
+See [the current slab suite](../tests/slab/README.md).
 
 The regression driver compares serial/OpenMP single steps, an all-response
 single step, and the complete saved prefix of a frozen legacy singleACE run:
