@@ -1,5 +1,11 @@
 # KHN26 actual-basis checks
 
+The v0.21.87 candidate uses a different 88-ACE GOAmazon case; its current
+workflow is [the slab suite](../slab/README.md). The commands below target
+the preserved 101-ACE Manaus baseline. Use the `v0.20.87` checkout for its
+original runners/defaults; many runners pin that case's dimensions and source
+anchors and are not generic launchers for the new case.
+
 These checks cover the author-selected 101-ACE 4UNEVEN basis and processed
 Manaus profile 1342. Requirements: licensed MATLAB (tested R2023b), GNU
 Fortran/netCDF-Fortran (`nf-config`), Python NumPy/netCDF4, generated

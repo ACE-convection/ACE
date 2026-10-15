@@ -328,3 +328,22 @@ AI assistants should:
 When uncertain whether a change is organizational or scientific, treat it as potentially scientific until reviewed.
 
 The goal is not merely to make the code cleaner. The goal is to make ACE development reproducible, understandable, scientifically trustworthy, and maintainable by multiple developers.
+
+---
+
+## 13. Basis data policy from v0.21 onward
+
+The developer requires basis data for v0.21 and later to remain local-only.
+Do not add, commit, upload or push basis payloads, including through Git LFS,
+archives or byte-split parts. This includes shared NetCDF files containing
+complete PMB/PMDv/PMD operators and their parts. Do not bypass ignore rules
+with `git add -f` for these payloads.
+
+Version only source code, conversion/materialization tools, documentation,
+small provenance records and hashes needed to identify externally supplied
+local data. Preserve local basis files. Removing an already tracked basis
+from the current index does not remove earlier commits or server LFS objects.
+Rewriting existing/shared history, replacing published tags, force-pushing,
+or deleting server objects requires explicit separate developer authorization.
+Historical pre-v0.21 basis lineage must remain preserved unless separately
+authorized for cleanup.

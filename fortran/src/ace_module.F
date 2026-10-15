@@ -14,8 +14,8 @@ type :: ace_response_t
   private
   integer :: coarse_nz, coarse_ratio
   real, allocatable :: coarse_z(:), coarse_ze(:), coarse_F(:,:), dwdt(:,:)
-  ! PMB(source level, forcing ACE, response edge, response ACE).
-  ! Momentum operators retain their input layout and binary64 storage.
+  ! All operators: (source level, forcing ACE, response edge, response ACE).
+  ! Binary64 coefficients and vertical-then-forcing reduction are preserved.
   real*8, allocatable :: PMB(:,:,:,:), PMDv(:,:,:,:), PMD(:,:,:,:)
   logical :: slab_geometry=.false., zero_ref_buoyancy=.false., Wbar_eq_zero=.false.
   logical :: turn_off_DHv=.true., turn_off_DHh=.true.
@@ -353,6 +353,8 @@ do i=1,ncols
   enddo
 enddo
 call move_alloc(packed_pmb,response%PMB)
+if (allocated(response%PMDv)) call pack_momentum_basis(response%PMDv)
+if (allocated(response%PMD)) call pack_momentum_basis(response%PMD)
 
 response%Wbar_eq_zero=response%slab_geometry
 if (present(Wbar_eq_zero_input)) response%Wbar_eq_zero=Wbar_eq_zero_input
@@ -364,6 +366,21 @@ response%coarse_z = z_presolve
 response%coarse_ze = ze_presolve
 
 end subroutine ace_initialization_context
+
+subroutine pack_momentum_basis(basis)
+! Pure permutation: input (response,forcing,source,edge) to contiguous source.
+! Use one temporary operator at a time; retain every binary64 coefficient.
+real*8, allocatable, intent(inout) :: basis(:,:,:,:)
+real*8, allocatable :: packed(:,:,:,:)
+integer :: i,k
+allocate(packed(size(basis,3),size(basis,2),size(basis,4),size(basis,1)))
+do i=1,size(basis,1)
+  do k=1,size(basis,4)
+    packed(:,:,k,i)=transpose(basis(i,:,:,k))
+  enddo
+enddo
+call move_alloc(packed,basis)
+end subroutine pack_momentum_basis
 
 
 subroutine ace_tendency(ncols,nz,n_weno,n_prog,dt,A,B,X,Ref,dXdt,rkstage,response)
@@ -406,6 +423,7 @@ integer :: i,j,l,n,k,ks,ke,outer
 real :: dum1,dum2
 real*8 :: partial,value
 real :: packed_F(response%coarse_nz,ncols)
+real :: packed_DHv(response%coarse_nz,ncols),packed_DHh(response%coarse_nz,ncols)
 real, dimension(ncols,nz,2) :: eps_tur
 real, dimension(nz) :: Tv, mean_rho0B
 real, dimension(ncols,nz) :: rho0B, FH, dz2FH, DHh
@@ -511,6 +529,9 @@ do i=1,ncols
     DHh(i,1:nz-1)=ioflow(i,1:nz-1)**2
     if (i>1) DHh(i,1:nz-1)=DHh(i,1:nz-1)-ioflow(i-1,1:nz-1)**2
     DHh(i,1:nz-1)=DHh(i,1:nz-1)/Ref(1:nz-1,1)/A(i)
+    ! Supplied slab PMD uses MATLAB's Ai in km^2, whereas A here is m^2.
+    ! ioflow^2/A scales with area: restore the native-basis forcing units.
+    DHh(i,1:nz-1)=DHh(i,1:nz-1)/1.e6
   endif
 
   if (rkstage==1) then
@@ -550,10 +571,12 @@ do i=1,ncols
 enddo
 
 packed_F=transpose(response%coarse_F)
+if (.not.response%turn_off_DHv) packed_DHv=transpose(coarse_DHv)
+if (.not.response%turn_off_DHh) packed_DHh=transpose(coarse_DHh)
 ! Each output keeps the legacy vertical-then-forcing reduction order.
 ! Without -fopenmp these directives leave the same serial kernel.
 !$omp parallel do collapse(2) default(none) schedule(static) &
-!$omp shared(ncols,response,packed_F) private(i,k,j,l,partial,value)
+!$omp shared(ncols,response,packed_F,packed_DHv,packed_DHh) private(i,k,j,l,partial,value)
 do i=1,ncols
   do k=1,response%coarse_nz+1
     value=0.
@@ -565,16 +588,34 @@ do i=1,ncols
       value=value+partial
     enddo
     response%dwdt(i,k)=value
+    ! Retain separate PMB + PMDv + PMD additions; do not combine reductions.
+    if (.not.response%turn_off_DHv) then
+      value=0.
+      do j=1,ncols
+        partial=0.
+        do l=1,response%coarse_nz
+          partial=partial+response%PMDv(l,j,k,i)*packed_DHv(l,j)
+        enddo
+        value=value+partial
+      enddo
+      response%dwdt(i,k)=response%dwdt(i,k)+value
+    endif
+    if (.not.response%turn_off_DHh) then
+      value=0.
+      do j=1,ncols
+        partial=0.
+        do l=1,response%coarse_nz
+          partial=partial+response%PMD(l,j,k,i)*packed_DHh(l,j)
+        enddo
+        value=value+partial
+      enddo
+      response%dwdt(i,k)=response%dwdt(i,k)+value
+    endif
   enddo
 enddo
 !$omp end parallel do
 
 do i=1,ncols
-  do k=1,response%coarse_nz+1
-    if (.not.response%turn_off_DHv) response%dwdt(i,k)=response%dwdt(i,k)+sum(sum(response%PMDv(i,:,:,k)*coarse_DHv,2),1)
-    if (.not.response%turn_off_DHh) response%dwdt(i,k)=response%dwdt(i,k)+sum(sum(response%PMD(i,:,:,k)*coarse_DHh,2),1)
-  enddo
-
   if (response%slab_geometry) then
     if (response%coarse_ratio==1) then
       ! Schema 2 basis edges coincide with MF levels, as in S20's direct branch.
@@ -1359,7 +1400,7 @@ end subroutine cal_cij
 
 
 subroutine model_initialize(self,shared_input,input_file,p3_directory,n_weno,physics,dt,intervals,intervals_set, &
-                            ncols,nz,ncoarse,n_prog,khn26_case,precipitation_enabled)
+                            ncols,nz,ncoarse,n_prog,khn26_case,precipitation_enabled,turn_off_DHv_input,turn_off_DHh_input)
 use ace_input, only: read_case_metadata, read_case_profile, read_case_geometry
 use iso_fortran_env, only: real64
 class(ace_t), intent(inout) :: self
@@ -1371,6 +1412,7 @@ real, intent(inout) :: dt
 integer, intent(inout) :: intervals
 integer, intent(out) :: ncols,nz,ncoarse,n_prog
 logical, intent(out) :: khn26_case,precipitation_enabled
+logical, intent(in), optional :: turn_off_DHv_input,turn_off_DHh_input
 real, parameter :: Rd=287.04, Cp=1005.7, g=9.80665, p0=1.e5
 integer :: i,k,record_length,io_status
 real :: dz,dum1
@@ -1396,7 +1438,7 @@ if (dt==0.) then
   dt=2.
   if (khn26_case) dt=6.
 endif
-if (khn26_case .and. .not.intervals_set) intervals=360
+if (khn26_case .and. .not.intervals_set) intervals=480
 allocate(self%input_profile(nz,12),self%diameters(7),self%input_area(ncols),self%input_perimeter(ncols))
 allocate(self%input_coarse_z(ncoarse),self%input_coarse_ze(ncoarse+1),self%tmp(nz))
 if (shared_input) then
@@ -1481,7 +1523,8 @@ else
 endif
 call set_p3_context_directory(self%p3,trim(p3_directory))
 if (shared_input) then
-  call ace_initialization_context(self%response,self%thermal,ncols,nz,ncoarse,self%coarse_z,self%coarse_ze,trim(input_file),self%Tv0,netcdf_input=.true.)
+  call ace_initialization_context(self%response,self%thermal,ncols,nz,ncoarse,self%coarse_z,self%coarse_ze,trim(input_file),self%Tv0,netcdf_input=.true., &
+       turn_off_DHv_input=turn_off_DHv_input,turn_off_DHh_input=turn_off_DHh_input)
 else
   call ace_initialization_context(self%response,self%thermal,ncols,nz,ncoarse,self%coarse_z,self%coarse_ze,'./input_data/PMB.dat',self%Tv0)
 endif

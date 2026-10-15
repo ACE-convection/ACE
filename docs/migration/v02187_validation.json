@@ -1,0 +1,5002 @@
+{
+  "status": "Developer accepted native eight-hour results and response plots for v0.21.87; release commit/main merge/tag authorized",
+  "case": {
+    "ncols": 88,
+    "profile": "GOAmazon filtered 314",
+    "dt_seconds": 6,
+    "dz_m": 100,
+    "duration_seconds": 28800,
+    "DHh": true,
+    "DHv": true
+  },
+  "input_readback": {
+    "operators": {
+      "PMB": {
+        "shape": [
+          88,
+          88,
+          200,
+          201
+        ],
+        "binary64_exact_readback": true,
+        "finite": true
+      },
+      "PMDv": {
+        "shape": [
+          88,
+          88,
+          200,
+          201
+        ],
+        "binary64_exact_readback": true,
+        "finite": true
+      },
+      "PMD": {
+        "shape": [
+          88,
+          88,
+          200,
+          201
+        ],
+        "binary64_exact_readback": true,
+        "finite": true
+      }
+    },
+    "geometry": {
+      "width_m": [
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0,
+        5000.0
+      ],
+      "basis_z_exact": true
+    },
+    "profiles_finite": true
+  },
+  "old_case_regression_before_unit_fix": {
+    "case": "Manaus1342 101ACE; native; dt6; 10 steps; DHh/DHv off",
+    "bitwise_equal": true,
+    "baseline_sha256": "d3bb1e0cc381e37345a6d98b246561ddc91615a12ec160550227ff76becbbe17",
+    "candidate_sha256": "d3bb1e0cc381e37345a6d98b246561ddc91615a12ec160550227ff76becbbe17"
+  },
+  "momentum_unit_diagnosis": {
+    "initial_max_abs_error": [
+      1.3877787807814457e-17,
+      1.7053025658242404e-13,
+      6.591949208711867e-17
+    ],
+    "field_order": [
+      "MF",
+      "theta_e",
+      "qt"
+    ],
+    "mode_errors": [
+      [
+        3.0574501264091225e-17,
+        6.424305531993468e-13,
+        3.4887169515036495e-20
+      ],
+      [
+        3.209238430557093e-17,
+        6.424305531993468e-13,
+        3.4887169515036495e-20
+      ],
+      [
+        6.682568670825915,
+        6.424305531993468e-13,
+        3.4887169515036495e-20
+      ],
+      [
+        6.682568670825915,
+        6.424305531993468e-13,
+        3.4887169515036495e-20
+      ]
+    ],
+    "DHh_fortran_vs_matlab_max_abs": [
+      6.682575353401268,
+      7.180363608843368e-06
+    ],
+    "DHh_error_after_dividing_by_1e6": 5.408320534629002e-07,
+    "DHh_coincident_basis_edges_error_after_dividing_by_1e6": 5.617231338614901e-18,
+    "fine_grid_scaling_note": "makima interpolation of the combined response is nonlinear; unit ratio must be checked at coincident basis edges before scaling/interpolating the combined response."
+  },
+  "placeholder_guards": {
+    "link_command": [
+      "gfortran",
+      "-fopenmp",
+      "-ffree-form",
+      "-fdefault-real-8",
+      "-fdefault-double-8",
+      "/scratch/peter50504/ACE/tests/khn26/guard.f90",
+      "ace_module.o",
+      "ace_input.o",
+      "ace_interpolation.o",
+      "microphy_p3.o",
+      "-L/home/peter50504/miniconda3/lib",
+      "-lnetcdff",
+      "-lnetcdf",
+      "-o",
+      "guard.exe"
+    ],
+    "guards": {
+      "PMDv": {
+        "rejected": true,
+        "exit_code": 1
+      },
+      "PMD": {
+        "rejected": true,
+        "exit_code": 1
+      }
+    }
+  },
+  "preserved_matlab_sections": {
+    "matlab_numerical_functions_unchanged": true,
+    "matlab_reference_and_bubble_initialization_unchanged": true
+  },
+  "input_provenance": {
+    "basis_sha256": "9eb0422dc3bf91817494f2a2579e7e5e975eeb641d44e12e79f9aab858cdf9de",
+    "sounding_sha256": "57016c62474bb4a2faf6011d285ee280d9581f9dc791327c506207ae06cc362a",
+    "reference_version": "ACE v0.21.87",
+    "initialization_policy": "Current KHN26 inversion-derived reference Tv and thermal bubble",
+    "sounding_policy": "Raw GOAmazon filtered profile 314; current paired MATLAB preprocessing",
+    "profile_index": 314,
+    "operator_chunks": {
+      "PMB": [
+        1,
+        1,
+        200,
+        201
+      ],
+      "PMDv": [
+        1,
+        1,
+        200,
+        201
+      ],
+      "PMD": [
+        1,
+        1,
+        200,
+        201
+      ]
+    },
+    "output": "data/input/goamazon314_88aces.nc",
+    "output_sha256": "cd2320ba1206e82a54caf5bf288e8ecc31dc0e7208b1f59b2a17535ef9753322",
+    "converter_sha256": "99b2b335f672a8ec6b29b356b4328689bccac83cbfde49fb6ed11456bc72f541",
+    "matlab_driver_sha256": "3d6d62fe8e7279b20895d896eec184842ff6c4380083df39ef5d6fc4a34d516b",
+    "dimensions": {
+      "nz": 401,
+      "ncols": 88,
+      "ncoarse": 200
+    },
+    "model_validation": "pending",
+    "storage_policy": "Full vertical chunks per forcing/response pair; exact readback against original converter output"
+  },
+  "stopped_run": {
+    "phase": "stopped_for_unit_mapping_correction",
+    "utc": "2026-10-15T04:07:34.405665+00:00",
+    "supervisor_pid": 1233938,
+    "previous_supervisor_pid": 1224802
+  },
+  "current_workspace": "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum",
+  "corrected_momentum_comparison": {
+    "field_order": [
+      "MF",
+      "theta_e",
+      "qt"
+    ],
+    "modes": [
+      "off/off",
+      "off/on",
+      "on/off",
+      "on/on"
+    ],
+    "max_abs_tendency_errors": [
+      [
+        3.0574501264091225e-17,
+        6.424305531993468e-13,
+        3.4887169515036495e-20
+      ],
+      [
+        3.209238430557093e-17,
+        6.424305531993468e-13,
+        3.4887169515036495e-20
+      ],
+      [
+        3.209238430557093e-17,
+        6.424305531993468e-13,
+        3.4887169515036495e-20
+      ],
+      [
+        3.3393426912553537e-17,
+        6.424305531993468e-13,
+        3.4887169515036495e-20
+      ]
+    ],
+    "absolute_limits": [
+      1e-09,
+      1e-08,
+      1e-11
+    ],
+    "passed": true
+  },
+  "corrected_momentum_oracle": {
+    "PMDv": {
+      "max_abs_error": 1.2875893415000429e-20,
+      "max_oracle_magnitude": 4.867531983440771e-09,
+      "nonzero": true
+    },
+    "PMD": {
+      "max_abs_error": 1.0248405898014021e-20,
+      "max_oracle_magnitude": 7.666534273580642e-06,
+      "nonzero": true
+    },
+    "additivity_error": 1.3552527156068805e-20
+  },
+  "corrected_old_case_regression": {
+    "case": "Manaus1342 101ACE; native; dt6; 10 steps; DHh/DHv off",
+    "bitwise_equal": true,
+    "baseline_sha256": "d3bb1e0cc381e37345a6d98b246561ddc91615a12ec160550227ff76becbbe17",
+    "corrected_sha256": "d3bb1e0cc381e37345a6d98b246561ddc91615a12ec160550227ff76becbbe17",
+    "command": [
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/native_units/production/ace_model.exe",
+      "--input",
+      "/scratch/peter50504/ACE/data/input/manaus1342_khn26.nc",
+      "--physics",
+      "native",
+      "--dt",
+      "6",
+      "--steps",
+      "10",
+      "--dhh",
+      "off",
+      "--dhv",
+      "off",
+      "--state-output",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/corrected_old_case.bin"
+    ]
+  },
+  "real32_compile_only": {
+    "real32_serial_compile_link": "passed",
+    "runtime": "not tested",
+    "commands": [
+      [
+        "gfortran",
+        "-cpp",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/fortran/src/ace_input.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/fortran/src/ace_interpolation.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/fortran/src/microphy_p3.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/fortran/src/ace_module.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/fortran/src/test.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "ace_input.o",
+        "ace_interpolation.o",
+        "microphy_p3.o",
+        "ace_module.o",
+        "test.o",
+        "-L/home/peter50504/miniconda3/lib",
+        "-lnetcdff",
+        "-lnetcdf",
+        "-o",
+        "ace_model.exe"
+      ]
+    ]
+  },
+  "current_run_status": {
+    "phase": "dt_3",
+    "utc": "2026-10-15T05:00:59.016875+00:00",
+    "supervisor_pid": 1289584,
+    "driver_pids": {
+      "matlab": 1330620,
+      "fortran": 1330621
+    },
+    "exits": {
+      "matlab": null,
+      "fortran": null
+    },
+    "output_bytes": {
+      "matlab": 2540736,
+      "fortran": 5111804
+    }
+  },
+  "p3_one_step": {
+    "command": [
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/native_units/debug/ace_model.exe",
+      "--input",
+      "/scratch/peter50504/ACE/data/input/goamazon314_88aces.nc",
+      "--physics",
+      "p3",
+      "--dt",
+      "6",
+      "--steps",
+      "1",
+      "--p3-lookup-directory",
+      "/scratch/peter50504/ACE_FORTRAN/input_data",
+      "--state-output",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/p3_smoke/states.bin"
+    ],
+    "exit_code": 0,
+    "scope": "One 6 s P3 compatibility step; no long-run or MATLAB-P3 equivalence claim",
+    "header": [
+      88,
+      401,
+      11
+    ],
+    "finite": true,
+    "minimum_water_number_fields": [
+      2.359079500848575e-06,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "rimed_mass_not_above_ice": true,
+    "sha256": "aa25fbda5958cc3b67ae7b983a4a97e2c4fce985048956770cff591871e931aa"
+  },
+  "matlab_production_smoke": {
+    "reference_version": "ACE v0.21.87",
+    "profile_index": 314,
+    "dt_seconds": 6.0,
+    "DHh_enabled": 1,
+    "DHv_enabled": 1,
+    "time_seconds": [
+      0.0,
+      6.0
+    ],
+    "ace_count": 88,
+    "finite": true
+  },
+  "production_one_step_comparison": {
+    "duration_seconds": 6,
+    "dt_seconds": 6,
+    "field_order": [
+      "MF",
+      "theta_e",
+      "qt"
+    ],
+    "max_abs_errors": [
+      [
+        0.0,
+        1.7053025658242404e-13,
+        6.591949208711867e-17
+      ],
+      [
+        1.7694179454963432e-16,
+        4.547473508864641e-13,
+        6.591949208711867e-17
+      ]
+    ],
+    "absolute_limits": [
+      1e-09,
+      1e-07,
+      1e-11
+    ],
+    "passed": true
+  },
+  "debug_production_gate": {
+    "bitwise_equal": true,
+    "debug_sha256": "38dea5cdda9ee27f3963ad5ca4a9c2b31e6907fad3a8343919982565bc2966e9",
+    "production_sha256": "38dea5cdda9ee27f3963ad5ca4a9c2b31e6907fad3a8343919982565bc2966e9"
+  },
+  "automated_smoke": {
+    "duration_seconds": 6,
+    "saved_states": 2,
+    "field_order": [
+      "MF",
+      "theta_e",
+      "qt"
+    ],
+    "max_abs_error": [
+      1.7694179454963432e-16,
+      4.547473508864641e-13,
+      6.591949208711867e-17
+    ],
+    "max_abs_error_each_state": [
+      [
+        0.0,
+        1.7053025658242404e-13,
+        6.591949208711867e-17
+      ],
+      [
+        1.7694179454963432e-16,
+        4.547473508864641e-13,
+        6.591949208711867e-17
+      ]
+    ],
+    "short_limits": [
+      1e-09,
+      1e-07,
+      1e-11
+    ],
+    "reference_tv_error": 5.684341886080802e-14,
+    "ranges": {
+      "matlab": {
+        "min": [
+          -0.018473197099496182,
+          336.1767515454305,
+          2.402924403868546e-06
+        ],
+        "max": [
+          0.022372637819555116,
+          1227.772002016326,
+          0.01775554455347804
+        ]
+      },
+      "fortran": {
+        "min": [
+          -0.01847319709949615,
+          336.1767515454305,
+          2.402924403868546e-06
+        ],
+        "max": [
+          0.02237263781955511,
+          1227.7720020163263,
+          0.017755544553478105
+        ]
+      }
+    },
+    "max_area_mean_MF": {
+      "matlab": 2.168404344971009e-19,
+      "fortran": 6.935242521888266e-20
+    },
+    "domain_water_increments_kg_m2": {
+      "matlab": {
+        "dynamics_and_clipping": -5.505059034914722e-11,
+        "native_precipitation": -5.081995430538716e-13,
+        "damping": -4.470430874693354e-06
+      },
+      "fortran": {
+        "dynamics_and_clipping": -5.5070695478290504e-11,
+        "native_precipitation": -5.152242269187726e-13,
+        "damping": -4.47043087025246e-06
+      }
+    },
+    "scientific_acceptance": "pending",
+    "sha256": {
+      "fortran_states.bin": "38dea5cdda9ee27f3963ad5ca4a9c2b31e6907fad3a8343919982565bc2966e9",
+      "fortran_budget.bin": "358e0cf533e8abc91515cba088fcf0aa40bfe2ae225022093cc0520033588bff",
+      "matlab_states.bin": "f112e4ae30be937e6e3fc7fac903445c632cc032df08473a743b3ad9f2f0d4ea",
+      "matlab_budget.bin": "82037cb6ad4ee91e2c721976c92db69103de3a256a4c76070f62e103749f6a3e",
+      "matlab_reference.bin": "962cbf950986e49e188a75035d5ba1440ec2057f96faff7d3f3c317299d4e635"
+    }
+  },
+  "configuration": {
+    "input": "/scratch/peter50504/ACE/data/input/goamazon314_88aces.nc",
+    "input_sha256": "cd2320ba1206e82a54caf5bf288e8ecc31dc0e7208b1f59b2a17535ef9753322",
+    "git_commit": "a0658ec19f427bb3dac349f96fad4b22d0c53156",
+    "compiler": "GNU Fortran (conda-forge gcc 11.2.0-16) 11.2.0\nCopyright (C) 2021 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+    "duration_seconds": 28800,
+    "dt_seconds": 6,
+    "dz_m": 100,
+    "bubble_K": 0.25,
+    "initial_MF": 0,
+    "field_order": [
+      "MF",
+      "theta_e",
+      "qt"
+    ],
+    "short_absolute_limits": [
+      1e-09,
+      1e-07,
+      1e-11
+    ],
+    "threads": 8,
+    "flags": [
+      "-cpp",
+      "-O2",
+      "-ffree-form",
+      "-ffree-line-length-none",
+      "-fdefault-real-8",
+      "-fdefault-double-8",
+      "-fopenmp"
+    ],
+    "sha256": {
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/components.f90": "9036c2c53dbe5ac7329743d89ed7832fdef8f534f3a2ddc58bac4c3a024e9067",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/README.md": "8b94f6a7791e6574a72ec33b2535f4c6de4ec67b5bd94ee3d216048ecba87a54",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/ace.m": "3d6d62fe8e7279b20895d896eec184842ff6c4380083df39ef5d6fc4a34d516b",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/read_shared_input.m": "93a5e26a9359182993cc1332469f02ef65bf7f7270676f10b4acfae3133d561c",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/fortran/ace_module.F": "65abe56485644d8b250f5007c17d97ea2850ef9f652fa89a7afe2cec76fe6bf9",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/fortran/ace_input.F": "41a9c009d579372ee34ddb046fba8093eee0f926003ccaf828a7186d0fe5a987",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/fortran/ace_interpolation.F": "5b4b3b83a9be9f5c3b886850f45d67c632c9005d4b75c054bdc6ce9de0e1862e",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/fortran/test.F": "da95e7292f6712a1c76c6c82e9ea99d22f21446fc9b8b7113c84eb388a2e9f98",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/fortran/microphy_p3.F": "8ab448e72a43230543b6d0911a195141ba7dc1264cdd0f532b21b49d9a9d1b11",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_timeint/ssprk93.m": "b23650cbd13f1854deb9970282f0c6b4edbe4e0a660a6f2421b51d1da8042ae0",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_weno/reconstruction_up3.m": "748ac867a4a5ef7089db896e1fcd5a20c8b1dfcaa461c3aac34a410f20c66c20",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_weno/reconstruction_weno_vec.m": "7db699727a68b1838a177e57c02b53901b90256cfc99c6172da338529e9ebdf4",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_weno/reconstruction_weno.m": "fd5478923021e54188d5996365fd942e047298f2b223a68d6bd97c7f13a961c1",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_basis/COLLECT_PRECOMPUTE_VERTICAL_MODES_2D.m": "40af7d61aa58d08ad13078b7007eda6224e0e4d9b4e206c88e34a526b4a62ead",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_basis/PRECOMPUTE_COMPOSITE_ACE_BASIS_2D.m": "338aad46c71a9ec08ef8fabba9552f0bbb208ec30e4b6ae5baa9b76060c92b7c",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_basis/vertical_solutions_reconstruct_util.m": "48e242ae4d6b298fe5bfae6355e5f13a552a8ffc6f4cff1091a1ee447f15409d",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_basis/PRECOMPUTE_VERTICAL_MODES_2D.m": "a48f64b41c2c440714e611c7981921c6c6d7e50834e78f06bf2d0b3758b690e8",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_plume/entrain_plume_calc.m": "ab7a4297ca87f31a331d28d2d462429ecbe0d5084fb8056a29bdab577ceddeed",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_plume/cin_cape_calc.m": "d3dd0639db6bb06259a6ea94ee1c3e0df2afbd80cdb873ba3af687ec54e6d639",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_dTes.m": "dccd232253f4422bdb334a7089c5065459c0207def6cde54714fa1fa97bcf116",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/inv_T_from_h.m": "73621892b81e2179d9cda710b56de9bb5d6a8883c36b71d432ce25d6b584faed",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/NOTE.m": "d8b2a2c3dab6cdcb343cb18974af1bce8d4f7a60c36d1e98bd1aeb736748b9fc",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_qsat.m": "1aff97bbd0e4b66c33e817aa99741056ccf95ab30840c787a6a4a81b0a516310",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_qsat2.m": "16a75d060676e65e16d4fdee2067716db779a2f6d9dbd3ac6b278051091e4a3d",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/lv.m": "c389332e53409f9a3f01adc2641fd140e0e59f4c4ad88ad49914724b7021a2d1",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_qsi.m": "5a92de14d0b02b6394a2f186aafc8cf75530d322db4582ce52045c4f9b30f270",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_dTqs.m": "35e4585653c828cb6bede2d25914c66d71b59c7894ad4e877180ffd57c57a74a",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_qsi2.m": "3c7b3674ea2e00c004aa526c3a0c79cf6c2f039d2b989d98a15ef3f2cc12161e",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_B.m": "4260dae12c5e40d915ce2ac348b85d3358d9470dd9ad17bf3771a0e803647e6b",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/inv_T_from_theta_il.m": "6d0faaf7ee84460e6a1e10d7ea40dcf175e51f0462d4fa0c01a89698d0e8c05b",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_theta.m": "c69e40c66320d5d1b0d62365db0897cbdc87a9c523c0aecd211945780811d71b",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_theta_v.m": "f531d0ca252a777616935340b23079911faa5f79ef890e2de9371cf094413274",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_h.m": "6a6bc3c9990469ae0296dfac8f234dfcbccb3851aa3faa6bececb536f271497b",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_theta_il.m": "f5f98373a466be1d84199ce7d882fe98faae7c96a4dd6aa9d614e2f2dbf0931b",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/IMPORT_CONSTANTS.m": "9fde477680e8eea17fc2f5f2aca61ef95d556fbc4c4f7f676cc53f6d3d82ba89",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_qsscl.m": "1b47aa01ca8ec7e9ee2368d4f83d601767c7fe793766ee475cdc18cd7e60cf82",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_dTqsi.m": "5ce3913522b068b98badfdd279ab0fa1ad0ed9a7ce751e5fd4ef2b688a734de6",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_esscl.m": "7fa1acdff3547765addb2f6295b0d0cfaff96436356c4dfefdb2d0caeb981724",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_esi.m": "13e7d32f678a1b8e9a0f97e326dbaf94027a3e09b808f424e3b02c427f1813db",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/ci.m": "dba544e76ce1e74136daff7fd988670f68000c8835732344d5ac6c20697389ce",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_theta_l.m": "6628625f218e53e004623b44871ad6984a13b6308264d123193464143292c90d",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/inv_T_from_theta_e.m": "e001fe0db37d6bff77b3e0b15ac8491fb84a2c3774c07622854d97062bcce440",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/inv_T_from_theta_e_nogpu.m": "0b57c816e4dee65cef71a3bd61535c28f926b506dfe1f11f8e05a7832f187eed",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/gputest_invTq.m": "c2918e5cb0aa97278730069c6f4edf4b2a09c1bb56eb0411882fa2a73d1c219f",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_q2.m": "f0986c79fc1b362ca92e188977b04d073a31b9bb3e27b96fc5b35968539f1f11",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_qs2.m": "6c1f03213c04a6e98dd515d5ce98ebcba6a2cd8f62e99ebd750599af8978671d",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_es.m": "a6d89db08505d726edae0b520d69360da23aed5dd4079697797302cdaab6ec2c",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_Tv.m": "d86992e3f9ef64bbf038424876b9c2c3b2a6ec1d2f23f673a553bca014213690",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_rho.m": "b22b7816d5199e9f025304b57719f7ab68367e5222ac351224ba7ee8a2f2c91a",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_dTqsscl.m": "4e025fb26f0deb388b8c7551fdd5ca5160d4aa7c2f13d0dd230c3177851cedde",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_q.m": "19fc7e2235e52c12948b3b10654a90ea45b9391a7b1821a3a39d2683ca02be8c",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_theta_e.m": "631d04f3cac84824255fb4404068081bab52bb163efe37800559c223988a9843",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_qs.m": "09f7e3c707ed1eaacb9baba896cc8ab9cb16e742fa7dc823273b8cc2c71fe402",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/IMPORT_CONSTANTS_NOGLOBAL.m": "68056228f1419b0d3708c72682d0e6fee0bcdc1f5f3a1d09c1ea822113297499",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_thermodynamics/eval_theta_es.m": "39ff2e6d87d2bc4ad2f0b33922e524b2998e64939bec58e908b76fce8ef32b79",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_basis/uneven_tests/PRECOMPUTE_VERTICAL_MODES_2D.m": "a48f64b41c2c440714e611c7981921c6c6d7e50834e78f06bf2d0b3758b690e8",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_basis/uneven_tests/PRECOMPUTE_COMPOSITE_ACE_BASIS_2D_truncate.m": "4c98737aa0950e786b62a0c7401a486a3083e305749627eb3cfbb77aa3ad8609",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_basis/uneven_tests/vertical_solutions_reconstruct_util.m": "48e242ae4d6b298fe5bfae6355e5f13a552a8ffc6f4cff1091a1ee447f15409d",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_basis/uneven_tests/PRECOMPUTE_COMPOSITE_ACE_BASIS_2D_4uneven.m": "acd47fb0839b88924d681c6531d21f358b19a1cdf9a459fdd55607a2cc938961",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/matlab/util_basis/uneven_tests/COLLECT_PRECOMPUTE_VERTICAL_MODES_2D.m": "40af7d61aa58d08ad13078b7007eda6224e0e4d9b4e206c88e34a526b4a62ead",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/executed_runner.py": "093fb5df5644f21ace9bde1d322c3b467a9a4560fae6119a7fc8ad9914f4b18b",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/debug/ace_model.exe": "1d639822406e01b741720b449cd1fa5034aac5c096a853a1169e59c35163e126",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/production/ace_model.exe": "c9ae78311929ed75514252d3d5acb4cebf3e4769a91e27b543f6c531db341752",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/components/components.exe": "2829898a51edde5d029fa894840470a96e4b73caf3aa3d57ebdc743e0354c29b",
+      "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/budget/ace_model.exe": "7e0d040e21bc26ee7969531c25f971f17d623aa37f830af49e131ebfd7eba6c6"
+    },
+    "commands": [
+      [
+        "gfortran",
+        "-cpp",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-fopenmp",
+        "-g",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/fortran/ace_input.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-fopenmp",
+        "-g",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/fortran/ace_interpolation.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-fopenmp",
+        "-g",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/fortran/microphy_p3.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-fopenmp",
+        "-g",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/fortran/ace_module.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-fopenmp",
+        "-g",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/fortran/test.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-fopenmp",
+        "-g",
+        "-fcheck=all,no-array-temps",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "ace_input.o",
+        "ace_interpolation.o",
+        "microphy_p3.o",
+        "ace_module.o",
+        "test.o",
+        "-L/home/peter50504/miniconda3/lib",
+        "-lnetcdff",
+        "-lnetcdf",
+        "-o",
+        "ace_model.exe"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-fopenmp",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/fortran/ace_input.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-fopenmp",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/fortran/ace_interpolation.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-fopenmp",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/fortran/microphy_p3.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-fopenmp",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/fortran/ace_module.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-fopenmp",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/fortran/test.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-fopenmp",
+        "ace_input.o",
+        "ace_interpolation.o",
+        "microphy_p3.o",
+        "ace_module.o",
+        "test.o",
+        "-L/home/peter50504/miniconda3/lib",
+        "-lnetcdff",
+        "-lnetcdf",
+        "-o",
+        "ace_model.exe"
+      ]
+    ],
+    "layout_reference": {
+      "work": "/scratch/peter50504/ACE/migration_work/v02187_validation/native_units",
+      "configuration_sha256": "d0d7d34c818afa37b226664952f618d43bb174de5857573b8cf37f9702db543a",
+      "artifacts": {
+        "components/components.bin": {
+          "path": "/scratch/peter50504/ACE/migration_work/v02187_validation/native_units/components/components.bin",
+          "sha256": "6f2e7e7dbc38fb6a797f7b7e3b9220388388ec2cd69e9522f01e82ff53272cf1"
+        },
+        "build_gate_production/states.bin": {
+          "path": "/scratch/peter50504/ACE/migration_work/v02187_validation/native_units/build_gate_production/states.bin",
+          "sha256": "38dea5cdda9ee27f3963ad5ca4a9c2b31e6907fad3a8343919982565bc2966e9"
+        },
+        "smoke/fortran_states.bin": {
+          "path": "/scratch/peter50504/ACE/migration_work/v02187_validation/native_units/smoke/fortran_states.bin",
+          "sha256": "38dea5cdda9ee27f3963ad5ca4a9c2b31e6907fad3a8343919982565bc2966e9"
+        },
+        "nonzero_mf_h0v0/fortran_states.bin": {
+          "path": "/scratch/peter50504/ACE/migration_work/v02187_validation/native_units/nonzero_mf_h0v0/fortran_states.bin",
+          "sha256": "621c348ae342e871e7ac2598fc80a6497438f75abcad181f3a3eb667c56f4449"
+        },
+        "nonzero_mf_h0v1/fortran_states.bin": {
+          "path": "/scratch/peter50504/ACE/migration_work/v02187_validation/native_units/nonzero_mf_h0v1/fortran_states.bin",
+          "sha256": "74ca05e72f6c93b84bc10a924940c6f44fdd74d5abdaf423127fd8ebd8460db2"
+        },
+        "nonzero_mf_h1v0/fortran_states.bin": {
+          "path": "/scratch/peter50504/ACE/migration_work/v02187_validation/native_units/nonzero_mf_h1v0/fortran_states.bin",
+          "sha256": "613cc7ab3e10055d47933475d4d88771574577b8988eeeb67318eb6d46c56bad"
+        },
+        "nonzero_mf_h1v1/fortran_states.bin": {
+          "path": "/scratch/peter50504/ACE/migration_work/v02187_validation/native_units/nonzero_mf_h1v1/fortran_states.bin",
+          "sha256": "6a663944b36ec89b3ef6612f7197b3098f6815e05bae0bfb954de88472d38d0f"
+        },
+        "dry_10min/fortran_budget.bin": {
+          "path": "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/reference_dry_budget_prefix.bin",
+          "sha256": "c5e5f4b61f2ede6c030c3f2c422de5a26367be8d4971b7ab919f268f0c888cfe",
+          "prefix_bytes": 33792,
+          "complete_steps": 12
+        }
+      }
+    }
+  },
+  "pre_layout_stop": {
+    "phase": "stopped_layout_preservation",
+    "utc": "2026-10-15T04:34:45.005987+00:00",
+    "supervisor_pid": 1289231,
+    "previous_supervisor_pid": 1238312
+  },
+  "layout_preservation": {
+    "reference": {
+      "work": "/scratch/peter50504/ACE/migration_work/v02187_validation/native_units",
+      "configuration_sha256": "d0d7d34c818afa37b226664952f618d43bb174de5857573b8cf37f9702db543a",
+      "artifacts": {
+        "components/components.bin": {
+          "path": "/scratch/peter50504/ACE/migration_work/v02187_validation/native_units/components/components.bin",
+          "sha256": "6f2e7e7dbc38fb6a797f7b7e3b9220388388ec2cd69e9522f01e82ff53272cf1"
+        },
+        "build_gate_production/states.bin": {
+          "path": "/scratch/peter50504/ACE/migration_work/v02187_validation/native_units/build_gate_production/states.bin",
+          "sha256": "38dea5cdda9ee27f3963ad5ca4a9c2b31e6907fad3a8343919982565bc2966e9"
+        },
+        "smoke/fortran_states.bin": {
+          "path": "/scratch/peter50504/ACE/migration_work/v02187_validation/native_units/smoke/fortran_states.bin",
+          "sha256": "38dea5cdda9ee27f3963ad5ca4a9c2b31e6907fad3a8343919982565bc2966e9"
+        },
+        "nonzero_mf_h0v0/fortran_states.bin": {
+          "path": "/scratch/peter50504/ACE/migration_work/v02187_validation/native_units/nonzero_mf_h0v0/fortran_states.bin",
+          "sha256": "621c348ae342e871e7ac2598fc80a6497438f75abcad181f3a3eb667c56f4449"
+        },
+        "nonzero_mf_h0v1/fortran_states.bin": {
+          "path": "/scratch/peter50504/ACE/migration_work/v02187_validation/native_units/nonzero_mf_h0v1/fortran_states.bin",
+          "sha256": "74ca05e72f6c93b84bc10a924940c6f44fdd74d5abdaf423127fd8ebd8460db2"
+        },
+        "nonzero_mf_h1v0/fortran_states.bin": {
+          "path": "/scratch/peter50504/ACE/migration_work/v02187_validation/native_units/nonzero_mf_h1v0/fortran_states.bin",
+          "sha256": "613cc7ab3e10055d47933475d4d88771574577b8988eeeb67318eb6d46c56bad"
+        },
+        "nonzero_mf_h1v1/fortran_states.bin": {
+          "path": "/scratch/peter50504/ACE/migration_work/v02187_validation/native_units/nonzero_mf_h1v1/fortran_states.bin",
+          "sha256": "6a663944b36ec89b3ef6612f7197b3098f6815e05bae0bfb954de88472d38d0f"
+        },
+        "dry_10min/fortran_budget.bin": {
+          "path": "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/reference_dry_budget_prefix.bin",
+          "sha256": "c5e5f4b61f2ede6c030c3f2c422de5a26367be8d4971b7ab919f268f0c888cfe",
+          "prefix_bytes": 33792,
+          "complete_steps": 12
+        }
+      }
+    },
+    "checks": {
+      "components/components.bin": {
+        "bitwise_equal": true,
+        "sha256": "6f2e7e7dbc38fb6a797f7b7e3b9220388388ec2cd69e9522f01e82ff53272cf1"
+      },
+      "build_gate_production/states.bin": {
+        "bitwise_equal": true,
+        "sha256": "38dea5cdda9ee27f3963ad5ca4a9c2b31e6907fad3a8343919982565bc2966e9"
+      },
+      "smoke/fortran_states.bin": {
+        "bitwise_equal": true,
+        "sha256": "38dea5cdda9ee27f3963ad5ca4a9c2b31e6907fad3a8343919982565bc2966e9"
+      },
+      "nonzero_mf_h0v0/fortran_states.bin": {
+        "bitwise_equal": true,
+        "sha256": "621c348ae342e871e7ac2598fc80a6497438f75abcad181f3a3eb667c56f4449"
+      },
+      "nonzero_mf_h1v0/fortran_states.bin": {
+        "bitwise_equal": true,
+        "sha256": "613cc7ab3e10055d47933475d4d88771574577b8988eeeb67318eb6d46c56bad"
+      },
+      "nonzero_mf_h0v1/fortran_states.bin": {
+        "bitwise_equal": true,
+        "sha256": "74ca05e72f6c93b84bc10a924940c6f44fdd74d5abdaf423127fd8ebd8460db2"
+      },
+      "nonzero_mf_h1v1/fortran_states.bin": {
+        "bitwise_equal": true,
+        "sha256": "6a663944b36ec89b3ef6612f7197b3098f6815e05bae0bfb954de88472d38d0f"
+      },
+      "dry_10min/fortran_budget.bin": {
+        "bitwise_equal": true,
+        "sha256": "c5e5f4b61f2ede6c030c3f2c422de5a26367be8d4971b7ab919f268f0c888cfe"
+      }
+    }
+  },
+  "pre_layout_performance_observation": {
+    "budget_records": 25,
+    "completed_steps": 6,
+    "simulated_seconds": 36,
+    "elapsed_wall_seconds": 435.82234930992126,
+    "wall_seconds_per_step_including_startup": 72.6370582183202,
+    "eight_hour_wall_hours_at_current_average": 96.84941095776028
+  },
+  "packed_support": {
+    "old_case": {
+      "exit_code": 0,
+      "command": [
+        "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/production/ace_model.exe",
+        "--input",
+        "/scratch/peter50504/ACE/data/input/manaus1342_khn26.nc",
+        "--dt",
+        "6",
+        "--state-output",
+        "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_support/old_case_states.bin",
+        "--physics",
+        "native",
+        "--steps",
+        "10",
+        "--dhh",
+        "off",
+        "--dhv",
+        "off"
+      ],
+      "sha256": "d3bb1e0cc381e37345a6d98b246561ddc91615a12ec160550227ff76becbbe17",
+      "pre_layout_sha256": "d3bb1e0cc381e37345a6d98b246561ddc91615a12ec160550227ff76becbbe17",
+      "bitwise_equal": true
+    },
+    "p3": {
+      "exit_code": 0,
+      "command": [
+        "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/debug/ace_model.exe",
+        "--input",
+        "/scratch/peter50504/ACE/data/input/goamazon314_88aces.nc",
+        "--dt",
+        "6",
+        "--state-output",
+        "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_support/p3_states.bin",
+        "--physics",
+        "p3",
+        "--steps",
+        "1",
+        "--p3-lookup-directory",
+        "/scratch/peter50504/ACE_FORTRAN/input_data"
+      ],
+      "sha256": "aa25fbda5958cc3b67ae7b983a4a97e2c4fce985048956770cff591871e931aa",
+      "pre_layout_sha256": "aa25fbda5958cc3b67ae7b983a4a97e2c4fce985048956770cff591871e931aa",
+      "bitwise_equal": true,
+      "lookup_sha256": "57d2e839b4bbc52fa15892ac47d04a76c0854577a5df34dae264e55bdad4baf3"
+    }
+  },
+  "packed_real32_compile_only": {
+    "real32_serial_compile_link": "passed",
+    "runtime": "not tested",
+    "commands": [
+      [
+        "gfortran",
+        "-cpp",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/fortran/ace_input.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/fortran/ace_interpolation.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/fortran/microphy_p3.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/fortran/ace_module.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-I/home/peter50504/miniconda3/include",
+        "-I/home/peter50504/miniconda3/include",
+        "-c",
+        "/scratch/peter50504/ACE/migration_work/v02187_validation/packed_momentum/source/fortran/test.F"
+      ],
+      [
+        "gfortran",
+        "-cpp",
+        "-O2",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "ace_input.o",
+        "ace_interpolation.o",
+        "microphy_p3.o",
+        "ace_module.o",
+        "test.o",
+        "-L/home/peter50504/miniconda3/lib",
+        "-lnetcdff",
+        "-lnetcdf",
+        "-o",
+        "ace_model.exe"
+      ]
+    ]
+  },
+  "layout_timing": {
+    "steps": 1,
+    "scope": "One fresh-process integration per layout; initialization/compilation excluded, saved-state I/O included. Not a general long-run speed claim.",
+    "jobs": {
+      "baseline": {
+        "elapsed_seconds": 70.145375385,
+        "seconds_per_step": 70.145375385,
+        "state_sha256": "38dea5cdda9ee27f3963ad5ca4a9c2b31e6907fad3a8343919982565bc2966e9",
+        "module_sha256": "2157a27f275e4795db70a748a0102eb0f776480c841d1362224811d2b70b6756",
+        "timed_driver_sha256": "0c2c7c2656c735bceb60e8f985cc603f52a0836627bb0bf94d1aa8411fe85748",
+        "threads": 8,
+        "flags": [
+          "-cpp",
+          "-O2",
+          "-ffree-form",
+          "-ffree-line-length-none",
+          "-fdefault-real-8",
+          "-fdefault-double-8",
+          "-fopenmp"
+        ],
+        "commands": [
+          [
+            "gfortran",
+            "-cpp",
+            "-O2",
+            "-ffree-form",
+            "-ffree-line-length-none",
+            "-fdefault-real-8",
+            "-fdefault-double-8",
+            "-fopenmp",
+            "-I/home/peter50504/miniconda3/include",
+            "-I/home/peter50504/miniconda3/include",
+            "-c",
+            "/scratch/peter50504/ACE/migration_work/v02187_validation/layout_timing/baseline/timed_driver.F"
+          ],
+          [
+            "gfortran",
+            "-cpp",
+            "-O2",
+            "-ffree-form",
+            "-ffree-line-length-none",
+            "-fdefault-real-8",
+            "-fdefault-double-8",
+            "-fopenmp",
+            "timed_driver.o",
+            "ace_module.o",
+            "ace_input.o",
+            "ace_interpolation.o",
+            "microphy_p3.o",
+            "-L/home/peter50504/miniconda3/lib",
+            "-lnetcdff",
+            "-lnetcdf",
+            "-o",
+            "timed_model.exe"
+          ],
+          [
+            "/scratch/peter50504/ACE/migration_work/v02187_validation/layout_timing/baseline/timed_model.exe",
+            "--input",
+            "/scratch/peter50504/ACE/data/input/goamazon314_88aces.nc",
+            "--physics",
+            "native",
+            "--steps",
+            "1",
+            "--dt",
+            "6",
+            "--dhh",
+            "on",
+            "--dhv",
+            "on",
+            "--state-output",
+            "/scratch/peter50504/ACE/migration_work/v02187_validation/layout_timing/baseline/states.bin"
+          ]
+        ],
+        "input_sha256": "cd2320ba1206e82a54caf5bf288e8ecc31dc0e7208b1f59b2a17535ef9753322"
+      },
+      "candidate": {
+        "elapsed_seconds": 2.043945507,
+        "seconds_per_step": 2.043945507,
+        "state_sha256": "38dea5cdda9ee27f3963ad5ca4a9c2b31e6907fad3a8343919982565bc2966e9",
+        "module_sha256": "9fc16913f5a38c06f958cb1b688a92e1a5e8656667b98eeaaf9b77a088618393",
+        "timed_driver_sha256": "0c2c7c2656c735bceb60e8f985cc603f52a0836627bb0bf94d1aa8411fe85748",
+        "threads": 8,
+        "flags": [
+          "-cpp",
+          "-O2",
+          "-ffree-form",
+          "-ffree-line-length-none",
+          "-fdefault-real-8",
+          "-fdefault-double-8",
+          "-fopenmp"
+        ],
+        "commands": [
+          [
+            "gfortran",
+            "-cpp",
+            "-O2",
+            "-ffree-form",
+            "-ffree-line-length-none",
+            "-fdefault-real-8",
+            "-fdefault-double-8",
+            "-fopenmp",
+            "-I/home/peter50504/miniconda3/include",
+            "-I/home/peter50504/miniconda3/include",
+            "-c",
+            "/scratch/peter50504/ACE/migration_work/v02187_validation/layout_timing/candidate/timed_driver.F"
+          ],
+          [
+            "gfortran",
+            "-cpp",
+            "-O2",
+            "-ffree-form",
+            "-ffree-line-length-none",
+            "-fdefault-real-8",
+            "-fdefault-double-8",
+            "-fopenmp",
+            "timed_driver.o",
+            "ace_module.o",
+            "ace_input.o",
+            "ace_interpolation.o",
+            "microphy_p3.o",
+            "-L/home/peter50504/miniconda3/lib",
+            "-lnetcdff",
+            "-lnetcdf",
+            "-o",
+            "timed_model.exe"
+          ],
+          [
+            "/scratch/peter50504/ACE/migration_work/v02187_validation/layout_timing/candidate/timed_model.exe",
+            "--input",
+            "/scratch/peter50504/ACE/data/input/goamazon314_88aces.nc",
+            "--physics",
+            "native",
+            "--steps",
+            "1",
+            "--dt",
+            "6",
+            "--dhh",
+            "on",
+            "--dhv",
+            "on",
+            "--state-output",
+            "/scratch/peter50504/ACE/migration_work/v02187_validation/layout_timing/candidate/states.bin"
+          ]
+        ],
+        "input_sha256": "cd2320ba1206e82a54caf5bf288e8ecc31dc0e7208b1f59b2a17535ef9753322"
+      }
+    },
+    "bitwise_equal": true,
+    "observed_speedup": 34.318613262814345
+  },
+  "independent_output_audit": {
+    "jobs": {
+      "nonzero_mf_h0v0": {
+        "saved_states": 2,
+        "duration_seconds": 6,
+        "hashes_match": true,
+        "field_order": [
+          "MF",
+          "theta_e",
+          "qt"
+        ],
+        "matlab": {
+          "finite": true,
+          "minimum_qt": 2.4029196041568403e-06,
+          "max_postinitial_area_mean_MF": 3.815036394433369e-18,
+          "budget_continuous": true,
+          "bookkeeping_closure_error_kg_m2": 0.0,
+          "physical_conservation_claim": false
+        },
+        "fortran": {
+          "finite": true,
+          "minimum_qt": 2.4029196041568403e-06,
+          "max_postinitial_area_mean_MF": 4.336808689942018e-18,
+          "budget_continuous": true,
+          "bookkeeping_closure_error_kg_m2": 0.0,
+          "physical_conservation_claim": false
+        },
+        "final_max_abs_error": [
+          1.8041124150158794e-16,
+          4.547473508864641e-13,
+          6.591949208711867e-17
+        ],
+        "passed": true
+      },
+      "smoke": {
+        "saved_states": 2,
+        "duration_seconds": 6,
+        "hashes_match": true,
+        "field_order": [
+          "MF",
+          "theta_e",
+          "qt"
+        ],
+        "matlab": {
+          "finite": true,
+          "minimum_qt": 2.402924403868546e-06,
+          "max_postinitial_area_mean_MF": 2.168404344971009e-19,
+          "budget_continuous": true,
+          "bookkeeping_closure_error_kg_m2": 0.0,
+          "physical_conservation_claim": false
+        },
+        "fortran": {
+          "finite": true,
+          "minimum_qt": 2.402924403868546e-06,
+          "max_postinitial_area_mean_MF": 6.935242521888266e-20,
+          "budget_continuous": true,
+          "bookkeeping_closure_error_kg_m2": 0.0,
+          "physical_conservation_claim": false
+        },
+        "final_max_abs_error": [
+          1.7694179454963432e-16,
+          4.547473508864641e-13,
+          6.591949208711867e-17
+        ],
+        "passed": true
+      },
+      "nonzero_mf_h1v0": {
+        "saved_states": 2,
+        "duration_seconds": 6,
+        "hashes_match": true,
+        "field_order": [
+          "MF",
+          "theta_e",
+          "qt"
+        ],
+        "matlab": {
+          "finite": true,
+          "minimum_qt": 2.4029196205242976e-06,
+          "max_postinitial_area_mean_MF": 3.925997710523682e-18,
+          "budget_continuous": true,
+          "bookkeeping_closure_error_kg_m2": 0.0,
+          "physical_conservation_claim": false
+        },
+        "fortran": {
+          "finite": true,
+          "minimum_qt": 2.4029196205242976e-06,
+          "max_postinitial_area_mean_MF": 4.7704895589362195e-18,
+          "budget_continuous": true,
+          "bookkeeping_closure_error_kg_m2": 0.0,
+          "physical_conservation_claim": false
+        },
+        "final_max_abs_error": [
+          1.8735013540549517e-16,
+          4.547473508864641e-13,
+          6.591949208711867e-17
+        ],
+        "passed": true
+      },
+      "nonzero_mf_h0v1": {
+        "saved_states": 2,
+        "duration_seconds": 6,
+        "hashes_match": true,
+        "field_order": [
+          "MF",
+          "theta_e",
+          "qt"
+        ],
+        "matlab": {
+          "finite": true,
+          "minimum_qt": 2.4029196042015187e-06,
+          "max_postinitial_area_mean_MF": 3.9776667203061944e-18,
+          "budget_continuous": true,
+          "bookkeeping_closure_error_kg_m2": 0.0,
+          "physical_conservation_claim": false
+        },
+        "fortran": {
+          "finite": true,
+          "minimum_qt": 2.4029196042015187e-06,
+          "max_postinitial_area_mean_MF": 5.204170427930421e-18,
+          "budget_continuous": true,
+          "bookkeeping_closure_error_kg_m2": 0.0,
+          "physical_conservation_claim": false
+        },
+        "final_max_abs_error": [
+          1.8388068845354155e-16,
+          4.547473508864641e-13,
+          6.591949208711867e-17
+        ],
+        "passed": true
+      },
+      "nonzero_mf_h1v1": {
+        "saved_states": 2,
+        "duration_seconds": 6,
+        "hashes_match": true,
+        "field_order": [
+          "MF",
+          "theta_e",
+          "qt"
+        ],
+        "matlab": {
+          "finite": true,
+          "minimum_qt": 2.4029196205692683e-06,
+          "max_postinitial_area_mean_MF": 3.922186062261038e-18,
+          "budget_continuous": true,
+          "bookkeeping_closure_error_kg_m2": 0.0,
+          "physical_conservation_claim": false
+        },
+        "fortran": {
+          "finite": true,
+          "minimum_qt": 2.4029196205692683e-06,
+          "max_postinitial_area_mean_MF": 4.7704895589362195e-18,
+          "budget_continuous": true,
+          "bookkeeping_closure_error_kg_m2": 0.0,
+          "physical_conservation_claim": false
+        },
+        "final_max_abs_error": [
+          1.8735013540549517e-16,
+          4.547473508864641e-13,
+          6.591949208711867e-17
+        ],
+        "passed": true
+      },
+      "dry_10min": {
+        "saved_states": 11,
+        "duration_seconds": 600,
+        "hashes_match": true,
+        "field_order": [
+          "MF",
+          "theta_e",
+          "qt"
+        ],
+        "matlab": {
+          "finite": true,
+          "minimum_qt": 2.4024123646996547e-06,
+          "max_postinitial_area_mean_MF": 6.071532165918825e-18,
+          "budget_continuous": true,
+          "bookkeeping_closure_error_kg_m2": 0.0,
+          "physical_conservation_claim": false
+        },
+        "fortran": {
+          "finite": true,
+          "minimum_qt": 2.4024123646996547e-06,
+          "max_postinitial_area_mean_MF": 3.2836688038191046e-18,
+          "budget_continuous": true,
+          "bookkeeping_closure_error_kg_m2": 0.0,
+          "physical_conservation_claim": false
+        },
+        "fortran_normal_output": {
+          "records": 11,
+          "fields": 9,
+          "finite": true,
+          "prognostics_exact_real32_cast": true
+        },
+        "final_max_abs_error": [
+          7.777806176889612e-14,
+          2.9558577807620168e-12,
+          1.682681771697503e-16
+        ],
+        "passed": true
+      },
+      "native_10min": {
+        "saved_states": 11,
+        "duration_seconds": 600,
+        "hashes_match": true,
+        "field_order": [
+          "MF",
+          "theta_e",
+          "qt"
+        ],
+        "matlab": {
+          "finite": true,
+          "minimum_qt": 2.402411827115303e-06,
+          "max_postinitial_area_mean_MF": 7.806255641895632e-18,
+          "budget_continuous": true,
+          "bookkeeping_closure_error_kg_m2": 0.0,
+          "physical_conservation_claim": false
+        },
+        "fortran": {
+          "finite": true,
+          "minimum_qt": 2.4024118271153027e-06,
+          "max_postinitial_area_mean_MF": 3.4068856278650036e-18,
+          "budget_continuous": true,
+          "bookkeeping_closure_error_kg_m2": 0.0,
+          "physical_conservation_claim": false
+        },
+        "fortran_normal_output": {
+          "records": 11,
+          "fields": 9,
+          "finite": true,
+          "prognostics_exact_real32_cast": true
+        },
+        "final_max_abs_error": [
+          4.8900883342639645e-12,
+          1.892885848064907e-10,
+          6.4514366071577456e-15
+        ],
+        "passed": true
+      }
+    },
+    "status": "running",
+    "utc": "2026-10-15T05:01:03.173020+00:00",
+    "supervisor": {
+      "phase": "dt_3",
+      "utc": "2026-10-15T05:00:59.016875+00:00",
+      "supervisor_pid": 1289584,
+      "driver_pids": {
+        "matlab": 1330620,
+        "fortran": 1330621
+      },
+      "exits": {
+        "matlab": null,
+        "fortran": null
+      },
+      "output_bytes": {
+        "matlab": 2540736,
+        "fortran": 5111804
+      }
+    }
+  },
+  "physics_off_10min": {
+    "duration_seconds": 600,
+    "saved_states": 11,
+    "field_order": [
+      "MF",
+      "theta_e",
+      "qt"
+    ],
+    "max_abs_error": [
+      7.777806176889612e-14,
+      2.9558577807620168e-12,
+      1.682681771697503e-16
+    ],
+    "max_abs_error_each_state": [
+      [
+        0.0,
+        1.7053025658242404e-13,
+        6.591949208711867e-17
+      ],
+      [
+        3.802513859341161e-15,
+        9.094947017729282e-13,
+        5.898059818321144e-17
+      ],
+      [
+        4.855845300641607e-15,
+        1.2505552149377763e-12,
+        5.898059818321144e-17
+      ],
+      [
+        7.471610579778452e-15,
+        1.4779288903810084e-12,
+        5.551115123125783e-17
+      ],
+      [
+        1.2826795203152392e-14,
+        1.4779288903810084e-12,
+        3.122502256758253e-17
+      ],
+      [
+        1.8118853293233887e-14,
+        1.5916157281026244e-12,
+        3.642919299551295e-17
+      ],
+      [
+        2.7243832190215755e-14,
+        2.0463630789890885e-12,
+        4.683753385137379e-17
+      ],
+      [
+        3.797309688913231e-14,
+        2.1600499167107046e-12,
+        6.418476861114186e-17
+      ],
+      [
+        4.840225442670487e-14,
+        2.5011104298755527e-12,
+        8.673617379884035e-17
+      ],
+      [
+        6.333128466096127e-14,
+        2.6147972675971687e-12,
+        1.249000902703301e-16
+      ],
+      [
+        7.777806176889612e-14,
+        2.9558577807620168e-12,
+        1.682681771697503e-16
+      ]
+    ],
+    "short_limits": [
+      1e-09,
+      1e-07,
+      1e-11
+    ],
+    "reference_tv_error": 5.684341886080802e-14,
+    "ranges": {
+      "matlab": {
+        "min": [
+          -0.44326634318173463,
+          336.1767515454305,
+          2.4024123646996547e-06
+        ],
+        "max": [
+          0.8150125219518801,
+          1227.772002016326,
+          0.01775554455347804
+        ]
+      },
+      "fortran": {
+        "min": [
+          -0.44326634318174013,
+          336.1767515454305,
+          2.4024123646996547e-06
+        ],
+        "max": [
+          0.8150125219518874,
+          1227.7720020163263,
+          0.017755544553478105
+        ]
+      }
+    },
+    "max_area_mean_MF": {
+      "matlab": 6.071532165918825e-18,
+      "fortran": 3.2836688038191046e-18
+    },
+    "domain_water_increments_kg_m2": {
+      "matlab": {
+        "dynamics_and_clipping": 4.1941195728228964e-08,
+        "native_precipitation": 0.0,
+        "damping": -0.0004725947029558985
+      },
+      "fortran": {
+        "dynamics_and_clipping": 4.194121897699299e-08,
+        "native_precipitation": 0.0,
+        "damping": -0.00047259470300256844
+      }
+    },
+    "scientific_acceptance": "pending",
+    "sha256": {
+      "matlab_reference.bin": "962cbf950986e49e188a75035d5ba1440ec2057f96faff7d3f3c317299d4e635",
+      "matlab_states.bin": "c93e15423e0e85efde1fdaa5ff7d5f4af4cdf00aee68239d119de341ca91b44c",
+      "matlab_budget.bin": "81dfa5330831fbbd11c0e62df148d3459341864447877ae5174d5a8771b0cf5c",
+      "fortran_states.bin": "51575776eb5dba1c29b3a3426ba6caec91b667a8cb3cf732a17ebba68c5df4e9",
+      "fortran_budget.bin": "c86c87b3ef11d112735a8a123dd5fa3b720ca292611c757c6a58347d19f0e71c"
+    }
+  },
+  "trajectory_prefix_preservation": {
+    "fortran_budget.bin": {
+      "prefix_bytes": 33792,
+      "bitwise_equal": true,
+      "sha256": "c5e5f4b61f2ede6c030c3f2c422de5a26367be8d4971b7ab919f268f0c888cfe"
+    },
+    "fortran_states.bin": {
+      "prefix_bytes": 1703932,
+      "bitwise_equal": true,
+      "sha256": "7f81aab39f05e3cd836b3d1e930b0d4ec1cf92d714776d20b93a8720c240013f"
+    }
+  },
+  "figures": {
+    "migration_work/v02187_validation/packed_momentum/dry_10min/figures/scope.json": {
+      "sha256": "8f992441e0d9f8fd53e051e24c60e16b73ce4adbc3b8a87954e5e6cf579e239b"
+    },
+    "migration_work/v02187_validation/packed_momentum/dry_10min/figures/mf_comparison.pdf": {
+      "sha256": "3cdcf556576fa859f457beecfedb8ee60e6ab8d28b7062c1ff6262fa8a84b57b"
+    },
+    "migration_work/v02187_validation/packed_momentum/dry_10min/figures/mf_comparison.png": {
+      "sha256": "688fc5c87ee963ff8058b7b5b93b9bc82d9a87e58a84b57e9bf96d51fbf6b333"
+    },
+    "migration_work/v02187_validation/packed_momentum/native_10min/figures/scope.json": {
+      "sha256": "73b30f648507e139cf6dd725743585e2160fd5ad11419914dd3e7d7b9adf9efe"
+    },
+    "migration_work/v02187_validation/packed_momentum/native_10min/figures/mf_comparison.png": {
+      "sha256": "cc1fb48599091881773c4bce38498f67d32374a1ed5d375ba6dd56381573861b"
+    },
+    "migration_work/v02187_validation/packed_momentum/native_10min/figures/mf_comparison.pdf": {
+      "sha256": "1a2efdb503810a90d2f1855dce047bcd8d87e57ae9149a954d82e756fb2ad5fa"
+    }
+  },
+  "native_10min": {
+    "duration_seconds": 600,
+    "saved_states": 11,
+    "field_order": [
+      "MF",
+      "theta_e",
+      "qt"
+    ],
+    "max_abs_error": [
+      4.8900883342639645e-12,
+      1.892885848064907e-10,
+      6.4514366071577456e-15
+    ],
+    "max_abs_error_each_state": [
+      [
+        0.0,
+        1.7053025658242404e-13,
+        6.591949208711867e-17
+      ],
+      [
+        3.3623277773120464e-15,
+        9.094947017729282e-13,
+        6.591949208711867e-17
+      ],
+      [
+        4.863636700119701e-15,
+        1.2505552149377763e-12,
+        5.898059818321144e-17
+      ],
+      [
+        8.659739592076221e-15,
+        1.4779288903810084e-12,
+        5.551115123125783e-17
+      ],
+      [
+        1.3476842856407502e-14,
+        1.3642420526593924e-12,
+        4.5102810375396984e-17
+      ],
+      [
+        1.904021412276358e-14,
+        1.6484591469634324e-12,
+        4.5102810375396984e-17
+      ],
+      [
+        2.5121695749439092e-14,
+        1.9895196601282805e-12,
+        4.683753385137379e-17
+      ],
+      [
+        5.717648576819556e-14,
+        3.234390533179976e-11,
+        2.0990154059319366e-16
+      ],
+      [
+        4.944933351680447e-13,
+        7.361222742474638e-11,
+        1.4710455076283324e-15
+      ],
+      [
+        3.242073276510382e-12,
+        1.4858869690215215e-10,
+        3.866698627952303e-15
+      ],
+      [
+        4.8900883342639645e-12,
+        1.892885848064907e-10,
+        6.4514366071577456e-15
+      ]
+    ],
+    "short_limits": [
+      1e-09,
+      1e-07,
+      1e-11
+    ],
+    "reference_tv_error": 5.684341886080802e-14,
+    "ranges": {
+      "matlab": {
+        "min": [
+          -0.443266343501218,
+          336.1767515454305,
+          2.402411827115303e-06
+        ],
+        "max": [
+          0.8196864175620864,
+          1227.772002016326,
+          0.01775554455347804
+        ]
+      },
+      "fortran": {
+        "min": [
+          -0.44326634350122723,
+          336.1767515454305,
+          2.4024118271153027e-06
+        ],
+        "max": [
+          0.8196864175633023,
+          1227.7720020163263,
+          0.017755544553478105
+        ]
+      }
+    },
+    "max_area_mean_MF": {
+      "matlab": 7.806255641895632e-18,
+      "fortran": 3.4068856278650036e-18
+    },
+    "domain_water_increments_kg_m2": {
+      "matlab": {
+        "dynamics_and_clipping": 4.231666727097516e-08,
+        "native_precipitation": -0.002494550818233727,
+        "damping": -0.0004698168370459139
+      },
+      "fortran": {
+        "dynamics_and_clipping": 4.2316685912313634e-08,
+        "native_precipitation": -0.0024945508181815675,
+        "damping": -0.0004698168371147075
+      }
+    },
+    "scientific_acceptance": "pending",
+    "sha256": {
+      "matlab_states.bin": "d1689e427102c49dcd4f8e4711dcbc605f0ebd9efefc03e90afb03a4aa654b58",
+      "matlab_budget.bin": "6d453a47330b45b99b26bdbb518a8806977141ae769a5e8aa06941daea9f67e5",
+      "fortran_states.bin": "a4514668e5792c820f85ab95570aabf4b49ff89f2845e198e5b072c5d3210b8d",
+      "matlab_reference.bin": "962cbf950986e49e188a75035d5ba1440ec2057f96faff7d3f3c317299d4e635",
+      "fortran_budget.bin": "48bf33e6bbc60b344b71ce8808f7595fcff97fcc609fa33202591ceb16a01143"
+    }
+  },
+  "latest_32_thread_validation": {
+    "reviewed_utc": "2026-10-15T16:06:13.781341+00:00",
+    "workspace": "migration_work/v02187_validation/parallel32_10min_1h/native_10min",
+    "matlab_threads": 32,
+    "fortran_threads": 32,
+    "native_10min": {
+      "duration_seconds": 600,
+      "saved_states": 11,
+      "field_order": [
+        "MF",
+        "theta_e",
+        "qt"
+      ],
+      "max_abs_error": [
+        4.8900883342639645e-12,
+        1.892885848064907e-10,
+        6.4514366071577456e-15
+      ],
+      "max_abs_error_each_state": [
+        [
+          0.0,
+          1.7053025658242404e-13,
+          6.591949208711867e-17
+        ],
+        [
+          3.3623277773120464e-15,
+          9.094947017729282e-13,
+          6.591949208711867e-17
+        ],
+        [
+          4.863636700119701e-15,
+          1.2505552149377763e-12,
+          5.898059818321144e-17
+        ],
+        [
+          8.659739592076221e-15,
+          1.4779288903810084e-12,
+          5.551115123125783e-17
+        ],
+        [
+          1.3476842856407502e-14,
+          1.3642420526593924e-12,
+          4.5102810375396984e-17
+        ],
+        [
+          1.904021412276358e-14,
+          1.6484591469634324e-12,
+          4.5102810375396984e-17
+        ],
+        [
+          2.5121695749439092e-14,
+          1.9895196601282805e-12,
+          4.683753385137379e-17
+        ],
+        [
+          5.717648576819556e-14,
+          3.234390533179976e-11,
+          2.0990154059319366e-16
+        ],
+        [
+          4.944933351680447e-13,
+          7.361222742474638e-11,
+          1.4710455076283324e-15
+        ],
+        [
+          3.242073276510382e-12,
+          1.4858869690215215e-10,
+          3.866698627952303e-15
+        ],
+        [
+          4.8900883342639645e-12,
+          1.892885848064907e-10,
+          6.4514366071577456e-15
+        ]
+      ],
+      "short_limits": [
+        1e-09,
+        1e-07,
+        1e-11
+      ],
+      "reference_tv_error": 5.684341886080802e-14,
+      "ranges": {
+        "matlab": {
+          "min": [
+            -0.443266343501218,
+            336.1767515454305,
+            2.402411827115303e-06
+          ],
+          "max": [
+            0.8196864175620864,
+            1227.772002016326,
+            0.01775554455347804
+          ]
+        },
+        "fortran": {
+          "min": [
+            -0.44326634350122723,
+            336.1767515454305,
+            2.4024118271153027e-06
+          ],
+          "max": [
+            0.8196864175633023,
+            1227.7720020163263,
+            0.017755544553478105
+          ]
+        }
+      },
+      "max_area_mean_MF": {
+        "matlab": 7.806255641895632e-18,
+        "fortran": 3.4068856278650036e-18
+      },
+      "domain_water_increments_kg_m2": {
+        "matlab": {
+          "dynamics_and_clipping": 4.231666727097516e-08,
+          "native_precipitation": -0.002494550818233727,
+          "damping": -0.0004698168370459139
+        },
+        "fortran": {
+          "dynamics_and_clipping": 4.2316685912313634e-08,
+          "native_precipitation": -0.0024945508181815675,
+          "damping": -0.0004698168371147075
+        }
+      },
+      "scientific_acceptance": "pending",
+      "sha256": {
+        "fortran_budget.bin": "48bf33e6bbc60b344b71ce8808f7595fcff97fcc609fa33202591ceb16a01143",
+        "fortran_states.bin": "a4514668e5792c820f85ab95570aabf4b49ff89f2845e198e5b072c5d3210b8d",
+        "matlab_reference.bin": "962cbf950986e49e188a75035d5ba1440ec2057f96faff7d3f3c317299d4e635",
+        "matlab_budget.bin": "6d453a47330b45b99b26bdbb518a8806977141ae769a5e8aa06941daea9f67e5",
+        "matlab_states.bin": "d1689e427102c49dcd4f8e4711dcbc605f0ebd9efefc03e90afb03a4aa654b58"
+      }
+    },
+    "independent_audit": {
+      "saved_states": 11,
+      "duration_seconds": 600,
+      "hashes_match": true,
+      "field_order": [
+        "MF",
+        "theta_e",
+        "qt"
+      ],
+      "matlab": {
+        "finite": true,
+        "minimum_qt": 2.402411827115303e-06,
+        "max_postinitial_area_mean_MF": 7.806255641895632e-18,
+        "budget_continuous": true,
+        "bookkeeping_closure_error_kg_m2": 0.0,
+        "physical_conservation_claim": false
+      },
+      "fortran": {
+        "finite": true,
+        "minimum_qt": 2.4024118271153027e-06,
+        "max_postinitial_area_mean_MF": 3.4068856278650036e-18,
+        "budget_continuous": true,
+        "bookkeeping_closure_error_kg_m2": 0.0,
+        "physical_conservation_claim": false
+      },
+      "fortran_normal_output": {
+        "records": 11,
+        "fields": 9,
+        "finite": true,
+        "prognostics_exact_real32_cast": true
+      },
+      "final_max_abs_error": [
+        4.8900883342639645e-12,
+        1.892885848064907e-10,
+        6.4514366071577456e-15
+      ],
+      "passed": true
+    },
+    "comparison_to_8_threads": {
+      "matlab_states.bin": {
+        "sha256_32_threads": "d1689e427102c49dcd4f8e4711dcbc605f0ebd9efefc03e90afb03a4aa654b58",
+        "sha256_8_threads": "d1689e427102c49dcd4f8e4711dcbc605f0ebd9efefc03e90afb03a4aa654b58",
+        "bitwise_equal": true
+      },
+      "fortran_states.bin": {
+        "sha256_32_threads": "a4514668e5792c820f85ab95570aabf4b49ff89f2845e198e5b072c5d3210b8d",
+        "sha256_8_threads": "a4514668e5792c820f85ab95570aabf4b49ff89f2845e198e5b072c5d3210b8d",
+        "bitwise_equal": true
+      },
+      "matlab_reference.bin": {
+        "sha256_32_threads": "962cbf950986e49e188a75035d5ba1440ec2057f96faff7d3f3c317299d4e635",
+        "sha256_8_threads": "962cbf950986e49e188a75035d5ba1440ec2057f96faff7d3f3c317299d4e635",
+        "bitwise_equal": true
+      },
+      "matlab_budget.bin": {
+        "sha256_32_threads": "6d453a47330b45b99b26bdbb518a8806977141ae769a5e8aa06941daea9f67e5",
+        "sha256_8_threads": "6d453a47330b45b99b26bdbb518a8806977141ae769a5e8aa06941daea9f67e5",
+        "bitwise_equal": true
+      },
+      "fortran_budget.bin": {
+        "sha256_32_threads": "48bf33e6bbc60b344b71ce8808f7595fcff97fcc609fa33202591ceb16a01143",
+        "sha256_8_threads": "48bf33e6bbc60b344b71ce8808f7595fcff97fcc609fa33202591ceb16a01143",
+        "bitwise_equal": true
+      },
+      "fields.dat": {
+        "sha256_32_threads": "67f4fcbf44f6750ae0b6231ad0e08e8fc5197c42caf096543f26513c9dac9570",
+        "sha256_8_threads": "67f4fcbf44f6750ae0b6231ad0e08e8fc5197c42caf096543f26513c9dac9570",
+        "bitwise_equal": true
+      }
+    },
+    "native_1h": {
+      "result": {
+        "duration_seconds": 3600,
+        "saved_states": 61,
+        "field_order": [
+          "MF",
+          "theta_e",
+          "qt"
+        ],
+        "max_abs_error": [
+          6.599498725279318e-10,
+          5.7565898714528885e-09,
+          1.4730716646482733e-12
+        ],
+        "max_abs_error_each_state": [
+          [
+            0.0,
+            1.7053025658242404e-13,
+            6.591949208711867e-17
+          ],
+          [
+            3.3623277773120464e-15,
+            9.094947017729282e-13,
+            6.591949208711867e-17
+          ],
+          [
+            4.863636700119701e-15,
+            1.2505552149377763e-12,
+            5.898059818321144e-17
+          ],
+          [
+            8.659739592076221e-15,
+            1.4779288903810084e-12,
+            5.551115123125783e-17
+          ],
+          [
+            1.3476842856407502e-14,
+            1.3642420526593924e-12,
+            4.5102810375396984e-17
+          ],
+          [
+            1.904021412276358e-14,
+            1.6484591469634324e-12,
+            4.5102810375396984e-17
+          ],
+          [
+            2.5121695749439092e-14,
+            1.9895196601282805e-12,
+            4.683753385137379e-17
+          ],
+          [
+            5.717648576819556e-14,
+            3.234390533179976e-11,
+            2.0990154059319366e-16
+          ],
+          [
+            4.944933351680447e-13,
+            7.361222742474638e-11,
+            1.4710455076283324e-15
+          ],
+          [
+            3.242073276510382e-12,
+            1.4858869690215215e-10,
+            3.866698627952303e-15
+          ],
+          [
+            4.8900883342639645e-12,
+            1.892885848064907e-10,
+            6.4514366071577456e-15
+          ],
+          [
+            3.1347147100291295e-12,
+            2.9393731892923824e-10,
+            1.3272369314698551e-14
+          ],
+          [
+            4.5508874446653635e-12,
+            3.000764081662055e-10,
+            1.851123421214851e-14
+          ],
+          [
+            8.303469023474008e-12,
+            4.5628212319570594e-10,
+            2.6041668821363828e-14
+          ],
+          [
+            2.180455815903315e-11,
+            6.411937647499144e-10,
+            4.1300296516055823e-14
+          ],
+          [
+            3.171840567972595e-11,
+            5.142055670148693e-10,
+            5.902743571706282e-14
+          ],
+          [
+            3.973910089882793e-11,
+            7.297558113350533e-10,
+            6.411191022515084e-14
+          ],
+          [
+            4.5821346716934386e-11,
+            5.535412128665484e-10,
+            9.185360805297194e-14
+          ],
+          [
+            5.2442938880403744e-11,
+            6.86895873514004e-10,
+            9.27764809421916e-14
+          ],
+          [
+            5.687450510549752e-11,
+            1.2975647223356646e-09,
+            1.2207942989839182e-13
+          ],
+          [
+            6.32993657490033e-11,
+            1.087244072550675e-09,
+            1.5201208347637163e-13
+          ],
+          [
+            6.865175095072118e-11,
+            1.237310698343208e-09,
+            1.312127489994097e-13
+          ],
+          [
+            8.417488928103012e-11,
+            2.2020572032488417e-09,
+            1.47871298539215e-13
+          ],
+          [
+            1.1334111427174776e-10,
+            1.1793304111051839e-09,
+            1.6902104715832422e-13
+          ],
+          [
+            1.432658436328893e-10,
+            1.7056436263374053e-09,
+            2.2132469468250093e-13
+          ],
+          [
+            1.7565460197488392e-10,
+            2.5601138986530714e-09,
+            2.282601191394562e-13
+          ],
+          [
+            1.990871911772274e-10,
+            2.403339749434963e-09,
+            2.5920064705697854e-13
+          ],
+          [
+            2.1076607126246927e-10,
+            1.725595666357549e-09,
+            3.264385289858396e-13
+          ],
+          [
+            2.0648860399319346e-10,
+            1.8258674572280142e-09,
+            4.0041234217191857e-13
+          ],
+          [
+            1.9182233579329022e-10,
+            2.2021140466677025e-09,
+            4.6028979239221e-13
+          ],
+          [
+            1.961908413505853e-10,
+            2.343824689887697e-09,
+            5.407011643976389e-13
+          ],
+          [
+            1.9188739486253326e-10,
+            1.7766410564945545e-09,
+            5.919657125597055e-13
+          ],
+          [
+            1.890962941786256e-10,
+            2.913509433710715e-09,
+            5.89611692802805e-13
+          ],
+          [
+            2.0456414340230822e-10,
+            2.264982867927756e-09,
+            5.615178461093606e-13
+          ],
+          [
+            2.120534858818246e-10,
+            2.791409769997699e-09,
+            6.105931732447445e-13
+          ],
+          [
+            2.1037971364989971e-10,
+            2.293120360263856e-09,
+            6.106920524828752e-13
+          ],
+          [
+            2.2286839040930317e-10,
+            2.103604401781922e-09,
+            6.595852336532815e-13
+          ],
+          [
+            2.5385427093738144e-10,
+            2.583874447736889e-09,
+            6.553368958606143e-13
+          ],
+          [
+            2.8726399037282135e-10,
+            3.022705641342327e-09,
+            7.221896691778085e-13
+          ],
+          [
+            3.2682612172152403e-10,
+            3.3899709706020076e-09,
+            7.859372874730042e-13
+          ],
+          [
+            3.687139482622115e-10,
+            4.059245384269161e-09,
+            7.930687356827448e-13
+          ],
+          [
+            4.2086600871016344e-10,
+            2.461888470861595e-09,
+            8.012410179780716e-13
+          ],
+          [
+            4.74428940577809e-10,
+            3.032823769899551e-09,
+            8.520909672293797e-13
+          ],
+          [
+            5.446052497859455e-10,
+            3.2787283998914063e-09,
+            8.81388712015152e-13
+          ],
+          [
+            6.195683965870558e-10,
+            3.097852641076315e-09,
+            9.649078411277934e-13
+          ],
+          [
+            6.599498725279318e-10,
+            3.950674454245018e-09,
+            9.686331597924536e-13
+          ],
+          [
+            6.579274902662746e-10,
+            3.6378082768351305e-09,
+            1.0552678522679493e-12
+          ],
+          [
+            5.995777208056552e-10,
+            4.295316102798097e-09,
+            1.1311914946410262e-12
+          ],
+          [
+            5.250737622475299e-10,
+            5.599986252491362e-09,
+            1.2416291952921377e-12
+          ],
+          [
+            4.573443845856673e-10,
+            5.164565664017573e-09,
+            1.3314939428799022e-12
+          ],
+          [
+            3.9938297113906174e-10,
+            5.345782483345829e-09,
+            1.4374066173439282e-12
+          ],
+          [
+            3.450980612385024e-10,
+            5.5052282732503954e-09,
+            1.4730716646482733e-12
+          ],
+          [
+            3.407312765268955e-10,
+            5.7565898714528885e-09,
+            1.3963743356049108e-12
+          ],
+          [
+            3.1615909890092553e-10,
+            5.641595635097474e-09,
+            1.4400100036005004e-12
+          ],
+          [
+            2.8200067281325403e-10,
+            5.530921498575481e-09,
+            1.3166013418386413e-12
+          ],
+          [
+            2.8423796649690303e-10,
+            4.8858055379241705e-09,
+            1.1426892418398005e-12
+          ],
+          [
+            2.936928478192158e-10,
+            5.4658357839798555e-09,
+            9.697550922005416e-13
+          ],
+          [
+            2.98465141490567e-10,
+            4.300204636820126e-09,
+            7.419425317178874e-13
+          ],
+          [
+            3.058873154770936e-10,
+            3.934587766707409e-09,
+            4.566074081335803e-13
+          ],
+          [
+            3.102527124099197e-10,
+            2.747640337474877e-09,
+            3.907898310506752e-13
+          ],
+          [
+            3.1131763833514015e-10,
+            2.572619450802449e-09,
+            4.012692955690511e-13
+          ]
+        ],
+        "short_limits": null,
+        "reference_tv_error": 5.684341886080802e-14,
+        "ranges": {
+          "matlab": {
+            "min": [
+              -1.1975532285844295,
+              336.1767515454305,
+              2.4017629886671448e-06
+            ],
+            "max": [
+              3.797255468210623,
+              1227.772002016326,
+              0.01775554455347804
+            ]
+          },
+          "fortran": {
+            "min": [
+              -1.197553228741369,
+              336.1767515454305,
+              2.4017629886671325e-06
+            ],
+            "max": [
+              3.7972554686565547,
+              1227.7720020163263,
+              0.017755544553478105
+            ]
+          }
+        },
+        "max_area_mean_MF": {
+          "matlab": 2.6020852139652106e-17,
+          "fortran": 2.0111950299606107e-17
+        },
+        "domain_water_increments_kg_m2": {
+          "matlab": {
+            "dynamics_and_clipping": 6.203463060461267e-07,
+            "native_precipitation": -0.3632223674427581,
+            "damping": 0.0014255100599710534
+          },
+          "fortran": {
+            "dynamics_and_clipping": 6.203463437937096e-07,
+            "native_precipitation": -0.3632223674564044,
+            "damping": 0.0014255100599428793
+          }
+        },
+        "scientific_acceptance": "pending",
+        "sha256": {
+          "matlab_reference.bin": "962cbf950986e49e188a75035d5ba1440ec2057f96faff7d3f3c317299d4e635",
+          "fortran_states.bin": "8803e2d012b9789dc64dc976b7bb9de650fa672cf4cbc0e2eaf773588f52a9cd",
+          "fortran_budget.bin": "94026e941ad359adcf9d6ec37461cd0a8b7ccadf2148fcbfbd2bd6f4bf18d605",
+          "matlab_budget.bin": "f358aaf8d986e3f9b12fc89587dc0d01727d077efb6db48a31d57911da8f4607",
+          "matlab_states.bin": "092416edd7b5a3bc2fed837f44491838ddff201dcb6c3577815239bb551cb7a1"
+        }
+      },
+      "independent_audit": {
+        "saved_states": 61,
+        "duration_seconds": 3600,
+        "hashes_match": true,
+        "field_order": [
+          "MF",
+          "theta_e",
+          "qt"
+        ],
+        "matlab": {
+          "finite": true,
+          "minimum_qt": 2.4017629886671448e-06,
+          "max_postinitial_area_mean_MF": 2.6020852139652106e-17,
+          "budget_continuous": true,
+          "bookkeeping_closure_error_kg_m2": 0.0,
+          "physical_conservation_claim": false
+        },
+        "fortran": {
+          "finite": true,
+          "minimum_qt": 2.4017629886671325e-06,
+          "max_postinitial_area_mean_MF": 2.0111950299606107e-17,
+          "budget_continuous": true,
+          "bookkeeping_closure_error_kg_m2": 0.0,
+          "physical_conservation_claim": false
+        },
+        "fortran_normal_output": {
+          "records": 61,
+          "fields": 9,
+          "finite": true,
+          "prognostics_exact_real32_cast": true
+        },
+        "final_max_abs_error": [
+          3.1131763833514015e-10,
+          2.572619450802449e-09,
+          4.012692955690511e-13
+        ],
+        "passed": true
+      }
+    },
+    "eight_hour_authorized": true,
+    "scientific_acceptance": "pending",
+    "native_8h": {
+      "workspace": "migration_work/v02187_validation/native8h_threads32",
+      "phase": "completed_pending_scientific_review",
+      "precomputed_enabled": false,
+      "result": {
+        "duration_seconds": 28800,
+        "saved_states": 481,
+        "field_order": [
+          "MF",
+          "theta_e",
+          "qt"
+        ],
+        "max_abs_error": [
+          3.139159160392424e-08,
+          3.164322492921201e-07,
+          7.539331919187431e-11
+        ],
+        "max_abs_error_each_state": [
+          [
+            0.0,
+            1.7053025658242404e-13,
+            6.591949208711867e-17
+          ],
+          [
+            3.3623277773120464e-15,
+            9.094947017729282e-13,
+            6.591949208711867e-17
+          ],
+          [
+            4.863636700119701e-15,
+            1.2505552149377763e-12,
+            5.898059818321144e-17
+          ],
+          [
+            8.659739592076221e-15,
+            1.4779288903810084e-12,
+            5.551115123125783e-17
+          ],
+          [
+            1.3476842856407502e-14,
+            1.3642420526593924e-12,
+            4.5102810375396984e-17
+          ],
+          [
+            1.904021412276358e-14,
+            1.6484591469634324e-12,
+            4.5102810375396984e-17
+          ],
+          [
+            2.5121695749439092e-14,
+            1.9895196601282805e-12,
+            4.683753385137379e-17
+          ],
+          [
+            5.717648576819556e-14,
+            3.234390533179976e-11,
+            2.0990154059319366e-16
+          ],
+          [
+            4.944933351680447e-13,
+            7.361222742474638e-11,
+            1.4710455076283324e-15
+          ],
+          [
+            3.242073276510382e-12,
+            1.4858869690215215e-10,
+            3.866698627952303e-15
+          ],
+          [
+            4.8900883342639645e-12,
+            1.892885848064907e-10,
+            6.4514366071577456e-15
+          ],
+          [
+            3.1347147100291295e-12,
+            2.9393731892923824e-10,
+            1.3272369314698551e-14
+          ],
+          [
+            4.5508874446653635e-12,
+            3.000764081662055e-10,
+            1.851123421214851e-14
+          ],
+          [
+            8.303469023474008e-12,
+            4.5628212319570594e-10,
+            2.6041668821363828e-14
+          ],
+          [
+            2.180455815903315e-11,
+            6.411937647499144e-10,
+            4.1300296516055823e-14
+          ],
+          [
+            3.171840567972595e-11,
+            5.142055670148693e-10,
+            5.902743571706282e-14
+          ],
+          [
+            3.973910089882793e-11,
+            7.297558113350533e-10,
+            6.411191022515084e-14
+          ],
+          [
+            4.5821346716934386e-11,
+            5.535412128665484e-10,
+            9.185360805297194e-14
+          ],
+          [
+            5.2442938880403744e-11,
+            6.86895873514004e-10,
+            9.27764809421916e-14
+          ],
+          [
+            5.687450510549752e-11,
+            1.2975647223356646e-09,
+            1.2207942989839182e-13
+          ],
+          [
+            6.32993657490033e-11,
+            1.087244072550675e-09,
+            1.5201208347637163e-13
+          ],
+          [
+            6.865175095072118e-11,
+            1.237310698343208e-09,
+            1.312127489994097e-13
+          ],
+          [
+            8.417488928103012e-11,
+            2.2020572032488417e-09,
+            1.47871298539215e-13
+          ],
+          [
+            1.1334111427174776e-10,
+            1.1793304111051839e-09,
+            1.6902104715832422e-13
+          ],
+          [
+            1.432658436328893e-10,
+            1.7056436263374053e-09,
+            2.2132469468250093e-13
+          ],
+          [
+            1.7565460197488392e-10,
+            2.5601138986530714e-09,
+            2.282601191394562e-13
+          ],
+          [
+            1.990871911772274e-10,
+            2.403339749434963e-09,
+            2.5920064705697854e-13
+          ],
+          [
+            2.1076607126246927e-10,
+            1.725595666357549e-09,
+            3.264385289858396e-13
+          ],
+          [
+            2.0648860399319346e-10,
+            1.8258674572280142e-09,
+            4.0041234217191857e-13
+          ],
+          [
+            1.9182233579329022e-10,
+            2.2021140466677025e-09,
+            4.6028979239221e-13
+          ],
+          [
+            1.961908413505853e-10,
+            2.343824689887697e-09,
+            5.407011643976389e-13
+          ],
+          [
+            1.9188739486253326e-10,
+            1.7766410564945545e-09,
+            5.919657125597055e-13
+          ],
+          [
+            1.890962941786256e-10,
+            2.913509433710715e-09,
+            5.89611692802805e-13
+          ],
+          [
+            2.0456414340230822e-10,
+            2.264982867927756e-09,
+            5.615178461093606e-13
+          ],
+          [
+            2.120534858818246e-10,
+            2.791409769997699e-09,
+            6.105931732447445e-13
+          ],
+          [
+            2.1037971364989971e-10,
+            2.293120360263856e-09,
+            6.106920524828752e-13
+          ],
+          [
+            2.2286839040930317e-10,
+            2.103604401781922e-09,
+            6.595852336532815e-13
+          ],
+          [
+            2.5385427093738144e-10,
+            2.583874447736889e-09,
+            6.553368958606143e-13
+          ],
+          [
+            2.8726399037282135e-10,
+            3.022705641342327e-09,
+            7.221896691778085e-13
+          ],
+          [
+            3.2682612172152403e-10,
+            3.3899709706020076e-09,
+            7.859372874730042e-13
+          ],
+          [
+            3.687139482622115e-10,
+            4.059245384269161e-09,
+            7.930687356827448e-13
+          ],
+          [
+            4.2086600871016344e-10,
+            2.461888470861595e-09,
+            8.012410179780716e-13
+          ],
+          [
+            4.74428940577809e-10,
+            3.032823769899551e-09,
+            8.520909672293797e-13
+          ],
+          [
+            5.446052497859455e-10,
+            3.2787283998914063e-09,
+            8.81388712015152e-13
+          ],
+          [
+            6.195683965870558e-10,
+            3.097852641076315e-09,
+            9.649078411277934e-13
+          ],
+          [
+            6.599498725279318e-10,
+            3.950674454245018e-09,
+            9.686331597924536e-13
+          ],
+          [
+            6.579274902662746e-10,
+            3.6378082768351305e-09,
+            1.0552678522679493e-12
+          ],
+          [
+            5.995777208056552e-10,
+            4.295316102798097e-09,
+            1.1311914946410262e-12
+          ],
+          [
+            5.250737622475299e-10,
+            5.599986252491362e-09,
+            1.2416291952921377e-12
+          ],
+          [
+            4.573443845856673e-10,
+            5.164565664017573e-09,
+            1.3314939428799022e-12
+          ],
+          [
+            3.9938297113906174e-10,
+            5.345782483345829e-09,
+            1.4374066173439282e-12
+          ],
+          [
+            3.450980612385024e-10,
+            5.5052282732503954e-09,
+            1.4730716646482733e-12
+          ],
+          [
+            3.407312765268955e-10,
+            5.7565898714528885e-09,
+            1.3963743356049108e-12
+          ],
+          [
+            3.1615909890092553e-10,
+            5.641595635097474e-09,
+            1.4400100036005004e-12
+          ],
+          [
+            2.8200067281325403e-10,
+            5.530921498575481e-09,
+            1.3166013418386413e-12
+          ],
+          [
+            2.8423796649690303e-10,
+            4.8858055379241705e-09,
+            1.1426892418398005e-12
+          ],
+          [
+            2.936928478192158e-10,
+            5.4658357839798555e-09,
+            9.697550922005416e-13
+          ],
+          [
+            2.98465141490567e-10,
+            4.300204636820126e-09,
+            7.419425317178874e-13
+          ],
+          [
+            3.058873154770936e-10,
+            3.934587766707409e-09,
+            4.566074081335803e-13
+          ],
+          [
+            3.102527124099197e-10,
+            2.747640337474877e-09,
+            3.907898310506752e-13
+          ],
+          [
+            3.1131763833514015e-10,
+            2.572619450802449e-09,
+            4.012692955690511e-13
+          ],
+          [
+            3.0406532847138124e-10,
+            2.547494659665972e-09,
+            4.235136547015017e-13
+          ],
+          [
+            2.9688107527903185e-10,
+            2.2643007469014265e-09,
+            4.4345083161090315e-13
+          ],
+          [
+            2.6937185815256726e-10,
+            2.139188381988788e-09,
+            4.477043735739983e-13
+          ],
+          [
+            2.548405375613072e-10,
+            3.0252635951910634e-09,
+            4.561507421785294e-13
+          ],
+          [
+            2.610443111672467e-10,
+            3.726881914190017e-09,
+            4.82652112721027e-13
+          ],
+          [
+            2.513051988728421e-10,
+            4.0194549910665955e-09,
+            4.930396368951762e-13
+          ],
+          [
+            2.2446522418562154e-10,
+            3.798447778535774e-09,
+            4.784939805491106e-13
+          ],
+          [
+            2.447219371592979e-10,
+            3.186755748174619e-09,
+            6.487536202692823e-13
+          ],
+          [
+            2.5832037897632887e-10,
+            3.126388037344441e-09,
+            8.068701956576163e-13
+          ],
+          [
+            2.7339552843841375e-10,
+            3.4008849070232827e-09,
+            8.536799739333745e-13
+          ],
+          [
+            3.053906016958763e-10,
+            3.5619791560748126e-09,
+            9.538082129667558e-13
+          ],
+          [
+            3.376401380705829e-10,
+            3.906279744114727e-09,
+            1.1374789998797041e-12
+          ],
+          [
+            3.72130326553588e-10,
+            4.893308869213797e-09,
+            1.278777431168443e-12
+          ],
+          [
+            3.9064285140000266e-10,
+            5.343395059753675e-09,
+            1.3694687744925105e-12
+          ],
+          [
+            3.875986198664805e-10,
+            5.367894573282683e-09,
+            1.408692607007822e-12
+          ],
+          [
+            3.806424064833891e-10,
+            5.047922968515195e-09,
+            1.428291512839408e-12
+          ],
+          [
+            3.716864593883429e-10,
+            5.2123709792795125e-09,
+            1.4277121151984318e-12
+          ],
+          [
+            4.0173196713677584e-10,
+            5.536264779948397e-09,
+            1.458354270678086e-12
+          ],
+          [
+            4.382359961030424e-10,
+            5.916433565289481e-09,
+            1.4932985403781629e-12
+          ],
+          [
+            4.5435278456240624e-10,
+            6.341508651530603e-09,
+            1.5309559175946674e-12
+          ],
+          [
+            4.34416891348377e-10,
+            6.771301741537172e-09,
+            1.547439260063399e-12
+          ],
+          [
+            4.2026331026345787e-10,
+            7.2047328103508335e-09,
+            1.5712396661538008e-12
+          ],
+          [
+            4.117554179561278e-10,
+            7.632422693859553e-09,
+            1.4807530201998986e-12
+          ],
+          [
+            4.0585704241813403e-10,
+            8.051188160607126e-09,
+            1.598759319376697e-12
+          ],
+          [
+            4.248283946850506e-10,
+            8.433346465608338e-09,
+            1.583573550067996e-12
+          ],
+          [
+            4.845626122573776e-10,
+            8.770655313128373e-09,
+            1.6378513129078343e-12
+          ],
+          [
+            5.594222862725928e-10,
+            8.764345693634823e-09,
+            1.6572142963466874e-12
+          ],
+          [
+            6.205533864545032e-10,
+            8.140943918988341e-09,
+            1.6732700294785907e-12
+          ],
+          [
+            6.84102996473257e-10,
+            7.328878837142838e-09,
+            1.7691698800392786e-12
+          ],
+          [
+            7.735105889139504e-10,
+            6.3848801801213995e-09,
+            1.872288782345244e-12
+          ],
+          [
+            8.590932409902052e-10,
+            9.499046882410767e-09,
+            2.0645317053147316e-12
+          ],
+          [
+            9.175531445748675e-10,
+            8.978474852483487e-09,
+            2.2059888638015224e-12
+          ],
+          [
+            8.997105283015117e-10,
+            8.862855338520603e-09,
+            2.320827557911187e-12
+          ],
+          [
+            8.354075209382472e-10,
+            9.895700259221485e-09,
+            2.3579497729353527e-12
+          ],
+          [
+            8.621996450131064e-10,
+            1.0178496268054005e-08,
+            2.3318699401975174e-12
+          ],
+          [
+            8.524775330087664e-10,
+            1.0594192190183094e-08,
+            2.3838257756647607e-12
+          ],
+          [
+            8.89768482417036e-10,
+            9.858467819867656e-09,
+            2.7666462870667985e-12
+          ],
+          [
+            8.245545912721752e-10,
+            1.0238409231533296e-08,
+            2.969081577819388e-12
+          ],
+          [
+            8.273810525594172e-10,
+            9.436746495339321e-09,
+            2.923536412957617e-12
+          ],
+          [
+            7.860894157829534e-10,
+            7.935796020319685e-09,
+            2.704010626519704e-12
+          ],
+          [
+            7.292841885941925e-10,
+            7.789537903590826e-09,
+            2.880513536029916e-12
+          ],
+          [
+            6.800011664864769e-10,
+            8.2590645433811e-09,
+            2.9160146519657815e-12
+          ],
+          [
+            7.589675554697806e-10,
+            7.96774202171946e-09,
+            2.7222963466799754e-12
+          ],
+          [
+            8.285736541324695e-10,
+            7.961773462739075e-09,
+            2.3305333357592772e-12
+          ],
+          [
+            8.603728840483882e-10,
+            8.048175459407503e-09,
+            1.747452876843525e-12
+          ],
+          [
+            8.582741184426368e-10,
+            6.958146059332648e-09,
+            1.7511686545290672e-12
+          ],
+          [
+            8.461480405230759e-10,
+            7.81091102908249e-09,
+            1.626502751927994e-12
+          ],
+          [
+            8.037850385278489e-10,
+            6.310585831670323e-09,
+            1.2397912557693402e-12
+          ],
+          [
+            7.727647410860072e-10,
+            6.081904757593293e-09,
+            1.110941200144211e-12
+          ],
+          [
+            7.294942427904516e-10,
+            5.689287263521692e-09,
+            1.3165319528996022e-12
+          ],
+          [
+            6.792302276181772e-10,
+            4.681680820795009e-09,
+            1.2477276156719341e-12
+          ],
+          [
+            6.431106758242322e-10,
+            4.669402642321074e-09,
+            1.2688409350980479e-12
+          ],
+          [
+            6.382917527858467e-10,
+            4.980392986908555e-09,
+            1.3124726999658165e-12
+          ],
+          [
+            6.367630311920891e-10,
+            4.775188244821038e-09,
+            1.159471824108138e-12
+          ],
+          [
+            6.21703133418805e-10,
+            4.572427769744536e-09,
+            1.2039553382026114e-12
+          ],
+          [
+            6.110028039074678e-10,
+            4.257458385836799e-09,
+            1.0585941845331348e-12
+          ],
+          [
+            6.412981257142292e-10,
+            3.569311957107857e-09,
+            1.062242308003114e-12
+          ],
+          [
+            6.580911371401044e-10,
+            3.6449137041927315e-09,
+            9.721303623200228e-13
+          ],
+          [
+            6.748583913918083e-10,
+            3.557431682565948e-09,
+            1.0216497786652567e-12
+          ],
+          [
+            6.813458686139029e-10,
+            3.3239189178857487e-09,
+            1.3563646733549817e-12
+          ],
+          [
+            6.804121710501931e-10,
+            4.143487331020879e-09,
+            1.7653083855817542e-12
+          ],
+          [
+            6.813767328139875e-10,
+            5.600099939329084e-09,
+            2.252760478160809e-12
+          ],
+          [
+            6.802872709599228e-10,
+            7.012317837506998e-09,
+            2.7865539736771083e-12
+          ],
+          [
+            6.84659884342409e-10,
+            7.360370091191726e-09,
+            3.2580708964058402e-12
+          ],
+          [
+            7.007103786094149e-10,
+            6.64380195303238e-09,
+            3.3869313603718254e-12
+          ],
+          [
+            6.821687104086038e-10,
+            6.365439730871003e-09,
+            2.861007437904295e-12
+          ],
+          [
+            6.550436859598108e-10,
+            8.046185939747375e-09,
+            3.620785962721307e-12
+          ],
+          [
+            6.403645114172463e-10,
+            8.368601811525878e-09,
+            4.137711007157208e-12
+          ],
+          [
+            5.482548998125836e-10,
+            6.363165994116571e-09,
+            3.3801191012816645e-12
+          ],
+          [
+            4.719439769540479e-10,
+            5.246363343758276e-09,
+            3.314246446728397e-12
+          ],
+          [
+            3.9646728955400334e-10,
+            5.794902335765073e-09,
+            3.6983003465218545e-12
+          ],
+          [
+            2.785042196862264e-10,
+            4.875403192272643e-09,
+            3.050689909023241e-12
+          ],
+          [
+            3.278601834466599e-10,
+            3.3435298973927274e-09,
+            2.484935868185545e-12
+          ],
+          [
+            4.0572423198881324e-10,
+            5.044114459451521e-09,
+            2.7331904101091098e-12
+          ],
+          [
+            5.281755033337276e-10,
+            3.3988385439442936e-09,
+            2.5910454337640942e-12
+          ],
+          [
+            6.085019710333484e-10,
+            3.17697868013056e-09,
+            2.189111739103744e-12
+          ],
+          [
+            6.29726715217771e-10,
+            2.6177531253779307e-09,
+            1.6676660052894476e-12
+          ],
+          [
+            5.786984919042837e-10,
+            3.2331399779650383e-09,
+            1.1401973115665598e-12
+          ],
+          [
+            5.285030191259921e-10,
+            4.459991487237858e-09,
+            7.77575920318796e-13
+          ],
+          [
+            5.814082548738497e-10,
+            3.72290287486976e-09,
+            6.675640942810368e-13
+          ],
+          [
+            6.295919341425815e-10,
+            4.0745362639427185e-09,
+            7.276410377010656e-13
+          ],
+          [
+            6.530163076945428e-10,
+            3.9993324207898695e-09,
+            7.099824200773597e-13
+          ],
+          [
+            7.436771198854331e-10,
+            2.547437816247111e-09,
+            7.108263630484224e-13
+          ],
+          [
+            7.962892567547897e-10,
+            2.763101747405017e-09,
+            7.295370904603082e-13
+          ],
+          [
+            8.238041360186799e-10,
+            3.002014636876993e-09,
+            7.46610238910872e-13
+          ],
+          [
+            8.381637606191816e-10,
+            1.8905552678916138e-09,
+            8.544814161792758e-13
+          ],
+          [
+            8.63631388625663e-10,
+            3.292711880931165e-09,
+            9.637828729536224e-13
+          ],
+          [
+            8.81156481113976e-10,
+            2.5594886210456025e-09,
+            9.608329756827239e-13
+          ],
+          [
+            8.338991719369915e-10,
+            3.316358743177261e-09,
+            8.634256504214122e-13
+          ],
+          [
+            7.476770313985526e-10,
+            3.013497007486876e-09,
+            8.85352555157759e-13
+          ],
+          [
+            6.649671924208178e-10,
+            2.8484805625339504e-09,
+            8.401985704398207e-13
+          ],
+          [
+            5.994515994700578e-10,
+            2.489798589522252e-09,
+            8.17739539277218e-13
+          ],
+          [
+            6.056142254351471e-10,
+            3.6960727811674587e-09,
+            7.67927388345413e-13
+          ],
+          [
+            6.386420281501159e-10,
+            3.6141614145890344e-09,
+            7.642306926181064e-13
+          ],
+          [
+            6.455480594524943e-10,
+            4.584421731124166e-09,
+            7.507362786984828e-13
+          ],
+          [
+            6.398934715434734e-10,
+            3.2818547879287507e-09,
+            7.503329554903182e-13
+          ],
+          [
+            6.181637424163e-10,
+            4.935372999170795e-09,
+            7.586388114932952e-13
+          ],
+          [
+            6.184053269464584e-10,
+            5.128526936459821e-09,
+            7.588530498425783e-13
+          ],
+          [
+            6.514166983606628e-10,
+            4.765354333358118e-09,
+            7.311313013347309e-13
+          ],
+          [
+            6.684097719755755e-10,
+            2.9695570447074715e-09,
+            7.171485627566199e-13
+          ],
+          [
+            6.644578220971198e-10,
+            4.629441718861926e-09,
+            6.945451158646421e-13
+          ],
+          [
+            6.341029923362385e-10,
+            6.411028152797371e-09,
+            7.217351716271025e-13
+          ],
+          [
+            5.978506578685483e-10,
+            7.062226359266788e-09,
+            7.482634303834779e-13
+          ],
+          [
+            5.189382257242414e-10,
+            5.388585577748017e-09,
+            7.670604602882936e-13
+          ],
+          [
+            4.3110626180009604e-10,
+            4.571404588205041e-09,
+            7.553228875689655e-13
+          ],
+          [
+            3.758309219392686e-10,
+            3.7547920328506734e-09,
+            7.244396055261504e-13
+          ],
+          [
+            3.504680989863118e-10,
+            4.450953383638989e-09,
+            6.732739366022145e-13
+          ],
+          [
+            3.520138625034974e-10,
+            4.671051101468038e-09,
+            6.734161839272446e-13
+          ],
+          [
+            3.901845513354374e-10,
+            4.156675004196586e-09,
+            6.880225555949693e-13
+          ],
+          [
+            4.474436932078163e-10,
+            5.5579221225343645e-09,
+            6.851619965830835e-13
+          ],
+          [
+            5.070814879104546e-10,
+            4.180492396699265e-09,
+            6.645500122415271e-13
+          ],
+          [
+            6.057294665851032e-10,
+            4.5562842387880664e-09,
+            6.272447838906459e-13
+          ],
+          [
+            7.200968710208144e-10,
+            3.3881519811984617e-09,
+            5.766116750738348e-13
+          ],
+          [
+            7.889455755361041e-10,
+            3.5414018384472e-09,
+            5.774703631944433e-13
+          ],
+          [
+            7.937674961766561e-10,
+            3.1063791539054364e-09,
+            5.760374816032865e-13
+          ],
+          [
+            7.99812882590345e-10,
+            3.3866740523080807e-09,
+            5.775848549438578e-13
+          ],
+          [
+            7.866272078160819e-10,
+            3.2224534152192064e-09,
+            5.697300270446348e-13
+          ],
+          [
+            7.901557186329455e-10,
+            3.679474502860103e-09,
+            5.511997108742506e-13
+          ],
+          [
+            7.823688363828296e-10,
+            2.6626025828591082e-09,
+            5.211803211224719e-13
+          ],
+          [
+            7.469326268605414e-10,
+            3.100524281762773e-09,
+            5.059789393024872e-13
+          ],
+          [
+            6.912564964878243e-10,
+            3.029185791092459e-09,
+            5.177715894921775e-13
+          ],
+          [
+            6.81392942070147e-10,
+            2.964668510685442e-09,
+            5.253531984439341e-13
+          ],
+          [
+            6.668078311733439e-10,
+            2.8786644179490395e-09,
+            5.820873297257556e-13
+          ],
+          [
+            6.898449589343159e-10,
+            4.1707721720740665e-09,
+            6.488013251648717e-13
+          ],
+          [
+            7.373542887378903e-10,
+            3.5370817386137787e-09,
+            6.863815071866952e-13
+          ],
+          [
+            7.931288958928917e-10,
+            3.832269612757955e-09,
+            6.638639291067783e-13
+          ],
+          [
+            8.275568008642153e-10,
+            3.8104417399154045e-09,
+            7.249530836750395e-13
+          ],
+          [
+            8.161156195285457e-10,
+            3.665491021820344e-09,
+            8.497434526855141e-13
+          ],
+          [
+            8.189600109176354e-10,
+            3.63706931238994e-09,
+            8.914934762627169e-13
+          ],
+          [
+            7.965256232367324e-10,
+            3.917477897630306e-09,
+            8.476982137073374e-13
+          ],
+          [
+            7.753622188744203e-10,
+            3.690331595862517e-09,
+            7.932335344129626e-13
+          ],
+          [
+            7.266756085755333e-10,
+            2.774925178528065e-09,
+            8.684715273321597e-13
+          ],
+          [
+            7.13570313948253e-10,
+            2.9269813239807263e-09,
+            9.409938106497151e-13
+          ],
+          [
+            7.194207451988177e-10,
+            3.6810661185882054e-09,
+            9.872480437322917e-13
+          ],
+          [
+            7.641199895047635e-10,
+            3.518039193295408e-09,
+            1.0059461943989767e-12
+          ],
+          [
+            7.80498776720151e-10,
+            2.7752662390412297e-09,
+            1.0167830119534038e-12
+          ],
+          [
+            7.503782040174656e-10,
+            3.304876372567378e-09,
+            1.0218206489276405e-12
+          ],
+          [
+            6.803795304932692e-10,
+            3.5235530049249064e-09,
+            1.01579291852949e-12
+          ],
+          [
+            6.214462278109067e-10,
+            3.864442987833172e-09,
+            9.891440964915343e-13
+          ],
+          [
+            5.61098278950567e-10,
+            3.730974640347995e-09,
+            8.857949096441331e-13
+          ],
+          [
+            4.790254859443621e-10,
+            3.2806610761326738e-09,
+            7.598795724594876e-13
+          ],
+          [
+            4.0706060744355455e-10,
+            3.9634642234887e-09,
+            6.798268545327169e-13
+          ],
+          [
+            4.061189162740675e-10,
+            4.0940904000308365e-09,
+            6.241400625495164e-13
+          ],
+          [
+            4.1479131240862444e-10,
+            3.0296405384433456e-09,
+            5.721261138458278e-13
+          ],
+          [
+            4.6343817672322984e-10,
+            3.3422793421777897e-09,
+            5.19158500911221e-13
+          ],
+          [
+            5.066174146861613e-10,
+            4.4686316869047005e-09,
+            4.691871891004951e-13
+          ],
+          [
+            5.322862151047048e-10,
+            3.745469712157501e-09,
+            4.552135578206329e-13
+          ],
+          [
+            5.738916009079276e-10,
+            3.894115252478514e-09,
+            4.507314660395778e-13
+          ],
+          [
+            6.116369632991336e-10,
+            3.3350033845636062e-09,
+            4.846088808019289e-13
+          ],
+          [
+            6.163705101869255e-10,
+            3.63917251888779e-09,
+            5.028113342353535e-13
+          ],
+          [
+            6.36536157117007e-10,
+            2.9464217732311226e-09,
+            5.17363062113585e-13
+          ],
+          [
+            6.330758139938553e-10,
+            2.8800855034205597e-09,
+            5.388797047478633e-13
+          ],
+          [
+            6.252007800355841e-10,
+            2.902140749938553e-09,
+            6.09953060282109e-13
+          ],
+          [
+            6.290492571281447e-10,
+            2.926185516116675e-09,
+            6.36206365367542e-13
+          ],
+          [
+            6.175131517238697e-10,
+            3.4753497857309412e-09,
+            6.534547208891794e-13
+          ],
+          [
+            6.167915067578633e-10,
+            2.964043233077973e-09,
+            6.852244466282187e-13
+          ],
+          [
+            5.825107063373025e-10,
+            2.6359430194133893e-09,
+            7.00011229537445e-13
+          ],
+          [
+            5.539202430071555e-10,
+            3.4127651815651916e-09,
+            7.349832548131374e-13
+          ],
+          [
+            5.233216082700665e-10,
+            3.1841409509070218e-09,
+            7.75627825855274e-13
+          ],
+          [
+            4.970948097593464e-10,
+            3.807656412391225e-09,
+            7.826265677191024e-13
+          ],
+          [
+            5.015990955925531e-10,
+            4.8268589125655126e-09,
+            8.312569382828983e-13
+          ],
+          [
+            6.076046332736951e-10,
+            4.492392235988518e-09,
+            9.40630386081498e-13
+          ],
+          [
+            7.132556767430742e-10,
+            3.787476998695638e-09,
+            1.0869126779167182e-12
+          ],
+          [
+            7.537233059906612e-10,
+            4.172875378571916e-09,
+            1.3031745821345808e-12
+          ],
+          [
+            8.258380645997931e-10,
+            4.923379037791165e-09,
+            1.529861307081326e-12
+          ],
+          [
+            8.298588483057756e-10,
+            4.837033884541597e-09,
+            1.7261790954958833e-12
+          ],
+          [
+            7.856417738594246e-10,
+            5.092431365483208e-09,
+            1.8251216510334345e-12
+          ],
+          [
+            6.974367749990051e-10,
+            5.940876235399628e-09,
+            1.7436104643442363e-12
+          ],
+          [
+            7.187939757291595e-10,
+            5.584809059655527e-09,
+            1.4558666772135354e-12
+          ],
+          [
+            7.255423900565106e-10,
+            6.063544333301252e-09,
+            1.0956695620234491e-12
+          ],
+          [
+            7.691608461257715e-10,
+            6.256755114009138e-09,
+            1.0297717539797802e-12
+          ],
+          [
+            8.470701362561783e-10,
+            7.0318151301762555e-09,
+            1.099646415592126e-12
+          ],
+          [
+            8.675504065136508e-10,
+            6.814957487222273e-09,
+            1.0630003821621159e-12
+          ],
+          [
+            8.10476616375233e-10,
+            5.666834113071673e-09,
+            1.0183494672522109e-12
+          ],
+          [
+            7.088974268709691e-10,
+            5.657227575284196e-09,
+            1.0400786135122964e-12
+          ],
+          [
+            6.861557702228516e-10,
+            5.381252776714973e-09,
+            1.3500849743719456e-12
+          ],
+          [
+            6.821974721238355e-10,
+            5.089418664283585e-09,
+            1.6003448566337397e-12
+          ],
+          [
+            6.813244968206789e-10,
+            5.831054750160547e-09,
+            1.7786184851320552e-12
+          ],
+          [
+            6.494297651190271e-10,
+            5.340552888810635e-09,
+            1.861283262932778e-12
+          ],
+          [
+            6.228475200875661e-10,
+            6.145512543298537e-09,
+            1.8512435508155622e-12
+          ],
+          [
+            6.574222000121921e-10,
+            5.596177743427688e-09,
+            1.7652324914296802e-12
+          ],
+          [
+            6.83636230958129e-10,
+            5.3335043048718944e-09,
+            1.6291434347392997e-12
+          ],
+          [
+            6.979310462895683e-10,
+            5.1315396376594435e-09,
+            1.455667184013798e-12
+          ],
+          [
+            7.627201092930136e-10,
+            5.495508048625197e-09,
+            1.2436067800547512e-12
+          ],
+          [
+            8.281211272276323e-10,
+            5.882668574486161e-09,
+            1.0313282346186003e-12
+          ],
+          [
+            8.741598556127883e-10,
+            4.744038051285315e-09,
+            9.171673837071737e-13
+          ],
+          [
+            9.389398147874317e-10,
+            4.723688107333146e-09,
+            9.227419175972251e-13
+          ],
+          [
+            9.963880831520555e-10,
+            5.618687737296568e-09,
+            9.499189629336158e-13
+          ],
+          [
+            1.0339197276110212e-09,
+            4.978801371180452e-09,
+            9.917440133011546e-13
+          ],
+          [
+            1.063005572454756e-09,
+            5.134893399372231e-09,
+            1.0339615448551331e-12
+          ],
+          [
+            1.1168762581448277e-09,
+            5.073445663583698e-09,
+            1.0724008486784342e-12
+          ],
+          [
+            1.1811807087980242e-09,
+            4.840387646254385e-09,
+            1.1199461497080065e-12
+          ],
+          [
+            1.2249763425842275e-09,
+            5.125571078679059e-09,
+            1.1529618405836661e-12
+          ],
+          [
+            1.2318014386281106e-09,
+            5.119375146023231e-09,
+            1.1755479402408842e-12
+          ],
+          [
+            1.2084748757246189e-09,
+            4.86323870063643e-09,
+            1.2086421273538317e-12
+          ],
+          [
+            1.1760004081651232e-09,
+            4.433218236954417e-09,
+            1.2341061332576952e-12
+          ],
+          [
+            1.1266690913558364e-09,
+            3.898890099662822e-09,
+            1.2248899811106995e-12
+          ],
+          [
+            1.068144572791141e-09,
+            4.046341928187758e-09,
+            1.2193995813092329e-12
+          ],
+          [
+            9.74726521718594e-10,
+            3.92969923268538e-09,
+            1.2704533605689683e-12
+          ],
+          [
+            8.745951740607438e-10,
+            4.121716301597189e-09,
+            1.5216170337617463e-12
+          ],
+          [
+            7.771954191326813e-10,
+            4.2361989471828565e-09,
+            1.8069287385791277e-12
+          ],
+          [
+            6.813877240219313e-10,
+            4.074422577104997e-09,
+            2.1150216994447746e-12
+          ],
+          [
+            6.16689643795354e-10,
+            3.7301788324839436e-09,
+            2.394581928577555e-12
+          ],
+          [
+            5.571576533469624e-10,
+            3.7754830373160075e-09,
+            2.564952590600189e-12
+          ],
+          [
+            5.150353477034741e-10,
+            3.4960407901962753e-09,
+            2.6521900994835867e-12
+          ],
+          [
+            5.274397724130964e-10,
+            3.6374672163219657e-09,
+            2.6918432760592026e-12
+          ],
+          [
+            5.223790497388414e-10,
+            3.3521700970595703e-09,
+            2.6260981236814196e-12
+          ],
+          [
+            5.199407848710536e-10,
+            3.3813876143540256e-09,
+            2.574843983860209e-12
+          ],
+          [
+            4.845162188127361e-10,
+            4.362675554148154e-09,
+            2.5822928864660533e-12
+          ],
+          [
+            5.25624432867744e-10,
+            3.971706519223517e-09,
+            2.6458626956049613e-12
+          ],
+          [
+            5.822611282013668e-10,
+            3.943853243981721e-09,
+            2.712920166292321e-12
+          ],
+          [
+            6.240454819561592e-10,
+            5.082256393507123e-09,
+            2.7988028561409806e-12
+          ],
+          [
+            6.694835796849929e-10,
+            3.9113956518121995e-09,
+            2.8765843873568286e-12
+          ],
+          [
+            7.473701657545462e-10,
+            3.815955551544903e-09,
+            2.9171561000129742e-12
+          ],
+          [
+            8.246128224698168e-10,
+            4.804007858183468e-09,
+            2.89996672508952e-12
+          ],
+          [
+            9.694025582263066e-10,
+            5.070717179478379e-09,
+            2.800205813752177e-12
+          ],
+          [
+            1.1361709351120908e-09,
+            5.424567461886909e-09,
+            2.6087331080060228e-12
+          ],
+          [
+            1.283749329061834e-09,
+            5.216918452788377e-09,
+            2.34754229944123e-12
+          ],
+          [
+            1.3898673323353705e-09,
+            5.057984253653558e-09,
+            2.0608545252265298e-12
+          ],
+          [
+            1.4478989118771324e-09,
+            4.7643879952374846e-09,
+            1.825454717940822e-12
+          ],
+          [
+            1.4419865301817936e-09,
+            4.859657565248199e-09,
+            1.7655347669953692e-12
+          ],
+          [
+            1.3898135975409787e-09,
+            5.242952738626627e-09,
+            1.7307787147924358e-12
+          ],
+          [
+            1.3345191618441277e-09,
+            5.8110458667215426e-09,
+            1.7234443039360059e-12
+          ],
+          [
+            1.3191896464093134e-09,
+            6.364246019074926e-09,
+            1.728749955687281e-12
+          ],
+          [
+            1.259826909461026e-09,
+            6.69797373120673e-09,
+            1.7312453554074736e-12
+          ],
+          [
+            1.168020166697481e-09,
+            6.477705483121099e-09,
+            1.7155625878229053e-12
+          ],
+          [
+            1.182285463974253e-09,
+            6.858272172394209e-09,
+            1.7107357197509998e-12
+          ],
+          [
+            1.211307970594433e-09,
+            7.3980572778964415e-09,
+            1.914898795085662e-12
+          ],
+          [
+            1.2784709402247074e-09,
+            7.273342816915829e-09,
+            2.1224922860940687e-12
+          ],
+          [
+            1.3253778630151203e-09,
+            7.633900622749934e-09,
+            2.3011410485440642e-12
+          ],
+          [
+            1.4273564552524931e-09,
+            7.544372238044161e-09,
+            2.4887713417909296e-12
+          ],
+          [
+            1.5150649623763002e-09,
+            8.131223694363143e-09,
+            3.0100861039827898e-12
+          ],
+          [
+            1.5610357451123491e-09,
+            7.614517016918398e-09,
+            3.526911835499691e-12
+          ],
+          [
+            1.5861361113422845e-09,
+            7.480423391825752e-09,
+            4.269850965854527e-12
+          ],
+          [
+            1.5569860956077264e-09,
+            8.334723133884836e-09,
+            4.822120133751717e-12
+          ],
+          [
+            1.5061960567663846e-09,
+            8.91395757207647e-09,
+            5.141213843540271e-12
+          ],
+          [
+            1.3867151871238548e-09,
+            9.270479495171458e-09,
+            5.2562069280392976e-12
+          ],
+          [
+            1.23234220050783e-09,
+            9.411735391040565e-09,
+            5.2112533038828346e-12
+          ],
+          [
+            1.2237406921133953e-09,
+            9.317432159150485e-09,
+            5.060780787491392e-12
+          ],
+          [
+            1.267199220555959e-09,
+            9.200789463648107e-09,
+            4.839536757450524e-12
+          ],
+          [
+            1.265389987237242e-09,
+            1.021197704176302e-08,
+            4.5368361845099514e-12
+          ],
+          [
+            1.2623251333110375e-09,
+            9.985285487346118e-09,
+            4.134494829832747e-12
+          ],
+          [
+            1.4228023204054807e-09,
+            9.048676474776585e-09,
+            3.668875099560598e-12
+          ],
+          [
+            1.5144365761443623e-09,
+            8.224333214457147e-09,
+            3.1889577783994483e-12
+          ],
+          [
+            1.5859902280368487e-09,
+            8.707218057679711e-09,
+            2.6939301484008027e-12
+          ],
+          [
+            1.5902374972398547e-09,
+            8.345011792698642e-09,
+            2.389036884986595e-12
+          ],
+          [
+            1.5684986642838794e-09,
+            8.846654964145273e-09,
+            2.3322368342126865e-12
+          ],
+          [
+            1.520680914524064e-09,
+            8.16476131149102e-09,
+            2.2403936345005704e-12
+          ],
+          [
+            1.6143231196252827e-09,
+            7.672554147575283e-09,
+            2.1406088707154325e-12
+          ],
+          [
+            1.699403728849802e-09,
+            7.3968635661003646e-09,
+            2.0496434410821607e-12
+          ],
+          [
+            1.747343825186931e-09,
+            7.652943168068305e-09,
+            2.2301188673523598e-12
+          ],
+          [
+            1.7585364275873872e-09,
+            7.691710379731376e-09,
+            2.315602570801545e-12
+          ],
+          [
+            1.7675212404810736e-09,
+            7.220307907118695e-09,
+            2.2797059379131568e-12
+          ],
+          [
+            1.7439221178250364e-09,
+            7.216215180960717e-09,
+            2.2936427063191545e-12
+          ],
+          [
+            1.709550945250271e-09,
+            7.037613158900058e-09,
+            2.3196089146693133e-12
+          ],
+          [
+            1.6583576734063854e-09,
+            6.684672371193301e-09,
+            2.3132476836829063e-12
+          ],
+          [
+            1.610330091494916e-09,
+            6.240554739633808e-09,
+            2.2967114321481574e-12
+          ],
+          [
+            1.538022376124104e-09,
+            6.1411924434651155e-09,
+            2.274368193777576e-12
+          ],
+          [
+            1.48263357147016e-09,
+            6.129198482085485e-09,
+            2.125523715368338e-12
+          ],
+          [
+            1.4374428314312127e-09,
+            5.899835286982125e-09,
+            2.003464668470789e-12
+          ],
+          [
+            1.4106541490477298e-09,
+            6.3297989072452765e-09,
+            2.0296108543815805e-12
+          ],
+          [
+            1.4038066542543248e-09,
+            6.685354492219631e-09,
+            2.0239174919334246e-12
+          ],
+          [
+            1.3873619475468502e-09,
+            6.889138148835627e-09,
+            1.931132337373853e-12
+          ],
+          [
+            1.3532280018768716e-09,
+            7.057508355501341e-09,
+            1.8298140780359518e-12
+          ],
+          [
+            1.313451902795748e-09,
+            6.618222414545016e-09,
+            1.885151756919612e-12
+          ],
+          [
+            1.2781506963932543e-09,
+            6.866457624710165e-09,
+            1.9274373763700225e-12
+          ],
+          [
+            1.3273349364073539e-09,
+            7.66243601901806e-09,
+            1.896280008018003e-12
+          ],
+          [
+            1.3775205698340898e-09,
+            8.280380825453904e-09,
+            2.0139133416474664e-12
+          ],
+          [
+            1.4118554103603742e-09,
+            8.66702976054512e-09,
+            2.1471262268146774e-12
+          ],
+          [
+            1.4430453082470152e-09,
+            8.885365332389483e-09,
+            2.275044735933207e-12
+          ],
+          [
+            1.4736699083250926e-09,
+            8.916686056181788e-09,
+            2.2758253614973967e-12
+          ],
+          [
+            1.5005428011249933e-09,
+            8.683002761245007e-09,
+            2.3776466906433313e-12
+          ],
+          [
+            1.513199995861747e-09,
+            8.53901838127058e-09,
+            2.46362479028317e-12
+          ],
+          [
+            1.5348793000469207e-09,
+            8.623317171441158e-09,
+            2.4418644190005168e-12
+          ],
+          [
+            1.5742511409039261e-09,
+            8.976144272310194e-09,
+            2.7970126215137725e-12
+          ],
+          [
+            1.6435126592995175e-09,
+            9.70612745732069e-09,
+            3.1729376070988025e-12
+          ],
+          [
+            1.7801341511969326e-09,
+            1.0553662832535338e-08,
+            3.408591117692872e-12
+          ],
+          [
+            1.8987365568712278e-09,
+            1.1395457022445044e-08,
+            3.3398596388511947e-12
+          ],
+          [
+            2.0179541371234677e-09,
+            1.2093607892893488e-08,
+            3.309337179291383e-12
+          ],
+          [
+            2.128845322246775e-09,
+            1.253420123248361e-08,
+            3.382551183594984e-12
+          ],
+          [
+            2.2293031864961677e-09,
+            1.2652662917389534e-08,
+            3.674047177604223e-12
+          ],
+          [
+            2.321243863789846e-09,
+            1.3761450645688456e-08,
+            3.904942341703688e-12
+          ],
+          [
+            2.4155561995087282e-09,
+            1.4591307717637392e-08,
+            4.246748785963206e-12
+          ],
+          [
+            2.5335451514507668e-09,
+            1.5074022030603373e-08,
+            4.785465426704327e-12
+          ],
+          [
+            2.6922895579595263e-09,
+            1.5307591638702434e-08,
+            5.133981781368924e-12
+          ],
+          [
+            2.875184701434108e-09,
+            1.5410535070259357e-08,
+            5.146057191485198e-12
+          ],
+          [
+            3.0728791733380945e-09,
+            1.5463967883988516e-08,
+            4.993221114357738e-12
+          ],
+          [
+            3.2815083983450677e-09,
+            1.6920125744945835e-08,
+            5.410423845053636e-12
+          ],
+          [
+            3.51711548773892e-09,
+            1.7283753095398424e-08,
+            5.6799443620692e-12
+          ],
+          [
+            3.764058731370312e-09,
+            1.8488890418666415e-08,
+            6.143188388540999e-12
+          ],
+          [
+            4.0315210614316754e-09,
+            1.966685658771894e-08,
+            6.4687890460879416e-12
+          ],
+          [
+            4.35378144647558e-09,
+            2.145526423191768e-08,
+            6.900311919078028e-12
+          ],
+          [
+            4.682697007929448e-09,
+            2.2751521555619547e-08,
+            7.394482595679541e-12
+          ],
+          [
+            5.037324668499821e-09,
+            2.6499776595301228e-08,
+            8.235910217702092e-12
+          ],
+          [
+            5.38845945641242e-09,
+            2.806314114423003e-08,
+            8.963262423944407e-12
+          ],
+          [
+            5.716453199688942e-09,
+            2.7762212084780913e-08,
+            9.392138108910153e-12
+          ],
+          [
+            6.0125915357645e-09,
+            3.2083221412904095e-08,
+            9.974633966014501e-12
+          ],
+          [
+            6.295523879984444e-09,
+            3.478135113255121e-08,
+            1.1000332589272688e-11
+          ],
+          [
+            6.574370825518372e-09,
+            3.5564085010264535e-08,
+            1.1625585910612912e-11
+          ],
+          [
+            6.832031607117983e-09,
+            3.7181507650529966e-08,
+            1.2665203955042337e-11
+          ],
+          [
+            7.114530520269113e-09,
+            4.0995018935063854e-08,
+            1.3448091598644574e-11
+          ],
+          [
+            6.994087975442653e-09,
+            4.2126998778257985e-08,
+            1.5147659168657235e-11
+          ],
+          [
+            7.1684322922038746e-09,
+            4.517971774475882e-08,
+            1.7371078533945372e-11
+          ],
+          [
+            7.433143101032158e-09,
+            5.0877133617177606e-08,
+            1.9712913593150638e-11
+          ],
+          [
+            7.730494577806724e-09,
+            5.603328645520378e-08,
+            2.2053003520539072e-11
+          ],
+          [
+            8.001655893430382e-09,
+            6.188378165461472e-08,
+            2.4245820628987502e-11
+          ],
+          [
+            8.310664378896604e-09,
+            6.89632884132152e-08,
+            2.6019585791514643e-11
+          ],
+          [
+            8.305681808984389e-09,
+            7.456759476553998e-08,
+            2.7306268357563113e-11
+          ],
+          [
+            8.535832318745662e-09,
+            7.77695845499693e-08,
+            2.806613101646871e-11
+          ],
+          [
+            9.03013058772828e-09,
+            8.975774790087598e-08,
+            2.841186487467784e-11
+          ],
+          [
+            9.716993765174209e-09,
+            9.051581173480372e-08,
+            2.8422030354247063e-11
+          ],
+          [
+            1.0477624878824088e-08,
+            1.0663876537364558e-07,
+            2.821578908018818e-11
+          ],
+          [
+            1.1177181569177463e-08,
+            1.0856842891371343e-07,
+            2.97633315562984e-11
+          ],
+          [
+            1.1791853160580956e-08,
+            1.2021672546325135e-07,
+            3.0796059279081245e-11
+          ],
+          [
+            1.2527994641686746e-08,
+            1.2374954394545057e-07,
+            3.39308225613677e-11
+          ],
+          [
+            1.3312468905013475e-08,
+            1.3473044191414374e-07,
+            3.438173357128704e-11
+          ],
+          [
+            1.4013038285298762e-08,
+            1.339519144494261e-07,
+            3.7491632194630586e-11
+          ],
+          [
+            1.51764065758897e-08,
+            1.526765345261083e-07,
+            3.965012172757465e-11
+          ],
+          [
+            1.6324444351845102e-08,
+            1.646298528612533e-07,
+            4.135658482340432e-11
+          ],
+          [
+            1.736787047512678e-08,
+            1.6763078747317195e-07,
+            4.536949288480585e-11
+          ],
+          [
+            1.8072364826871024e-08,
+            1.8440027815813664e-07,
+            4.844635716899637e-11
+          ],
+          [
+            1.8690976766322365e-08,
+            2.0389717292346177e-07,
+            5.06363111163477e-11
+          ],
+          [
+            1.9445685506269683e-08,
+            2.2317379944070126e-07,
+            5.3024554365344034e-11
+          ],
+          [
+            2.012472766210749e-08,
+            2.2455344605987193e-07,
+            5.922573542704868e-11
+          ],
+          [
+            2.0954412427443003e-08,
+            2.2470089788839687e-07,
+            6.165847867001251e-11
+          ],
+          [
+            2.1586181508936875e-08,
+            2.482561285432894e-07,
+            6.588829135067975e-11
+          ],
+          [
+            2.228957585170832e-08,
+            2.6979552103512106e-07,
+            6.88942210572141e-11
+          ],
+          [
+            2.266431298192373e-08,
+            2.834235601767432e-07,
+            6.921201025494872e-11
+          ],
+          [
+            2.2231677498929514e-08,
+            2.9538466606027214e-07,
+            7.059088470012798e-11
+          ],
+          [
+            2.182518435422942e-08,
+            3.0510568649333436e-07,
+            7.514928783425301e-11
+          ],
+          [
+            2.3076316219006188e-08,
+            3.164322492921201e-07,
+            7.539331919187431e-11
+          ],
+          [
+            2.5283259458275253e-08,
+            3.154420937789837e-07,
+            7.031927991285603e-11
+          ],
+          [
+            2.73914534942854e-08,
+            2.800213678710861e-07,
+            6.916488042019164e-11
+          ],
+          [
+            2.9368289633513456e-08,
+            2.7911744382436154e-07,
+            6.896794507021964e-11
+          ],
+          [
+            3.077591653743994e-08,
+            2.675209884728247e-07,
+            5.967291417940945e-11
+          ],
+          [
+            3.139159160392424e-08,
+            2.4903852136048954e-07,
+            5.705506640057978e-11
+          ],
+          [
+            3.0847947585233015e-08,
+            2.5105407530645607e-07,
+            4.92729069351272e-11
+          ],
+          [
+            2.9218126640362385e-08,
+            2.5916057211361476e-07,
+            4.456346576475756e-11
+          ],
+          [
+            2.5941532921791577e-08,
+            2.328457640032866e-07,
+            3.907291244026334e-11
+          ],
+          [
+            2.3854779596099718e-08,
+            2.2554633005711366e-07,
+            3.6721659567306997e-11
+          ],
+          [
+            2.3433190013411043e-08,
+            1.8880439256463433e-07,
+            3.301088222218418e-11
+          ],
+          [
+            2.40847749521933e-08,
+            2.0848710846621543e-07,
+            3.082662684145143e-11
+          ],
+          [
+            2.3021615225271574e-08,
+            1.701823748589959e-07,
+            3.2992088228045446e-11
+          ],
+          [
+            2.0723538551870035e-08,
+            1.6483329545735614e-07,
+            3.2910073971548215e-11
+          ],
+          [
+            1.749042013998725e-08,
+            1.53130372382293e-07,
+            3.049371172236803e-11
+          ],
+          [
+            1.6349088888256702e-08,
+            1.48601827731909e-07,
+            2.623212064234437e-11
+          ],
+          [
+            1.690433219792009e-08,
+            1.2949391248184838e-07,
+            2.42433547195664e-11
+          ],
+          [
+            1.6075757364175658e-08,
+            1.1572370794965536e-07,
+            2.3631881607838467e-11
+          ],
+          [
+            1.4244830315313095e-08,
+            1.1777547115343623e-07,
+            2.3027669181219235e-11
+          ],
+          [
+            1.391722509458404e-08,
+            1.1398162769182818e-07,
+            2.3606791868524546e-11
+          ],
+          [
+            1.3417399913340233e-08,
+            1.0232650993202697e-07,
+            2.6539494560329224e-11
+          ],
+          [
+            1.2645419933399182e-08,
+            8.761765002418542e-08,
+            2.81415914876737e-11
+          ],
+          [
+            1.2708843149730753e-08,
+            7.534509904871811e-08,
+            2.7464305135671552e-11
+          ],
+          [
+            1.1977595713863476e-08,
+            7.227947662613587e-08,
+            2.434581702903671e-11
+          ],
+          [
+            1.0568928149323753e-08,
+            7.277816393980174e-08,
+            2.6430751684514142e-11
+          ],
+          [
+            1.152484335742443e-08,
+            7.321631301238085e-08,
+            2.8706672455802718e-11
+          ],
+          [
+            1.1464254174448074e-08,
+            7.343066954490496e-08,
+            2.937423394799854e-11
+          ],
+          [
+            1.0739484197774818e-08,
+            7.315463790291687e-08,
+            2.8461882156660678e-11
+          ],
+          [
+            1.0469334260632124e-08,
+            7.202680762929958e-08,
+            2.6343101311443462e-11
+          ],
+          [
+            1.0992733320835946e-08,
+            6.972186383791268e-08,
+            2.4644166915499532e-11
+          ],
+          [
+            1.0762274321729492e-08,
+            6.632552640439826e-08,
+            2.277254947113949e-11
+          ],
+          [
+            1.0349013155989961e-08,
+            6.221250714588678e-08,
+            2.0918348650478258e-11
+          ],
+          [
+            1.1447430031674699e-08,
+            5.7814133924694033e-08,
+            1.9241913618017747e-11
+          ],
+          [
+            1.1910384276059283e-08,
+            5.35430899617495e-08,
+            1.7817107164641577e-11
+          ],
+          [
+            1.228983166623454e-08,
+            4.970280542693217e-08,
+            1.732262770726134e-11
+          ],
+          [
+            1.1714179952437842e-08,
+            4.901448846794665e-08,
+            1.730308604730446e-11
+          ],
+          [
+            1.0286835037433273e-08,
+            4.9437005600339035e-08,
+            1.6384518741752174e-11
+          ],
+          [
+            9.776559565383147e-09,
+            4.978653578291414e-08,
+            1.8156831940729923e-11
+          ],
+          [
+            9.950578722106584e-09,
+            4.987003876522067e-08,
+            1.9216728902593516e-11
+          ],
+          [
+            9.666046213441248e-09,
+            4.9519258027430624e-08,
+            1.9467896045233246e-11
+          ],
+          [
+            8.82493902953918e-09,
+            4.883082738160738e-08,
+            1.9140617910085034e-11
+          ],
+          [
+            7.653862155176938e-09,
+            4.798255304194754e-08,
+            1.8347368763160787e-11
+          ],
+          [
+            7.093207160524528e-09,
+            4.6993136493256316e-08,
+            1.720290229711985e-11
+          ],
+          [
+            7.401669947088019e-09,
+            4.578043899527984e-08,
+            1.6389398518890097e-11
+          ],
+          [
+            7.287661939192613e-09,
+            4.430171429703478e-08,
+            1.633458125704923e-11
+          ],
+          [
+            7.553116278258276e-09,
+            4.262136599209043e-08,
+            1.779405095492237e-11
+          ],
+          [
+            7.479949770683447e-09,
+            4.083909743712866e-08,
+            1.9273905388361712e-11
+          ],
+          [
+            6.974516325586322e-09,
+            3.9026701870170655e-08,
+            2.0667674169305705e-11
+          ],
+          [
+            6.694047857691565e-09,
+            3.797549652517773e-08,
+            2.201665585954693e-11
+          ],
+          [
+            6.761376163165814e-09,
+            3.7158997656661086e-08,
+            2.3370491306073937e-11
+          ],
+          [
+            6.52744749918277e-09,
+            3.698966111187474e-08,
+            2.4661616498944383e-11
+          ],
+          [
+            6.123240858801893e-09,
+            3.739006615433027e-08,
+            2.5462840169687695e-11
+          ],
+          [
+            6.099899127476327e-09,
+            3.820235860985122e-08,
+            2.5817908574921056e-11
+          ],
+          [
+            6.29656746881091e-09,
+            3.8985319861239986e-08,
+            2.5852861518238512e-11
+          ],
+          [
+            6.237290975374954e-09,
+            3.922815494661336e-08,
+            2.5641426482092555e-11
+          ],
+          [
+            5.917906033270359e-09,
+            4.0057443584373686e-08,
+            2.531783636905427e-11
+          ],
+          [
+            6.414119752690128e-09,
+            4.160881417192286e-08,
+            2.4945885634952703e-11
+          ],
+          [
+            6.5174598944724854e-09,
+            4.177081791567616e-08,
+            2.4541091381280467e-11
+          ],
+          [
+            6.283930670085425e-09,
+            4.066464498464484e-08,
+            2.4082100896771763e-11
+          ],
+          [
+            5.689280158094334e-09,
+            3.865972075800528e-08,
+            2.352541772498995e-11
+          ],
+          [
+            5.8480381023851e-09,
+            3.623136990427156e-08,
+            2.2826671108866492e-11
+          ],
+          [
+            6.006320003859589e-09,
+            3.379540203241049e-08,
+            2.1958159249213516e-11
+          ],
+          [
+            5.70773481256559e-09,
+            3.325902753203991e-08,
+            2.0924945803857398e-11
+          ],
+          [
+            5.077629563338126e-09,
+            3.385758873264422e-08,
+            1.977482587400825e-11
+          ],
+          [
+            4.886753302360547e-09,
+            3.416795379962423e-08,
+            1.8594738596111604e-11
+          ],
+          [
+            5.1557539617816395e-09,
+            3.4071376830979716e-08,
+            1.7494708806631287e-11
+          ],
+          [
+            5.211714386443855e-09,
+            3.341449428262422e-08,
+            1.657736621585304e-11
+          ],
+          [
+            5.176521801486533e-09,
+            3.375015467099729e-08,
+            1.591382234322758e-11
+          ],
+          [
+            4.972503929445704e-09,
+            3.509535417833831e-08,
+            1.590106345206177e-11
+          ],
+          [
+            4.898834910643801e-09,
+            3.611722831919906e-08,
+            1.6297477256621562e-11
+          ],
+          [
+            5.037973434263154e-09,
+            3.6409744552656775e-08,
+            1.6436402586195165e-11
+          ],
+          [
+            4.933858020056414e-09,
+            3.579009444365511e-08,
+            1.617302645973151e-11
+          ],
+          [
+            4.626422094380911e-09,
+            3.518744051689282e-08,
+            1.5872934910898806e-11
+          ],
+          [
+            5.135903625996807e-09,
+            3.67296593140054e-08,
+            1.6553826018284035e-11
+          ],
+          [
+            5.637836215238723e-09,
+            3.746271204363438e-08,
+            1.6886774964475215e-11
+          ],
+          [
+            5.983984977669943e-09,
+            3.7270694974722574e-08,
+            1.6817554293613313e-11
+          ],
+          [
+            6.28564222632938e-09,
+            3.613132548707654e-08,
+            1.6330560168031916e-11
+          ],
+          [
+            6.378814689672087e-09,
+            3.5744164961215574e-08,
+            1.6090158719284098e-11
+          ],
+          [
+            6.263514942816961e-09,
+            3.666059456008952e-08,
+            1.6501237876109798e-11
+          ],
+          [
+            6.025933852599197e-09,
+            3.685602223413298e-08,
+            1.660439320760876e-11
+          ],
+          [
+            5.770383325678918e-09,
+            3.634829681686824e-08,
+            1.640381580569894e-11
+          ],
+          [
+            5.5909267285270126e-09,
+            3.519289748510346e-08,
+            1.5918467932696245e-11
+          ],
+          [
+            5.560165885001855e-09,
+            3.456625563558191e-08,
+            1.5542641826349346e-11
+          ],
+          [
+            5.712386553363702e-09,
+            3.538912096701097e-08,
+            1.5926321025871992e-11
+          ],
+          [
+            6.0202683385343625e-09,
+            3.5724440294870874e-08,
+            1.6105113770370494e-11
+          ],
+          [
+            6.458756707223125e-09,
+            3.556584715624922e-08,
+            1.6072167902114742e-11
+          ],
+          [
+            6.971727907218589e-09,
+            3.488861466394155e-08,
+            1.58112533482635e-11
+          ],
+          [
+            7.479188408356097e-09,
+            3.3659034670563415e-08,
+            1.5301176992110754e-11
+          ],
+          [
+            7.902694600277205e-09,
+            3.519858182698954e-08,
+            1.5560337740527785e-11
+          ],
+          [
+            8.182548128432207e-09,
+            3.778535528908833e-08,
+            1.5889772136956637e-11
+          ]
+        ],
+        "short_limits": null,
+        "reference_tv_error": 5.684341886080802e-14,
+        "ranges": {
+          "matlab": {
+            "min": [
+              -1.66120968661031,
+              336.1767515454305,
+              2.4017629886671448e-06
+            ],
+            "max": [
+              4.039151785912004,
+              1227.772002016326,
+              0.01775554455347804
+            ]
+          },
+          "fortran": {
+            "min": [
+              -1.6612096865397221,
+              336.1767515454305,
+              2.4017629886671325e-06
+            ],
+            "max": [
+              4.039151785728413,
+              1227.7720020163263,
+              0.017755544553478105
+            ]
+          }
+        },
+        "max_area_mean_MF": {
+          "matlab": 5.204170427930421e-17,
+          "fortran": 3.674090112010253e-17
+        },
+        "domain_water_increments_kg_m2": {
+          "matlab": {
+            "dynamics_and_clipping": 6.746968499449224e-06,
+            "native_precipitation": -4.096629080397749,
+            "damping": 1.0295854156052393
+          },
+          "fortran": {
+            "dynamics_and_clipping": 6.746968118642727e-06,
+            "native_precipitation": -4.096629081157482,
+            "damping": 1.0295854157234858
+          }
+        },
+        "scientific_acceptance": "pending",
+        "sha256": {
+          "fortran_states.bin": "b12fe3bbb782b262509a1e9c9c28b1ff4418d86733b0f650956b2fb86b856b76",
+          "fortran_budget.bin": "ca18da7df9648e9feb616b26cdbf333c91c070fadbfa05f1b5a959033b91ef0f",
+          "matlab_budget.bin": "8564856a9a517f2bfdb7f7915e2874858f9e5a0cd4ab26f0d657e51aa4ce3c75",
+          "matlab_reference.bin": "962cbf950986e49e188a75035d5ba1440ec2057f96faff7d3f3c317299d4e635",
+          "matlab_states.bin": "a563180687784a4f711d19b0783483c6a9b5ce445a4a6fab84201c93259b1fb1"
+        }
+      },
+      "independent_audit": {
+        "saved_states": 481,
+        "duration_seconds": 28800,
+        "hashes_match": true,
+        "field_order": [
+          "MF",
+          "theta_e",
+          "qt"
+        ],
+        "matlab": {
+          "finite": true,
+          "minimum_qt": 2.4017629886671448e-06,
+          "max_postinitial_area_mean_MF": 5.204170427930421e-17,
+          "budget_continuous": true,
+          "bookkeeping_closure_error_kg_m2": 0.0,
+          "physical_conservation_claim": false
+        },
+        "fortran": {
+          "finite": true,
+          "minimum_qt": 2.4017629886671325e-06,
+          "max_postinitial_area_mean_MF": 3.674090112010253e-17,
+          "budget_continuous": true,
+          "bookkeeping_closure_error_kg_m2": 0.0,
+          "physical_conservation_claim": false
+        },
+        "fortran_normal_output": {
+          "records": 481,
+          "fields": 9,
+          "finite": true,
+          "prognostics_exact_real32_cast": true
+        },
+        "final_max_abs_error": [
+          8.182548128432207e-09,
+          3.778535528908833e-08,
+          1.5889772136956637e-11
+        ],
+        "passed": true
+      },
+      "approx_wall_seconds": {
+        "matlab": 24348.2813,
+        "fortran": 12507.3917
+      }
+    }
+  },
+  "developer_acceptance": {
+    "date": "2026-10-15",
+    "scope": "88-ACE GOAmazon314 native precipitation, dt6 dz100, DHh/DHv enabled, 8 hours, 32 threads",
+    "basis": "Completed MATLAB/Fortran trajectories, independent audits and reviewed MF/gravity-wave plots",
+    "retained_limitations": "P3 long run, real32 runtime, compiler portability, closed physical budgets and full MATLAB postprocessing acceptance not extended",
+    "precomputed_in_production": false
+  }
+}

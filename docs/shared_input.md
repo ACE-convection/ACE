@@ -1,5 +1,25 @@
 # Shared ACE case input
 
+## v0.21.87 shared case (accepted 2026-10-15)
+
+Both drivers now default to `data/input/goamazon314_88aces.nc`: the supplied
+88-ACE basis, raw GOAmazon filtered profile 314, all three supplied operators.
+Use `tools/input/create_s20_shared_input.m` with profile 314, arm 3, dz 100
+and actual basis/sounding hashes. It extracts the unchanged raw-sounding
+preprocessing functions from the current MATLAB driver. Input generation
+is separate from the current inversion-derived runtime reference Tv/bubble.
+The converter uses full vertical chunks for each forcing/response pair.
+See [release scope](releases/v0.21.87-notes.md) and [tests](../tests/slab/README.md).
+
+From v0.21 onward, basis and shared inputs embedding full operators are
+local-only, including their parts: do not commit or upload them. Obtain them
+separately. The manifest and `tools/input/materialize_v02187_inputs.py` verify
+every local part/full SHA-256 and reconstruct the original runtime paths
+without numerical conversion. The developer authorized rebuilding the release
+history after v0.20.87 without the new basis/operator payload pointers, while
+preserving all earlier historical inputs.
+The following dated v0.20 records describe the preserved Manaus baseline.
+
 ## Current v0.20 development interface (2026-10-04)
 
 Both drivers now default to `data/input/manaus1342_khn26.nc`, the

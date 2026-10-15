@@ -1,0 +1,88 @@
+{
+  "version": "v0.21.87",
+  "part_bytes": 1073741824,
+  "policy": "Byte splitting only; no recompression or numerical conversion; reconstruct original runtime paths with tools/input/materialize_v02187_inputs.py",
+  "files": [
+    {
+      "path": "data/basis/COMPOSITE_ACE_BASIS_2D.mat",
+      "bytes": 4441245887,
+      "sha256": "9eb0422dc3bf91817494f2a2579e7e5e975eeb641d44e12e79f9aab858cdf9de",
+      "parts": [
+        {
+          "name": "COMPOSITE_ACE_BASIS_2D.mat.part000",
+          "bytes": 1073741824,
+          "sha256": "2a0f0d7ffcd2ebcb03afb8177f27a51a595e82723d99a8fb10af5721d04c0679"
+        },
+        {
+          "name": "COMPOSITE_ACE_BASIS_2D.mat.part001",
+          "bytes": 1073741824,
+          "sha256": "963e368f355c9c981feea693d415088d2e07141cbcc53c057f2ddc0930326cfe"
+        },
+        {
+          "name": "COMPOSITE_ACE_BASIS_2D.mat.part002",
+          "bytes": 1073741824,
+          "sha256": "536976b770bb9d6b147376864035d64f4c86456da34f15b4d7fdcb95e341aa05"
+        },
+        {
+          "name": "COMPOSITE_ACE_BASIS_2D.mat.part003",
+          "bytes": 1073741824,
+          "sha256": "b5e9d6e9f7b95de7332a9fce15d42d70edcba13bd6cac75322c2b9f3fb490987"
+        },
+        {
+          "name": "COMPOSITE_ACE_BASIS_2D.mat.part004",
+          "bytes": 146278591,
+          "sha256": "c5010c5b9dfc012581ceafae6947a0e962a75edb81695d79b4ec57fe42c297c3"
+        }
+      ]
+    },
+    {
+      "path": "data/soundings/maoarmbeatmM1.c1.20140101.003000.nc",
+      "bytes": 103316408,
+      "sha256": "57016c62474bb4a2faf6011d285ee280d9581f9dc791327c506207ae06cc362a",
+      "parts": [
+        {
+          "name": "maoarmbeatmM1.c1.20140101.003000.nc.part000",
+          "bytes": 103316408,
+          "sha256": "57016c62474bb4a2faf6011d285ee280d9581f9dc791327c506207ae06cc362a"
+        }
+      ]
+    },
+    {
+      "path": "data/input/goamazon314_88aces.nc",
+      "bytes": 5667681931,
+      "sha256": "cd2320ba1206e82a54caf5bf288e8ecc31dc0e7208b1f59b2a17535ef9753322",
+      "parts": [
+        {
+          "name": "goamazon314_88aces.nc.part000",
+          "bytes": 1073741824,
+          "sha256": "940efe1cbee65817d767616acf3c1ee5ba4c610984a373a6f3a81411126b3e8c"
+        },
+        {
+          "name": "goamazon314_88aces.nc.part001",
+          "bytes": 1073741824,
+          "sha256": "e03e3bef52600bb906434ecd2a762e3b6f891c0017a2ca9e7eaab294b408f1ec"
+        },
+        {
+          "name": "goamazon314_88aces.nc.part002",
+          "bytes": 1073741824,
+          "sha256": "3058665f9e450db552335ea34ea7aeaa2f1d5c090d34a282c2da75ad5e981709"
+        },
+        {
+          "name": "goamazon314_88aces.nc.part003",
+          "bytes": 1073741824,
+          "sha256": "10ee15b0b499b192ee86ebb394227ed658fd7a7a526ff7c5a0af1ff5ac99cc1d"
+        },
+        {
+          "name": "goamazon314_88aces.nc.part004",
+          "bytes": 1073741824,
+          "sha256": "d7b31991e89fd2b519f616a64dabb25487846642985a899b13b489defff0dce8"
+        },
+        {
+          "name": "goamazon314_88aces.nc.part005",
+          "bytes": 298972811,
+          "sha256": "52b26a6037d9ea794c678bf2e9f3329aa7de6dbd12b88b80655f49ca2d3454f2"
+        }
+      ]
+    }
+  ]
+}

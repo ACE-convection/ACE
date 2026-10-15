@@ -1,3 +1,8 @@
 data/** filter=lfs diff=lfs merge=lfs -text
 matlab/history/original_git/data/** filter=lfs diff=lfs merge=lfs -text
 matlab/history/snapshots/ACE_V019.3/data/** filter=lfs diff=lfs merge=lfs -text
+
+# v0.21 local-only basis policy: keep identifying metadata as ordinary text.
+data/distribution/v02187/README.md -filter diff merge text
+data/distribution/v02187/manifest.json -filter diff merge text
+data/input/goamazon314_88aces.provenance.json -filter diff merge text

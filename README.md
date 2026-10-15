@@ -28,9 +28,17 @@ three-hour evolution and precipitation differences on 2026-10-12.
 scope, known differences and unresolved issues. The dt=6 s, six-hour driver
 defaults are distinct from the tested dt=4 s, +1 K, three-hour cases.
 
+The `v0.21.87` milestone selects an 88-ACE GOAmazon
+case, enables supplied DHh/DHv and uses an eight-hour default. Initialization
+and precipitation ordering remain unchanged. The developer accepted the
+eight-hour native results and response plots on 2026-10-15;
+see [release notes](docs/releases/v0.21.87-notes.md) and
+[the slab tests](tests/slab/README.md). The accepted older tags remain intact.
+
 Current sources are directly under [`matlab/`](matlab/README.md) and
-[`fortran/`](fortran/README.md). The shared KHN26 NetCDF input supplies the
-101-ACE slab basis; PMDv/PMD are disabled placeholders. Minute precipitation
+[`fortran/`](fortran/README.md). The default shared input is `data/input/goamazon314_88aces.nc` with all three
+supplied operators; the older 101-ACE Manaus input remains available with
+both momentum switches disabled. Minute precipitation
 accumulation is available through the diagnostic runner, rather than as a
 new production-driver default. P3 requires external lookup data.
 The previous [v0.18.0 release](docs/releases/v0.18.0.md) remains available
@@ -50,6 +58,15 @@ comparison uses error metrics and scientific review rather than byte equality.
 Historical MATLAB `data/` files use Git LFS. Install Git LFS and run
 `git lfs pull` after cloning to obtain the MAT and NetCDF contents; see the
 [migration and provenance record](docs/migration/matlab_data_lfs_migration.md).
+
+From v0.21 onward, basis payloads are local-only and are not distributed in
+Git or Git LFS. Obtain the basis and the shared NetCDF containing its response
+operators separately, placing them at the documented `data/` paths. Provenance,
+hashes and conversion tools remain versioned. The materializer can reconstruct
+inputs from separately supplied local parts; matching existing inputs are
+verified and differing files are never overwritten. Earlier published history
+introduced after v0.20.87 is removed from the rewritten release history;
+pre-v0.21 historical inputs remain unchanged.
 
 ## Repository reorganization
 
