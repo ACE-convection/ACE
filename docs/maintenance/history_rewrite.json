@@ -1,0 +1,208 @@
+{
+  "schema": "ACE-history-rewrite-1",
+  "applied_utc": "2026-10-16T03:33:53.849285+00:00",
+  "scope": "39 retired narrative Markdown paths; local refs only",
+  "target_paths_removed_from_rewritten_refs": [
+    "docs/fortran_multiace_precision_control.md",
+    "docs/fortran_single_precision_multiace.md",
+    "docs/fortran_single_precision_precipitation.md",
+    "docs/goamazon314_single_no_precip_3h.md",
+    "docs/goamazon314_single_saturated_bubble_3h.md",
+    "docs/manus208_multi_outer_pulse_12h.md",
+    "docs/manus208_single_saturated_bubble_3h.md",
+    "docs/manus208_single_saturated_bubble_precip_3h.md",
+    "docs/migration/v020_khn26_constants_audit.md",
+    "docs/migration/v020_khn26_matlab_alignment_ten_minute_gates.md",
+    "docs/migration/v020_khn26_multiace_difference_attribution.md",
+    "docs/migration/v020_khn26_multiace_gravity_wave.md",
+    "docs/migration/v020_khn26_multiace_three_hour_comparison.md",
+    "docs/migration/v020_khn26_p3_smoke.md",
+    "docs/migration/v020_khn26_p3_three_hour.md",
+    "docs/migration/v020_khn26_single.md",
+    "docs/migration/v020_khn26_single_native_physical_review.md",
+    "docs/migration/v020_khn26_single_physical_review.md",
+    "docs/migration/v020_khn26_single_precip_comparison.md",
+    "docs/migration/v020_khn26_six_hour.md",
+    "docs/migration/v020_khn26_status.md",
+    "docs/migration/v020_khn26_ten_minute_error_sources.md",
+    "docs/migration/v020_khn26_thermodynamics_matlab_alignment.md",
+    "docs/migration/v020_khn26_weno_matlab_alignment.md",
+    "docs/migration/v020_khn26_weno_three_hour_review.md",
+    "docs/v018_aligned_runtime_comparison.md",
+    "docs/v018_atmospheric_validation.md",
+    "docs/v018_forward_evaluation_diagnostic.md",
+    "docs/v018_ice_heat_capacity_alignment.md",
+    "docs/v018_ice_precipitation_comparison.md",
+    "docs/v018_mixed_precipitation_comparison.md",
+    "docs/v018_mixed_residual_diagnostic.md",
+    "docs/v018_phase_endpoint_proposal.md",
+    "docs/v018_pressure_power_diagnostic.md",
+    "docs/v018_reference_tv_alignment.md",
+    "docs/v018_reference_tv_diagnostic.md",
+    "docs/v018_runtime_comparison.md",
+    "docs/v018_thermodynamic_alignment.md",
+    "docs/v018_thermodynamic_review.md"
+  ],
+  "updated_primary_refs": [
+    {
+      "ref": "refs/heads/docs/archive-test-evidence",
+      "old": "ac867a57fd2192fc49ebc364f2f65e122450bb4a",
+      "new": "1a692a4a23e7549c8092cd6cdc3cf79a950b6098",
+      "changed": true
+    },
+    {
+      "ref": "refs/heads/docs/consolidate-migration",
+      "old": "29c81dfb90e4da598a84b9964025ad348728931f",
+      "new": "dad0627f44afc12c17314685aff3a0908cba113b",
+      "changed": true
+    },
+    {
+      "ref": "refs/heads/feature/shared-netcdf-input",
+      "old": "c9ae729be1e9d6ff214693bb09abaa9344def0e7",
+      "new": "0e9d7cd12227fd02cb42fbf61e14c7e648c6d225",
+      "changed": true
+    },
+    {
+      "ref": "refs/heads/feature/v02187-basis-goamazon",
+      "old": "4ef14d9a9d5d9536b7ec35ecfee7435dc3f2f994",
+      "new": "9296778f6e5fdd13cde7c9cbbacab06e095fd38a",
+      "changed": true
+    },
+    {
+      "ref": "refs/heads/fix/fortran-single-precision-precip",
+      "old": "1710b725a75ddaf6be4671426d785c9ada33b682",
+      "new": "24b9c2b123b13c3199f207925363570d1b91ee9b",
+      "changed": true
+    },
+    {
+      "ref": "refs/heads/main",
+      "old": "545c284ede5adbc3dd59293bc6a72601f3f240e9",
+      "new": "83b597d36e3283c5731cb7945c22c9cb79d057f0",
+      "changed": true
+    },
+    {
+      "ref": "refs/heads/migration/v020-preparation",
+      "old": "acaf6f7d64f3013dfd96a2f3ea897baae8481404",
+      "new": "8784851517fc0ddc3ecca7fa78b38d5086e137f6",
+      "changed": true
+    },
+    {
+      "ref": "refs/heads/migration/v02487-review",
+      "old": "115cc50db158f2a0f0ba55fca66027958a895060",
+      "new": "e9f7bfad71251d72ee2ee0903b1eefa11429347f",
+      "changed": true
+    },
+    {
+      "ref": "refs/heads/refactor/fortran-v020-oop",
+      "old": "af399d784c3737a66ad7355186a0f6dc503707fc",
+      "new": "066834830f9eb907a7d2a19cdcf151c60e9139a2",
+      "changed": true
+    },
+    {
+      "ref": "refs/heads/refactor/normalize-v018",
+      "old": "9f83e23fcc7c3c20705560259fa66df044ffee3b",
+      "new": "08635477c692533bb29775a1b16332578bd01643",
+      "changed": true
+    },
+    {
+      "ref": "refs/heads/test/khn26-multiace-gravity-wave",
+      "old": "b37832f805d2bff7a66598cb0b311a5d98f50322",
+      "new": "af06ada20688ef563c376cfeb69f3b619e4052b2",
+      "changed": true
+    },
+    {
+      "ref": "refs/heads/test/pmb-stage1-baseline",
+      "old": "d7d25b10c1bbad99543ed579a11196673d531c17",
+      "new": "0230f80b9eae389691319f7cbf318127a1fce7c6",
+      "changed": true
+    },
+    {
+      "ref": "refs/heads/test/serial-timestep-profile",
+      "old": "d7d25b10c1bbad99543ed579a11196673d531c17",
+      "new": "0230f80b9eae389691319f7cbf318127a1fce7c6",
+      "changed": true
+    },
+    {
+      "ref": "refs/remotes/origin/feature/shared-netcdf-input",
+      "old": "40d7cf24642fbdbf1c197c6dca0e4ba5261052c1",
+      "new": "cf2a8058e6cbf3b5df7d376d171f4ab481fa7af4",
+      "changed": true
+    },
+    {
+      "ref": "refs/remotes/origin/main",
+      "old": "545c284ede5adbc3dd59293bc6a72601f3f240e9",
+      "new": "83b597d36e3283c5731cb7945c22c9cb79d057f0",
+      "changed": true
+    },
+    {
+      "ref": "refs/tags/v0.18.0",
+      "old": "b8d0da0d3817d55873f049e814b9ffb4b8288ca0",
+      "new": "7fe8f721d3ba9e0a8f641029f5250ef2101b2463",
+      "changed": true
+    },
+    {
+      "ref": "refs/tags/v0.20.0",
+      "old": "9f70c015d5a1317c0fb74c5db505f1455b4aa2b2",
+      "new": "3daab05cb2b41098e0d0385b9fdc37e36dff3bb9",
+      "changed": true
+    },
+    {
+      "ref": "refs/tags/v0.20.87",
+      "old": "148a8aefb710f8b93cf18e7dff555914fc1a81a6",
+      "new": "7dcb121c5962189b000ff3020cf87cf83311c061",
+      "changed": true
+    },
+    {
+      "ref": "refs/tags/v0.21.87",
+      "old": "2a22d867920ae95b65077a669e71a933adfc7240",
+      "new": "d1ee53b1f5c66595d02c81f54b295200c06faad2",
+      "changed": true
+    }
+  ],
+  "symbolic_alias": "refs/remotes/origin/HEAD -> refs/remotes/origin/main",
+  "reachable_commits_checked": 189,
+  "rewritten_commits": 79,
+  "unchanged_commits": 110,
+  "non_target_files_modes_and_blobs_preserved": true,
+  "commit_metadata_parent_topology_and_tag_annotations_preserved": true,
+  "signed_commits_preserved_exactly": [
+    "69fcfa2aad148663b20a0bebf5289dc3812f4d5f",
+    "e7c176eaab974a5710021cfc21dfdde3771981b5",
+    "f0025fea675e93cbf8255582c651de451c173393",
+    "51d99444773ef27b403dfc90891fdb9845ed7bc4",
+    "b91b2976bba7f9bedde354a20dadd6c9af8e5d09",
+    "a7b0a6d5d5d5b27d93055b766af0705fa7b07983",
+    "a0f30cddd7d641786a4c0464e92f0c137d71f7fa",
+    "25d49e77fb616970506da51d347f83f3665ebd6d",
+    "5a0b02755b7e9bcac8c03016710d2945121d8e8b",
+    "9030adf45aba0ce3ad21e556de0b0d1d244b1860",
+    "31e42aa8c8091feedb44cc1ef18129cf0c4ffd79",
+    "813befce66a60425506bfd17db8d1ab975e0ac73",
+    "ff4ddf44fd7b977e6f6f5d20fc9d67599667590f",
+    "0d1cef49b21314caec6bcdefa059c84eca57b9bc",
+    "ca94f035a44785bb1bc470f2578a8adb28795262",
+    "ffdd734042ce5ad2689da13efb90f77d79d48f6d",
+    "88e4af5892ec2b93f6bde65fbc11c506276e420f",
+    "b3f922e48e238581a85d31469bafcb800569a748"
+  ],
+  "uncommitted_worktree_files_preserved": 49,
+  "attached_worktree_retired_markdown_removed": 22,
+  "detached_snapshots_retained": {
+    "migration_work/v02187_history_cleanup": "3b3d3152c4a22595eb2612f90e8debd6c3f3612b",
+    "migration_work/v02187_history_cleanup_final": "4ef14d9a9d5d9536b7ec35ecfee7435dc3f2f994"
+  },
+  "recovery_bundle": {
+    "local_path": "migration_work/history_purge_review/recovery.bundle",
+    "sha256": "62374c9c5e6a4c3641dc9f3e060d7f3b604878815022738d5d78a937da01646e",
+    "bytes": 273827944,
+    "contains_original_history": true
+  },
+  "old_objects_reflogs_lfs_cache_pruned": false,
+  "remote_contacted_or_pushed": false,
+  "publication_status": "Local tag refs have changed; remote still has original history.",
+  "remaining_original_history": "Recovery bundle, original reflogs/objects and two detached historical worktrees intentionally retain old history. Therefore git rev-list --all may still expose old paths via worktree HEADs; the checked branch/tag/remote-tracking refs no longer do.",
+  "commit_map": "docs/maintenance/history_commit_map.tsv",
+  "basis_payloads_added_or_removed": false,
+  "model_tests_rerun": false,
+  "post_rewrite_audit_commit": "The later audit-only commit will add this record and the commit map; listed ref updates describe the historical rewrite transaction."
+}

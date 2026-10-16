@@ -1,11 +1,11 @@
 # ACE 截至 v0.21.87：文件、歷史與測試結果彙整
 
-盤點日期：2026-10-15。範圍包含 v0.21.87，基準 commit `545c284ede5adbc3dd59293bc6a72601f3f240e9`。
+盤點日期：2026-10-15。範圍包含 v0.21.87，基準 commit 原識別碼 `545c284ede5adbc3dd59293bc6a72601f3f240e9`；歷史清理後對照見 [commit map](history_commit_map.tsv)。
 這是文件與現存證據的整併，沒有重新執行模型，也沒有更改數值算法。
 
 閱讀順序：本文件的里程碑與限制 → [版本測試清單](version_test_matrix.md) → 必要時展開本文件末尾的舊報告原文。
 詳細設定集中於 [test_evidence.json](test_evidence.json)，原始結果 JSON、測試程式、輸入識別資料仍保留。
-已依開發者確認執行 A1/A3：移除39份已整併的舊Markdown與94個Python cache，並修正文件引用。原始run、圖表、basis與Git舊歷史保留。逐檔紀錄見 [cleanup_receipt.json](cleanup_receipt.json)。
+已依開發者確認執行 A1/A3：移除39份已整併的舊Markdown與94個Python cache，並修正文件引用。原始run、圖表與basis保留；另已完成39個文件路徑的本機Git歷史清理。復原bundle、reflogs與detached快照仍保留原歷史，遠端未更新。逐檔紀錄見 [cleanup_receipt.json](cleanup_receipt.json)。
 
 ## 1. 範圍與可靠性
 
@@ -64,7 +64,7 @@ v0.21.87 全部 saved states 的 MATLAB/Fortran 最大差異：MF `3.13915916039
 
 ## 5. 具體清理提案與歷史重寫邊界
 
-A1/A3 已依本輪開發者「好，進行提交」確認執行；A2、B、C 保留為尚未執行的選項。下表記錄各組狀態。
+A1/A3 已依開發者確認執行；後續另確認並完成C組的39個文件路徑之本機歷史清理。A2與B仍未執行。下表記錄各組狀態。
 
 | 組別 | 具體範圍 | 預期影響與前置工作 |
 | --- | --- | --- |
@@ -72,18 +72,18 @@ A1/A3 已依本輪開發者「好，進行提交」確認執行；A2、B、C 保
 | A2：圖表格式擇一 | 下方 38 個有同名 PNG 的 tracked PDF | 保留 PNG、數據與 plot scripts；會失去現存向量 PDF，可能需原始 run 才能重畫，屬有代價的可選精簡 |
 | A3：cache | 本機 94 個 `.pyc`，逐檔 hash 列於本機 inventory | 已移除，可重新產生；`.py` 與所有 compiled scientific executable 保留 |
 | B：大型 run | 135 個目錄逐一列於測試清單 | 暫保留；需要先核對每個引用、唯一資料、hardlink 及執行狀態，不能按年代或目錄名直接刪 |
-| C：Git 歷史 | 僅 A1/A2 的逐路徑 purge 可作下一個審查範圍 | 需先確認哪些 local branches、remote branches 與 tags 允許改寫；不得擴大至 basis、歷史 source、其他路徑 |
+| C：Git 歷史 | 已對A1的39個Markdown路徑清理，不包含A2 PDF | 已套用下列19個主要本機refs與origin/HEAD別名，含四個tags；79個commits重寫，其他檔案不變，遠端未更新 |
 
 A2+A3 合計邏輯大小約 7.97 MiB；不會釋放 119 GiB 的 run 空間。A1 原文被整併而非丟棄，因此不應把原檔大小當成淨節省量。
 
 `git rm` 加新 commit 只改當前樹，舊版本仍能還原；歷史 purge 則會改寫包含這些路徑的 commits 及後繼 commits，使 commit IDs、annotated tags 與記錄中的歷史定位失效。只有本機 rewrite 不會清掉遠端；更新共享分支／tags 必須另行確認並協調其他 checkout。伺服器 LFS objects 也不會因 refs 改寫而自動消失。
 較安全方案是先做 A 組的一般 commit，保留舊 release tags；若仍要歷史 purge，先另存可驗證的 recovery bundle／對照表、在獨立 clone 預演 path filter，檢查舊 source 與 pre-v0.21 basis lineage，再確認要替換的 refs。不能直接對目前有其他 worktree 的 repo 執行全域清理或 garbage collection。
 
-需要確認的依據是 [AGENTS.md](../../AGENTS.md) §7「obtain developer confirmation before destructive cleanup」、§8「summarize the proposed work and obtain developer confirmation」，以及 §13「Rewriting existing/shared history, replacing published tags, force-pushing, or deleting server objects requires explicit separate developer authorization」。本輪已確認一般整理與提交；尚未指定可替換哪些既有共享 refs，因此歷史 rewrite／force-push 未執行。
+需要確認的依據是 [AGENTS.md](../../AGENTS.md) §7「obtain developer confirmation before destructive cleanup」、§8「summarize the proposed work and obtain developer confirmation」，以及 §13「Rewriting existing/shared history, replacing published tags, force-pushing, or deleting server objects requires explicit separate developer authorization」。開發者後續明確確認下列本機refs（含四個release tags）的替換，已完成本機rewrite；沒有授權或執行force-push。
 
 ### 歷史 purge 會涉及的現有 refs
 
-本機歷史查詢找到13個local branches、2個remote-tracking refs、4個release tags曾包含A1/A2路徑。以下是待批准的範圍清單；remote-tracking資訊來自本機，尚未向伺服器確認最新狀態，並未獲准改寫或推送。只改main會讓其他refs繼續保留原檔。
+本機歷史查詢找到13個local branches、2個remote-tracking refs、4個release tags曾包含A1/A2路徑。以下清單已按確認範圍套用；origin/HEAD仍為origin/main的別名。remote-tracking資訊僅為本機值，未向伺服器確認或更新遠端。
 
 - `refs/heads/docs/archive-test-evidence`
 - `refs/heads/docs/consolidate-migration`
@@ -104,6 +104,13 @@ A2+A3 合計邏輯大小約 7.97 MiB；不會釋放 119 GiB 的 run 空間。A1 
 - `refs/tags/v0.20.0`
 - `refs/tags/v0.20.87`
 - `refs/tags/v0.21.87`
+
+### 本機歷史清理驗證
+
+[套用紀錄](history_rewrite.json)列出逐ref前後值，[commit map](history_commit_map.tsv)保留189個commit的原／新識別碼。
+79個commits重寫、110個原ID不變；全部非目標path、mode、blob保持，父子拓樸與作者／提交者／message保持，18個signed commits原bytes與ID保持。
+三個worktrees均已核對；attached測試worktree的49個未提交檔案逐一hash不變，僅同步22個已退休文件路徑及index；兩個detached快照保持原HEAD。
+本機復原bundle為`migration_work/history_purge_review/recovery.bundle`，SHA-256與大小記錄在套用紀錄。bundle、原objects/reflogs與兩個detached快照仍可還原舊路徑，因此不能把本次rewrite視為物理抹除或已釋放空間；`git rev-list --all`也可能因worktree HEAD列到舊commit。
 
 ### A1：整併原檔與 hash
 

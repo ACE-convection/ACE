@@ -7,9 +7,11 @@
 標為 `complete configuration file` 的紀錄保留完整 JSON；其他紀錄只擷取設定／provenance／狀態欄位，沒有取代原始數值結果。原始結果、scripts、輸入、lookup、frozen baselines 仍需保留。
 缺漏欄位表示「該紀錄未明載」，不以目前 production defaults 補填。檔案內不同層級的 duration/threads 可能屬不同子測試，不合併成單一設定。
 
+本文件與設定附件保留盤點時的原commit IDs；本機歷史清理後請使用 [commit map](history_commit_map.tsv) 查找對應新ID。四個tag的前後object值見 [套用紀錄](history_rewrite.json)。
+
 ## 1. 版本定位與通過定義
 
-| Tag | 實際 commit（剝除 annotated tag object） | 測試證據的意義 |
+| Tag | 盤點時原 commit（剝除 annotated tag object） | 測試證據的意義 |
 | --- | --- | --- |
 | `v0.18.0` | `d7d25b10c1bbad99543ed579a11196673d531c17` | 收錄該開發階段的證據；非全部在此 commit 重跑 |
 | `v0.20.0` | `115cc50db158f2a0f0ba55fca66027958a895060` | 收錄該開發階段的證據；非全部在此 commit 重跑 |

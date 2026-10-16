@@ -54,7 +54,11 @@ For the consolidated record through v0.21.87, see the
 [version-by-version test inventory](docs/maintenance/version_test_matrix.md).
 The inventory includes recorded configurations, incomplete attempts and local
 reference dependencies. Superseded narrative reports have been consolidated;
-raw scientific references and published Git history remain preserved.
+raw scientific references remain preserved. The 39 retired report paths were
+removed from the reviewed local histories; local release tag IDs changed.
+The [rewrite record](docs/maintenance/history_rewrite.json) and
+[commit map](docs/maintenance/history_commit_map.tsv) preserve traceability.
+The remote has not been updated.
 
 The [canonical initial runtime test](tests/README.md) for v0.18 and later
 v0.20/v0.24 comparisons is Manus 208: a single ACE, a saturated +1 K bubble
