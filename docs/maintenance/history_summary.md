@@ -5,7 +5,7 @@
 
 閱讀順序：本文件的里程碑與限制 → [版本測試清單](version_test_matrix.md) → 必要時展開本文件末尾的舊報告原文。
 詳細設定集中於 [test_evidence.json](test_evidence.json)，原始結果 JSON、測試程式、輸入識別資料仍保留。
-已依開發者確認執行 A1/A3：移除39份已整併的舊Markdown與94個Python cache，並修正文件引用。原始run、圖表與basis保留；另已完成39個文件路徑的本機Git歷史清理。復原bundle、reflogs與detached快照仍保留原歷史，遠端未更新。逐檔紀錄見 [cleanup_receipt.json](cleanup_receipt.json)。
+已依開發者確認執行 A1/A3：移除39份已整併的舊Markdown與94個Python cache，並修正文件引用。原始run、圖表與basis保留；另已完成39個文件路徑的本機Git歷史清理。復原bundle、reflogs與detached快照仍保留原歷史，遠端已依後續授權同步，見 [同步紀錄](remote_sync.json)。逐檔紀錄見 [cleanup_receipt.json](cleanup_receipt.json)。
 
 ## 1. 範圍與可靠性
 
@@ -72,18 +72,18 @@ A1/A3 已依開發者確認執行；後續另確認並完成C組的39個文件�
 | A2：圖表格式擇一 | 下方 38 個有同名 PNG 的 tracked PDF | 保留 PNG、數據與 plot scripts；會失去現存向量 PDF，可能需原始 run 才能重畫，屬有代價的可選精簡 |
 | A3：cache | 本機 94 個 `.pyc`，逐檔 hash 列於本機 inventory | 已移除，可重新產生；`.py` 與所有 compiled scientific executable 保留 |
 | B：大型 run | 135 個目錄逐一列於測試清單 | 暫保留；需要先核對每個引用、唯一資料、hardlink 及執行狀態，不能按年代或目錄名直接刪 |
-| C：Git 歷史 | 已對A1的39個Markdown路徑清理，不包含A2 PDF | 已套用下列19個主要本機refs與origin/HEAD別名，含四個tags；79個commits重寫，其他檔案不變，遠端未更新 |
+| C：Git 歷史 | 已對A1的39個Markdown路徑清理，不包含A2 PDF | 已套用下列19個主要本機refs與origin/HEAD別名，含四個tags；79個commits重寫，其他檔案不變；後續已同步遠端，見同步紀錄 |
 
 A2+A3 合計邏輯大小約 7.97 MiB；不會釋放 119 GiB 的 run 空間。A1 原文被整併而非丟棄，因此不應把原檔大小當成淨節省量。
 
 `git rm` 加新 commit 只改當前樹，舊版本仍能還原；歷史 purge 則會改寫包含這些路徑的 commits 及後繼 commits，使 commit IDs、annotated tags 與記錄中的歷史定位失效。只有本機 rewrite 不會清掉遠端；更新共享分支／tags 必須另行確認並協調其他 checkout。伺服器 LFS objects 也不會因 refs 改寫而自動消失。
 較安全方案是先做 A 組的一般 commit，保留舊 release tags；若仍要歷史 purge，先另存可驗證的 recovery bundle／對照表、在獨立 clone 預演 path filter，檢查舊 source 與 pre-v0.21 basis lineage，再確認要替換的 refs。不能直接對目前有其他 worktree 的 repo 執行全域清理或 garbage collection。
 
-需要確認的依據是 [AGENTS.md](../../AGENTS.md) §7「obtain developer confirmation before destructive cleanup」、§8「summarize the proposed work and obtain developer confirmation」，以及 §13「Rewriting existing/shared history, replacing published tags, force-pushing, or deleting server objects requires explicit separate developer authorization」。開發者後續明確確認下列本機refs（含四個release tags）的替換，已完成本機rewrite；沒有授權或執行force-push。
+需要確認的依據是 [AGENTS.md](../../AGENTS.md) §7「obtain developer confirmation before destructive cleanup」、§8「summarize the proposed work and obtain developer confirmation」，以及 §13「Rewriting existing/shared history, replacing published tags, force-pushing, or deleting server objects requires explicit separate developer authorization」。開發者後續明確確認下列本機refs（含四個release tags）的替換，已完成本機rewrite；其後另經明確授權，以逐ref的expected-old lease與atomic push同步遠端，見 [同步紀錄](remote_sync.json)。
 
 ### 歷史 purge 會涉及的現有 refs
 
-本機歷史查詢找到13個local branches、2個remote-tracking refs、4個release tags曾包含A1/A2路徑。以下清單已按確認範圍套用；origin/HEAD仍為origin/main的別名。remote-tracking資訊僅為本機值，未向伺服器確認或更新遠端。
+本機歷史查詢找到13個local branches、2個remote-tracking refs、4個release tags曾包含A1/A2路徑。以下清單已按確認範圍套用；origin/HEAD仍為origin/main的別名。後續已向伺服器核對並同步原有的main、feature/shared-netcdf-input與四個tags；其他未發布的本機分支沒有因此新增到遠端。
 
 - `refs/heads/docs/archive-test-evidence`
 - `refs/heads/docs/consolidate-migration`

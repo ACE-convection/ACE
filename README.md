@@ -58,7 +58,8 @@ raw scientific references remain preserved. The 39 retired report paths were
 removed from the reviewed local histories; local release tag IDs changed.
 The [rewrite record](docs/maintenance/history_rewrite.json) and
 [commit map](docs/maintenance/history_commit_map.tsv) preserve traceability.
-The remote has not been updated.
+The reviewed histories have been synchronized to the existing remote branches
+and four release tags; see the [publication record](docs/maintenance/remote_sync.json).
 
 The [canonical initial runtime test](tests/README.md) for v0.18 and later
 v0.20/v0.24 comparisons is Manus 208: a single ACE, a saturated +1 K bubble

@@ -1,0 +1,48 @@
+{
+  "schema": "ACE-remote-history-sync-1",
+  "verified_utc": "2026-10-16T03:41:25.436184+00:00",
+  "remote": "git@github.com:ACE-convection/ACE.git",
+  "status": "Initial six-ref atomic publication independently verified by git ls-remote",
+  "updated_refs": [
+    {
+      "ref": "refs/heads/feature/shared-netcdf-input",
+      "old": "40d7cf24642fbdbf1c197c6dca0e4ba5261052c1",
+      "new": "cf2a8058e6cbf3b5df7d376d171f4ab481fa7af4"
+    },
+    {
+      "ref": "refs/heads/main",
+      "old": "545c284ede5adbc3dd59293bc6a72601f3f240e9",
+      "new": "5833dd10649dc27cb059ec0905b44082c57624f6"
+    },
+    {
+      "ref": "refs/tags/v0.18.0",
+      "old": "b8d0da0d3817d55873f049e814b9ffb4b8288ca0",
+      "new": "7fe8f721d3ba9e0a8f641029f5250ef2101b2463"
+    },
+    {
+      "ref": "refs/tags/v0.20.0",
+      "old": "9f70c015d5a1317c0fb74c5db505f1455b4aa2b2",
+      "new": "3daab05cb2b41098e0d0385b9fdc37e36dff3bb9"
+    },
+    {
+      "ref": "refs/tags/v0.20.87",
+      "old": "148a8aefb710f8b93cf18e7dff555914fc1a81a6",
+      "new": "7dcb121c5962189b000ff3020cf87cf83311c061"
+    },
+    {
+      "ref": "refs/tags/v0.21.87",
+      "old": "2a22d867920ae95b65077a669e71a933adfc7240",
+      "new": "d1ee53b1f5c66595d02c81f54b295200c06faad2"
+    }
+  ],
+  "unchanged_branch": {
+    "ref": "refs/heads/docs/v018-developer-handoff",
+    "oid": "0b46e2ceee428367a9f0afb227d807f10fbfe7ab"
+  },
+  "atomic": true,
+  "explicit_expected_old_force_with_lease": true,
+  "new_remote_branches_created": false,
+  "post_v02087_new_lfs_pointers": [],
+  "server_objects_or_lfs_garbage_collected": false,
+  "publication_audit": "This record is added in a later audit-only commit and then published by a guarded fast-forward of main. The main OID above identifies the historical rewrite publication, not that later audit commit."
+}

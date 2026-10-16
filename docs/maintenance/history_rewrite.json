@@ -198,11 +198,13 @@
     "contains_original_history": true
   },
   "old_objects_reflogs_lfs_cache_pruned": false,
-  "remote_contacted_or_pushed": false,
-  "publication_status": "Local tag refs have changed; remote still has original history.",
+  "remote_contacted_or_pushed": true,
+  "publication_status": "The reviewed rewritten histories were published to origin, including both existing affected remote branches and four release tags. See remote_sync.json.",
   "remaining_original_history": "Recovery bundle, original reflogs/objects and two detached historical worktrees intentionally retain old history. Therefore git rev-list --all may still expose old paths via worktree HEADs; the checked branch/tag/remote-tracking refs no longer do.",
   "commit_map": "docs/maintenance/history_commit_map.tsv",
   "basis_payloads_added_or_removed": false,
   "model_tests_rerun": false,
-  "post_rewrite_audit_commit": "The later audit-only commit will add this record and the commit map; listed ref updates describe the historical rewrite transaction."
+  "post_rewrite_audit_commit": "The later audit-only commit will add this record and the commit map; listed ref updates describe the historical rewrite transaction.",
+  "local_rewrite_phase_remote_contacted_or_pushed": false,
+  "remote_sync_record": "docs/maintenance/remote_sync.json"
 }

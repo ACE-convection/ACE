@@ -740,9 +740,9 @@
     "docs/v018_thermodynamic_review.md"
   ],
   "history_rewritten": true,
-  "remote_updated": false,
+  "remote_updated": true,
   "basis_or_scientific_outputs_removed": false,
-  "note": "The initial cleanup commit removed the 39 paths from the branch tip. A subsequently authorized local history rewrite removed those paths from all reviewed branch/tag/remote-tracking histories. Ignored Python caches had no tracked history. Recovery bundle, original reflogs/objects and detached worktrees retain the original history; remote was not updated.",
+  "note": "The initial cleanup commit removed the 39 paths from the branch tip. A subsequently authorized local history rewrite removed those paths from all reviewed branch/tag/remote-tracking histories. Ignored Python caches had no tracked history. Recovery bundle, original reflogs/objects and detached worktrees retain the original history; the reviewed histories were subsequently published to origin with explicit expected-old leases. See remote_sync.json.",
   "verification": {
     "metadata_source_hashes_verified": 600,
     "local_links_checked": 1776,
@@ -752,5 +752,6 @@
     "model_tests_rerun": false
   },
   "history_rewritten_during_initial_cleanup": false,
-  "history_rewrite_record": "docs/maintenance/history_rewrite.json"
+  "history_rewrite_record": "docs/maintenance/history_rewrite.json",
+  "remote_sync_record": "docs/maintenance/remote_sync.json"
 }
