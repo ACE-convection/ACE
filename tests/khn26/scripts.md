@@ -65,12 +65,12 @@ workflow. Existing raw workspaces and executed runner copies are preserved.
 
 ## Saved evidence
 
-- [Ci source correction and audited constants](../../docs/migration/v020_khn26_constants_audit.md),
+- [Ci source correction and audited constants](../../docs/maintenance/history_summary.md#record-v020-khn26-constants-audit),
   with [versioned validation summary](ci_correction_validation.json).
-- [Native singleACE three-hour review](../../docs/migration/v020_khn26_single_native_physical_review.md).
-- [Native multiACE three-hour comparison](../../docs/migration/v020_khn26_multiace_three_hour_comparison.md).
-- Earlier [multiACE setup/history](../../docs/migration/v020_khn26_multiace_gravity_wave.md)
-  and [singleACE precipitation attribution](../../docs/migration/v020_khn26_single_precip_comparison.md).
+- [Native singleACE three-hour review](../../docs/maintenance/history_summary.md#record-v020-khn26-single-native-physical-review).
+- [Native multiACE three-hour comparison](../../docs/maintenance/history_summary.md#record-v020-khn26-multiace-three-hour-comparison).
+- Earlier [multiACE setup/history](../../docs/maintenance/history_summary.md#record-v020-khn26-multiace-gravity-wave)
+  and [singleACE precipitation attribution](../../docs/maintenance/history_summary.md#record-v020-khn26-single-precip-comparison).
 
 One-minute saved-state agreement does not establish agreement at every SSPRK
 stage, a closed water budget, surface rainfall, or an independent wave-speed

@@ -2,7 +2,7 @@
 
 This page records the initial 2026-10-04 integration. Subsequent PMB,
 constant and thermodynamic changes and their validation scope are indexed
-in [current development status](v020_khn26_status.md). In particular,
+in [current development status](../maintenance/history_summary.md#record-v020-khn26-status). In particular,
 `b1010ea` updates native softplus evaluation to follow MATLAB when the
 exponential is representable; the description below is the initial method.
 

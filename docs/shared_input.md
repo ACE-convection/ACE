@@ -312,7 +312,7 @@ in the v0.18 alignment audit.
 
 ## Cross-implementation runtime evidence
 
-The [single/multi runtime report](v018_runtime_comparison.md) now records
+The [single/multi runtime report](maintenance/history_summary.md#record-v018-runtime-comparison) now records
 actual dynamics integration in MATLAB and GNU Fortran, including matched
 one-step and 120-second dry/precipitating cases. It uses the input-validation
 path to initialize, then calls the actual numerical routines without the

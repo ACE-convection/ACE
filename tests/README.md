@@ -22,7 +22,7 @@ The canonical initial runtime comparison for v0.18, v0.20 and v0.24 is
 **`manus_saturated_bubble`**, designated by the developer on 2026-10-02.
 Its fixed definition is [`cases/manus_saturated_bubble.json`](cases/manus_saturated_bubble.json);
 the completed v0.18 reference is documented in
-[the Manus report](../docs/manus208_single_saturated_bubble_3h.md).
+[the Manus report](../docs/maintenance/history_summary.md#record-manus208-single-saturated-bubble-3h).
 
 ## Fixed case contract
 
@@ -91,7 +91,7 @@ on v0.20/v0.24. Additional scientific, budget and physics tests are needed.
 same fixed Manus sounding, saturated bubble, common initial state and timing.
 The original precipitation-disabled case remains the default. The fixed
 definition is [`cases/manus_saturated_bubble_precip.json`](cases/manus_saturated_bubble_precip.json);
-see [the completed three-hour report](../docs/manus208_single_saturated_bubble_precip_3h.md).
+see [the completed three-hour report](../docs/maintenance/history_summary.md#record-manus208-single-saturated-bubble-precip-3h).
 
 ```bash
 python3 tests/alignment/run_reference_case.py --case manus_saturated_bubble_precip --check-only
@@ -151,7 +151,7 @@ from left to right. Each panel's height is one fifth of its width. Each row
 uses a shared MATLAB/Fortran color scale and an independent difference scale;
 color scales vary between ACE rows.
 
-See the [completed 12-hour report](../docs/manus208_multi_outer_pulse_12h.md).
+See the [completed 12-hour report](../docs/maintenance/history_summary.md#record-manus208-multi-outer-pulse-12h).
 This trial does not set a numerical acceptance tolerance or automatically
 replace the frozen single-ACE reference cases.
 

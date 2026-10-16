@@ -1,0 +1,714 @@
+{
+  "schema": "ACE-cleanup-receipt-1",
+  "executed_utc": "2026-10-16T01:37:02.399195+00:00",
+  "branch": "docs/archive-test-evidence",
+  "base_commit": "545c284ede5adbc3dd59293bc6a72601f3f240e9",
+  "authorization": "Developer confirmed proposed cleanup and requested commit in this conversation. Optional PDF deletion and shared-history rewrite were not selected.",
+  "removed_tracked_markdown": [
+    {
+      "path": "docs/fortran_multiace_precision_control.md",
+      "sha256": "ff950c592e649d375400236b83e18559e915ed03ede1524a43cfc091f5b89ed9",
+      "replacement": "docs/maintenance/history_summary.md#record-fortran-multiace-precision-control"
+    },
+    {
+      "path": "docs/fortran_single_precision_multiace.md",
+      "sha256": "78f294ea60069c9fd572906e34ca388955750b71d7683404797cd70436c6a999",
+      "replacement": "docs/maintenance/history_summary.md#record-fortran-single-precision-multiace"
+    },
+    {
+      "path": "docs/fortran_single_precision_precipitation.md",
+      "sha256": "105add1fe775ddb04169de21f741860c447764247eaf70ef357b8b2825bfc2ec",
+      "replacement": "docs/maintenance/history_summary.md#record-fortran-single-precision-precipitation"
+    },
+    {
+      "path": "docs/goamazon314_single_no_precip_3h.md",
+      "sha256": "84256c1e7516ebd2d8625f3b575574f20a5b50570be29bdb3f4533bb735212cb",
+      "replacement": "docs/maintenance/history_summary.md#record-goamazon314-single-no-precip-3h"
+    },
+    {
+      "path": "docs/goamazon314_single_saturated_bubble_3h.md",
+      "sha256": "52cd930a9aea7d1e94d86ee8218833fa823edcef04c8086e1afe54a6c77e58e1",
+      "replacement": "docs/maintenance/history_summary.md#record-goamazon314-single-saturated-bubble-3h"
+    },
+    {
+      "path": "docs/manus208_multi_outer_pulse_12h.md",
+      "sha256": "15609fe49d34d60baa801ee7a88cdd7877724cac8cdd4fb79b1a006069ba780e",
+      "replacement": "docs/maintenance/history_summary.md#record-manus208-multi-outer-pulse-12h"
+    },
+    {
+      "path": "docs/manus208_single_saturated_bubble_3h.md",
+      "sha256": "09bc33d9f72bc5b04e59604be30dc20e807d617fe80568de4e005bf729cf9341",
+      "replacement": "docs/maintenance/history_summary.md#record-manus208-single-saturated-bubble-3h"
+    },
+    {
+      "path": "docs/manus208_single_saturated_bubble_precip_3h.md",
+      "sha256": "196cd9ad5f0a213d2018839a86640fa433d0c83b37ad3950ce01a8cf7925e501",
+      "replacement": "docs/maintenance/history_summary.md#record-manus208-single-saturated-bubble-precip-3h"
+    },
+    {
+      "path": "docs/migration/v020_khn26_constants_audit.md",
+      "sha256": "689d7fcccac314be8d3228666807e7a12ebd040de641a0d6fde51be21153d03a",
+      "replacement": "docs/maintenance/history_summary.md#record-v020-khn26-constants-audit"
+    },
+    {
+      "path": "docs/migration/v020_khn26_matlab_alignment_ten_minute_gates.md",
+      "sha256": "ea7c01a24afab0fc6aed524bfa23d792078f79ab2029d774c075b58ff7c02e1c",
+      "replacement": "docs/maintenance/history_summary.md#record-v020-khn26-matlab-alignment-ten-minute-gates"
+    },
+    {
+      "path": "docs/migration/v020_khn26_multiace_difference_attribution.md",
+      "sha256": "362ee8aaa8ce45695912a63d013966218c0f88bf4e6b86fc6928267d481c2201",
+      "replacement": "docs/maintenance/history_summary.md#record-v020-khn26-multiace-difference-attribution"
+    },
+    {
+      "path": "docs/migration/v020_khn26_multiace_gravity_wave.md",
+      "sha256": "e6fa2f20f2a67fdd9f0f27a1c9de1ab22e6f5111f93841293c7d49353fc682f6",
+      "replacement": "docs/maintenance/history_summary.md#record-v020-khn26-multiace-gravity-wave"
+    },
+    {
+      "path": "docs/migration/v020_khn26_multiace_three_hour_comparison.md",
+      "sha256": "93f4f302a77c1eb7e176b635150161cccf6b1adc684d53b42d0c8b3fe175e558",
+      "replacement": "docs/maintenance/history_summary.md#record-v020-khn26-multiace-three-hour-comparison"
+    },
+    {
+      "path": "docs/migration/v020_khn26_p3_smoke.md",
+      "sha256": "7609dad627aa3efba03df1a6fba3e63020533993d70a6e8f8e6dba9305851b1c",
+      "replacement": "docs/maintenance/history_summary.md#record-v020-khn26-p3-smoke"
+    },
+    {
+      "path": "docs/migration/v020_khn26_p3_three_hour.md",
+      "sha256": "d9feee0e715f16a1fd04ab04f6831d8bab4510600e923338b3bf14f935b07af5",
+      "replacement": "docs/maintenance/history_summary.md#record-v020-khn26-p3-three-hour"
+    },
+    {
+      "path": "docs/migration/v020_khn26_single.md",
+      "sha256": "6dad8d0e07488979f3c1936d46e5fcc31d45cc57c8a3288e682d8145a192f5ba",
+      "replacement": "docs/maintenance/history_summary.md#record-v020-khn26-single"
+    },
+    {
+      "path": "docs/migration/v020_khn26_single_native_physical_review.md",
+      "sha256": "4be19dfcbceb17743a207624ad46d6ece2fdfea09608f4a3b8e0d230d69647a7",
+      "replacement": "docs/maintenance/history_summary.md#record-v020-khn26-single-native-physical-review"
+    },
+    {
+      "path": "docs/migration/v020_khn26_single_physical_review.md",
+      "sha256": "c16b4ab51662c83ef38adf228d360c1545bcc9e3f329eca955371a8f1b4b50cb",
+      "replacement": "docs/maintenance/history_summary.md#record-v020-khn26-single-physical-review"
+    },
+    {
+      "path": "docs/migration/v020_khn26_single_precip_comparison.md",
+      "sha256": "c86c61f198c6dab209c3b4df0515b5448d59443c2294c615de3caed1202100c0",
+      "replacement": "docs/maintenance/history_summary.md#record-v020-khn26-single-precip-comparison"
+    },
+    {
+      "path": "docs/migration/v020_khn26_six_hour.md",
+      "sha256": "80eb87a7dd2ad234852b1e20987709a7d950ecd403a8c4633c0851ec1f919f44",
+      "replacement": "docs/maintenance/history_summary.md#record-v020-khn26-six-hour"
+    },
+    {
+      "path": "docs/migration/v020_khn26_status.md",
+      "sha256": "3ad97422ea1528826b3c51099171929d4644a79497c5c7505b1068117c97665f",
+      "replacement": "docs/maintenance/history_summary.md#record-v020-khn26-status"
+    },
+    {
+      "path": "docs/migration/v020_khn26_ten_minute_error_sources.md",
+      "sha256": "4e083c12cd83d6ef9a6d0cfad7978a66f73e697af04a8ad9cfdf2e2d05b562d4",
+      "replacement": "docs/maintenance/history_summary.md#record-v020-khn26-ten-minute-error-sources"
+    },
+    {
+      "path": "docs/migration/v020_khn26_thermodynamics_matlab_alignment.md",
+      "sha256": "fba17f03eba7bde040cbce391382659b6444ef126a18a5891153bc283db98c39",
+      "replacement": "docs/maintenance/history_summary.md#record-v020-khn26-thermodynamics-matlab-alignment"
+    },
+    {
+      "path": "docs/migration/v020_khn26_weno_matlab_alignment.md",
+      "sha256": "d42f5ca913bc5e397b789cb4872c4787822c6476caba0097fc485a54a464986e",
+      "replacement": "docs/maintenance/history_summary.md#record-v020-khn26-weno-matlab-alignment"
+    },
+    {
+      "path": "docs/migration/v020_khn26_weno_three_hour_review.md",
+      "sha256": "bfce333f20987c1cff33409dbcd27d7512d64a8ec8ef7145aac1aeb0f0a8d57e",
+      "replacement": "docs/maintenance/history_summary.md#record-v020-khn26-weno-three-hour-review"
+    },
+    {
+      "path": "docs/v018_aligned_runtime_comparison.md",
+      "sha256": "9112fd712b7a8f2b3eba7e57c4b39f772a87f47e107cde351acc25259de82154",
+      "replacement": "docs/maintenance/history_summary.md#record-v018-aligned-runtime-comparison"
+    },
+    {
+      "path": "docs/v018_atmospheric_validation.md",
+      "sha256": "75af7fbcbbb36926c1097834b6e13a31b9dd33af0fa5932e36041a19a1954f6d",
+      "replacement": "docs/maintenance/history_summary.md#record-v018-atmospheric-validation"
+    },
+    {
+      "path": "docs/v018_forward_evaluation_diagnostic.md",
+      "sha256": "1b7df8f5e383ce2a16e5414803b01edbc42e5707260def4b1a37f6c23dc89c56",
+      "replacement": "docs/maintenance/history_summary.md#record-v018-forward-evaluation-diagnostic"
+    },
+    {
+      "path": "docs/v018_ice_heat_capacity_alignment.md",
+      "sha256": "80d08e111efd4173e98a6ffdf9767b44d9129d61d3dc75bbfaedef7c5957f72e",
+      "replacement": "docs/maintenance/history_summary.md#record-v018-ice-heat-capacity-alignment"
+    },
+    {
+      "path": "docs/v018_ice_precipitation_comparison.md",
+      "sha256": "91dc47604261a8e0ef2a4c8df9e387a53d163ff6c231bbbbbb7ec575dc389d06",
+      "replacement": "docs/maintenance/history_summary.md#record-v018-ice-precipitation-comparison"
+    },
+    {
+      "path": "docs/v018_mixed_precipitation_comparison.md",
+      "sha256": "d6bb7808eacd5d348bb27aa659e46a582fb8f9d1cd817e67ef9ffa8e9cf24b0d",
+      "replacement": "docs/maintenance/history_summary.md#record-v018-mixed-precipitation-comparison"
+    },
+    {
+      "path": "docs/v018_mixed_residual_diagnostic.md",
+      "sha256": "54965a14f5bc6a4e9a01600b95a677c0e95e96f8c00075fdcb264d9071506bc5",
+      "replacement": "docs/maintenance/history_summary.md#record-v018-mixed-residual-diagnostic"
+    },
+    {
+      "path": "docs/v018_phase_endpoint_proposal.md",
+      "sha256": "286a8e8d718a2bd0071f21d2f253f2728ffa83da322590bac34789190d9a9dc9",
+      "replacement": "docs/maintenance/history_summary.md#record-v018-phase-endpoint-proposal"
+    },
+    {
+      "path": "docs/v018_pressure_power_diagnostic.md",
+      "sha256": "bb4b20a437c3e3365cf95ae20b7e69e20814e5357bf02086367e746f57c0685a",
+      "replacement": "docs/maintenance/history_summary.md#record-v018-pressure-power-diagnostic"
+    },
+    {
+      "path": "docs/v018_reference_tv_alignment.md",
+      "sha256": "c41fdb7caf43ff95f763a85aa3a0a5418a13f30af19295197653f72256306ef4",
+      "replacement": "docs/maintenance/history_summary.md#record-v018-reference-tv-alignment"
+    },
+    {
+      "path": "docs/v018_reference_tv_diagnostic.md",
+      "sha256": "9843d0ca06c5da62d93a9cafbd85de9d9b6be5cb18f0a04cd665ac6e3f7e01c6",
+      "replacement": "docs/maintenance/history_summary.md#record-v018-reference-tv-diagnostic"
+    },
+    {
+      "path": "docs/v018_runtime_comparison.md",
+      "sha256": "7c3769794b4ae0ce82aced94bcfe361c2f59fc443011cbce56815a70e9bd2973",
+      "replacement": "docs/maintenance/history_summary.md#record-v018-runtime-comparison"
+    },
+    {
+      "path": "docs/v018_thermodynamic_alignment.md",
+      "sha256": "e930de4e34b26b830bb72613af884f06e3183151e19f179a7d2797c665cb9287",
+      "replacement": "docs/maintenance/history_summary.md#record-v018-thermodynamic-alignment"
+    },
+    {
+      "path": "docs/v018_thermodynamic_review.md",
+      "sha256": "5cadf5a1e9781d831102eb03a4299c8ba1a29df2657ba47ce7b9a273f8c6a837",
+      "replacement": "docs/maintenance/history_summary.md#record-v018-thermodynamic-review"
+    }
+  ],
+  "removed_ignored_python_cache": [
+    {
+      "path": "benchmarks/nonlocal_response/__pycache__/run_fullsteps.cpython-313.pyc",
+      "sha256": "eba73c257c9c3f79c3e97d276b0801550dd2b5e0bb7992006baf56b1c3c93c92",
+      "bytes": 4648
+    },
+    {
+      "path": "migration_work/fortran_v020_oop_long/helpers/__pycache__/oop_regression.cpython-313.pyc",
+      "sha256": "0895722762c1d9a6735c0080e05f7d4ffcb68c60f3c9fd6267609f769bf77835",
+      "bytes": 43544
+    },
+    {
+      "path": "migration_work/fortran_v020_oop_long/helpers/__pycache__/p3_smoke.cpython-313.pyc",
+      "sha256": "a12a26bacb1822016892f2136976bdfc6c33bb43e815787b39a445ac06d3c30a",
+      "bytes": 15078
+    },
+    {
+      "path": "migration_work/fortran_v020_oop_long/helpers/__pycache__/precip_timeseries.cpython-313.pyc",
+      "sha256": "1d4cd14158a9d9c01d1552b8ed85bcf18f3dff36bb973bb6d39580abfd51d85a",
+      "bytes": 33621
+    },
+    {
+      "path": "migration_work/fortran_v020_oop_stage2/__pycache__/collect_stage2.cpython-313.pyc",
+      "sha256": "c1d07410a5578e53fedf32ffb71fd7194f4a90427abe6af8b2150b0c955252ec",
+      "bytes": 6410
+    },
+    {
+      "path": "migration_work/fortran_v020_oop_stage3a/__pycache__/collect_stage3a.cpython-313.pyc",
+      "sha256": "410d407723b66deac7ae33bd7e6ba122bb1a12455ddc30f322c7bcc0fa441c14",
+      "bytes": 10095
+    },
+    {
+      "path": "migration_work/fortran_v020_oop_stage4a/__pycache__/collect_results.cpython-313.pyc",
+      "sha256": "76cb61fb72a56c9a14888d53ea0432cc92ee690a17f2db57440a5572d8fa3ad3",
+      "bytes": 8693
+    },
+    {
+      "path": "migration_work/fortran_v020_oop_stage4b/__pycache__/collect_evidence.cpython-313.pyc",
+      "sha256": "c6cba8a6a565b88c92826bf3421f5a9b5f4e200cd2d3e7343c31c971dbcf99a0",
+      "bytes": 7197
+    },
+    {
+      "path": "migration_work/v02187_validation/threads32/__pycache__/executed_runner.cpython-313.pyc",
+      "sha256": "238c3948c8dcdf97c3e81fa46422a111e02d2a0de7f166261024a5fec0dd63a8",
+      "bytes": 49286
+    },
+    {
+      "path": "tests/alignment/__pycache__/compare.cpython-313.pyc",
+      "sha256": "8d37018fe008adebcc870043cd663a8ac54445969e957c54b0a0b9ad9c3a3fd1",
+      "bytes": 16226
+    },
+    {
+      "path": "tests/alignment/__pycache__/compare_ice_forward.cpython-313.pyc",
+      "sha256": "6fc3c0405ffce2fb45be7d656b13d91bfb998a1c22b2c48be1e77d4094200670",
+      "bytes": 6626
+    },
+    {
+      "path": "tests/alignment/__pycache__/isolate_forward_evaluation.cpython-313.pyc",
+      "sha256": "660f8f6f78ae10105f90eb1e2d25a800fac79b6a9d84c288ec16a353ee0f4286",
+      "bytes": 19713
+    },
+    {
+      "path": "tests/alignment/__pycache__/isolate_pressure_power.cpython-313.pyc",
+      "sha256": "5f18540c3176d9a78cc6fca3f9c5ad89ad5242323698638391e271c3ccdd7766",
+      "bytes": 14443
+    },
+    {
+      "path": "tests/alignment/__pycache__/isolate_reference_tv.cpython-313.pyc",
+      "sha256": "0035d03a2734165812f3bf755cb57aa9c0278b3592b38a6e315a8b1510ab69af",
+      "bytes": 15802
+    },
+    {
+      "path": "tests/alignment/__pycache__/plot_mf.cpython-313.pyc",
+      "sha256": "8bed9e524153566dfd2c776307e150c8a1cfebc9fb742788d4d653e33a4c305b",
+      "bytes": 5453
+    },
+    {
+      "path": "tests/alignment/__pycache__/plot_multi_mf.cpython-313.pyc",
+      "sha256": "a9acfa59d5f72e6fb862dfc9fcb9d543c6bfd7c243191c9333be65ad4e76d3a7",
+      "bytes": 11311
+    },
+    {
+      "path": "tests/alignment/__pycache__/prepare.cpython-313.pyc",
+      "sha256": "26095ebd5d0d6beb631fe71aea657bdce3ca1eeb80d45f3cbf276390cdd375f9",
+      "bytes": 6649
+    },
+    {
+      "path": "tests/alignment/__pycache__/replay_mixed_residual.cpython-313.pyc",
+      "sha256": "a30882d67f7d7715ac3c0b685741dab98c3ce9f5f0d12b8f86f9e05b9b0444df",
+      "bytes": 17172
+    },
+    {
+      "path": "tests/alignment/__pycache__/report.cpython-313.pyc",
+      "sha256": "538831648c01a44ffdced6c13edfa54ca39fafabe70a7e8be720ab33924f5316",
+      "bytes": 14039
+    },
+    {
+      "path": "tests/alignment/__pycache__/run.cpython-313.pyc",
+      "sha256": "d9f4ab00446f62dae2d76f79935b62d304a308ba5096f824facd2a696a21edff",
+      "bytes": 5659
+    },
+    {
+      "path": "tests/alignment/__pycache__/run_reference_case.cpython-313.pyc",
+      "sha256": "17f8434de93726813f69c088724adbc7d21c954d942c2045116577c452fdc1fb",
+      "bytes": 12716
+    },
+    {
+      "path": "tests/alignment/__pycache__/run_sounding_case.cpython-313.pyc",
+      "sha256": "aff0a429cae8c05198cdfdb3208a1f573ee710e7381c43b344e2bd23a3fe097a",
+      "bytes": 25478
+    },
+    {
+      "path": "tests/basis_layout/__pycache__/analyze_serial_simd.cpython-313.pyc",
+      "sha256": "5066be187515d7a4a574f6404c144c2626ba5f848721425bf3ad273426ebdce8",
+      "bytes": 17087
+    },
+    {
+      "path": "tests/basis_layout/__pycache__/compare_compilers.cpython-313.pyc",
+      "sha256": "d8113be85a5532556c5978aeca787251d4139a277b6719c5d5b67373114408f3",
+      "bytes": 14010
+    },
+    {
+      "path": "tests/basis_layout/__pycache__/plot.cpython-313.pyc",
+      "sha256": "6efb7e9dad489aebcf921b8c50e54df5006420f87a60c970ada36c52f5256a84",
+      "bytes": 4862
+    },
+    {
+      "path": "tests/basis_layout/__pycache__/plot_blocked_model.cpython-313.pyc",
+      "sha256": "780580902ae6104c695bfa5bb9cdf0076f6fd7450f415fbc1b01d1bc0658ef3c",
+      "bytes": 3772
+    },
+    {
+      "path": "tests/basis_layout/__pycache__/plot_serial_simd.cpython-313.pyc",
+      "sha256": "0707808ecde10b631c94a3c21ef195ee61b7c60b102fdd2bb0af9cf361f8b9a2",
+      "bytes": 4341
+    },
+    {
+      "path": "tests/basis_layout/__pycache__/profile_model.cpython-313.pyc",
+      "sha256": "369d1ba8dc6575f6469a69507860aaa10a43d065fde44d8955ad300907eecc34",
+      "bytes": 18091
+    },
+    {
+      "path": "tests/basis_layout/__pycache__/report_blocked_15min.cpython-313.pyc",
+      "sha256": "0ffe655a590da8016d98cf185ea0664e02e67279e178135d1acf7a335b36c9a3",
+      "bytes": 12193
+    },
+    {
+      "path": "tests/basis_layout/__pycache__/run.cpython-313.pyc",
+      "sha256": "a9e2f9e9bc1eaace00db10a51b73a34ca37bfd34ecbcd8f0e2fb02f4bb30a052",
+      "bytes": 21885
+    },
+    {
+      "path": "tests/basis_layout/__pycache__/test_blocked_model.cpython-313.pyc",
+      "sha256": "e0513f9dcba25a02a93d9aaabebd25d04527c88768f27a7c4aa8ddb8851651ec",
+      "bytes": 7247
+    },
+    {
+      "path": "tests/basis_layout/__pycache__/validate_model.cpython-313.pyc",
+      "sha256": "62080c628c52a9ba0aa83a904c8db20d2c03e2b1f0a377b7f120fbb38008dbcf",
+      "bytes": 14452
+    },
+    {
+      "path": "tests/input/__pycache__/validate_fortran.cpython-313.pyc",
+      "sha256": "89ab5c1b65ab29b62252337e302bb06a6fc1d912752214b0f833373d114dbd9b",
+      "bytes": 7420
+    },
+    {
+      "path": "tests/khn26/__pycache__/analyze_error_sources.cpython-313.pyc",
+      "sha256": "e56e91634d4cf868e94067e21b48ca01e52a45e41f06e205eed7d4a313ab0422",
+      "bytes": 10636
+    },
+    {
+      "path": "tests/khn26/__pycache__/attribute_ci.cpython-313.pyc",
+      "sha256": "23eb6eeee4de2cc92928a68fcc311e45ea1131afeb28f23e9ec964292a6ea430",
+      "bytes": 5534
+    },
+    {
+      "path": "tests/khn26/__pycache__/benchmark_matlab_single.cpython-313.pyc",
+      "sha256": "5cbdf19840c476f7d9e6f2fc10a396fe88535ec9603201ed5c408b5224e078e5",
+      "bytes": 11987
+    },
+    {
+      "path": "tests/khn26/__pycache__/benchmark_single.cpython-313.pyc",
+      "sha256": "938b4c688929a108d8b2f9ba396e9b353d06a23c2345a8dd4802008dfb396ad8",
+      "bytes": 17935
+    },
+    {
+      "path": "tests/khn26/__pycache__/ci_validation.cpython-313.pyc",
+      "sha256": "a152b965baa51fe13cff977157cc8ae13ad3474fb7a8d4dca1ad135ae1b4b339",
+      "bytes": 6249
+    },
+    {
+      "path": "tests/khn26/__pycache__/common_precip.cpython-313.pyc",
+      "sha256": "11f0de17760ffeddb6ff1ffceaa4e7424a9c9337c78e3be50a84f44116095d3b",
+      "bytes": 17626
+    },
+    {
+      "path": "tests/khn26/__pycache__/compare_multi_prefix.cpython-313.pyc",
+      "sha256": "8922cee1825d7fe84782f8d8ef804d57a33c3ed411b4094b0af99aad12c90969",
+      "bytes": 10130
+    },
+    {
+      "path": "tests/khn26/__pycache__/diagnose_single.cpython-313.pyc",
+      "sha256": "feea54d010291da73424713e6add846ca3cd1e798657dfc719c98543ceda9d00",
+      "bytes": 8351
+    },
+    {
+      "path": "tests/khn26/__pycache__/full_multi.cpython-313.pyc",
+      "sha256": "cd2c01094fe80803d7c7c3406d7392ee68523650e154d47d201c868848c2a967",
+      "bytes": 20864
+    },
+    {
+      "path": "tests/khn26/__pycache__/full_sequence.cpython-313.pyc",
+      "sha256": "f4c0de9a50925cc567b73a1e9e034151e26284998870dc05d4222af76eaa542b",
+      "bytes": 6242
+    },
+    {
+      "path": "tests/khn26/__pycache__/gate_matlab_default.cpython-313.pyc",
+      "sha256": "d6ec261c3b8640ff1d1d8f1b5123c82be016705f30c260f127f40af25be7de8c",
+      "bytes": 7554
+    },
+    {
+      "path": "tests/khn26/__pycache__/locate_gate_differences.cpython-313.pyc",
+      "sha256": "c661945050048ea175d5d433ac588d444b2ebcc39a6f8a603c4d652f3b104f2d",
+      "bytes": 8810
+    },
+    {
+      "path": "tests/khn26/__pycache__/multi.cpython-313.pyc",
+      "sha256": "1a0ae80c0a9bba6009da8251d00645b0ffa7811a2d115b4a9d33092c534793f7",
+      "bytes": 55151
+    },
+    {
+      "path": "tests/khn26/__pycache__/oop_damping_contract.cpython-313.pyc",
+      "sha256": "70764344a4d2662e45c7bca4f37d9c3d632728eba65191f4d183628430cfea73",
+      "bytes": 20363
+    },
+    {
+      "path": "tests/khn26/__pycache__/oop_diagnose_contract.cpython-313.pyc",
+      "sha256": "588ae37e37e6f53e1182962f06e74117fc31fe5d7777734a62bcaa0882c0dbd2",
+      "bytes": 14595
+    },
+    {
+      "path": "tests/khn26/__pycache__/oop_initialization_contract.cpython-313.pyc",
+      "sha256": "c36b93ac6e00ba276f63fa2bb647b0a3e95e68509ca6ef9624d0271d55dfaaf8",
+      "bytes": 7305
+    },
+    {
+      "path": "tests/khn26/__pycache__/oop_integration_contract.cpython-313.pyc",
+      "sha256": "295a947cecc086fb82e4d16faf667515d10f53080cf3354c986fd873643b7d24",
+      "bytes": 12734
+    },
+    {
+      "path": "tests/khn26/__pycache__/oop_output_contract.cpython-313.pyc",
+      "sha256": "6e444dede73a0e73dbc425f7a221f1e1f05ac0c57672a3d70b6cf9b8c6717a8e",
+      "bytes": 17378
+    },
+    {
+      "path": "tests/khn26/__pycache__/oop_p3_contract.cpython-313.pyc",
+      "sha256": "4eac5607008193510e9106f512f2240ea973ca61b4bcd9af99088879b839282b",
+      "bytes": 18333
+    },
+    {
+      "path": "tests/khn26/__pycache__/oop_regression.cpython-313.pyc",
+      "sha256": "0aabdc1d724db34bbddb3306ea0fc6022e043e6ceb7fe21e11768517085e9cff",
+      "bytes": 43487
+    },
+    {
+      "path": "tests/khn26/__pycache__/p3_smoke.cpython-313.pyc",
+      "sha256": "74ef955aba71c245605a641a2eac9eefe48334aab63363933004d5973efdbc42",
+      "bytes": 15021
+    },
+    {
+      "path": "tests/khn26/__pycache__/plot_multi.cpython-313.pyc",
+      "sha256": "9bf6474bcf4674a8098e389d7fe7d71fc7c5e86347f04c62135de4d9aec06dcc",
+      "bytes": 7127
+    },
+    {
+      "path": "tests/khn26/__pycache__/plot_multi_snapshots.cpython-313.pyc",
+      "sha256": "cfc81de68a4355aee58aaa44bf91a1c35dbb8595c33b10e5c38be606f074eb71",
+      "bytes": 7981
+    },
+    {
+      "path": "tests/khn26/__pycache__/plot_p3.cpython-313.pyc",
+      "sha256": "fa18fdfc6e53aa778177fe51d01dcda9186b1e617bee7ad87490d9ed6a73976e",
+      "bytes": 12354
+    },
+    {
+      "path": "tests/khn26/__pycache__/plot_single.cpython-313.pyc",
+      "sha256": "72c38b42f521ab21859093bab501724a7c56b7c0665dc4d9fbde2843047a3f8c",
+      "bytes": 10056
+    },
+    {
+      "path": "tests/khn26/__pycache__/plot_single_native.cpython-313.pyc",
+      "sha256": "9f501d25dc223a810eca2c6058cb9cb375fdbb78900c3a992748b6ff6aefb6af",
+      "bytes": 15343
+    },
+    {
+      "path": "tests/khn26/__pycache__/precip_timeseries.cpython-313.pyc",
+      "sha256": "c401624f439721cbc39dc4b4a03606478686fc132d7bf877fa796254e14019c2",
+      "bytes": 33588
+    },
+    {
+      "path": "tests/khn26/__pycache__/probe_replay_precip.cpython-313.pyc",
+      "sha256": "76101de81c03fffbb3ec1eade4bd19b04d7548d6596b1b1fa211ac07021f1404",
+      "bytes": 8323
+    },
+    {
+      "path": "tests/khn26/__pycache__/profile_matlab.cpython-313.pyc",
+      "sha256": "3cfc413d5ccbce210f410140e8b2dbd5202b3356818e00877d35fb26efc6460f",
+      "bytes": 19129
+    },
+    {
+      "path": "tests/khn26/__pycache__/profile_paired.cpython-313.pyc",
+      "sha256": "646f8098b3aa53a5dc51cf3d138302b1f8eb0c1e3987c3f531dbbc6cb4dae4e7",
+      "bytes": 18656
+    },
+    {
+      "path": "tests/khn26/__pycache__/profile_sensitivity.cpython-313.pyc",
+      "sha256": "fd322459397d05065950f583b4f44cf9317a3b3ffc45059a79445e87359297a6",
+      "bytes": 3275
+    },
+    {
+      "path": "tests/khn26/__pycache__/recheck_thermodynamics.cpython-313.pyc",
+      "sha256": "dcde62179fa42c9fecb894a97e0056b33a906c419aa883c9b1a4b5f1158695c5",
+      "bytes": 6864
+    },
+    {
+      "path": "tests/khn26/__pycache__/replay_multi.cpython-313.pyc",
+      "sha256": "cdf9faf1ba2ee3e50a6d52f55340b7c992abc29fef5ea3c86608ac5f1cfe46cd",
+      "bytes": 21041
+    },
+    {
+      "path": "tests/khn26/__pycache__/run.cpython-313.pyc",
+      "sha256": "a137247f5c605fb8567126b43c77ebd6babb3ca9b809414abd0b0a079dc0acb2",
+      "bytes": 23282
+    },
+    {
+      "path": "tests/khn26/__pycache__/serial_timing.cpython-313.pyc",
+      "sha256": "7af34f518f5d47e00e1959deb47844e4a127d9770c463f8ece3ff12986c46b3d",
+      "bytes": 19924
+    },
+    {
+      "path": "tests/khn26/__pycache__/single.cpython-313.pyc",
+      "sha256": "61fb426eca5adbe3332254f72e60e04c663c278b6dd2f466b1613ef84d0520de",
+      "bytes": 25202
+    },
+    {
+      "path": "tests/khn26/__pycache__/single_precip.cpython-313.pyc",
+      "sha256": "81f18f68a272f53d242ca746c9f6b144fe984399a563a16cef0564bb20af2869",
+      "bytes": 10477
+    },
+    {
+      "path": "tests/khn26/__pycache__/stage_budget.cpython-313.pyc",
+      "sha256": "1c54129296d079ac3c21ef90034c9d6fcfc4ca91f0bbf5b68a1d0f1e38a57afc",
+      "bytes": 32459
+    },
+    {
+      "path": "tests/khn26/__pycache__/stop_multi_at_three_hours.cpython-313.pyc",
+      "sha256": "3fc690a3d1f155b85bd71055237f851cfc38a9d176d08ac3bcec0c16fd54b31d",
+      "bytes": 5089
+    },
+    {
+      "path": "tests/khn26/__pycache__/trajectory.cpython-313.pyc",
+      "sha256": "1d9832008fb05fb39e911468a423c5582bbec782d1231b65dad6e3d8061d1018",
+      "bytes": 26444
+    },
+    {
+      "path": "tests/khn26/__pycache__/unrestricted_multi.cpython-313.pyc",
+      "sha256": "fc725f8dc2abd55ff10ac9c26aa246c3ed24fa00af0317591e67ba4355ff64af",
+      "bytes": 13214
+    },
+    {
+      "path": "tests/khn26/__pycache__/unrestricted_single.cpython-313.pyc",
+      "sha256": "b6811793d6c5cd4782794154dfd4f0291fcbc63a01e63264fbfc8a4ba35a9068",
+      "bytes": 13693
+    },
+    {
+      "path": "tests/precision/__pycache__/compare_multi.cpython-313.pyc",
+      "sha256": "bcf58a6f6779d5d8f895390dc2dda8c63e88ae4d30df355a667871482e6a59d3",
+      "bytes": 8744
+    },
+    {
+      "path": "tests/precision/__pycache__/plot_mf.cpython-313.pyc",
+      "sha256": "4809bb2fd7498358954eedf8a948aa88485f3b3df11e435710ec7c1d6475d0fb",
+      "bytes": 5050
+    },
+    {
+      "path": "tests/precision/__pycache__/run_multi.cpython-313.pyc",
+      "sha256": "0fb9800e0f194a50ffa23724997b652c792b014ca04bc6a20c11c0e0c064e671",
+      "bytes": 15578
+    },
+    {
+      "path": "tests/precision/__pycache__/run_precipitation.cpython-313.pyc",
+      "sha256": "a47d6e3b99b8b13246e6e81a5b4ec055630369510fdbf6e0d2b9718e3744425f",
+      "bytes": 17736
+    },
+    {
+      "path": "tests/slab/__pycache__/audit.cpython-313.pyc",
+      "sha256": "0ec765b7a7e913ac020c3cfa4ae480e8ceca625ce8b45b1bd1fd7a5c71f7c652",
+      "bytes": 11626
+    },
+    {
+      "path": "tests/slab/__pycache__/benchmark_layout.cpython-313.pyc",
+      "sha256": "27a4279d81a403c70c3553370589de0ab19ee4bfe5130464e8b2f00dee611e9c",
+      "bytes": 7589
+    },
+    {
+      "path": "tests/slab/__pycache__/benchmark_threads.cpython-313.pyc",
+      "sha256": "3c7a8501ddce82f906e2a2f90960f722311fe9b5a0c7b6cc86358e5d294748c5",
+      "bytes": 6318
+    },
+    {
+      "path": "tests/slab/__pycache__/run.cpython-313.pyc",
+      "sha256": "2e00f462ec6cbfc59a4fa10a26ced327a7f72deb6b5429ce0c550cf39d724db8",
+      "bytes": 49218
+    },
+    {
+      "path": "tests/slab/__pycache__/run_eight_hour.cpython-313.pyc",
+      "sha256": "155f94172e23cb65782c03493583934579ac9f0b46ee37f63c9b44216814fb8f",
+      "bytes": 5629
+    },
+    {
+      "path": "tests/slab/__pycache__/run_parallel_cases.cpython-313.pyc",
+      "sha256": "20158e22c8ba1c5689f7a691d804f0829df971fb561b0fd49cda2c12fe0d57e5",
+      "bytes": 6530
+    },
+    {
+      "path": "tests/thermodynamics/__pycache__/preview_phase_endpoints.cpython-313.pyc",
+      "sha256": "18dc03e312dfcab51203c1392517e7009cdf4a9ea90e07c498e22e02846c05a7",
+      "bytes": 7418
+    },
+    {
+      "path": "tests/thermodynamics/__pycache__/sweep_inversion.cpython-313.pyc",
+      "sha256": "baa70270eb33a44f3f9937677f21dc0eff3cf8f4ce6636fa2a20c9014485727c",
+      "bytes": 15383
+    },
+    {
+      "path": "tests/thermodynamics/__pycache__/trace_mismatches.cpython-313.pyc",
+      "sha256": "898e22a9cd258ca363d975ab3b0b52a765eb117aa17649f2246309e732279898",
+      "bytes": 10162
+    },
+    {
+      "path": "tests/thermodynamics/__pycache__/validate_atmosphere.cpython-313.pyc",
+      "sha256": "aa23a57140070597aaf53412f8f88dcfc90c8bc39de7a6b707d432895a946a9f",
+      "bytes": 3057
+    },
+    {
+      "path": "tests/thermodynamics/__pycache__/validate_ice.cpython-313.pyc",
+      "sha256": "724d1f61b0fced376fac3f7dfa4774652682cebffd08cf29b30b2bdc5a2c7f51",
+      "bytes": 1823
+    },
+    {
+      "path": "tests/thermodynamics/__pycache__/validate_liquid.cpython-313.pyc",
+      "sha256": "381f839474b0c91caadd319374f3b439d4df01b019b1a07212bd239433e22492",
+      "bytes": 1809
+    },
+    {
+      "path": "tests/thermodynamics/__pycache__/validate_mixed.cpython-313.pyc",
+      "sha256": "5b85f242b9576e709af2b355e54ce55b2a3a5c66e4b3e74cccd2de3ccb94cf1f",
+      "bytes": 3322
+    },
+    {
+      "path": "tools/input/__pycache__/create_khn26_shared_input.cpython-313.pyc",
+      "sha256": "865a52521830ef14a3e060818a0a6715dce72897a1003732f690ce97f34ba87b",
+      "bytes": 13019
+    },
+    {
+      "path": "tools/input/__pycache__/materialize_v02187_inputs.cpython-313.pyc",
+      "sha256": "02fef206750dc8e5bbb60b236c84f6a3fe430a5561b49e341d66e526219cf811",
+      "bytes": 5050
+    }
+  ],
+  "updated_documents": [
+    "README.md",
+    "docs/maintenance/history_summary.md",
+    "docs/maintenance/version_test_matrix.md",
+    "docs/migration/README.md",
+    "docs/migration/fortran_v020_oop_refactor.md",
+    "docs/migration/matlab_fortran_alignment_plan.md",
+    "docs/migration/v018_alignment.md",
+    "docs/migration/v020_khn26_code_comparison.md",
+    "docs/migration/v020_khn26_integration.md",
+    "docs/releases/v0.18.0.md",
+    "docs/releases/v0.20.0-notes.md",
+    "docs/shared_input.md",
+    "tests/README.md",
+    "tests/khn26/README.md",
+    "tests/khn26/scripts.md",
+    "tests/precision/README.md"
+  ],
+  "markdown_links_redirected": 56,
+  "retained_optional_pdf_count": 38,
+  "preserved_preexisting_untracked_sha256": {
+    "docs/migration/v02487_source_review.json": "f882c93b2a57c9554fab8e7d4340e84aa67e26d6386dbf06dd7834f3aa464f99",
+    "docs/migration/v02487_source_review.md": "d362e6cfdd944487034ebd247f7fc95e9a2578df0deba6d45077244fa8c15a38",
+    "docs/migration/v02487_upgrade_spec.md": "9eb282b3c404a92223ddfccec765bfff38caec855d4ce42ec75c84d7421bb167"
+  },
+  "history_purged_paths": [],
+  "history_rewritten": false,
+  "remote_updated": false,
+  "basis_or_scientific_outputs_removed": false,
+  "note": "A regular commit removes paths from this branch tip. All original files remain recoverable from earlier commits. Cache files were ignored and had no tracked Git history to purge.",
+  "verification": {
+    "metadata_source_hashes_verified": 600,
+    "local_links_checked": 1776,
+    "retired_paths_absent": 133,
+    "model_source_changed": false,
+    "preexisting_untracked_files_unchanged": true,
+    "model_tests_rerun": false
+  }
+}

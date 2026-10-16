@@ -4,11 +4,11 @@ Reviewed 2026-10-08 against the active source at `b1010ea` on
 `test/khn26-multiace-gravity-wave`. This is a fresh source inspection,
 plus an isolated GNU real64 WENO-coefficient probe. No model trajectory,
 production source edit or new scientific-equivalence claim is included.
-Previously completed [ten-minute controls](v020_khn26_ten_minute_error_sources.md)
+Previously completed [ten-minute controls](../maintenance/history_summary.md#record-v020-khn26-ten-minute-error-sources)
 provide numerical context; their measurements were not rerun here.
 
 The developer subsequently requested production k=2 WENO alignment with
-MATLAB. The [WENO change and fresh ten-minute gates](v020_khn26_weno_matlab_alignment.md)
+MATLAB. The [WENO change and fresh ten-minute gates](../maintenance/history_summary.md#record-v020-khn26-weno-matlab-alignment)
 supersede the WENO-difference row below for the current working source.
 Other rows retain their reviewed scope.
 

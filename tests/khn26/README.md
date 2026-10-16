@@ -403,7 +403,7 @@ python3 tests/khn26/review_single.py migration_work/khn26_single_openmp6_3h --ou
 
 NumPy/netCDF4 are required and matplotlib is optional for plotting.
 Existing model outputs are read only; selected analysis outputs are
-regenerated. The [physical review](../../docs/migration/v020_khn26_single_physical_review.md)
+regenerated. The [physical review](../../docs/maintenance/history_summary.md#record-v020-khn26-single-physical-review)
 explains the masked-case reservoir behavior and sparse-sampling limits.
 Theta_e inventory and vertical KE do not establish total-energy closure.
 The [saved report](single_physical_review.json) contains all 181 samples and
@@ -413,11 +413,11 @@ provenance. No new performance measurement or model run is part of this review.
 
 For source-version scope, fresh aligned ten-minute gates, error-source
 controls and stale runtime labels, see the
-[current development status](../../docs/migration/v020_khn26_status.md).
+[current development status](../../docs/maintenance/history_summary.md#record-v020-khn26-status).
 The three-hour trajectories below predate the thermodynamic alignment
 in `b1010ea`; they do not validate a three-hour run of that aligned source.
 
-The subsequent [k=2 WENO alignment](../../docs/migration/v020_khn26_weno_matlab_alignment.md)
+The subsequent [k=2 WENO alignment](../../docs/maintenance/history_summary.md#record-v020-khn26-weno-matlab-alignment)
 also passed fresh dry/native ten-minute multiACE gates. Its
 [result record](weno_matlab_alignment_gate_results.json) includes unchanged
 limits, component checks and comparison with the pre-WENO aligned gate.
@@ -429,10 +429,10 @@ from twelve hours to three hours; neither long-run queue is active.
 
 | Evidence | Record |
 | --- | --- |
-| Ci correction, common-state and short tests | [Constants audit](../../docs/migration/v020_khn26_constants_audit.md), [validation summary](ci_correction_validation.json) |
-| Native singleACE three hours | [Physical review](../../docs/migration/v020_khn26_single_native_physical_review.md) |
-| Native multiACE three hours | [Comparison](../../docs/migration/v020_khn26_multiace_three_hour_comparison.md) |
-| Earlier experiment history | [MultiACE case](../../docs/migration/v020_khn26_multiace_gravity_wave.md), [singleACE precipitation investigation](../../docs/migration/v020_khn26_single_precip_comparison.md) |
+| Ci correction, common-state and short tests | [Constants audit](../../docs/maintenance/history_summary.md#record-v020-khn26-constants-audit), [validation summary](ci_correction_validation.json) |
+| Native singleACE three hours | [Physical review](../../docs/maintenance/history_summary.md#record-v020-khn26-single-native-physical-review) |
+| Native multiACE three hours | [Comparison](../../docs/maintenance/history_summary.md#record-v020-khn26-multiace-three-hour-comparison) |
+| Earlier experiment history | [MultiACE case](../../docs/maintenance/history_summary.md#record-v020-khn26-multiace-gravity-wave), [singleACE precipitation investigation](../../docs/maintenance/history_summary.md#record-v020-khn26-single-precip-comparison) |
 | Script roles and dependencies | [Script index](scripts.md) |
 
 ### Inspect existing outputs

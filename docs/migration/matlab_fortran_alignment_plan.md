@@ -144,7 +144,7 @@ P3 and real32 numerical validation remain the next milestones.
 
 For subsequent completed three-hour comparisons, PMB/interpolation work,
 the `b1010ea` thermodynamic alignment, fresh ten-minute gates and remaining
-evidence gaps, use [current KHN26 development status](v020_khn26_status.md).
+evidence gaps, use [current KHN26 development status](../maintenance/history_summary.md#record-v020-khn26-status).
 The old six-hour `running` record is stale and does not establish completion
 or a currently active process. Aligned-source three-hour validation remains
 pending; no v0.20 release acceptance follows from the short gates.

@@ -49,6 +49,13 @@ Developers running the accepted cases should start with the
 The [migration index](docs/migration/README.md) identifies current guidance
 and the historical evidence needed for later versions.
 
+For the consolidated record through v0.21.87, see the
+[history and results summary](docs/maintenance/history_summary.md) and
+[version-by-version test inventory](docs/maintenance/version_test_matrix.md).
+The inventory includes recorded configurations, incomplete attempts and local
+reference dependencies. Superseded narrative reports have been consolidated;
+raw scientific references and published Git history remain preserved.
+
 The [canonical initial runtime test](tests/README.md) for v0.18 and later
 v0.20/v0.24 comparisons is Manus 208: a single ACE, a saturated +1 K bubble
 at levels 11–51, precipitation disabled, and three hours of integration.

@@ -33,8 +33,8 @@ Existing evidence/tools inspected:
 | --- | --- |
 | [KHN26 tests](../../tests/khn26/README.md), `run.py`, `multi.py`, `gate_matlab_default.py` | Initialization/component checks; all nine tendency frames; native sinks; dry/native ten-minute gates; checked/production prefixes |
 | [WENO gate results](../../tests/khn26/weno_matlab_alignment_gate_results.json) | Preserve current written k=2 expressions; existing MATLAB tolerances are contextual, not OOP tolerance allowances |
-| [Aligned three-hour review](v020_khn26_weno_three_hour_review.md) | Accepted native multiACE trajectory, raw hashes and source-version scope |
-| [P3 smoke](v020_khn26_p3_smoke.md), `p3_smoke.py`, [three-hour record](v020_khn26_p3_three_hour.md) | P3 variable ordering, debug/production identity and validity/riming checks |
+| [Aligned three-hour review](../maintenance/history_summary.md#record-v020-khn26-weno-three-hour-review) | Accepted native multiACE trajectory, raw hashes and source-version scope |
+| [P3 smoke](../maintenance/history_summary.md#record-v020-khn26-p3-smoke), `p3_smoke.py`, [three-hour record](../maintenance/history_summary.md#record-v020-khn26-p3-three-hour) | P3 variable ordering, debug/production identity and validity/riming checks |
 | [Minute-output checks](../../tests/khn26/precip_output_results.json), `check_precip_output.py` | Actual accumulator fixtures, output cadence/units and reader checks |
 | [Final replay results](../figures/khn26_multi_precipitation_3h/results.json) | Three complete replays, 181 records each and exact within-implementation state reproduction |
 

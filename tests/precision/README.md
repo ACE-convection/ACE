@@ -67,7 +67,7 @@ are preserved. On the current host, plotting dependencies are available with
 ## Twelve-hour multiACE test
 
 Use the preserved, completed MATLAB multiACE reference described in
-[`docs/manus208_multi_outer_pulse_12h.md`](../../docs/manus208_multi_outer_pulse_12h.md).
+[`docs/manus208_multi_outer_pulse_12h.md`](../../docs/maintenance/history_summary.md#record-manus208-multi-outer-pulse-12h).
 The runner checks its common seed and MF archive against hashes in the
 committed report; those full reference artifacts are retained in the ignored
 workspace rather than the small frozen single-ACE test reference.

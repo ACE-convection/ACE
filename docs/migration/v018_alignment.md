@@ -18,10 +18,10 @@ static component table and original release gates are preserved at
 | Change | Commit(s) | Evidence |
 | --- | --- | --- |
 | Shared NetCDF inputs, recovered profiles and PMB | `2537f46` | [Input schema/readback](../shared_input.md), [input provenance](v018_input_contract.md) |
-| Fortran precipitation onset; MATLAB post-step splitting and qt clipping in both implementations | `1b3443c`, `b70343c` | [Thermodynamic review](../v018_thermodynamic_review.md) |
-| Inversion, saturation roundoff and liquid/ice Newton derivatives | `516da38`, `1b00033`, `b5eaf39` | [Thermodynamic alignment](../v018_thermodynamic_alignment.md) |
-| Fortran ice heat-capacity reference temperature | `1ac8d27` | [Ci alignment](../v018_ice_heat_capacity_alignment.md) |
-| Fixed environmental reference Tv from shared input | `fdf4cd1` | [Reference-Tv alignment](../v018_reference_tv_alignment.md) |
+| Fortran precipitation onset; MATLAB post-step splitting and qt clipping in both implementations | `1b3443c`, `b70343c` | [Thermodynamic review](../maintenance/history_summary.md#record-v018-thermodynamic-review) |
+| Inversion, saturation roundoff and liquid/ice Newton derivatives | `516da38`, `1b00033`, `b5eaf39` | [Thermodynamic alignment](../maintenance/history_summary.md#record-v018-thermodynamic-alignment) |
+| Fortran ice heat-capacity reference temperature | `1ac8d27` | [Ci alignment](../maintenance/history_summary.md#record-v018-ice-heat-capacity-alignment) |
+| Fixed environmental reference Tv from shared input | `fdf4cd1` | [Reference-Tv alignment](../maintenance/history_summary.md#record-v018-reference-tv-alignment) |
 | Source-root normalization, path-only driver adjustments | `9665658` | [Normalization map](v018_normalization.md) |
 | Exact preservation in all three full Manus reruns after normalization | `9f83e23` | [Release verification](../releases/v0.18.0.md#normalization-and-local-release-procedure) |
 
@@ -29,16 +29,16 @@ static component table and original release gates are preserved at
 
 | Evidence | Result or scope |
 | --- | --- |
-| [Initial runtime comparison](../v018_runtime_comparison.md) | Matched single/multi dry and precipitating 4 s / 120 s cases before the subsequent corrections |
-| [Aligned runtime comparison](../v018_aligned_runtime_comparison.md) | Dry/liquid short trajectories after initial thermodynamic alignment |
-| [Atmospheric validation](../v018_atmospheric_validation.md) | Documented thermodynamic probes and their limitations |
-| [Ice trajectories](../v018_ice_precipitation_comparison.md), [mixed-phase trajectories](../v018_mixed_precipitation_comparison.md) | Focused single/multi short-run phase and active-precipitation checks |
-| [Reference-Tv isolation](../v018_reference_tv_diagnostic.md) | Temporary diagnostic preceding the reviewed production change |
-| [Mixed residual](../v018_mixed_residual_diagnostic.md) | Common-cache probes and finite-difference rounding contributions |
-| [Forward evaluation](../v018_forward_evaluation_diagnostic.md), [pressure power](../v018_pressure_power_diagnostic.md) | Temporary substitutions isolate binary64 evaluation differences; not production fixes |
-| [Phase-endpoint proposal](../v018_phase_endpoint_proposal.md) | Known counterexamples remain; no endpoint proposal applied for this release |
-| [SingleACE, no precipitation](../manus208_single_saturated_bubble_3h.md), [with precipitation](../manus208_single_saturated_bubble_precip_3h.md) | Frozen Manus 208 three-hour references |
-| [MultiACE outer pulse](../manus208_multi_outer_pulse_12h.md) | Twelve hours with native precipitation, matched initial state, eight ACEs and the combined MF plot |
+| [Initial runtime comparison](../maintenance/history_summary.md#record-v018-runtime-comparison) | Matched single/multi dry and precipitating 4 s / 120 s cases before the subsequent corrections |
+| [Aligned runtime comparison](../maintenance/history_summary.md#record-v018-aligned-runtime-comparison) | Dry/liquid short trajectories after initial thermodynamic alignment |
+| [Atmospheric validation](../maintenance/history_summary.md#record-v018-atmospheric-validation) | Documented thermodynamic probes and their limitations |
+| [Ice trajectories](../maintenance/history_summary.md#record-v018-ice-precipitation-comparison), [mixed-phase trajectories](../maintenance/history_summary.md#record-v018-mixed-precipitation-comparison) | Focused single/multi short-run phase and active-precipitation checks |
+| [Reference-Tv isolation](../maintenance/history_summary.md#record-v018-reference-tv-diagnostic) | Temporary diagnostic preceding the reviewed production change |
+| [Mixed residual](../maintenance/history_summary.md#record-v018-mixed-residual-diagnostic) | Common-cache probes and finite-difference rounding contributions |
+| [Forward evaluation](../maintenance/history_summary.md#record-v018-forward-evaluation-diagnostic), [pressure power](../maintenance/history_summary.md#record-v018-pressure-power-diagnostic) | Temporary substitutions isolate binary64 evaluation differences; not production fixes |
+| [Phase-endpoint proposal](../maintenance/history_summary.md#record-v018-phase-endpoint-proposal) | Known counterexamples remain; no endpoint proposal applied for this release |
+| [SingleACE, no precipitation](../maintenance/history_summary.md#record-manus208-single-saturated-bubble-3h), [with precipitation](../maintenance/history_summary.md#record-manus208-single-saturated-bubble-precip-3h) | Frozen Manus 208 three-hour references |
+| [MultiACE outer pulse](../maintenance/history_summary.md#record-manus208-multi-outer-pulse-12h) | Twelve hours with native precipitation, matched initial state, eight ACEs and the combined MF plot |
 
 Each linked scientific report retains its original run settings, source hashes
 and numerical evidence. Earlier statements about missing data, available tools
