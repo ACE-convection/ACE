@@ -1,0 +1,263 @@
+{
+  "schema": "ACE-large-basis-cleanup-1",
+  "executed_utc": "2026-10-16T04:10:41.245708+00:00",
+  "scope": "101-ACE and 88-ACE basis/operator payloads, full files and byte-split parts. Preserve historical 4/7/8/11-ACE small bases.",
+  "audit_head": "238e305fd548238532b2632d78fbf3e57ec2c8b6",
+  "reachable_large_payloads_before_cleanup": [],
+  "additional_git_history_rewrite_needed": false,
+  "known_large_payload_oids": {
+    "9eb0422dc3bf91817494f2a2579e7e5e975eeb641d44e12e79f9aab858cdf9de": {
+      "role": "complete file",
+      "path": "data/basis/COMPOSITE_ACE_BASIS_2D.mat",
+      "bytes": 4441245887
+    },
+    "cd2320ba1206e82a54caf5bf288e8ecc31dc0e7208b1f59b2a17535ef9753322": {
+      "role": "complete file",
+      "path": "data/input/goamazon314_88aces.nc",
+      "bytes": 5667681931
+    },
+    "2a0f0d7ffcd2ebcb03afb8177f27a51a595e82723d99a8fb10af5721d04c0679": {
+      "role": "byte-split part",
+      "path": "data/distribution/v02187/COMPOSITE_ACE_BASIS_2D.mat.part000",
+      "bytes": 1073741824
+    },
+    "963e368f355c9c981feea693d415088d2e07141cbcc53c057f2ddc0930326cfe": {
+      "role": "byte-split part",
+      "path": "data/distribution/v02187/COMPOSITE_ACE_BASIS_2D.mat.part001",
+      "bytes": 1073741824
+    },
+    "536976b770bb9d6b147376864035d64f4c86456da34f15b4d7fdcb95e341aa05": {
+      "role": "byte-split part",
+      "path": "data/distribution/v02187/COMPOSITE_ACE_BASIS_2D.mat.part002",
+      "bytes": 1073741824
+    },
+    "b5e9d6e9f7b95de7332a9fce15d42d70edcba13bd6cac75322c2b9f3fb490987": {
+      "role": "byte-split part",
+      "path": "data/distribution/v02187/COMPOSITE_ACE_BASIS_2D.mat.part003",
+      "bytes": 1073741824
+    },
+    "c5010c5b9dfc012581ceafae6947a0e962a75edb81695d79b4ec57fe42c297c3": {
+      "role": "byte-split part",
+      "path": "data/distribution/v02187/COMPOSITE_ACE_BASIS_2D.mat.part004",
+      "bytes": 146278591
+    },
+    "940efe1cbee65817d767616acf3c1ee5ba4c610984a373a6f3a81411126b3e8c": {
+      "role": "byte-split part",
+      "path": "data/distribution/v02187/goamazon314_88aces.nc.part000",
+      "bytes": 1073741824
+    },
+    "e03e3bef52600bb906434ecd2a762e3b6f891c0017a2ca9e7eaab294b408f1ec": {
+      "role": "byte-split part",
+      "path": "data/distribution/v02187/goamazon314_88aces.nc.part001",
+      "bytes": 1073741824
+    },
+    "3058665f9e450db552335ea34ea7aeaa2f1d5c090d34a282c2da75ad5e981709": {
+      "role": "byte-split part",
+      "path": "data/distribution/v02187/goamazon314_88aces.nc.part002",
+      "bytes": 1073741824
+    },
+    "10ee15b0b499b192ee86ebb394227ed658fd7a7a526ff7c5a0af1ff5ac99cc1d": {
+      "role": "byte-split part",
+      "path": "data/distribution/v02187/goamazon314_88aces.nc.part003",
+      "bytes": 1073741824
+    },
+    "d7b31991e89fd2b519f616a64dabb25487846642985a899b13b489defff0dce8": {
+      "role": "byte-split part",
+      "path": "data/distribution/v02187/goamazon314_88aces.nc.part004",
+      "bytes": 1073741824
+    },
+    "52b26a6037d9ea794c678bf2e9f3329aa7de6dbd12b88b80655f49ca2d3454f2": {
+      "role": "byte-split part",
+      "path": "data/distribution/v02187/goamazon314_88aces.nc.part005",
+      "bytes": 298972811
+    },
+    "09408f4d0343afd8659df82f8f1cfe5dc59308cff150fb2bcfd569b1b8794d35": {
+      "role": "101-ACE shared input",
+      "path": "data/input/manaus1342_khn26.nc",
+      "bytes": 2555078915
+    },
+    "8e46bffa0966096f1269addf207b8990766c7fc69d0158f29139cf0ab6378338": {
+      "role": "101-ACE author basis",
+      "path": "COMPOSITE_ACE_BASIS_2D_KHN26_4UNEVEN.mat",
+      "bytes": null
+    }
+  },
+  "server_existence_of_listed_oids_verified": false,
+  "local_lfs_cache_removed": [
+    {
+      "oid": "2a0f0d7ffcd2ebcb03afb8177f27a51a595e82723d99a8fb10af5721d04c0679",
+      "cache_path": ".git/lfs/objects/2a/0f/2a0f0d7ffcd2ebcb03afb8177f27a51a595e82723d99a8fb10af5721d04c0679",
+      "retained_local_path": "data/distribution/v02187/COMPOSITE_ACE_BASIS_2D.mat.part000",
+      "bytes": 1073741824,
+      "links": 1,
+      "cache_inode": 3793465
+    },
+    {
+      "oid": "963e368f355c9c981feea693d415088d2e07141cbcc53c057f2ddc0930326cfe",
+      "cache_path": ".git/lfs/objects/96/3e/963e368f355c9c981feea693d415088d2e07141cbcc53c057f2ddc0930326cfe",
+      "retained_local_path": "data/distribution/v02187/COMPOSITE_ACE_BASIS_2D.mat.part001",
+      "bytes": 1073741824,
+      "links": 1,
+      "cache_inode": 3792418
+    },
+    {
+      "oid": "536976b770bb9d6b147376864035d64f4c86456da34f15b4d7fdcb95e341aa05",
+      "cache_path": ".git/lfs/objects/53/69/536976b770bb9d6b147376864035d64f4c86456da34f15b4d7fdcb95e341aa05",
+      "retained_local_path": "data/distribution/v02187/COMPOSITE_ACE_BASIS_2D.mat.part002",
+      "bytes": 1073741824,
+      "links": 1,
+      "cache_inode": 3790987
+    },
+    {
+      "oid": "b5e9d6e9f7b95de7332a9fce15d42d70edcba13bd6cac75322c2b9f3fb490987",
+      "cache_path": ".git/lfs/objects/b5/e9/b5e9d6e9f7b95de7332a9fce15d42d70edcba13bd6cac75322c2b9f3fb490987",
+      "retained_local_path": "data/distribution/v02187/COMPOSITE_ACE_BASIS_2D.mat.part003",
+      "bytes": 1073741824,
+      "links": 1,
+      "cache_inode": 3799457
+    },
+    {
+      "oid": "c5010c5b9dfc012581ceafae6947a0e962a75edb81695d79b4ec57fe42c297c3",
+      "cache_path": ".git/lfs/objects/c5/01/c5010c5b9dfc012581ceafae6947a0e962a75edb81695d79b4ec57fe42c297c3",
+      "retained_local_path": "data/distribution/v02187/COMPOSITE_ACE_BASIS_2D.mat.part004",
+      "bytes": 146278591,
+      "links": 1,
+      "cache_inode": 3798621
+    },
+    {
+      "oid": "940efe1cbee65817d767616acf3c1ee5ba4c610984a373a6f3a81411126b3e8c",
+      "cache_path": ".git/lfs/objects/94/0e/940efe1cbee65817d767616acf3c1ee5ba4c610984a373a6f3a81411126b3e8c",
+      "retained_local_path": "data/distribution/v02187/goamazon314_88aces.nc.part000",
+      "bytes": 1073741824,
+      "links": 1,
+      "cache_inode": 3799600
+    },
+    {
+      "oid": "e03e3bef52600bb906434ecd2a762e3b6f891c0017a2ca9e7eaab294b408f1ec",
+      "cache_path": ".git/lfs/objects/e0/3e/e03e3bef52600bb906434ecd2a762e3b6f891c0017a2ca9e7eaab294b408f1ec",
+      "retained_local_path": "data/distribution/v02187/goamazon314_88aces.nc.part001",
+      "bytes": 1073741824,
+      "links": 1,
+      "cache_inode": 3799954
+    },
+    {
+      "oid": "3058665f9e450db552335ea34ea7aeaa2f1d5c090d34a282c2da75ad5e981709",
+      "cache_path": ".git/lfs/objects/30/58/3058665f9e450db552335ea34ea7aeaa2f1d5c090d34a282c2da75ad5e981709",
+      "retained_local_path": "data/distribution/v02187/goamazon314_88aces.nc.part002",
+      "bytes": 1073741824,
+      "links": 1,
+      "cache_inode": 3794116
+    },
+    {
+      "oid": "10ee15b0b499b192ee86ebb394227ed658fd7a7a526ff7c5a0af1ff5ac99cc1d",
+      "cache_path": ".git/lfs/objects/10/ee/10ee15b0b499b192ee86ebb394227ed658fd7a7a526ff7c5a0af1ff5ac99cc1d",
+      "retained_local_path": "data/distribution/v02187/goamazon314_88aces.nc.part003",
+      "bytes": 1073741824,
+      "links": 1,
+      "cache_inode": 3795117
+    },
+    {
+      "oid": "d7b31991e89fd2b519f616a64dabb25487846642985a899b13b489defff0dce8",
+      "cache_path": ".git/lfs/objects/d7/b3/d7b31991e89fd2b519f616a64dabb25487846642985a899b13b489defff0dce8",
+      "retained_local_path": "data/distribution/v02187/goamazon314_88aces.nc.part004",
+      "bytes": 1073741824,
+      "links": 1,
+      "cache_inode": 3800074
+    },
+    {
+      "oid": "52b26a6037d9ea794c678bf2e9f3329aa7de6dbd12b88b80655f49ca2d3454f2",
+      "cache_path": ".git/lfs/objects/52/b2/52b26a6037d9ea794c678bf2e9f3329aa7de6dbd12b88b80655f49ca2d3454f2",
+      "retained_local_path": "data/distribution/v02187/goamazon314_88aces.nc.part005",
+      "bytes": 298972811,
+      "links": 1,
+      "cache_inode": 3789304
+    }
+  ],
+  "local_lfs_cache_removed_bytes": 10108927818,
+  "other_lfs_cache_objects_preserved_and_rehashed": 23,
+  "historical_small_basis_lineage_preserved": true,
+  "retained_local_payloads": {
+    "data/distribution/v02187/COMPOSITE_ACE_BASIS_2D.mat.part000": {
+      "bytes": 1073741824,
+      "sha256": "2a0f0d7ffcd2ebcb03afb8177f27a51a595e82723d99a8fb10af5721d04c0679"
+    },
+    "data/distribution/v02187/COMPOSITE_ACE_BASIS_2D.mat.part001": {
+      "bytes": 1073741824,
+      "sha256": "963e368f355c9c981feea693d415088d2e07141cbcc53c057f2ddc0930326cfe"
+    },
+    "data/distribution/v02187/COMPOSITE_ACE_BASIS_2D.mat.part002": {
+      "bytes": 1073741824,
+      "sha256": "536976b770bb9d6b147376864035d64f4c86456da34f15b4d7fdcb95e341aa05"
+    },
+    "data/distribution/v02187/COMPOSITE_ACE_BASIS_2D.mat.part003": {
+      "bytes": 1073741824,
+      "sha256": "b5e9d6e9f7b95de7332a9fce15d42d70edcba13bd6cac75322c2b9f3fb490987"
+    },
+    "data/distribution/v02187/COMPOSITE_ACE_BASIS_2D.mat.part004": {
+      "bytes": 146278591,
+      "sha256": "c5010c5b9dfc012581ceafae6947a0e962a75edb81695d79b4ec57fe42c297c3"
+    },
+    "data/distribution/v02187/goamazon314_88aces.nc.part000": {
+      "bytes": 1073741824,
+      "sha256": "940efe1cbee65817d767616acf3c1ee5ba4c610984a373a6f3a81411126b3e8c"
+    },
+    "data/distribution/v02187/goamazon314_88aces.nc.part001": {
+      "bytes": 1073741824,
+      "sha256": "e03e3bef52600bb906434ecd2a762e3b6f891c0017a2ca9e7eaab294b408f1ec"
+    },
+    "data/distribution/v02187/goamazon314_88aces.nc.part002": {
+      "bytes": 1073741824,
+      "sha256": "3058665f9e450db552335ea34ea7aeaa2f1d5c090d34a282c2da75ad5e981709"
+    },
+    "data/distribution/v02187/goamazon314_88aces.nc.part003": {
+      "bytes": 1073741824,
+      "sha256": "10ee15b0b499b192ee86ebb394227ed658fd7a7a526ff7c5a0af1ff5ac99cc1d"
+    },
+    "data/distribution/v02187/goamazon314_88aces.nc.part004": {
+      "bytes": 1073741824,
+      "sha256": "d7b31991e89fd2b519f616a64dabb25487846642985a899b13b489defff0dce8"
+    },
+    "data/distribution/v02187/goamazon314_88aces.nc.part005": {
+      "bytes": 298972811,
+      "sha256": "52b26a6037d9ea794c678bf2e9f3329aa7de6dbd12b88b80655f49ca2d3454f2"
+    },
+    "data/basis/COMPOSITE_ACE_BASIS_2D.mat": {
+      "bytes": 4441245887,
+      "sha256": "9eb0422dc3bf91817494f2a2579e7e5e975eeb641d44e12e79f9aab858cdf9de"
+    },
+    "data/input/goamazon314_88aces.nc": {
+      "bytes": 5667681931,
+      "sha256": "cd2320ba1206e82a54caf5bf288e8ecc31dc0e7208b1f59b2a17535ef9753322"
+    },
+    "data/input/manaus1342_khn26.nc": {
+      "bytes": 2555078915,
+      "sha256": "09408f4d0343afd8659df82f8f1cfe5dc59308cff150fb2bcfd569b1b8794d35"
+    }
+  },
+  "retained_payload_hashes_verified_before_deletion": true,
+  "retained_payload_sizes_and_inodes_unchanged_after_deletion": true,
+  "server_lfs_objects_deleted": false,
+  "support_request_submitted": false,
+  "website_instructions": "docs/maintenance/large_basis_policy.md",
+  "note": "The eleven removed files were duplicate local LFS cache objects for retained 88-ACE parts. All full-size local runtime inputs remain. No historical small basis, Git commit/tag, or remote LFS object was deleted by this cache operation. GitHub Support must verify server existence and handle any requested server-side purge.",
+  "remote_published_refs_checked": {
+    "refs/heads/docs/v018-developer-handoff": "0b46e2ceee428367a9f0afb227d807f10fbfe7ab",
+    "refs/heads/feature/shared-netcdf-input": "cf2a8058e6cbf3b5df7d376d171f4ab481fa7af4",
+    "refs/heads/main": "238e305fd548238532b2632d78fbf3e57ec2c8b6",
+    "refs/tags/v0.18.0": "7fe8f721d3ba9e0a8f641029f5250ef2101b2463",
+    "refs/tags/v0.20.0": "3daab05cb2b41098e0d0385b9fdc37e36dff3bb9",
+    "refs/tags/v0.20.87": "7dcb121c5962189b000ff3020cf87cf83311c061",
+    "refs/tags/v0.21.87": "d1ee53b1f5c66595d02c81f54b295200c06faad2"
+  },
+  "remote_large_payloads_reachable": false,
+  "verification": {
+    "ignore_examples_passed": 7,
+    "no_lfs_filter_examples_passed": 6,
+    "allowed_historical_lfs_paths_checked": 3,
+    "untracked_v02487_files_unchanged": true,
+    "model_code_changed": false,
+    "model_tests_rerun": false,
+    "local_lfs_allocated_size_after": "117 MiB (du -sh)",
+    "remote_refs_were_already_clean_before_this_change": true
+  }
+}

@@ -57,3 +57,12 @@ migration_work/
 **/*BASIS*.mat.part*
 **/*basis*.mat.part*
 /data/distribution/**/goamazon314_88aces.nc.part*
+
+# Large 101/88-ACE payloads are local-only, regardless of release version.
+# Small historical basis lineage is retained in Git history.
+**/COMPOSITE_ACE_BASIS_2D_KHN26_4UNEVEN.mat*
+**/COMPOSITE_ACE_BASIS_2D.mat*
+**/manaus1342_khn26.nc*
+**/goamazon314_88aces.nc*
+*.nc.part*
+*.nc4.part*

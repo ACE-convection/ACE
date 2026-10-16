@@ -347,3 +347,14 @@ Rewriting existing/shared history, replacing published tags, force-pushing,
 or deleting server objects requires explicit separate developer authorization.
 Historical pre-v0.21 basis lineage must remain preserved unless separately
 authorized for cleanup.
+
+### Large-basis clarification (developer decision)
+
+The local-only rule also covers the 101-ACE KHN26 basis and shared NetCDF,
+regardless of their v0.20 release lineage, as well as the 88-ACE basis and
+shared NetCDF. Never track or upload these full payloads or byte-split parts
+in ordinary Git or Git LFS. Preserve local runtime files and author data.
+The developer explicitly retains historical small 4-, 7-, 8- and 11-ACE
+basis lineage. Keep source, materializers, small provenance and hashes
+versioned. Large payloads will be supplied separately on request; contact
+information will be published later. Do not invent contact information.

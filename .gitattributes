@@ -6,3 +6,11 @@ matlab/history/snapshots/ACE_V019.3/data/** filter=lfs diff=lfs merge=lfs -text
 data/distribution/v02187/README.md -filter diff merge text
 data/distribution/v02187/manifest.json -filter diff merge text
 data/input/goamazon314_88aces.provenance.json -filter diff merge text
+
+# Provenance stays ordinary text; large basis payloads must never use LFS.
+data/**/*.json -filter diff merge text
+/data/basis/** -filter -diff -merge -text
+**/COMPOSITE_ACE_BASIS_2D_KHN26_4UNEVEN.mat* -filter -diff -merge -text
+**/COMPOSITE_ACE_BASIS_2D.mat* -filter -diff -merge -text
+**/manaus1342_khn26.nc* -filter -diff -merge -text
+**/goamazon314_88aces.nc* -filter -diff -merge -text

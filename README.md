@@ -71,9 +71,14 @@ Historical MATLAB `data/` files use Git LFS. Install Git LFS and run
 `git lfs pull` after cloning to obtain the MAT and NetCDF contents; see the
 [migration and provenance record](docs/migration/matlab_data_lfs_migration.md).
 
-From v0.21 onward, basis payloads are local-only and are not distributed in
-Git or Git LFS. Obtain the basis and the shared NetCDF containing its response
-operators separately, placing them at the documented `data/` paths. Provenance,
+The large 101-ACE KHN26 and 88-ACE basis payloads, including shared NetCDFs
+with their operators and byte-split parts, are local-only and are not
+distributed in Git or Git LFS. This applies regardless of release version.
+Historical small 4-/7-/8-/11-ACE bases remain preserved. Large data are
+available separately on request; maintainer contact details will be published
+later. See the [basis data policy and LFS cleanup guide](docs/maintenance/large_basis_policy.md).
+Obtain the basis and the shared NetCDF containing its response operators
+separately, placing them at the documented `data/` paths. Provenance,
 hashes and conversion tools remain versioned. The materializer can reconstruct
 inputs from separately supplied local parts; matching existing inputs are
 verified and differing files are never overwritten. Earlier published history

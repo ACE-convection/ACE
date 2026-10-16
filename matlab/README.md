@@ -9,8 +9,8 @@ zero initial MF and post-dynamics precipitation ordering are retained.
 both switches `off`. See [release notes](../docs/releases/v0.21.87-notes.md)
 and [new tests](../tests/slab/README.md). The developer accepted the tested
 native eight-hour case and response plots; retained limitations are in the notes.
-Obtain basis/shared operator inputs separately: v0.21 onward keeps them
-local-only. The materializer verifies existing files or reconstructs them
+Obtain the large 101-ACE KHN26 and 88-ACE basis/shared operator inputs
+separately: both are local-only and must not be uploaded through Git or LFS. The materializer verifies existing files or reconstructs them
 from separately supplied local parts; do not commit or upload those payloads.
 
 ```matlab

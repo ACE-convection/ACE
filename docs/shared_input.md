@@ -1,3 +1,8 @@
+> Large-input policy: both the 101-ACE KHN26 and 88-ACE operator-containing
+> inputs are supplied separately on request, outside Git and Git LFS.
+> Historical small 4-/7-/8-/11-ACE basis lineage remains preserved.
+> See [policy and cleanup instructions](maintenance/large_basis_policy.md).
+
 # Shared ACE case input
 
 ## v0.21.87 shared case (accepted 2026-10-15)
